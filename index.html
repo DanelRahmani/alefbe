@@ -109,6 +109,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:11px;heigh
 .dn:hover,.dn.cur{border-color:var(--gold);color:var(--gold)}.dn.lv1{border-color:rgba(76,175,125,.45);color:var(--ok)}.dn.lv2{border-color:rgba(59,130,246,.5);color:var(--blue)}.dn.master{border-color:var(--gold);background:rgba(212,168,67,.1)}
 .cw.shake{animation:shake .3s}
 @keyframes shake{0%,100%{transform:none}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.form-tabs{display:flex;gap:2px;background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:2px;margin-bottom:9px}
+.ftab{flex:1;padding:5px 3px;border-radius:7px;border:1px solid transparent;background:transparent;color:var(--dim);font-family:'Raleway',sans-serif;font-size:.57rem;font-weight:600;cursor:pointer;transition:all .16s;text-align:center}
+.ftab.on{background:rgba(212,168,67,.14);color:var(--gold);border-color:rgba(212,168,67,.3)}
+.ftab:hover:not(.on):not(:disabled){background:var(--bg3);color:var(--text)}
+.ftab:disabled{opacity:.25;cursor:not-allowed}
 /* PRACTICE */
 .prac-hdr{text-align:center;margin-bottom:16px}.prac-hdr h2{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;letter-spacing:2px;margin-bottom:3px}.prac-hdr p{font-size:.73rem;color:var(--dim)}
 .sel-row{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap}
@@ -231,6 +236,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:11px;heigh
     <button class="lnbtn" onclick="fNav(1)">›</button>
   </div>
   <div class="dot-nav" id="t-dots"></div>
+  <div class="form-tabs" id="t-form-tabs">
+    <button class="ftab on" id="tf0" onclick="setForm(0,this)">Isolated</button>
+    <button class="ftab" id="tf1" onclick="setForm(1,this)">Initial</button>
+    <button class="ftab" id="tf2" onclick="setForm(2,this)">Medial</button>
+    <button class="ftab" id="tf3" onclick="setForm(3,this)">Final</button>
+  </div>
   <div class="clbl" id="t-clbl"></div>
   <div class="cw" id="trace-cw">
     <canvas id="gc"></canvas><canvas id="cc"></canvas>
@@ -264,6 +275,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:11px;heigh
     <div class="pop">
       <div class="po"><label>Sets per letter</label><select id="psets"><option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="5">5</option></select></div>
       <div class="po"><label>Attempts</label><select id="patts"><option value="2">2</option><option value="3" selected>3</option><option value="5">5</option></select></div>
+      <div class="po"><label>Letter form</label><select id="pform"><option value="0">Isolated</option><option value="1">Initial</option><option value="2">Medial</option><option value="3">Final</option><option value="4">All forms</option></select></div>
     </div>
     <button class="sbtn" onclick="startPrac()">Start Practice</button>
   </div>
@@ -273,6 +285,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:11px;heigh
       <div style="text-align:right"><div class="pa-qn" id="pa-qn"></div><div class="adots" id="adots"></div></div>
     </div>
     <div class="progbar"><div class="pbl"><span id="ppl">1 of 8</span><span id="psl">Set 1</span></div><div class="pb"><div class="pbf" id="pbf" style="width:0%"></div></div></div>
+    <div class="form-tabs">
+      <button class="ftab" id="pf0">Isolated</button>
+      <button class="ftab" id="pf1">Initial</button>
+      <button class="ftab" id="pf2">Medial</button>
+      <button class="ftab" id="pf3">Final</button>
+    </div>
     <div class="clbl" id="p-clbl"></div>
     <div class="cw" id="prac-cw">
       <canvas id="pgc"></canvas><canvas id="pcc"></canvas>
@@ -490,7 +508,111 @@ const WP=[
 ];
 
 // ═══════════════════════════════════════
-// STATE
+// FORM WAYPOINTS  (ini/med/fin — null entries fall back to ISO form)
+// ═══════════════════════════════════════
+const WP_INI=[
+  null,
+  /* 1 ب */ [[W(0.557,0.454),W(0.561,0.545),W(0.386,0.564)],[D(0.557,0.692)]],
+  /* 2 پ */ [[W(0.557,0.448),W(0.567,0.545),W(0.479,0.567),W(0.404,0.564)],[D(0.604,0.682)],[D(0.520,0.704)],[D(0.576,0.786)]],
+  null,
+  /* 4 ث */ [[W(0.561,0.464),W(0.554,0.564),W(0.395,0.579)],[D(0.532,0.267)],[D(0.582,0.342)],[D(0.517,0.348)]],
+  /* 5 ج */ [[W(0.392,0.423),W(0.679,0.476),W(0.514,0.504),W(0.357,0.554),W(0.242,0.554)],[D(0.545,0.654)]],
+  /* 6 چ */ [[W(0.379,0.432),W(0.686,0.486),W(0.486,0.523),W(0.364,0.564),W(0.236,0.557)],[D(0.579,0.639)],[D(0.507,0.664)],[D(0.545,0.729)]],
+  /* 7 ح */ [[W(0.392,0.429),W(0.673,0.479),W(0.529,0.514),W(0.370,0.570),W(0.236,0.567)]],
+  /* 8 خ */ [[W(0.398,0.423),W(0.689,0.467),W(0.511,0.517),W(0.373,0.561),W(0.254,0.567)],[D(0.526,0.295)]],
+  null,null,null,null,null,
+  /* 14 س */ [[W(0.682,0.429),W(0.661,0.520),W(0.592,0.467),W(0.532,0.542),W(0.461,0.495),W(0.382,0.561),W(0.270,0.570)]],
+  /* 15 ش */ [[W(0.686,0.429),W(0.632,0.520),W(0.595,0.457),W(0.498,0.567),W(0.467,0.486),W(0.386,0.554),W(0.273,0.554)],[D(0.564,0.229)],[D(0.617,0.311)],[D(0.532,0.326)]],
+  /* 16 ص */ [[W(0.442,0.617),W(0.542,0.489),W(0.673,0.432),W(0.707,0.517),W(0.576,0.579),W(0.417,0.504),W(0.342,0.554),W(0.220,0.561)]],
+  /* 17 ض */ [[W(0.448,0.629),W(0.545,0.492),W(0.692,0.439),W(0.695,0.554),W(0.511,0.576),W(0.398,0.504),W(0.345,0.554),W(0.223,0.561)],[D(0.532,0.311)]],
+  /* 18 ط */ [[W(0.464,0.182),W(0.457,0.529),W(0.589,0.426),W(0.673,0.486),W(0.445,0.567),W(0.276,0.564)]],
+  /* 19 ظ */ [[W(0.470,0.182),W(0.442,0.554),W(0.582,0.417),W(0.682,0.473),W(0.554,0.548),W(0.370,0.557),W(0.264,0.561)],[D(0.617,0.286)]],
+  /* 20 ع */ [[W(0.595,0.373),W(0.482,0.367),W(0.473,0.492),W(0.642,0.467),W(0.436,0.564),W(0.295,0.557)]],
+  /* 21 غ */ [[W(0.614,0.382),W(0.504,0.361),W(0.442,0.476),W(0.642,0.470),W(0.407,0.567),W(0.279,0.576)],[D(0.501,0.261)]],
+  /* 22 ف */ [[W(0.582,0.417),W(0.501,0.479),W(0.514,0.361),W(0.598,0.492),W(0.470,0.573),W(0.323,0.573)],[D(0.511,0.239)]],
+  /* 23 ق */ [[W(0.579,0.429),W(0.520,0.492),W(0.514,0.361),W(0.601,0.495),W(0.479,0.579),W(0.354,0.564)],[D(0.570,0.220)],[D(0.501,0.245)]],
+  /* 24 ک */ [[W(0.707,0.151),W(0.382,0.304),W(0.532,0.501),W(0.348,0.573),W(0.232,0.570)]],
+  /* 25 گ */ [[W(0.704,0.154),W(0.395,0.298),W(0.536,0.504),W(0.376,0.579),W(0.245,0.576),W(0.707,0.054),W(0.470,0.164)]],
+  /* 26 ل */ [[W(0.536,0.170),W(0.567,0.542),W(0.504,0.567),W(0.386,0.554)]],
+  /* 27 م */ [[W(0.529,0.479),W(0.595,0.520),W(0.582,0.395),W(0.439,0.557),W(0.317,0.567)]],
+  /* 28 ن */ [[W(0.564,0.448),W(0.576,0.548),W(0.495,0.554),W(0.392,0.557)],[D(0.557,0.317)]],
+  null,
+  /* 30 ه */ [[W(0.542,0.354),W(0.654,0.504),W(0.514,0.507),W(0.461,0.442),W(0.536,0.436),W(0.467,0.542),W(0.404,0.570),W(0.289,0.557)]],
+  /* 31 ی */ [[W(0.579,0.479),W(0.561,0.557),W(0.495,0.567),W(0.382,0.567)],[D(0.604,0.689)],[D(0.529,0.707)]]
+];
+
+const WP_MED=[
+  null,
+  /* 1 ب */ [[W(0.670,0.573),W(0.545,0.554),W(0.504,0.504),W(0.432,0.567),W(0.336,0.570)],[D(0.507,0.686)]],
+  /* 2 پ */ [[W(0.692,0.570),W(0.545,0.564),W(0.517,0.511),W(0.439,0.557),W(0.317,0.554)],[D(0.548,0.676)],[D(0.482,0.676)],[D(0.526,0.742)]],
+  null,
+  /* 4 ث */ [[W(0.689,0.564),W(0.554,0.561),W(0.517,0.511),W(0.423,0.567),W(0.307,0.561)],[D(0.467,0.279)],[D(0.529,0.354)],[D(0.454,0.367)]],
+  /* 5 ج */ [[W(0.804,0.564),W(0.604,0.567),W(0.401,0.426),W(0.645,0.467),W(0.448,0.501),W(0.314,0.561),W(0.217,0.567)],[D(0.495,0.648)]],
+  /* 6 چ */ [[W(0.814,0.554),W(0.623,0.564),W(0.595,0.479),W(0.361,0.417),W(0.667,0.473),W(0.445,0.517),W(0.326,0.561),W(0.211,0.567)],[D(0.467,0.667)],[D(0.529,0.645)],[D(0.507,0.742)]],
+  /* 7 ح */ [[W(0.795,0.564),W(0.604,0.573),W(0.582,0.467),W(0.345,0.429),W(0.664,0.476),W(0.473,0.511),W(0.320,0.573),W(0.198,0.567)]],
+  /* 8 خ */ [[W(0.801,0.557),W(0.611,0.567),W(0.579,0.467),W(0.348,0.429),W(0.670,0.470),W(0.454,0.511),W(0.311,0.570),W(0.198,0.576)],[D(0.517,0.304)]],
+  null,null,null,null,null,
+  /* 14 س */ [[W(0.789,0.557),W(0.654,0.557),W(0.604,0.492),W(0.564,0.570),W(0.504,0.492),W(0.445,0.567),W(0.404,0.489),W(0.323,0.564),W(0.192,0.557)]],
+  /* 15 ش */ [[W(0.795,0.564),W(0.651,0.564),W(0.607,0.479),W(0.539,0.576),W(0.520,0.479),W(0.420,0.576),W(0.404,0.492),W(0.329,0.557),W(0.204,0.567)],[D(0.492,0.267)],[D(0.529,0.342)],[D(0.470,0.354)]],
+  /* 16 ص */ [[W(0.820,0.557),W(0.623,0.536),W(0.398,0.629),W(0.482,0.486),W(0.629,0.404),W(0.657,0.501),W(0.511,0.567),W(0.351,0.517),W(0.270,0.564),W(0.167,0.567)]],
+  /* 17 ض */ [[W(0.826,0.561),W(0.636,0.542),W(0.382,0.617),W(0.551,0.426),W(0.682,0.445),W(0.595,0.542),W(0.464,0.576),W(0.345,0.523),W(0.270,0.564),W(0.161,0.564)]],
+  /* 18 ط */ [[W(0.776,0.561),W(0.548,0.542),W(0.395,0.164),W(0.348,0.557),W(0.548,0.404),W(0.611,0.464),W(0.489,0.570),W(0.226,0.576)]],
+  /* 19 ظ */ [[W(0.782,0.567),W(0.536,0.529),W(0.392,0.151),W(0.357,0.561),W(0.545,0.407),W(0.620,0.470),W(0.470,0.573),W(0.220,0.573)],[D(0.542,0.289)]],
+  /* 20 ع */ [[W(0.729,0.564),W(0.548,0.554),W(0.436,0.461),W(0.551,0.457),W(0.398,0.554),W(0.261,0.570)]],
+  /* 21 غ */ [[W(0.729,0.570),W(0.557,0.561),W(0.432,0.451),W(0.570,0.451),W(0.392,0.548),W(0.276,0.564)],[D(0.457,0.279)]],
+  /* 22 ف */ [[W(0.732,0.557),W(0.570,0.564),W(0.464,0.492),W(0.561,0.354),W(0.576,0.457),W(0.404,0.561),W(0.282,0.542)],[D(0.536,0.226)]],
+  /* 23 ق */ [[W(0.732,0.554),W(0.567,0.564),W(0.467,0.476),W(0.532,0.361),W(0.576,0.442),W(0.482,0.529),W(0.376,0.570),W(0.270,0.551)],[D(0.545,0.214)],[D(0.464,0.232)]],
+  /* 24 ک */ [[W(0.786,0.557),W(0.645,0.567),W(0.492,0.432),W(0.654,0.114),W(0.326,0.332),W(0.482,0.442),W(0.482,0.514),W(0.307,0.570),W(0.220,0.561)]],
+  /* 25 گ */ [[W(0.782,0.570),W(0.651,0.554),W(0.479,0.407),W(0.648,0.107),W(0.351,0.307),W(0.482,0.420),W(0.479,0.529),W(0.317,0.579),W(0.211,0.564),W(0.645,0.029),W(0.398,0.154)]],
+  /* 26 ل */ [[W(0.670,0.576),W(0.545,0.561),W(0.489,0.167),W(0.501,0.498),W(0.442,0.567),W(0.339,0.567)]],
+  /* 27 م */ [[W(0.761,0.532),W(0.570,0.539),W(0.507,0.457),W(0.420,0.517),W(0.507,0.579),W(0.395,0.539),W(0.220,0.564)]],
+  /* 28 ن */ [[W(0.711,0.570),W(0.567,0.561),W(0.507,0.495),W(0.454,0.561),W(0.320,0.561)],[D(0.501,0.332)]],
+  null,
+  /* 30 ه */ [[W(0.726,0.557),W(0.476,0.567),W(0.557,0.379),W(0.486,0.542),W(0.520,0.717),W(0.551,0.582),W(0.401,0.545),W(0.257,0.570)]],
+  /* 31 ی */ [[W(0.704,0.582),W(0.548,0.564),W(0.520,0.495),W(0.439,0.567),W(0.332,0.567)],[D(0.545,0.664)],[D(0.457,0.670)]]
+];
+
+const WP_FIN=[
+  /* 0 ا */ [[W(0.411,0.197),W(0.445,0.563),W(0.614,0.557)]],
+  /* 1 ب */ [[W(0.807,0.561),W(0.723,0.564),W(0.645,0.507),W(0.579,0.582),W(0.382,0.617),W(0.251,0.586),W(0.236,0.473)],[D(0.451,0.732)]],
+  /* 2 پ */ [[W(0.820,0.567),W(0.701,0.561),W(0.670,0.514),W(0.586,0.579),W(0.395,0.611),W(0.239,0.592),W(0.232,0.451)],[D(0.467,0.701)],[D(0.395,0.711)],[D(0.467,0.779)]],
+  /* 3 ت */ [[W(0.829,0.554),W(0.701,0.557),W(0.664,0.507),W(0.614,0.567),W(0.401,0.614),W(0.229,0.579),W(0.245,0.464)],[D(0.486,0.307)],[D(0.404,0.332)]],
+  /* 4 ث */ [[W(0.820,0.551),W(0.711,0.561),W(0.657,0.507),W(0.517,0.601),W(0.304,0.617),W(0.226,0.486)],[D(0.432,0.236)],[D(0.482,0.307)],[D(0.411,0.339)]],
+  /* 5 ج */ [[W(0.742,0.561),W(0.548,0.567),W(0.517,0.464),W(0.329,0.457),W(0.617,0.457),W(0.386,0.545),W(0.298,0.701),W(0.361,0.867),W(0.651,0.876)],[D(0.486,0.689)]],
+  /* 6 چ */ [[W(0.761,0.564),W(0.548,0.564),W(0.507,0.467),W(0.323,0.464),W(0.614,0.461),W(0.407,0.536),W(0.307,0.654),W(0.332,0.854),W(0.623,0.889)],[D(0.514,0.673)],[D(0.457,0.695)],[D(0.511,0.751)]],
+  /* 7 ح */ [[W(0.748,0.561),W(0.551,0.567),W(0.489,0.467),W(0.323,0.464),W(0.626,0.454),W(0.376,0.551),W(0.298,0.679),W(0.357,0.848),W(0.629,0.870)]],
+  /* 8 خ */ [[W(0.745,0.567),W(0.548,0.567),W(0.482,0.467),W(0.326,0.476),W(0.607,0.464),W(0.398,0.536),W(0.301,0.682),W(0.370,0.864),W(0.623,0.879)],[D(0.457,0.314)]],
+  /* 9 د */ [[W(0.704,0.557),W(0.570,0.567),W(0.520,0.304),W(0.532,0.492),W(0.470,0.548),W(0.329,0.554)]],
+  /* 10 ذ */ [[W(0.704,0.579),W(0.554,0.564),W(0.529,0.307),W(0.548,0.482),W(0.470,0.551),W(0.357,0.545)],[D(0.495,0.214)]],
+  /* 11 ر */ [[W(0.673,0.557),W(0.489,0.532),W(0.507,0.664),W(0.314,0.754)]],
+  /* 12 ز */ [[W(0.657,0.567),W(0.501,0.536),W(0.501,0.654),W(0.329,0.748)],[D(0.448,0.339)]],
+  /* 13 ژ */ [[W(0.667,0.561),W(0.507,0.536),W(0.507,0.645),W(0.323,0.754)],[D(0.436,0.267)],[D(0.479,0.329)],[D(0.423,0.336)]],
+  /* 14 س */ [[W(0.879,0.570),W(0.757,0.567),W(0.695,0.479),W(0.651,0.589),W(0.601,0.498),W(0.539,0.567),W(0.454,0.514),W(0.486,0.667),W(0.342,0.779),W(0.186,0.761),W(0.164,0.620)]],
+  /* 15 ش */ [[W(0.882,0.567),W(0.748,0.567),W(0.711,0.486),W(0.657,0.573),W(0.607,0.501),W(0.532,0.589),W(0.467,0.520),W(0.470,0.682),W(0.364,0.767),W(0.220,0.773),W(0.167,0.598)],[D(0.626,0.342)],[D(0.579,0.276)],[D(0.554,0.357)]],
+  /* 16 ص */ [[W(0.929,0.551),W(0.707,0.526),W(0.520,0.539),W(0.670,0.389),W(0.776,0.445),W(0.686,0.529),W(0.432,0.501),W(0.442,0.648),W(0.282,0.742),W(0.129,0.692),W(0.157,0.511)]],
+  /* 17 ض */ [[W(0.920,0.554),W(0.789,0.564),W(0.695,0.526),W(0.520,0.542),W(0.664,0.404),W(0.773,0.442),W(0.623,0.551),W(0.426,0.479),W(0.442,0.651),W(0.270,0.745),W(0.161,0.707),W(0.145,0.532)],[D(0.579,0.264)]],
+  /* 18 ط */ [[W(0.795,0.554),W(0.564,0.551),W(0.426,0.142),W(0.382,0.545),W(0.579,0.404),W(0.629,0.479),W(0.507,0.564),W(0.298,0.561)]],
+  /* 19 ظ */ [[W(0.786,0.564),W(0.557,0.551),W(0.420,0.126),W(0.392,0.532),W(0.567,0.414),W(0.632,0.473),W(0.504,0.557),W(0.298,0.567)],[D(0.561,0.286)]],
+  /* 20 ع */ [[W(0.717,0.554),W(0.548,0.561),W(0.432,0.467),W(0.539,0.451),W(0.401,0.567),W(0.336,0.779),W(0.445,0.898),W(0.670,0.914)]],
+  /* 21 غ */ [[W(0.717,0.567),W(0.542,0.548),W(0.432,0.454),W(0.545,0.454),W(0.404,0.567),W(0.339,0.717),W(0.445,0.898),W(0.657,0.914)],[D(0.482,0.301)]],
+  /* 22 ف */ [[W(0.857,0.564),W(0.682,0.561),W(0.595,0.507),W(0.645,0.392),W(0.701,0.470),W(0.595,0.573),W(0.392,0.617),W(0.214,0.592),W(0.198,0.470)],[D(0.548,0.292)]],
+  /* 23 ق */ [[W(0.739,0.557),W(0.595,0.548),W(0.507,0.539),W(0.551,0.464),W(0.595,0.629),W(0.501,0.704),W(0.351,0.736),W(0.314,0.579)],[D(0.589,0.345)],[D(0.498,0.370)]],
+  /* 24 ک */ [[W(0.898,0.561),W(0.770,0.557),W(0.592,0.429),W(0.757,0.104),W(0.448,0.336),W(0.595,0.420),W(0.595,0.507),W(0.395,0.607),W(0.232,0.611),W(0.132,0.476)]],
+  /* 25 گ */ [[W(0.895,0.570),W(0.757,0.567),W(0.604,0.429),W(0.757,0.117),W(0.457,0.307),W(0.589,0.436),W(0.570,0.532),W(0.370,0.604),W(0.195,0.592),W(0.154,0.467),W(0.761,0.011),W(0.517,0.151)]],
+  /* 26 ل */ [[W(0.745,0.564),W(0.611,0.561),W(0.545,0.229),W(0.557,0.557),W(0.545,0.739),W(0.401,0.798),W(0.320,0.773),W(0.320,0.570)]],
+  /* 27 م */ [[W(0.707,0.557),W(0.507,0.536),W(0.454,0.632),W(0.445,0.492),W(0.336,0.561),W(0.364,0.923)]],
+  /* 28 ن */ [[W(0.745,0.567),W(0.623,0.567),W(0.595,0.526),W(0.601,0.670),W(0.486,0.782),W(0.326,0.770),W(0.320,0.595)],[D(0.473,0.392)]],
+  /* 29 و */ [[W(0.682,0.564),W(0.467,0.567),W(0.476,0.454),W(0.536,0.545),W(0.507,0.667),W(0.351,0.757)]],
+  /* 30 ه */ [[W(0.667,0.570),W(0.517,0.567),W(0.482,0.326),W(0.379,0.495),W(0.482,0.504),W(0.492,0.329)]],
+  /* 31 ی */ [[W(0.707,0.554),W(0.529,0.582),W(0.661,0.636),W(0.617,0.720),W(0.432,0.782),W(0.311,0.720),W(0.339,0.539)]]
+];
+
+function getWP(id,form){
+  const arr=[WP,WP_INI,WP_MED,WP_FIN][form];
+  return(arr&&arr[id]&&arr[id].length)?arr[id]:WP[id];
+}
+function formChar(l,form){return[l.iso,l.ini,l.med,l.fin][form];}
+const FORM_NAMES=['Isolated','Initial','Medial','Final'];
 // ═══════════════════════════════════════
 const S={learned:new Set(),quiz:{tot:0,cor:0},prog:{}};
 function loadS(){try{const p=JSON.parse(localStorage.getItem('alefba_v9')||'null');if(p){S.learned=new Set(p.l||[]);S.quiz=p.q||{tot:0,cor:0};S.prog=p.p||{};}}catch(e){}}
@@ -574,7 +696,7 @@ const SNAP_STR=[0.82,0.58,0];
 
 const mkTR=()=>({
   ready:false,dc:null,gc:null,cc:null,dX:null,gX:null,cX:null,sz:320,dpr:1,
-  idx:0,level:0,brush:16,drawing:false,lx:0,ly:0,mx:0,my:0,totalDist:0,hasDrawn:false,
+  idx:0,level:0,form:0,brush:16,drawing:false,lx:0,ly:0,mx:0,my:0,totalDist:0,hasDrawn:false,
   wpts:[],  // [{x,y,d,hit}]
   rafId:null,pulseT:0,
 });
@@ -588,22 +710,26 @@ function initTracer(){
 }
 
 function loadLetter(tr,mode){
-  // Flatten all WP groups for this letter into a single list
-  tr.wpts=WP[tr.idx].flat().map(w=>({...w,hit:false}));
+  // Flatten waypoints for this letter+form, fall back to iso if form not set
+  tr.wpts=getWP(tr.idx,tr.form).flat().map(w=>({...w,hit:false}));
   tr.drawing=false;tr.totalDist=0;tr.hasDrawn=false;
   clearDraw(tr);drawGuide(tr);hideRov(mode);
   updateClbl(tr,mode);setChkBtn(mode,false);
   startLoop(tr);
 }
 function clearDraw(tr){tr.dX&&tr.dX.clearRect(0,0,tr.sz,tr.sz);}
+// Vertical offset to align the rendered glyph with the editor-placed waypoints.
+// Arabic glyphs sit above the mathematical 'middle' baseline, so we shift down.
+const GUIDE_Y_OFFSET=0.06; // fraction of sz
+
 function drawGuide(tr){
-  const{gX,sz,idx,level}=tr,l=AL[idx];
+  const{gX,sz,idx,level,form}=tr,l=AL[idx];
   gX.clearRect(0,0,sz,sz);
   const a=[0.16,0.10,0][level];
   if(a>0){
     gX.font=`${sz*0.62}px 'Amiri',serif`;gX.textAlign='center';gX.textBaseline='middle';
     gX.fillStyle=l.isp?`rgba(199,129,58,${a})`:`rgba(212,168,67,${a})`;
-    gX.fillText(l.iso,sz/2,sz/2);
+    gX.fillText(formChar(l,form),sz/2,sz/2+sz*GUIDE_Y_OFFSET-23);
   }
 }
 function updateClbl(tr,mode){
@@ -728,7 +854,7 @@ function onPass(tr,mode,score){
   const l=AL[tr.idx];speak(l);
   const fl=document.getElementById(mode==='prac'?'p-cf':'t-cf');
   const cc=document.getElementById(mode==='prac'?'p-cfch':'t-cfch');
-  if(fl&&cc){cc.textContent=l.iso;cc.style.color=l.isp?'var(--persian)':'var(--gold)';fl.classList.add('show');}
+  if(fl&&cc){cc.textContent=formChar(l,tr.form);cc.style.color=l.isp?'var(--persian)':'var(--gold)';fl.classList.add('show');}
   setChkBtn(mode,false);
   setTimeout(()=>{if(fl)fl.classList.remove('show');showRov(mode,score,true);},1400);
 }
@@ -762,9 +888,21 @@ function resetT(mode){
 // ── Free trace controls ──
 function refreshFreeUI(){
   const l=AL[TR.idx];
-  document.getElementById('tnchar').textContent=l.iso;
-  document.getElementById('tnsub').textContent=l.name+' · /'+l.tr+'/';
+  document.getElementById('tnchar').textContent=formChar(l,TR.form);
+  document.getElementById('tnsub').textContent=`${l.name} · /${l.tr}/ · ${FORM_NAMES[TR.form]}`;
+  // Update form tab states — disable ini/med for non-connecting letters
+  [0,1,2,3].forEach(f=>{
+    const btn=document.getElementById('tf'+f);if(!btn)return;
+    btn.classList[TR.form===f?'add':'remove']('on');
+    btn.disabled=(f===1||f===2)&&!l.conn;
+  });
   buildDotNav();
+}
+function setForm(f,btn){
+  const l=AL[TR.idx];
+  if((f===1||f===2)&&!l.conn){toast('This letter has no '+FORM_NAMES[f]+' form');return;}
+  TR.form=f;
+  if(TR.ready){loadLetter(TR,'free');refreshFreeUI();}
 }
 function fNav(d){TR.idx=(TR.idx+d+32)%32;if(TR.ready){loadLetter(TR,'free');refreshFreeUI();}}
 function jumpFree(id){TR.idx=id;if(TR.ready){loadLetter(TR,'free');refreshFreeUI();}}
@@ -775,13 +913,13 @@ function setLv(lv,btn){
   document.getElementById('tlvldesc').textContent=['Trace the full letter then press ✓ Check','Outline only — trace then press ✓ Check','No guide — write from memory then press ✓ Check'][lv];
   if(TR.ready){loadLetter(TR,'free');refreshFreeUI();}
 }
-function nextFree(){TR.idx=(TR.idx+1)%32;loadLetter(TR,'free');refreshFreeUI();}
+function nextFree(){TR.idx=(TR.idx+1)%32;if(TR.ready){loadLetter(TR,'free');refreshFreeUI();}}
 function doHint(){
   const l=AL[TR.idx],sz=TR.sz;
   TR.gX.clearRect(0,0,sz,sz);TR.gX.font=`${sz*0.62}px 'Amiri',serif`;
   TR.gX.textAlign='center';TR.gX.textBaseline='middle';
   TR.gX.fillStyle=l.isp?'rgba(199,129,58,.72)':'rgba(212,168,67,.72)';
-  TR.gX.fillText(l.iso,sz/2,sz/2);
+  TR.gX.fillText(formChar(l,TR.form),sz/2,sz/2+sz*GUIDE_Y_OFFSET-23);
   clearTimeout(TR.hintTimer);TR.hintTimer=setTimeout(()=>drawGuide(TR),2200);
 }
 function buildDotNav(){
@@ -805,25 +943,49 @@ function showPracSetup(){['prac-setup','prac-active','prac-result'].forEach((id,
 function startPrac(){
   if(!PSEL.size){toast('Select at least 1 letter');return;}
   PSETS=+document.getElementById('psets').value;PMAXATT=+document.getElementById('patts').value;
-  PQUEUE=[];for(let s=0;s<PSETS;s++)PQUEUE.push(...[...PSEL].sort(()=>Math.random()-.5));
+  const formSel=+document.getElementById('pform').value;
+  // Build queue of {id,form} pairs
+  const forms=formSel===4?[0,1,2,3]:[formSel];
+  PQUEUE=[];
+  for(let s=0;s<PSETS;s++){
+    const batch=[];
+    [...PSEL].forEach(id=>{
+      const l=AL[id];
+      forms.forEach(f=>{
+        if((f===1||f===2)&&!l.conn)return; // skip ini/med for non-connecting
+        batch.push({id,form:f});
+      });
+    });
+    PQUEUE.push(...batch.sort(()=>Math.random()-.5));
+  }
+  if(!PQUEUE.length){toast('No valid letter+form combinations');return;}
   PQI=0;PSESH={passed:0,scores:{}};
   document.getElementById('prac-setup').style.display='none';document.getElementById('prac-result').style.display='none';document.getElementById('prac-active').style.display='block';
   const r=mkCanvas('pdc','pgc','pcc','prac-cw');Object.assign(PR,r);PR.brush=16;PR.ready=true;
   bindCanvas(PR,'prac');document.fonts.ready.then(()=>loadPracLetter());
 }
 function loadPracLetter(){
-  const id=PQUEUE[PQI],l=AL[id];PR.idx=id;PR.level=Math.min(TR.level,lv(id));
+  const{id,form}=PQUEUE[PQI],l=AL[id];
+  PR.idx=id;PR.level=Math.min(TR.level,lv(id));PR.form=form;
   loadLetter(PR,'prac');
-  document.getElementById('pa-ch').textContent=l.iso;document.getElementById('pa-nm').textContent=`${l.name} · /${l.tr}/`;
-  const si=(PQI%Math.max(PSEL.size,1))+1,sn=Math.floor(PQI/Math.max(PSEL.size,1))+1;
+  document.getElementById('pa-ch').textContent=formChar(l,form);
+  document.getElementById('pa-nm').textContent=`${l.name} · /${l.tr}/ · ${FORM_NAMES[form]}`;
+  // Update practice form tab indicators (read-only display)
+  [0,1,2,3].forEach(f=>{
+    const btn=document.getElementById('pf'+f);if(!btn)return;
+    btn.classList[f===form?'add':'remove']('on');
+    btn.disabled=true; // display only in practice
+  });
+  const si=(PQI%Math.max(PQUEUE.length/PSETS,1))+1,sn=Math.floor(PQI/(PQUEUE.length/PSETS))+1;
   document.getElementById('pa-qn').textContent=`${PQI+1}/${PQUEUE.length}`;
-  document.getElementById('ppl').textContent=`Letter ${si} of ${PSEL.size}`;document.getElementById('psl').textContent=`Set ${sn} of ${PSETS}`;
+  document.getElementById('ppl').textContent=`${PQI+1} of ${PQUEUE.length}`;document.getElementById('psl').textContent=`Set ${Math.min(sn,PSETS)} of ${PSETS}`;
   document.getElementById('pbf').style.width=(PQI/PQUEUE.length*100)+'%';speak(l);
 }
 function pracAdv(){
-  PSESH.passed++;const id=PQUEUE[PQI];
-  if(!PSESH.scores[id])PSESH.scores[id]=0;
-  PSESH.scores[id]=Math.max(PSESH.scores[id],Math.round(PR.wpts.filter(w=>w.hit).length/Math.max(PR.wpts.length,1)*100));
+  PSESH.passed++;const{id,form}=PQUEUE[PQI];
+  const key=`${id}_${form}`;
+  if(!PSESH.scores[key])PSESH.scores[key]={id,form,score:0};
+  PSESH.scores[key].score=Math.max(PSESH.scores[key].score,Math.round(PR.wpts.filter(w=>w.hit).length/Math.max(PR.wpts.length,1)*100));
   if(PR.rafId){cancelAnimationFrame(PR.rafId);PR.rafId=null;}
   PQI++;if(PQI>=PQUEUE.length){showPracResult();return;}loadPracLetter();
 }
@@ -832,13 +994,13 @@ function showPracResult(){
   if(PR.rafId){cancelAnimationFrame(PR.rafId);PR.rafId=null;}
   document.getElementById('prac-active').style.display='none';document.getElementById('prac-result').style.display='block';
   const tot=PQUEUE.length,pass=PSESH.passed,pct=Math.round(pass/tot*100);
-  const sc=Object.values(PSESH.scores),avg=sc.length?Math.round(sc.reduce((a,b)=>a+b,0)/sc.length):0;
+  const sc=Object.values(PSESH.scores).map(v=>v.score),avg=sc.length?Math.round(sc.reduce((a,b)=>a+b,0)/sc.length):0;
   const[em,ti]=pct>=90?['🏆','Mastery!']:pct>=70?['⭐','Excellent!']:pct>=50?['👍','Good!']:['💪','Keep going!'];
   document.getElementById('pre').textContent=em;document.getElementById('prt').textContent=ti;
   document.getElementById('prsu').textContent=`${pass} passed of ${tot}`;
   document.getElementById('prst').textContent=tot;document.getElementById('prsp').textContent=pass;document.getElementById('prsa').textContent=avg+'%';
-  const uniq=[...new Set(PQUEUE)];
-  document.getElementById('prls-g').innerHTML=uniq.map(id=>{const l=AL[id];const s=PSESH.scores[id]||0;const cls=s>=70?'g':s>=40?'m':'b';return`<div class="prli ${cls}"><span class="prli-ch" style="color:${l.isp?'var(--persian)':'var(--gold2)'}">${l.iso}</span><span class="prli-v">${s?s+'%':'—'}</span></div>`;}).join('');
+  const entries=Object.values(PSESH.scores);
+  document.getElementById('prls-g').innerHTML=entries.map(({id,form,score})=>{const l=AL[id];const cls=score>=70?'g':score>=40?'m':'b';return`<div class="prli ${cls}"><span class="prli-ch" style="color:${l.isp?'var(--persian)':'var(--gold2)'}">${formChar(l,form)}</span><span class="prli-v" style="font-size:.5rem;color:var(--dim)">${FORM_NAMES[form]}</span><span class="prli-v">${score?score+'%':'—'}</span></div>`;}).join('');
 }
 
 // ═══════════════════════════════════════
