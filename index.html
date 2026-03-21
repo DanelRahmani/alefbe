@@ -1,96 +1,1306 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script defer src="/_vercel/insights/script.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@exampledev/new.css@1.1.2/new.min.css"
-    />
-    <title>Vercel HTML Starter</title>
-    <meta
-      name="description"
-      content="High-performance HTML based website template."
-    />
-  </head>
-  <body>
-    <h1>Vercel HTML Starter</h1>
-    <p>
-      This template is a simple, but powerful single
-      <code>index.html</code> file deployed to
-      <a href="https://vercel.com">Vercel</a>. When your site is deployed, all
-      static assets (like HTML, JavaScript, CSS, images, and more) are deployed
-      globally to every
-      <a href="https://vercel.com/docs/concepts/edge-network/overview"
-        >Vercel Edge Network</a
-      >
-      region.
-    </p>
-    <h2>Simple, privacy-friendly analytics</h2>
-    <p>
-      Want to understand your visitor traffic? Vercel Analytics gives you
-      first-party, privacy-friendly traffic analytics for your HTML site. This
-      template is already configured using the following script:
-    </p>
-    <pre><code>&lt;script defer src="/_vercel/insights/script.js"&gt;&lt;/script&gt;</code></pre>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/analytics">Vercel Analytics</a>.
-    </p>
-    <h2>Integrated with git</h2>
-    <p>
-      Deploying updates to your site is as simple as
-      <code>git push</code> thanks to Vercel's advanced
-      <a href="https://vercel.com/docs/concepts/git">Git Integration</a>.
-      Support for GitHub, GitLab, Bitbucket is zero-configuration, and with the
-      flexible Vercel CLI and API, you can integrate with any tool possible.
-    </p>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/git">Git Integration</a>.
-    </p>
-    <h2>Fast <code>gzip</code> compression</h2>
-    <p>
-      To help ensure the smallest possible file sizes for your static assets,
-      the Vercel Edge Network compresses files by default using
-      <code>gzip</code>. You can also optionally use
-      <code>brotli</code> compressesion if you prefer.
-    </p>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/edge-network/compression"
-        >compression</a
-      >.
-    </p>
-    <h2>Advanced routing configuration</h2>
-    <p>
-      Vercel gives you a variety of ways to configure the routing of your
-      website. For example, adding redirects, rewrites, or headers to your page.
-      While you can use <code>vercel.json</code> to define these through JSON,
-      you can also express your routing configuration as code using
-      <a href="https://vercel.com/docs/concepts/functions/edge-middleware"
-        >Vercel Edge Middleware</a
-      >.
-    </p>
-    <p>
-      Middleware runs before the
-      <a href="https://vercel.com/docs/concepts/edge-network/caching"
-        >Vercel Edge Network Cache</a
-      >, so you can configure routing exactly as your application needs. For
-      example, this template uses <code>middleware.js</code> defined in the root
-      of the repository to add additional security headers to the site:
-    </p>
-    <pre><code>referrer-policy: origin-when-cross-origin
-strict-transport-security: max-age=31536000; includeSubDomains; preload
-x-content-type-options: nosniff
-x-dns-prefetch-control: on
-x-frame-options: DENY</code></pre>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/functions/edge-middleware"
-        >Vercel Edge Middleware</a
-      >.
-    </p>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>الفبا · Learn Persian</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Amiri:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0C0E2B;--bg2:#13163A;--bg3:#1A1E4A;--card:rgba(22,27,64,.85);
+  --gold:#D4A843;--gold2:#F0C870;--persian:#C7813A;--blue:#3B82F6;
+  --text:#E8E0CC;--dim:#8A82A8;--border:rgba(212,168,67,.18);
+  --ok:#4CAF7D;--err:#E05555;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Raleway',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:
+  radial-gradient(ellipse at 15% 15%,rgba(163,51,72,.15) 0%,transparent 55%),
+  radial-gradient(ellipse at 85% 85%,rgba(42,122,140,.15) 0%,transparent 55%);
+  pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23D4A843' fill-opacity='0.03'%3E%3Cpath d='M40 0L80 40L40 80L0 40z'/%3E%3C/g%3E%3C/svg%3E");
+  pointer-events:none;z-index:0}
+.app{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:0 14px 100px}
+header{text-align:center;padding:20px 0 14px}
+.logo{font-family:'Amiri',serif;font-size:clamp(2.4rem,8vw,4rem);color:var(--gold);text-shadow:0 0 50px rgba(212,168,67,.4);letter-spacing:4px}
+.logo-sub{font-family:'Cormorant Garamond',serif;font-size:clamp(.65rem,2vw,.85rem);color:var(--dim);letter-spacing:7px;text-transform:uppercase;margin-top:4px}
+nav{display:flex;gap:3px;background:var(--bg2);border:1px solid var(--border);border-radius:13px;padding:3px;margin-bottom:16px}
+nav button{flex:1;padding:8px 2px;border:none;border-radius:9px;background:transparent;color:var(--dim);font-family:'Raleway',sans-serif;font-size:.63rem;font-weight:600;letter-spacing:.3px;text-transform:uppercase;cursor:pointer;transition:all .18s;white-space:nowrap}
+nav button.active{background:var(--gold);color:var(--bg)}
+nav button:hover:not(.active){background:var(--bg3);color:var(--text)}
+.view{display:none}.view.active{display:block;animation:fu .28s ease}
+@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* LEARN */
+.filter-bar{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.fbtn{padding:5px 12px;border-radius:18px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Raleway',sans-serif;font-size:.67rem;font-weight:600;cursor:pointer;transition:all .16s}
+.fbtn.active,.fbtn:hover{border-color:var(--gold);color:var(--gold)}
+.alpha-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(94px,1fr));gap:7px}
+@media(max-width:380px){.alpha-grid{grid-template-columns:repeat(3,1fr);gap:5px}}
+.lcard{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:13px 5px 10px;cursor:pointer;text-align:center;transition:all .18s;position:relative}
+.lcard:hover{transform:translateY(-2px);border-color:var(--gold);box-shadow:0 5px 18px rgba(212,168,67,.11)}
+.lcard.learned{border-color:rgba(76,175,125,.35)}
+.lcard.learned::after{content:'✓';position:absolute;top:5px;right:6px;font-size:.56rem;color:var(--ok);font-weight:700}
+.lcard.practiced::before{content:'✍';position:absolute;top:5px;left:6px;font-size:.56rem;color:var(--gold)}
+.lcard.isp{border-color:rgba(199,129,58,.3)}
+.lchar{font-family:'Amiri',serif;font-size:2.3rem;line-height:1.1;color:var(--gold2);display:block;margin-bottom:2px}
+.lcard.isp .lchar{color:var(--persian)}
+.lname{font-size:.62rem;font-weight:600;color:var(--dim)}
+.ltrans{font-size:.57rem;color:var(--dim);opacity:.6;margin-top:1px;font-style:italic}
+.prog-pips{display:flex;gap:2px;justify-content:center;margin-top:5px}
+.pip{width:5px;height:5px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);transition:all .25s}
+.pip.on{background:var(--gold)}
+
+/* MODAL */
+.modal-wrap{display:none;position:fixed;inset:0;background:rgba(6,8,24,.88);backdrop-filter:blur(12px);z-index:200;align-items:center;justify-content:center;padding:12px}
+.modal-wrap.open{display:flex;animation:fu .18s ease}
+.modal{background:linear-gradient(135deg,var(--bg2),var(--bg3));border:1px solid var(--border);border-radius:20px;padding:24px 18px 18px;max-width:430px;width:100%;position:relative;max-height:90vh;overflow-y:auto}
+.mclose{position:absolute;top:11px;right:11px;background:transparent;border:1px solid var(--border);border-radius:50%;width:27px;height:27px;color:var(--dim);font-size:.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .16s}
+.mclose:hover{background:var(--bg3);color:var(--text)}
+.ml{font-family:'Amiri',serif;font-size:5rem;text-align:center;color:var(--gold);text-shadow:0 0 50px rgba(212,168,67,.3);line-height:1.1;margin-bottom:3px}
+.mt{font-family:'Cormorant Garamond',serif;font-size:1.6rem;text-align:center;font-weight:300;letter-spacing:2px}
+.mipa{text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--dim);margin-bottom:16px;font-size:.87rem}
+.pbadge{display:block;width:fit-content;margin:0 auto 9px;font-size:.52rem;font-weight:700;letter-spacing:.9px;text-transform:uppercase;background:rgba(199,129,58,.13);border:1px solid rgba(199,129,58,.36);color:var(--persian);border-radius:4px;padding:2px 7px}
+.msec{margin-bottom:13px}
+.msec h3{font-size:.56rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px;border-bottom:1px solid var(--border);padding-bottom:4px}
+.forms-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;text-align:center}
+.fi{background:var(--bg);border-radius:9px;padding:8px 3px 6px;border:1px solid var(--border)}
+.fc-ch{font-family:'Amiri',serif;font-size:1.6rem;color:var(--gold2);display:block;direction:rtl;margin-bottom:1px}
+.flbl{font-size:.5rem;font-weight:600;letter-spacing:.3px;text-transform:uppercase;color:var(--dim)}
+.snd-row{background:var(--bg);border-radius:9px;padding:9px 12px;border:1px solid var(--border);display:flex;align-items:center;gap:7px;font-size:.82rem}
+.spk{margin-left:auto;background:var(--gold);color:var(--bg);border:none;border-radius:6px;padding:5px 9px;font-size:.66rem;font-weight:700;cursor:pointer;font-family:'Raleway',sans-serif;transition:all .16s}
+.spk:hover{opacity:.82}
+.ex-row{background:var(--bg);border-radius:11px;padding:12px;border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:9px}
+.ex-fa{font-family:'Amiri',serif;font-size:1.8rem;color:var(--gold);direction:rtl}
+.ex-t{font-style:italic;font-size:.82rem;color:var(--text)}.ex-m{font-size:.68rem;color:var(--dim);margin-top:1px}
+.mlearn{width:100%;padding:11px;border-radius:11px;border:1px solid var(--border);background:transparent;color:var(--text);font-family:'Raleway',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .16s;margin-top:4px}
+.mlearn.on{background:rgba(76,175,125,.11);border-color:var(--ok);color:var(--ok)}
+.mlearn:hover:not(.on){background:var(--bg3)}
+.mtrace{width:100%;padding:11px;border-radius:11px;border:1px solid rgba(212,168,67,.26);background:rgba(212,168,67,.04);color:var(--gold);font-family:'Raleway',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .16s;margin-top:6px}
+.mtrace:hover{background:rgba(212,168,67,.08)}
+
+/* TRACE VIEW */
+.trace-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px}
+.trace-header h2{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;letter-spacing:2px}
+.lv-tabs{display:flex;gap:2px;background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:2px}
+.lvtab{padding:5px 10px;border-radius:7px;border:none;background:transparent;color:var(--dim);font-family:'Raleway',sans-serif;font-size:.6rem;font-weight:600;cursor:pointer;transition:all .16s}
+.lvtab.on{background:var(--blue);color:#fff}
+.lvtab:hover:not(.on){background:var(--bg3);color:var(--text)}
+.lnav-bar{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:13px;padding:10px 13px;margin-bottom:9px}
+.lnbtn{background:transparent;border:1px solid var(--border);border-radius:7px;width:32px;height:32px;color:var(--dim);font-size:.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .16s;flex-shrink:0}
+.lnbtn:hover{border-color:var(--gold);color:var(--gold)}
+.lnc{text-align:center;flex:1}
+.lnchar{font-family:'Amiri',serif;font-size:2.5rem;color:var(--gold);line-height:1;display:block}
+.lnsub{font-size:.64rem;color:var(--dim);font-weight:600;letter-spacing:.7px;margin-top:1px;display:block}
+.phase-bar{display:flex;gap:5px;justify-content:center;align-items:center;min-height:18px;margin-bottom:5px}
+.pp{height:5px;border-radius:3px;background:var(--bg3);border:1px solid var(--border);transition:all .25s}
+.pp.main{width:24px}.pp.dot{width:8px;height:8px;border-radius:50%}
+.pp.active{background:var(--blue);box-shadow:0 0 7px rgba(59,130,246,.5)}
+.pp.done{background:var(--gold)}
+.phase-label{text-align:center;font-size:.6rem;color:var(--dim);font-weight:600;letter-spacing:.7px;text-transform:uppercase;min-height:14px;margin-bottom:7px}
+
+/* CANVAS AREA */
+.cw{position:relative;margin:0 auto 10px;border-radius:16px;overflow:hidden;border:1px solid var(--border);background:var(--bg2);box-shadow:0 6px 22px rgba(0,0,0,.34)}
+.cw canvas{position:absolute;top:0;left:0}
+.cw .dc{touch-action:none;cursor:crosshair;position:relative !important}
+
+.rov{position:absolute;inset:0;border-radius:16px;background:rgba(10,12,34,.86);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;opacity:0;pointer-events:none;transition:opacity .22s;z-index:30;padding:14px}
+.rov.show{opacity:1;pointer-events:all}
+.rov-sc{font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:300;line-height:1}
+.rov-lbl{font-size:.58rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--dim)}
+.rov-stars{font-size:1.4rem;letter-spacing:3px;margin:2px 0}
+.rov-msg{font-family:'Cormorant Garamond',serif;font-size:.98rem;font-style:italic;color:var(--dim);text-align:center}
+.rov-btns{display:flex;gap:7px;margin-top:5px}
+.rovbtn{background:var(--gold);color:var(--bg);border:none;border-radius:9px;padding:9px 20px;font-family:'Raleway',sans-serif;font-size:.73rem;font-weight:700;cursor:pointer;transition:all .16s}
+.rovbtn:hover{opacity:.84}
+.rovbtn.sec{background:transparent;border:1px solid var(--border);color:var(--dim)}
+.rovbtn.sec:hover{border-color:var(--gold);color:var(--gold)}
+.cf{position:absolute;inset:0;border-radius:16px;display:flex;align-items:center;justify-content:center;background:rgba(10,12,34,.92);opacity:0;pointer-events:none;z-index:35;transition:opacity .2s}
+.cf.show{opacity:1}
+.cf-char{font-family:'Amiri',serif;color:var(--gold);text-shadow:0 0 60px rgba(212,168,67,.7);animation:cfpop .5s ease}
+@keyframes cfpop{0%{transform:scale(.2);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+.loading-ov{position:absolute;inset:0;background:var(--bg2);border-radius:16px;display:flex;align-items:center;justify-content:center;z-index:40;font-size:.72rem;color:var(--dim);letter-spacing:1px}
+
+.ttools{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.tbtn{background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:7px 12px;color:var(--dim);font-family:'Raleway',sans-serif;font-size:.64rem;font-weight:600;cursor:pointer;transition:all .16s}
+.tbtn:hover{border-color:var(--gold);color:var(--gold)}
+.tbtn.danger{color:var(--err);border-color:rgba(224,85,85,.28)}
+.tbtn.danger:hover{background:rgba(224,85,85,.07);border-color:var(--err)}
+.tbtn.check{background:var(--blue);color:#fff;border-color:var(--blue);font-weight:700}
+.tbtn.check:hover:not(:disabled){opacity:.88}
+.tbtn.check:disabled{opacity:.3;cursor:not-allowed}
+.tbtn.check.ready{background:var(--ok);border-color:var(--ok);box-shadow:0 0 10px rgba(76,175,125,.4)}
+.br{display:flex;align-items:center;gap:5px;margin-left:auto}
+.br label{font-size:.56rem;color:var(--dim);font-weight:600;text-transform:uppercase;white-space:nowrap}
+input[type=range]{-webkit-appearance:none;width:60px;height:3px;border-radius:3px;background:var(--border);cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:11px;border-radius:50%;background:var(--gold)}
+.hint-txt{font-size:.59rem;color:var(--dim);text-align:center;opacity:.65}
+.dot-nav{display:flex;gap:3px;justify-content:center;margin-bottom:9px;flex-wrap:wrap}
+.dn{width:21px;height:21px;border-radius:50%;border:1px solid var(--border);background:transparent;cursor:pointer;font-family:'Amiri',serif;font-size:.68rem;color:var(--dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .12s}
+.dn:hover,.dn.cur{border-color:var(--gold);color:var(--gold)}
+.dn.lv1{border-color:rgba(76,175,125,.45);color:var(--ok)}
+.dn.lv2{border-color:rgba(59,130,246,.5);color:var(--blue)}
+.dn.master{border-color:var(--gold);background:rgba(212,168,67,.1)}
+.cw.shake{animation:shake .3s}
+@keyframes shake{0%,100%{transform:none}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+
+/* PRACTICE */
+.prac-hdr{text-align:center;margin-bottom:16px}
+.prac-hdr h2{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;letter-spacing:2px;margin-bottom:3px}
+.prac-hdr p{font-size:.73rem;color:var(--dim)}
+.sel-row{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap}
+.sqb{padding:4px 10px;border-radius:15px;border:1px solid var(--border);background:transparent;color:var(--dim);font-family:'Raleway',sans-serif;font-size:.62rem;font-weight:600;cursor:pointer;transition:all .14s}
+.sqb:hover{border-color:var(--gold);color:var(--gold)}
+.sg{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:5px;margin-bottom:14px}
+.sc{background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:7px 2px 5px;text-align:center;cursor:pointer;transition:all .14px;position:relative}
+.sc:hover{border-color:var(--gold)}.sc.sel{border-color:var(--gold);background:rgba(212,168,67,.08)}
+.sc.sel::after{content:'✓';position:absolute;top:1px;right:3px;font-size:.48rem;color:var(--gold);font-weight:700}
+.sc-ch{font-family:'Amiri',serif;font-size:1.6rem;color:var(--gold2);display:block;line-height:1.1}
+.sc-nm{font-size:.48rem;color:var(--dim)}
+.pop{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.po{flex:1;min-width:105px}
+.po label{display:block;font-size:.6rem;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+.po select{width:100%;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:7px 9px;font-family:'Raleway',sans-serif;font-size:.78rem;cursor:pointer}
+.sbtn{background:var(--gold);color:var(--bg);border:none;border-radius:11px;padding:13px 36px;font-family:'Raleway',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;letter-spacing:.7px;text-transform:uppercase;transition:all .16s;display:block;margin:0 auto}
+.sbtn:hover{transform:scale(1.02);opacity:.87}
+.pa-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:9px}
+.pa-letter{font-family:'Amiri',serif;font-size:2.2rem;color:var(--gold);line-height:1}
+.pa-nm{font-size:.63rem;color:var(--dim);font-weight:600;margin-top:1px}
+.pa-qn{font-size:.63rem;color:var(--dim);font-weight:600}
+.adots{display:flex;gap:3px;justify-content:flex-end;margin-top:3px}
+.adot{width:7px;height:7px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);transition:all .18s}
+.adot.used{background:var(--err)}.adot.pass{background:var(--ok)}
+.progbar{margin-bottom:9px}
+.pbl{display:flex;justify-content:space-between;margin-bottom:3px}
+.pbl span{font-size:.58rem;color:var(--dim);font-weight:600}
+.pb{height:3px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.pbf{height:100%;background:var(--gold);border-radius:3px;transition:width .32s}
+.pres{text-align:center;animation:fu .35s ease}
+.pre{font-size:3rem;margin-bottom:9px}
+.prt{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:300;letter-spacing:2px;margin-bottom:3px}
+.prsu{font-size:.73rem;color:var(--dim);margin-bottom:18px}
+.prstats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:16px}
+.prsc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 5px;text-align:center}
+.prscv{font-family:'Cormorant Garamond',serif;font-size:1.9rem;color:var(--gold);font-weight:300}
+.prscl{font-size:.52rem;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--dim)}
+.prls{margin-bottom:16px}
+.prls h3{font-size:.58rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:7px}
+.prls-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:5px}
+.prli{background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:7px 4px 5px;text-align:center}
+.prli-ch{font-family:'Amiri',serif;font-size:1.6rem;display:block;line-height:1.1}
+.prli-v{font-size:.56rem;font-weight:700;margin-top:1px;display:block}
+.prli.g{border-color:rgba(76,175,125,.4)}.prli.g .prli-v{color:var(--ok)}
+.prli.m{border-color:rgba(199,129,58,.38)}.prli.m .prli-v{color:var(--persian)}
+.prli.b{border-color:rgba(224,85,85,.3)}.prli.b .prli-v{color:var(--err)}
+.prbtns{display:flex;gap:7px;justify-content:center;flex-wrap:wrap}
+.bsec{background:transparent;border:1px solid var(--border);border-radius:9px;padding:9px 18px;color:var(--dim);font-family:'Raleway',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;transition:all .16s}
+.bsec:hover{border-color:var(--gold);color:var(--gold)}
+
+/* QUIZ */
+.qsetup{text-align:center}
+.qsetup h2{font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:300;letter-spacing:2px;margin-bottom:5px}
+.qsetup p{color:var(--dim);font-size:.75rem;margin-bottom:18px}
+.qmodes{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.qmc{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:16px 11px;cursor:pointer;transition:all .18s;text-align:center}
+.qmc:hover,.qmc.on{border-color:var(--gold);background:rgba(212,168,67,.05)}
+.qmi{font-size:1.6rem;margin-bottom:5px;font-family:'Amiri',serif;color:var(--gold2)}
+.qmt{font-size:.75rem;font-weight:600;margin-bottom:2px}
+.qmd{font-size:.62rem;color:var(--dim)}
+.qopt{margin-bottom:15px}
+.qopt label{display:block;font-size:.62rem;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
+.qopt select{width:100%;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:7px;padding:8px 10px;font-family:'Raleway',sans-serif;font-size:.78rem;cursor:pointer}
+.qgame{display:none}
+.qhdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}
+.qprog,.qscr{font-size:.73rem;font-weight:600}.qprog{color:var(--dim)}.qscr{color:var(--gold)}
+.qbar{height:3px;background:var(--bg3);border-radius:3px;margin-bottom:16px}
+.qbarfill{height:100%;background:var(--gold);border-radius:3px;transition:width .28s}
+.qcard{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px 18px;text-align:center;margin-bottom:13px;min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.qlbl{font-size:.6rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:11px}
+.qbl{font-family:'Amiri',serif;font-size:6.5rem;color:var(--gold);line-height:1;text-shadow:0 0 40px rgba(212,168,67,.25)}
+.qbn{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--text);font-weight:300;letter-spacing:2px}
+.qbn2{font-size:.85rem;color:var(--dim);margin-top:3px;font-style:italic}
+.qopts{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.qob{background:var(--bg2);border:1px solid var(--border);border-radius:11px;padding:12px 9px;cursor:pointer;transition:all .16s;font-family:'Raleway',sans-serif;font-size:.76rem;font-weight:500;color:var(--text);display:flex;align-items:center;justify-content:center;gap:5px;min-height:52px;flex-direction:column;line-height:1.3}
+.qob .ol{font-family:'Amiri',serif;font-size:2rem;color:var(--gold2);line-height:1}
+.qob .osnd{font-size:.62rem;color:var(--dim);font-style:italic}
+.qob:hover:not(:disabled){border-color:var(--gold);transform:scale(1.01)}
+.qob.correct{border-color:var(--ok);background:rgba(76,175,125,.11);color:var(--ok)}
+.qob.wrong{border-color:var(--err);background:rgba(224,85,85,.07);color:var(--err)}
+.qob:disabled{cursor:default}
+.qresult{display:none;text-align:center;padding:26px 0;animation:fu .35s}
+.ree{font-size:3rem;margin-bottom:11px}
+.res{font-family:'Cormorant Garamond',serif;font-size:3rem;color:var(--gold);font-weight:300}
+.rel{color:var(--dim);font-size:.75rem;margin-bottom:14px}
+.remsg{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--text);font-style:italic;margin-bottom:20px}
+.rebtns{display:flex;gap:7px;justify-content:center;flex-wrap:wrap}
+.flashcard{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:34px 18px;cursor:pointer;min-height:230px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:14px;user-select:none;transition:border-color .18s}
+.flashcard:hover{border-color:rgba(212,168,67,.35)}
+.fch{font-size:.6rem;color:var(--dim);letter-spacing:.9px;text-transform:uppercase;margin-top:11px}
+.fcrev{display:none}.flashcard.rev .fcrev{display:block}.flashcard.rev .fch{display:none}
+.fcl{font-family:'Amiri',serif;font-size:6.5rem;color:var(--gold);line-height:1;text-shadow:0 0 40px rgba(212,168,67,.25)}
+.fcn{font-family:'Cormorant Garamond',serif;font-size:1.75rem;color:var(--text);margin-top:5px}
+.fci{font-style:italic;color:var(--dim);font-size:.82rem;margin-top:2px}
+.fcbtns{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.fcbtn{padding:11px;border-radius:11px;border:none;cursor:pointer;font-family:'Raleway',sans-serif;font-size:.74rem;font-weight:700;transition:all .16s}
+.fcbtn.knew{background:rgba(76,175,125,.15);color:var(--ok);border:1px solid var(--ok)}
+.fcbtn.nope{background:rgba(224,85,85,.11);color:var(--err);border:1px solid var(--err)}
+
+/* PROGRESS */
+.pgh{text-align:center;margin-bottom:20px}
+.pgh h2{font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:300;letter-spacing:2px;margin-bottom:3px}
+.pgh p{font-size:.72rem;color:var(--dim)}
+.stg{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:18px}
+@media(max-width:360px){.stg{grid-template-columns:repeat(2,1fr)}}
+.stc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 5px;text-align:center}
+.stv{font-family:'Cormorant Garamond',serif;font-size:1.75rem;color:var(--gold);font-weight:300}
+.stl{font-size:.52rem;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--dim)}
+.acw{margin-bottom:18px}
+.acw h3{font-size:.58rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+.acbar{height:5px;background:var(--bg3);border-radius:4px;overflow:hidden}
+.acfill{height:100%;background:linear-gradient(90deg,#A33348,var(--gold));border-radius:4px;transition:width .5s}
+.acl{font-size:.67rem;color:var(--dim);margin-top:4px}
+.pgsec h3{font-size:.58rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+.pgleg{display:flex;gap:10px;margin-bottom:9px;flex-wrap:wrap}
+.pgleg span{display:flex;align-items:center;gap:4px;font-size:.62rem;color:var(--dim)}
+.pgleg i{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.pgg{display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:5px;margin-bottom:22px}
+.pgi{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:7px 4px 5px;text-align:center;cursor:pointer;transition:all .14s}
+.pgi:hover{border-color:var(--gold)}
+.pgi.m1{border-color:rgba(76,175,125,.32)}.pgi.m2{border-color:rgba(59,130,246,.4)}.pgi.master{border-color:var(--gold);background:rgba(212,168,67,.06)}
+.pgi-ch{font-family:'Amiri',serif;font-size:1.4rem;display:block;color:var(--dim)}
+.pgi.m1 .pgi-ch{color:var(--ok)}.pgi.m2 .pgi-ch{color:var(--blue)}.pgi.master .pgi-ch{color:var(--gold)}
+.pgi-nm{font-size:.48rem;color:var(--dim);display:block}
+.rbtn{background:transparent;border:1px solid rgba(224,85,85,.24);border-radius:7px;padding:7px 14px;color:var(--err);font-family:'Raleway',sans-serif;font-size:.66rem;font-weight:600;cursor:pointer;transition:all .16s}
+.rbtn:hover{background:rgba(224,85,85,.07)}
+
+/* TOAST */
+.toast{position:fixed;bottom:86px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:7px 15px;font-size:.72rem;color:var(--text);opacity:0;transition:all .26s;pointer-events:none;z-index:400;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@keyframes sp{0%{transform:scale(0);opacity:0}70%{transform:scale(1.25)}100%{transform:scale(1);opacity:1}}
+.sp{animation:sp .38s ease forwards;opacity:0}.sp:nth-child(2){animation-delay:.11s}.sp:nth-child(3){animation-delay:.22s}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="logo">الفبا</div>
+  <div class="logo-sub">Learn the Persian Alphabet</div>
+</header>
+<nav>
+  <button class="active" onclick="goV('learn')">📚 Learn</button>
+  <button onclick="goV('trace')">✍️ Trace</button>
+  <button onclick="goV('practice')">🎯 Practice</button>
+  <button onclick="goV('quiz')">📝 Quiz</button>
+  <button onclick="goV('progress')">📊 Progress</button>
+</nav>
+
+<!-- LEARN -->
+<div id="view-learn" class="view active">
+  <div class="filter-bar">
+    <button class="fbtn active" onclick="filterL('all',this)">All 32</button>
+    <button class="fbtn" onclick="filterL('persian',this)">Persian Only</button>
+    <button class="fbtn" onclick="filterL('nc',this)">Non-connecting</button>
+    <button class="fbtn" onclick="filterL('new',this)">To Learn</button>
+  </div>
+  <div class="alpha-grid" id="alpha-grid"></div>
+</div>
+
+<!-- TRACE -->
+<div id="view-trace" class="view">
+  <div class="trace-header">
+    <div>
+      <h2 id="tlvlname">Guided Trace</h2>
+      <div style="font-size:.59rem;color:var(--dim);margin-top:1px" id="tlvldesc">Draw through each glowing checkpoint • Press ✓ Check when done</div>
+    </div>
+    <div class="lv-tabs">
+      <button class="lvtab on" onclick="setLv(0,this)">Guided</button>
+      <button class="lvtab" onclick="setLv(1,this)">Outline</button>
+      <button class="lvtab" onclick="setLv(2,this)">Freehand</button>
+    </div>
+  </div>
+  <div class="lnav-bar">
+    <button class="lnbtn" onclick="fNav(-1)">‹</button>
+    <div class="lnc"><span class="lnchar" id="tnchar"></span><span class="lnsub" id="tnsub"></span></div>
+    <button class="lnbtn" onclick="fNav(1)">›</button>
+  </div>
+  <div class="dot-nav" id="t-dots"></div>
+  <div class="phase-bar" id="phase-bar"></div>
+  <div class="phase-label" id="phase-lbl"></div>
+  <div class="cw" id="trace-cw">
+    <canvas id="gc"></canvas>
+    <canvas id="cc"></canvas>
+    <canvas id="dc" class="dc"></canvas>
+    <div class="rov" id="t-rov">
+      <div class="rov-sc" id="rovsc">—</div>
+      <div class="rov-lbl">Score</div>
+      <div class="rov-stars" id="rovstars"></div>
+      <div class="rov-msg" id="rovmsg"></div>
+      <div class="rov-btns">
+        <button class="rovbtn sec" id="rov-retry" onclick="retryPhase('free')">↺ Retry</button>
+        <button class="rovbtn" id="rov-next" onclick="nextFree()">Next →</button>
+      </div>
+    </div>
+    <div class="cf" id="t-cf"><span class="cf-char" id="t-cfch" style="font-size:160px"></span></div>
+    <div class="loading-ov" id="t-load">Loading font…</div>
+  </div>
+  <div class="ttools">
+    <button class="tbtn check" id="t-check" onclick="pressCheck('free')" disabled>✓ Check</button>
+    <button class="tbtn" onclick="doHint()">💡 Hint</button>
+    <button class="tbtn danger" onclick="retryPhase('free')">↺ Reset</button>
+    <div class="br"><label>Brush</label><input type="range" id="tbr" min="8" max="28" value="16" oninput="TR.brush=+this.value"></div>
+  </div>
+  <div class="hint-txt">Draw through the glowing circles in order • Press ✓ Check to submit each phase</div>
+</div>
+
+<!-- PRACTICE -->
+<div id="view-practice" class="view">
+  <div id="prac-setup">
+    <div class="prac-hdr"><h2>Practice Sets</h2><p>Pick letters and run sets</p></div>
+    <div class="sel-row">
+      <button class="sqb" onclick="selA()">All</button>
+      <button class="sqb" onclick="selN()">None</button>
+      <button class="sqb" onclick="selP()">Persian only</button>
+      <button class="sqb" onclick="selH()">Hardest</button>
+    </div>
+    <div class="sg" id="sel-grid"></div>
+    <div class="pop">
+      <div class="po"><label>Sets per letter</label>
+        <select id="psets"><option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="5">5</option></select></div>
+      <div class="po"><label>Attempts</label>
+        <select id="patts"><option value="2">2</option><option value="3" selected>3</option><option value="5">5</option></select></div>
+    </div>
+    <button class="sbtn" onclick="startPrac()">Start Practice</button>
+  </div>
+  <div id="prac-active" style="display:none">
+    <div class="pa-top">
+      <div><div class="pa-letter" id="pa-ch"></div><div class="pa-nm" id="pa-nm"></div></div>
+      <div style="text-align:right"><div class="pa-qn" id="pa-qn"></div><div class="adots" id="adots"></div></div>
+    </div>
+    <div class="progbar">
+      <div class="pbl"><span id="ppl">1 of 8</span><span id="psl">Set 1</span></div>
+      <div class="pb"><div class="pbf" id="pbf" style="width:0%"></div></div>
+    </div>
+    <div class="phase-bar" id="p-phase-bar"></div>
+    <div class="phase-label" id="p-phase-lbl"></div>
+    <div class="cw" id="prac-cw">
+      <canvas id="pgc"></canvas>
+      <canvas id="pcc"></canvas>
+      <canvas id="pdc" class="dc"></canvas>
+      <div class="rov" id="p-rov">
+        <div class="rov-sc" id="provsc">—</div>
+        <div class="rov-lbl">Score</div>
+        <div class="rov-stars" id="provstars"></div>
+        <div class="rov-msg" id="provmsg"></div>
+        <div class="rov-btns">
+          <button class="rovbtn sec" onclick="retryPhase('prac')">↺ Retry</button>
+          <button class="rovbtn" id="prov-next" onclick="pracAdv()">Next →</button>
+        </div>
+      </div>
+      <div class="cf" id="p-cf"><span class="cf-char" id="p-cfch" style="font-size:160px"></span></div>
+    </div>
+    <div class="ttools">
+      <button class="tbtn check" id="p-check" onclick="pressCheck('prac')" disabled>✓ Check</button>
+      <button class="tbtn danger" onclick="retryPhase('prac')">↺ Reset</button>
+      <div class="br"><label>Brush</label><input type="range" id="pbr" min="8" max="28" value="16" oninput="PR.brush=+this.value"></div>
+    </div>
+    <button class="bsec" style="width:100%;margin-top:7px" onclick="exitPrac()">✕ Exit</button>
+  </div>
+  <div id="prac-result" style="display:none" class="pres">
+    <div class="pre" id="pre">🏆</div><div class="prt" id="prt">Complete!</div><div class="prsu" id="prsu"></div>
+    <div class="prstats">
+      <div class="prsc"><div class="prscv" id="prst">0</div><div class="prscl">Traced</div></div>
+      <div class="prsc"><div class="prscv" id="prsp">0</div><div class="prscl">Passed</div></div>
+      <div class="prsc"><div class="prscv" id="prsa">—</div><div class="prscl">Avg</div></div>
+    </div>
+    <div class="prls"><h3>Letter Scores</h3><div class="prls-g" id="prls-g"></div></div>
+    <div class="prbtns">
+      <button class="bsec" onclick="showPracSetup()">Again</button>
+      <button class="sbtn" onclick="goV('learn')">Keep Learning</button>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="view-quiz" class="view">
+  <div class="qsetup" id="qsetup">
+    <h2>Test Yourself</h2><p>Choose your mode</p>
+    <div class="qmodes">
+      <div class="qmc on" data-mode="ltn" onclick="selQM(this)">
+        <div class="qmi">ب → ?</div><div class="qmt">Letter → Name</div><div class="qmd">See letter, pick the name + sound</div></div>
+      <div class="qmc" data-mode="latp" onclick="selQM(this)">
+        <div class="qmi">b → ب</div><div class="qmt">Latin → Persian</div><div class="qmd">See Latin sound, pick the letter</div></div>
+      <div class="qmc" data-mode="fc" onclick="selQM(this)">
+        <div class="qmi">🃏</div><div class="qmt">Flashcards</div><div class="qmd">Flip to recall</div></div>
+      <div class="qmc" data-mode="lts" onclick="selQM(this)">
+        <div class="qmi">ب → 🔊</div><div class="qmt">Letter → Sound</div><div class="qmd">Pick the correct sound</div></div>
+    </div>
+    <div class="qopt"><label>Questions</label><select id="qn"><option value="10">10</option><option value="16">16</option><option value="32">All 32</option></select></div>
+    <button class="sbtn" onclick="startQuiz()">Begin</button>
+  </div>
+  <div class="qgame" id="qgame">
+    <div class="qhdr"><span class="qprog" id="qprog">1/10</span><span class="qscr" id="qscr">0</span></div>
+    <div class="qbar"><div class="qbarfill" id="qbf" style="width:0%"></div></div>
+    <div class="qcard"><div class="qlbl" id="qlbl"></div><div id="qqst"></div></div>
+    <div class="qopts" id="qopts"></div>
+  </div>
+  <div id="fc-game" style="display:none">
+    <div class="qhdr"><span class="qprog" id="fcprog">1/10</span><span class="qscr" id="fcsco">✓0 ✗0</span></div>
+    <div class="qbar"><div class="qbarfill" id="fcbf" style="width:0%"></div></div>
+    <div class="flashcard" id="flashcard" onclick="revCard()">
+      <div class="fcl" id="fcl"></div>
+      <div class="fcrev"><div class="fcn" id="fcn"></div><div class="fci" id="fci"></div></div>
+      <div class="fch">Tap to reveal</div>
+    </div>
+    <div class="fcbtns" id="fcbtns" style="display:none">
+      <button class="fcbtn nope" onclick="fcA(false)">✗ Didn't Know</button>
+      <button class="fcbtn knew" onclick="fcA(true)">✓ Got It</button>
+    </div>
+  </div>
+  <div class="qresult" id="qresult">
+    <div class="ree" id="ree">🌟</div><div class="res" id="res">8/10</div>
+    <div class="rel">correct</div><div class="remsg" id="remsg"></div>
+    <div class="rebtns">
+      <button class="bsec" onclick="resetQuiz()">Try Again</button>
+      <button class="sbtn" onclick="goV('learn')">Keep Learning</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div id="view-progress" class="view">
+  <div class="pgh"><h2>Your Progress</h2><p>32 Persian letters</p></div>
+  <div class="stg">
+    <div class="stc"><div class="stv" id="stl">0</div><div class="stl">Learned</div></div>
+    <div class="stc"><div class="stv" id="stt">0</div><div class="stl">Traced</div></div>
+    <div class="stc"><div class="stv" id="stq">0</div><div class="stl">Quizzed</div></div>
+    <div class="stc"><div class="stv" id="sta">—</div><div class="stl">Accuracy</div></div>
+  </div>
+  <div class="acw"><h3>Quiz Accuracy</h3><div class="acbar"><div class="acfill" id="acf" style="width:0%"></div></div><div class="acl" id="acl">No quiz data yet</div></div>
+  <div class="pgleg">
+    <span><i style="background:var(--dim)"></i>Not traced</span>
+    <span><i style="background:var(--ok)"></i>Guided</span>
+    <span><i style="background:var(--blue)"></i>Outline</span>
+    <span><i style="background:var(--gold)"></i>Mastered</span>
+  </div>
+  <div class="pgsec"><h3>Letter Mastery</h3><div class="pgg" id="pgg"></div></div>
+  <button class="rbtn" onclick="resetAll()">Reset All Progress</button>
+</div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-wrap" id="modal-wrap" onclick="if(event.target===this)closeM()">
+  <div class="modal">
+    <button class="mclose" onclick="closeM()">✕</button>
+    <div class="ml" id="ml"></div><div id="mbadge"></div>
+    <div class="mt" id="mt"></div><div class="mipa" id="mipa"></div>
+    <div class="msec"><h3>Letter Forms</h3><div class="forms-grid" id="mforms"></div></div>
+    <div class="msec"><h3>Pronunciation</h3>
+      <div class="snd-row"><span>🔊</span><span id="msnd"></span><button class="spk" onclick="speak()">▶ Listen</button></div></div>
+    <div class="msec"><h3>Example Word</h3>
+      <div class="ex-row"><div class="ex-fa" id="mex-fa"></div><div><div class="ex-t" id="mex-t"></div><div class="ex-m" id="mex-m"></div></div></div></div>
+    <button class="mlearn" id="mlearnbtn" onclick="togLearned()"></button>
+    <button class="mtrace" onclick="traceFromM()">✍️ Trace This Letter</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════
+// ALPHABET DATA
+// ══════════════════════════════════════════════
+const AL=[
+ {id:0, iso:'ا',ini:'ا', med:'ـا',fin:'ـا',name:'Alef', tr:'â/a',ipa:'/ɒː/',snd:'like "a" in father',conn:false,isp:false,ex:{w:'آب',t:'âb',m:'water'}},
+ {id:1, iso:'ب',ini:'بـ',med:'ـبـ',fin:'ـب',name:'Be',  tr:'b',  ipa:'/b/', snd:'like "b" in boy',  conn:true, isp:false,ex:{w:'باد',t:'bâd',m:'wind'}},
+ {id:2, iso:'پ',ini:'پـ',med:'ـپـ',fin:'ـپ',name:'Pe',  tr:'p',  ipa:'/p/', snd:'like "p" in pan',  conn:true, isp:true, ex:{w:'پدر',t:'pedar',m:'father'}},
+ {id:3, iso:'ت',ini:'تـ',med:'ـتـ',fin:'ـت',name:'Te',  tr:'t',  ipa:'/t/', snd:'like "t" in top',  conn:true, isp:false,ex:{w:'تاج',t:'tâj',m:'crown'}},
+ {id:4, iso:'ث',ini:'ثـ',med:'ـثـ',fin:'ـث',name:'Se',  tr:'s',  ipa:'/s/', snd:'like "s" in sun',  conn:true, isp:false,ex:{w:'ثروت',t:'servat',m:'wealth'}},
+ {id:5, iso:'ج',ini:'جـ',med:'ـجـ',fin:'ـج',name:'Jim', tr:'j',  ipa:'/dʒ/',snd:'like "j" in jar',  conn:true, isp:false,ex:{w:'جنگل',t:'jangal',m:'forest'}},
+ {id:6, iso:'چ',ini:'چـ',med:'ـچـ',fin:'ـچ',name:'Che', tr:'ch', ipa:'/tʃ/',snd:'like "ch" in chair',conn:true,isp:true, ex:{w:'چای',t:'châi',m:'tea'}},
+ {id:7, iso:'ح',ini:'حـ',med:'ـحـ',fin:'ـح',name:'He',  tr:'h',  ipa:'/h/', snd:'aspirated "h"',     conn:true, isp:false,ex:{w:'حرف',t:'harf',m:'letter'}},
+ {id:8, iso:'خ',ini:'خـ',med:'ـخـ',fin:'ـخ',name:'Khe', tr:'kh', ipa:'/x/', snd:'like "ch" in loch', conn:true, isp:false,ex:{w:'خانه',t:'khâne',m:'house'}},
+ {id:9, iso:'د',ini:'د', med:'ـد',fin:'ـد',name:'Dal',  tr:'d',  ipa:'/d/', snd:'like "d" in door',  conn:false,isp:false,ex:{w:'دست',t:'dast',m:'hand'}},
+ {id:10,iso:'ذ',ini:'ذ', med:'ـذ',fin:'ـذ',name:'Zal',  tr:'z',  ipa:'/z/', snd:'like "z" in zoo',   conn:false,isp:false,ex:{w:'ذهن',t:'zehn',m:'mind'}},
+ {id:11,iso:'ر',ini:'ر', med:'ـر',fin:'ـر',name:'Re',   tr:'r',  ipa:'/r/', snd:'rolled "r"',         conn:false,isp:false,ex:{w:'رنگ',t:'rang',m:'color'}},
+ {id:12,iso:'ز',ini:'ز', med:'ـز',fin:'ـز',name:'Ze',   tr:'z',  ipa:'/z/', snd:'like "z" in zero',  conn:false,isp:false,ex:{w:'زبان',t:'zabân',m:'language'}},
+ {id:13,iso:'ژ',ini:'ژ', med:'ـژ',fin:'ـژ',name:'Zhe',  tr:'zh', ipa:'/ʒ/', snd:'like "s" in measure',conn:false,isp:true,ex:{w:'ژاپن',t:'zhâpon',m:'Japan'}},
+ {id:14,iso:'س',ini:'سـ',med:'ـسـ',fin:'ـس',name:'Sin', tr:'s',  ipa:'/s/', snd:'like "s" in sun',   conn:true, isp:false,ex:{w:'سبز',t:'sabz',m:'green'}},
+ {id:15,iso:'ش',ini:'شـ',med:'ـشـ',fin:'ـش',name:'Shin',tr:'sh', ipa:'/ʃ/', snd:'like "sh" in shop', conn:true, isp:false,ex:{w:'شب',t:'shab',m:'night'}},
+ {id:16,iso:'ص',ini:'صـ',med:'ـصـ',fin:'ـص',name:'Sad', tr:'s',  ipa:'/sˤ/',snd:'emphatic "s"',       conn:true, isp:false,ex:{w:'صبح',t:'sobh',m:'morning'}},
+ {id:17,iso:'ض',ini:'ضـ',med:'ـضـ',fin:'ـض',name:'Zad', tr:'z',  ipa:'/zˤ/',snd:'emphatic "z"',       conn:true, isp:false,ex:{w:'ضعیف',t:'zaif',m:'weak'}},
+ {id:18,iso:'ط',ini:'طـ',med:'ـطـ',fin:'ـط',name:'Ta',  tr:'t',  ipa:'/tˤ/',snd:'emphatic "t"',       conn:true, isp:false,ex:{w:'طلا',t:'talâ',m:'gold'}},
+ {id:19,iso:'ظ',ini:'ظـ',med:'ـظـ',fin:'ـظ',name:'Za',  tr:'z',  ipa:'/zˤ/',snd:'emphatic "z"',       conn:true, isp:false,ex:{w:'ظرف',t:'zarf',m:'container'}},
+ {id:20,iso:'ع',ini:'عـ',med:'ـعـ',fin:'ـع',name:'Eyn', tr:"'",  ipa:'/ʔ/', snd:'glottal stop',       conn:true, isp:false,ex:{w:'عشق',t:'eshq',m:'love'}},
+ {id:21,iso:'غ',ini:'غـ',med:'ـغـ',fin:'ـغ',name:'Gheyn',tr:'gh',ipa:'/ɣ/',snd:'gargling "r"',        conn:true, isp:false,ex:{w:'غروب',t:'ghorub',m:'sunset'}},
+ {id:22,iso:'ف',ini:'فـ',med:'ـفـ',fin:'ـف',name:'Fe',  tr:'f',  ipa:'/f/', snd:'like "f" in fan',    conn:true, isp:false,ex:{w:'فارسی',t:'fârsi',m:'Persian'}},
+ {id:23,iso:'ق',ini:'قـ',med:'ـقـ',fin:'ـق',name:'Qaf', tr:'q',  ipa:'/q/', snd:'deep throat sound',  conn:true, isp:false,ex:{w:'قلب',t:'qalb',m:'heart'}},
+ {id:24,iso:'ک',ini:'کـ',med:'ـکـ',fin:'ـک',name:'Kaf', tr:'k',  ipa:'/k/', snd:'like "k" in key',    conn:true, isp:false,ex:{w:'کتاب',t:'ketâb',m:'book'}},
+ {id:25,iso:'گ',ini:'گـ',med:'ـگـ',fin:'ـگ',name:'Gaf', tr:'g',  ipa:'/ɡ/', snd:'like "g" in garden', conn:true, isp:true, ex:{w:'گل',t:'gol',m:'flower'}},
+ {id:26,iso:'ل',ini:'لـ',med:'ـلـ',fin:'ـل',name:'Lam', tr:'l',  ipa:'/l/', snd:'like "l" in love',   conn:true, isp:false,ex:{w:'لاله',t:'lâle',m:'tulip'}},
+ {id:27,iso:'م',ini:'مـ',med:'ـمـ',fin:'ـم',name:'Mim', tr:'m',  ipa:'/m/', snd:'like "m" in moon',   conn:true, isp:false,ex:{w:'ماه',t:'mâh',m:'moon'}},
+ {id:28,iso:'ن',ini:'نـ',med:'ـنـ',fin:'ـن',name:'Nun', tr:'n',  ipa:'/n/', snd:'like "n" in night',  conn:true, isp:false,ex:{w:'نور',t:'nur',m:'light'}},
+ {id:29,iso:'و',ini:'و', med:'ـو',fin:'ـو',name:'Vav',  tr:'v/u',ipa:'/v~uː/',snd:'like "v" or "oo"',conn:false,isp:false,ex:{w:'ورزش',t:'varzesh',m:'sport'}},
+ {id:30,iso:'ه',ini:'هـ',med:'ـهـ',fin:'ـه',name:'He',  tr:'h',  ipa:'/h/', snd:'like "h" in hat',    conn:true, isp:false,ex:{w:'هوا',t:'havâ',m:'air'}},
+ {id:31,iso:'ی',ini:'یـ',med:'ـیـ',fin:'ـی',name:'Ye',  tr:'y/i',ipa:'/j~iː/',snd:'like "y" or "ee"',conn:true, isp:false,ex:{w:'یاد',t:'yâd',m:'memory'}},
+];
+
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+const S={learned:new Set(),quiz:{tot:0,cor:0},prog:{}};
+function loadS(){try{const p=JSON.parse(localStorage.getItem('alefba_v8')||'null');if(p){S.learned=new Set(p.l||[]);S.quiz=p.q||{tot:0,cor:0};S.prog=p.p||{};}}catch(e){}}
+function saveS(){try{localStorage.setItem('alefba_v8',JSON.stringify({l:[...S.learned],q:S.quiz,p:S.prog}));}catch(e){}}
+function lv(id){const p=S.prog[id];if(!p)return 0;const c=p.comp||[0,0,0];if(c[2]>=2)return 3;if(c[1]>=2)return 2;if(c[0]>=2)return 1;return 0;}
+function recComp(id,level){if(!S.prog[id])S.prog[id]={comp:[0,0,0]};S.prog[id].comp[level]=(S.prog[id].comp[level]||0)+1;saveS();}
+
+// ══════════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════════
+function goV(v){
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  ['learn','trace','practice','quiz','progress'].forEach((n,i)=>document.querySelectorAll('nav button')[i].classList[n===v?'add':'remove']('active'));
+  if(v==='progress')renderProg();
+  if(v==='trace'){if(!TR.ready)initTracer();else refreshFreeUI();}
+  if(v==='quiz')showQSetup();
+}
+
+// ══════════════════════════════════════════════
+// LEARN
+// ══════════════════════════════════════════════
+function renderAlpha(f){
+  let ls=f==='persian'?AL.filter(l=>l.isp):f==='nc'?AL.filter(l=>!l.conn):f==='new'?AL.filter(l=>!S.learned.has(l.id)):AL;
+  document.getElementById('alpha-grid').innerHTML=ls.map(l=>{
+    const lvl=lv(l.id),pips=[0,1,2].map(i=>`<div class="pip${i<Math.min(lvl,3)?' on':''}"></div>`).join('');
+    return`<div class="lcard${l.isp?' isp':''}${S.learned.has(l.id)?' learned':''}${lvl>0?' practiced':''}" onclick="openM(${l.id})">
+      <span class="lchar">${l.iso}</span><div class="lname">${l.name}</div><div class="ltrans">${l.tr}</div>
+      <div class="prog-pips">${pips}</div></div>`;
+  }).join('');
+}
+function filterL(f,btn){S.filter=f;document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderAlpha(f);}
+
+// ══════════════════════════════════════════════
+// MODAL
+// ══════════════════════════════════════════════
+let CL=null;
+function openM(id){
+  const l=AL[id];CL=l;
+  document.getElementById('ml').textContent=l.iso;document.getElementById('ml').style.color=l.isp?'var(--persian)':'var(--gold)';
+  document.getElementById('mt').textContent=l.name;document.getElementById('mipa').textContent=`${l.ipa} · /${l.tr}/`;
+  document.getElementById('msnd').textContent=l.snd;document.getElementById('mex-fa').textContent=l.ex.w;
+  document.getElementById('mex-t').textContent=l.ex.t;document.getElementById('mex-m').textContent='"'+l.ex.m+'"';
+  document.getElementById('mbadge').innerHTML=l.isp?'<span class="pbadge">✦ Persian-Specific</span>':'';
+  document.getElementById('mforms').innerHTML=l.conn
+    ?[l.iso,l.ini,l.med,l.fin].map((c,i)=>`<div class="fi"><span class="fc-ch">${c}</span><span class="flbl">${['Isolated','Initial','Medial','Final'][i]}</span></div>`).join('')
+    :`<div class="fi"><span class="fc-ch">${l.iso}</span><span class="flbl">Isolated</span></div><div class="fi"><span class="fc-ch">${l.fin}</span><span class="flbl">Final</span></div><div class="fi" style="opacity:.2"><span class="fc-ch">—</span><span class="flbl">N/A</span></div><div class="fi" style="opacity:.2"><span class="fc-ch">—</span><span class="flbl">N/A</span></div>`;
+  updLearnBtn();document.getElementById('modal-wrap').classList.add('open');
+}
+function updLearnBtn(){const ok=S.learned.has(CL.id);const b=document.getElementById('mlearnbtn');b.textContent=ok?'✓ Learned':'Mark as Learned';b.className='mlearn'+(ok?' on':'');}
+function closeM(){document.getElementById('modal-wrap').classList.remove('open');renderAlpha(S.filter||'all');}
+function togLearned(){const id=CL.id;S.learned.has(id)?S.learned.delete(id):S.learned.add(id);saveS();updLearnBtn();toast(S.learned.has(id)?'✓ Learned':'Removed');}
+function speak(l){const t=l||CL;if(!t||!window.speechSynthesis)return;const u=new SpeechSynthesisUtterance(t.iso+' '+t.ex.w);u.lang='fa-IR';u.rate=.75;speechSynthesis.cancel();speechSynthesis.speak(u);}
+function traceFromM(){const id=CL.id;closeM();TR.idx=id;TR.level=Math.min(2,lv(id));goV('trace');}
+
+// ══════════════════════════════════════════════
+// PHASE BUILDER — derives checkpoints from rendered pixels
+// ══════════════════════════════════════════════
+const PHASE_CACHE={};
+
+function buildPhases(id, sz, dpr){
+  const key=id+'_'+sz;
+  if(PHASE_CACHE[key]) return PHASE_CACHE[key];
+
+  const l=AL[id];
+  // Render at same size/position as the guide canvas
+  const off=document.createElement('canvas');
+  const W=sz*dpr, H=sz*dpr;
+  off.width=W; off.height=H;
+  const ctx=off.getContext('2d');
+  ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,sz,sz);
+  ctx.font=`${sz*0.62}px 'Amiri',serif`;
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillStyle='#fff';
+  ctx.fillText(l.iso, sz/2, sz/2);
+
+  const raw=ctx.getImageData(0,0,W,H).data;
+
+  // Build grid at CELL resolution — test center of each cell
+  const CELL=3;
+  const gW=Math.ceil(sz/CELL), gH=Math.ceil(sz/CELL);
+  const ink=new Uint8Array(gW*gH);
+  for(let gy=0;gy<gH;gy++){
+    for(let gx=0;gx<gW;gx++){
+      // sample center of cell in physical pixels
+      const px=Math.min(Math.round((gx+.5)*CELL*dpr), W-1);
+      const py=Math.min(Math.round((gy+.5)*CELL*dpr), H-1);
+      if(raw[(py*W+px)*4+3]>40) ink[gy*gW+gx]=1;
+    }
+  }
+
+  // BFS flood-fill to find connected clusters (8-connectivity)
+  const label=new Int16Array(gW*gH).fill(-1);
+  const clusters=[];
+  for(let i=0;i<ink.length;i++){
+    if(!ink[i]||label[i]>=0) continue;
+    const cells=[];
+    const q=[i]; label[i]=clusters.length;
+    while(q.length){
+      const ci=q.pop(); cells.push(ci);
+      const cx=ci%gW, cy=(ci/gW)|0;
+      for(let dy=-1;dy<=1;dy++) for(let dx=-1;dx<=1;dx++){
+        if(!dx&&!dy) continue;
+        const nx=cx+dx, ny=cy+dy;
+        if(nx>=0&&nx<gW&&ny>=0&&ny<gH){
+          const ni=ny*gW+nx;
+          if(ink[ni]&&label[ni]<0){label[ni]=clusters.length;q.push(ni);}
+        }
+      }
+    }
+    clusters.push(cells);
+  }
+  clusters.sort((a,b)=>b.length-a.length);
+
+  if(!clusters.length){
+    const fb=[{label:'Body',ckpts:[[.5,.25],[.5,.5],[.5,.75]],isDot:false}];
+    PHASE_CACHE[key]=fb; return fb;
+  }
+
+  // Convert cluster cell indices to logical pixel coords (center of cell)
+  const cellPx=cells=>cells.map(ci=>[(ci%gW+.5)*CELL, ((ci/gW)|0+.5)*CELL]);
+
+  // ─── BODY (largest cluster) ───
+  const bodyPts=cellPx(clusters[0]);
+  const xs=bodyPts.map(p=>p[0]), ys=bodyPts.map(p=>p[1]);
+  const minX=Math.min(...xs),maxX=Math.max(...xs);
+  const minY=Math.min(...ys),maxY=Math.max(...ys);
+  const spanX=maxX-minX, spanY=maxY-minY;
+
+  // Project each point onto the dominant stroke axis
+  // Persian is RTL, so most letters go right→left; for tall letters top→bottom
+  const isVertical=spanY>spanX*1.4;
+  const project= isVertical
+    ? p => p[1]*10 + p[0]         // primary: top→bottom; secondary: left→right
+    : p => -p[0]*10 + p[1];       // primary: right→left; secondary: top→bottom
+
+  const sorted=[...bodyPts].sort((a,b)=>project(a)-project(b));
+
+  // Sample 5 evenly-spaced points from sorted body
+  const N=5;
+  const ckpts=[];
+  for(let i=0;i<N;i++){
+    const idx=Math.round(i/(N-1)*(sorted.length-1));
+    const [px,py]=sorted[idx];
+    ckpts.push([parseFloat((px/sz).toFixed(3)), parseFloat((py/sz).toFixed(3))]);
+  }
+  const phases=[{label:'Body',ckpts,isDot:false}];
+
+  // ─── DOTS (small isolated clusters, < 28% of body) ───
+  const dotMax=clusters[0].length*0.28;
+  const dotClusters=clusters.slice(1).filter(c=>c.length>=2&&c.length<dotMax);
+  // Sort dots right→left (RTL order)
+  const dotsSorted=dotClusters
+    .map(cells=>{
+      const pts=cellPx(cells);
+      const cx=pts.reduce((s,p)=>s+p[0],0)/pts.length;
+      const cy=pts.reduce((s,p)=>s+p[1],0)/pts.length;
+      return{cx,cy};
+    })
+    .sort((a,b)=>b.cx-a.cx);
+
+  for(const{cx,cy} of dotsSorted){
+    phases.push({label:'Dot',ckpts:[[parseFloat((cx/sz).toFixed(3)),parseFloat((cy/sz).toFixed(3))]],isDot:true});
+  }
+
+  PHASE_CACHE[key]=phases;
+  return phases;
+}
+
+// ══════════════════════════════════════════════
+// CANVAS SETUP
+// ══════════════════════════════════════════════
+function mkCanvas(dcId,gcId,ccId,cwId){
+  const dpr=window.devicePixelRatio||1;
+  const sz=Math.min(window.innerWidth-40,360);
+  [dcId,gcId,ccId].forEach(id=>{
+    const c=document.getElementById(id);
+    if(!c) return;
+    c.width=sz*dpr; c.height=sz*dpr;
+    c.style.width=sz+'px'; c.style.height=sz+'px';
+  });
+  const cw=document.getElementById(cwId);
+  if(cw){cw.style.width=sz+'px'; cw.style.height=sz+'px';}
+  const dc=document.getElementById(dcId),gc=document.getElementById(gcId),cc=document.getElementById(ccId);
+  const dX=dc.getContext('2d'),gX=gc.getContext('2d'),cX=cc.getContext('2d');
+  dX.scale(dpr,dpr); gX.scale(dpr,dpr); cX.scale(dpr,dpr);
+  return{dX,gX,cX,dc,gc,cc,sz,dpr};
+}
+
+// ══════════════════════════════════════════════
+// TRACER STATE
+// Hit radius: generous — ~15% of canvas for guided, ~11% for outline, ~9% for freehand
+// For DOT phases: extra large radius (20% of canvas)
+// ══════════════════════════════════════════════
+const HIT_BODY=[0.15,0.11,0.09]; // fraction of sz for body checkpoints
+const HIT_DOT =[0.20,0.16,0.12]; // fraction of sz for dot checkpoints
+const SNAP_R  =[0.18,0.12,0.0];  // snap radius as fraction of sz
+const SNAP_STR=[0.82,0.58,0.0];  // snap strength
+
+const TR={ready:false,dc:null,gc:null,cc:null,dX:null,gX:null,cX:null,sz:320,dpr:1,
+          idx:0,level:0,brush:16,drawing:false,lx:0,ly:0,mx:0,my:0,
+          totalDist:0,hasDrawn:false,phaseIdx:0,ckptIdx:0,phasesTotal:0,phases:[],
+          rafId:null,pulseT:0};
+const PR={...TR};
+PR.ready=false; // Practice tracer — not ready initially
+
+function initTracer(){
+  const r=mkCanvas('dc','gc','cc','trace-cw');
+  Object.assign(TR,r); TR.ready=true;
+  bindCanvas(TR,'free');
+  document.fonts.ready.then(()=>{
+    document.getElementById('t-load').style.display='none';
+    TR.phases=buildPhases(TR.idx,TR.sz,TR.dpr);
+    TR.phasesTotal=TR.phases.length;
+    loadLetter(TR,'free');
+    refreshFreeUI();
+  });
+}
+
+function loadLetter(tr,mode){
+  tr.phaseIdx=0; tr.ckptIdx=0;
+  tr.drawing=false; tr.totalDist=0; tr.hasDrawn=false;
+  tr.phases=buildPhases(tr.idx,tr.sz,tr.dpr);
+  tr.phasesTotal=tr.phases.length;
+  clearDraw(tr);
+  drawGuide(tr);
+  hideRov(mode);
+  renderPips(tr,mode);
+  updatePhaseLbl(tr,mode);
+  setCheckBtn(mode,false);
+  startLoop(tr);
+}
+
+function clearDraw(tr){tr.dX&&tr.dX.clearRect(0,0,tr.sz,tr.sz);}
+
+function drawGuide(tr){
+  const{gX,sz,idx,level}=tr; const l=AL[idx];
+  gX.clearRect(0,0,sz,sz);
+  const a=[0.15,0.10,0.0][level];
+  if(a>0){
+    gX.font=`${sz*0.62}px 'Amiri',serif`;
+    gX.textAlign='center'; gX.textBaseline='middle';
+    gX.fillStyle=l.isp?`rgba(199,129,58,${a})`:`rgba(212,168,67,${a})`;
+    gX.fillText(l.iso,sz/2,sz/2);
+  }
+}
+
+// ══════════════════════════════════════════════
+// CHECKPOINT ANIMATION LOOP
+// ══════════════════════════════════════════════
+function startLoop(tr){
+  if(tr.rafId) cancelAnimationFrame(tr.rafId);
+  (function loop(){tr.rafId=requestAnimationFrame(loop);tr.pulseT+=0.05;renderCkpts(tr);})();
+}
+
+function renderCkpts(tr){
+  const{cX,sz,level,phaseIdx,ckptIdx,phases,pulseT}=tr;
+  cX.clearRect(0,0,sz,sz);
+  if(level===2||!phases.length) return;
+
+  for(let pi=0;pi<phases.length;pi++){
+    const ph=phases[pi];
+    for(let ci=0;ci<ph.ckpts.length;ci++){
+      const[nx,ny]=ph.ckpts[ci];
+      const x=nx*sz, y=ny*sz;
+      const isDone=(pi<phaseIdx)||(pi===phaseIdx&&ci<ckptIdx);
+      const isActive=(pi===phaseIdx&&ci===ckptIdx);
+      if(isDone){
+        cX.beginPath(); cX.arc(x,y,5,0,Math.PI*2);
+        cX.fillStyle='rgba(212,168,67,.6)'; cX.fill();
+      } else if(isActive){
+        const pulse=0.5+0.5*Math.sin(pulseT*4);
+        const baseR=ph.isDot?22:16;
+        cX.beginPath(); cX.arc(x,y,baseR+6*pulse,0,Math.PI*2);
+        cX.strokeStyle=`rgba(59,130,246,${0.4+0.35*pulse})`;
+        cX.lineWidth=2.5; cX.stroke();
+        cX.beginPath(); cX.arc(x,y,baseR*.6,0,Math.PI*2);
+        cX.fillStyle=`rgba(59,130,246,${0.65+0.25*pulse})`; cX.fill();
+        if(!ph.isDot){
+          cX.fillStyle='#fff';
+          cX.font=`bold ${Math.max(9,sz*.026)}px Raleway`;
+          cX.textAlign='center'; cX.textBaseline='middle';
+          cX.fillText(ci+1,x,y+1);
+        }
+      } else if(pi===phaseIdx&&ci>ckptIdx){
+        // Upcoming in same phase: dim ring
+        cX.beginPath(); cX.arc(x,y,8,0,Math.PI*2);
+        cX.strokeStyle='rgba(59,130,246,.2)'; cX.lineWidth=1.5; cX.stroke();
+      }
+    }
+  }
+  // Dashed path line between upcoming checkpoints in guided mode
+  if(level===0&&phaseIdx<phases.length){
+    const ph=phases[phaseIdx];
+    if(!ph.isDot&&ph.ckpts.length>1){
+      const startCI=Math.max(0,ckptIdx-1);
+      cX.beginPath();
+      ph.ckpts.slice(startCI).forEach(([nx,ny],i)=>{
+        i===0?cX.moveTo(nx*sz,ny*sz):cX.lineTo(nx*sz,ny*sz);
+      });
+      cX.strokeStyle='rgba(59,130,246,.14)';
+      cX.lineWidth=1.5; cX.setLineDash([5,5]); cX.stroke(); cX.setLineDash([]);
+    }
+  }
+}
+
+// ══════════════════════════════════════════════
+// INK
+// ══════════════════════════════════════════════
+function bindCanvas(tr,mode){
+  // Replace canvas node to clear old listeners
+  const nc=tr.dc.cloneNode(false);
+  tr.dc.parentNode.replaceChild(nc,tr.dc);
+  tr.dc=nc; tr.dX=nc.getContext('2d'); tr.dX.scale(tr.dpr,tr.dpr);
+  const gXY=e=>{const r=nc.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top};};
+  const tXY=e=>{const r=nc.getBoundingClientRect(),t=e.touches[0];return{x:t.clientX-r.left,y:t.clientY-r.top};};
+  nc.addEventListener('mousedown', e=>inkDown(tr,mode,gXY(e)));
+  nc.addEventListener('mousemove', e=>{if(e.buttons)inkMove(tr,mode,gXY(e));});
+  nc.addEventListener('mouseup',   ()=>inkUp(tr,mode));
+  nc.addEventListener('mouseleave',e=>{if(e.buttons)inkUp(tr,mode);});
+  nc.addEventListener('touchstart',e=>{e.preventDefault();inkDown(tr,mode,tXY(e));},{passive:false});
+  nc.addEventListener('touchmove', e=>{e.preventDefault();inkMove(tr,mode,tXY(e));},{passive:false});
+  nc.addEventListener('touchend',  e=>{e.preventDefault();inkUp(tr,mode);},{passive:false});
+}
+
+function snapPt(tr,px,py){
+  if(!tr.phases.length||tr.level===2) return{x:px,y:py};
+  const ph=tr.phases[tr.phaseIdx];
+  if(!ph||tr.ckptIdx>=ph.ckpts.length) return{x:px,y:py};
+  const[nx,ny]=ph.ckpts[tr.ckptIdx];
+  const cx=nx*tr.sz, cy=ny*tr.sz;
+  const dx=cx-px, dy=cy-py;
+  const dist=Math.sqrt(dx*dx+dy*dy);
+  const R=SNAP_R[tr.level]*tr.sz;
+  if(R>0&&dist<R){
+    const t=SNAP_STR[tr.level]*(1-dist/R);
+    return{x:px+dx*t, y:py+dy*t};
+  }
+  return{x:px,y:py};
+}
+
+function tryHit(tr,mode,sx,sy){
+  if(!tr.phases.length) return;
+  const ph=tr.phases[tr.phaseIdx];
+  if(!ph||tr.ckptIdx>=ph.ckpts.length) return;
+  const[nx,ny]=ph.ckpts[tr.ckptIdx];
+  const cx=nx*tr.sz, cy=ny*tr.sz;
+  const dist=Math.sqrt((cx-sx)**2+(cy-sy)**2);
+  const R=(ph.isDot?HIT_DOT:HIT_BODY)[tr.level]*tr.sz;
+  if(dist<=R){
+    tr.ckptIdx++;
+    updatePhaseLbl(tr,mode);
+    // Pulse the Check button green when a checkpoint is hit
+    setCheckBtn(mode,true);
+  }
+}
+
+function inkDown(tr,mode,p){
+  hideRov(mode);
+  tr.drawing=true; tr.hasDrawn=true;
+  const s=snapPt(tr,p.x,p.y);
+  tr.lx=s.x; tr.ly=s.y; tr.mx=s.x; tr.my=s.y;
+  tr.dX.beginPath(); tr.dX.arc(s.x,s.y,tr.brush/2,0,Math.PI*2);
+  tr.dX.fillStyle='rgba(240,200,112,.93)'; tr.dX.fill();
+  tryHit(tr,mode,s.x,s.y);
+}
+function inkMove(tr,mode,p){
+  if(!tr.drawing) return;
+  const s=snapPt(tr,p.x,p.y);
+  const nmx=(tr.lx+s.x)/2, nmy=(tr.ly+s.y)/2;
+  tr.dX.beginPath(); tr.dX.moveTo(tr.mx,tr.my);
+  tr.dX.quadraticCurveTo(tr.lx,tr.ly,nmx,nmy);
+  tr.dX.strokeStyle='rgba(240,200,112,.93)';
+  tr.dX.lineWidth=tr.brush; tr.dX.lineCap='round'; tr.dX.lineJoin='round'; tr.dX.stroke();
+  const ddx=s.x-tr.lx, ddy=s.y-tr.ly;
+  tr.totalDist+=Math.sqrt(ddx*ddx+ddy*ddy);
+  tr.mx=nmx; tr.my=nmy; tr.lx=s.x; tr.ly=s.y;
+  tryHit(tr,mode,s.x,s.y);
+  if(tr.totalDist>10) setCheckBtn(mode,true);
+}
+function inkUp(tr,mode){
+  tr.drawing=false;
+}
+
+// ══════════════════════════════════════════════
+// CHECK BUTTON — ONLY way to advance phases
+// No auto-advance anywhere in this code.
+// ══════════════════════════════════════════════
+function setCheckBtn(mode,on){
+  const id=mode==='prac'?'p-check':'t-check';
+  const b=document.getElementById(id);
+  if(!b) return;
+  b.disabled=!on;
+  b.className='tbtn check'+(on?' ready':'');
+}
+
+function pressCheck(mode){
+  const tr=mode==='prac'?PR:TR;
+  if(!tr.hasDrawn||!tr.phases.length) return;
+  evalPhase(tr,mode);
+}
+
+function evalPhase(tr,mode){
+  const ph=tr.phases[tr.phaseIdx];
+  if(!ph) return;
+  const total=ph.ckpts.length;
+  const hit=tr.ckptIdx;
+  // Pass if ≥60% of checkpoints hit (generous for pixel-derived positions)
+  const pct=hit/total;
+  if(pct>=0.6){
+    advancePhase(tr,mode);
+  } else {
+    failPhase(tr,mode,Math.round(pct*100),hit,total);
+  }
+}
+
+function advancePhase(tr,mode){
+  tr.phaseIdx++;
+  tr.ckptIdx=0;
+  tr.totalDist=0; tr.hasDrawn=false;
+  clearDraw(tr);
+  setCheckBtn(mode,false);
+  renderPips(tr,mode);
+
+  if(tr.phaseIdx>=tr.phasesTotal){
+    onLetterDone(tr,mode);
+  } else {
+    // Flash green border
+    const cw=document.getElementById(mode==='prac'?'prac-cw':'trace-cw');
+    if(cw){cw.style.boxShadow='0 0 0 2px rgba(76,175,125,.6)';setTimeout(()=>cw.style.boxShadow='',500);}
+    updatePhaseLbl(tr,mode);
+    toast('Phase done! ✓ Draw the next part.');
+  }
+}
+
+function failPhase(tr,mode,score,hit,total){
+  const cw=document.getElementById(mode==='prac'?'prac-cw':'trace-cw');
+  if(cw){cw.classList.add('shake');setTimeout(()=>cw.classList.remove('shake'),320);}
+  const oid=mode==='prac'?'p-rov':'t-rov';
+  const el=document.getElementById(oid);
+  if(!el) return;
+  el.className='rov show';
+  const stars=score>=50?1:0;
+  const se=document.getElementById(mode==='prac'?'provsc':'rovsc');
+  se.style.color='var(--err)'; countUp(se,score,'%');
+  document.getElementById(mode==='prac'?'provstars':'rovstars').innerHTML=
+    [...Array(3)].map((_,i)=>`<span class="sp" style="animation-delay:${i*.11}s">${i<stars?'⭐':'☆'}</span>`).join('');
+  document.getElementById(mode==='prac'?'provmsg':'rovmsg').textContent=
+    hit===0?'Draw through the glowing circles!':score<40?'Stay closer to the letter.':'Almost — try to hit more circles.';
+  document.getElementById(mode==='prac'?'prov-next':'rov-next').textContent='Skip →';
+  setCheckBtn(mode,false);
+}
+
+function onLetterDone(tr,mode){
+  const l=AL[tr.idx];
+  speak(l);
+  S.learned.add(tr.idx);
+  recComp(tr.idx,tr.level);
+  // Show calligraphic letter flash
+  const cfId=mode==='prac'?'p-cf':'t-cf';
+  const ccId=mode==='prac'?'p-cfch':'t-cfch';
+  const fl=document.getElementById(cfId), cc=document.getElementById(ccId);
+  if(fl&&cc){
+    cc.textContent=l.iso; cc.style.color=l.isp?'var(--persian)':'var(--gold)';
+    fl.classList.add('show');
+    setTimeout(()=>{fl.classList.remove('show'); showSuccessOv(tr,mode);}, 1400);
+  }
+}
+
+function showSuccessOv(tr,mode){
+  const oid=mode==='prac'?'p-rov':'t-rov';
+  const el=document.getElementById(oid);
+  if(!el) return;
+  el.className='rov show';
+  const se=document.getElementById(mode==='prac'?'provsc':'rovsc');
+  se.style.color='var(--ok)'; se.textContent='100%';
+  document.getElementById(mode==='prac'?'provstars':'rovstars').innerHTML=
+    [...Array(3)].map((_,i)=>`<span class="sp" style="animation-delay:${i*.11}s">⭐</span>`).join('');
+  document.getElementById(mode==='prac'?'provmsg':'rovmsg').textContent='Letter complete! 🌟';
+  const rr=document.getElementById(mode==='prac'?null:'rov-retry');
+  if(rr) rr.style.display='none';
+  document.getElementById(mode==='prac'?'prov-next':'rov-next').textContent='Next →';
+  setCheckBtn(mode,false);
+  if(mode==='prac') setTimeout(()=>pracAdv(),1600);
+}
+
+function hideRov(mode){
+  const el=document.getElementById(mode==='prac'?'p-rov':'t-rov');
+  if(el) el.className='rov';
+}
+
+// ══════════════════════════════════════════════
+// FREE TRACE CONTROLS
+// ══════════════════════════════════════════════
+function retryPhase(mode){
+  const tr=mode==='prac'?PR:TR;
+  hideRov(mode); clearDraw(tr);
+  tr.ckptIdx=0; tr.totalDist=0; tr.hasDrawn=false;
+  setCheckBtn(mode,false);
+}
+function nextFree(){TR.idx=(TR.idx+1)%32;loadLetter(TR,'free');refreshFreeUI();}
+function fNav(d){TR.idx=(TR.idx+d+32)%32;if(TR.ready){loadLetter(TR,'free');refreshFreeUI();}}
+function jumpFree(id){TR.idx=id;if(TR.ready){loadLetter(TR,'free');refreshFreeUI();}}
+function refreshFreeUI(){
+  const l=AL[TR.idx];
+  document.getElementById('tnchar').textContent=l.iso;
+  document.getElementById('tnsub').textContent=l.name+' · /'+l.tr+'/';
+  buildDotNav();
+}
+function setLv(lv,btn){
+  TR.level=lv;
+  document.querySelectorAll('.lvtab').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
+  document.getElementById('tlvlname').textContent=['Guided','Outline','Freehand'][lv]+' Trace';
+  document.getElementById('tlvldesc').textContent=['Draw through each glowing checkpoint • Press ✓ Check when done','Faint outline — no guide dots • Press ✓ Check when done','No guide — write from memory • Press ✓ Check when done'][lv];
+  if(TR.ready){loadLetter(TR,'free');refreshFreeUI();}
+}
+function doHint(){
+  const l=AL[TR.idx],sz=TR.sz;
+  TR.gX.clearRect(0,0,sz,sz);
+  TR.gX.font=`${sz*0.62}px 'Amiri',serif`;
+  TR.gX.textAlign='center'; TR.gX.textBaseline='middle';
+  TR.gX.fillStyle=l.isp?'rgba(199,129,58,.72)':'rgba(212,168,67,.72)';
+  TR.gX.fillText(l.iso,sz/2,sz/2);
+  clearTimeout(TR.hintTimer);
+  TR.hintTimer=setTimeout(()=>drawGuide(TR),2200);
+}
+function buildDotNav(){
+  document.getElementById('t-dots').innerHTML=AL.map(l=>{
+    const lvl=lv(l.id);
+    const cls='dn'+(TR.idx===l.id?' cur':lvl>=3?' master':lvl>=2?' lv2':lvl>=1?' lv1':'');
+    return`<div class="${cls}" onclick="jumpFree(${l.id})" title="${l.name}">${l.iso}</div>`;
+  }).join('');
+}
+function renderPips(tr,mode){
+  const el=document.getElementById(mode==='prac'?'p-phase-bar':'phase-bar');
+  if(!el) return;
+  el.innerHTML=tr.phases.map((ph,i)=>{
+    const cls=i<tr.phaseIdx?'pp done':i===tr.phaseIdx?'pp active':'pp';
+    return`<div class="${cls}${ph.isDot?' dot':' main'}" title="${ph.label}"></div>`;
+  }).join('');
+}
+function updatePhaseLbl(tr,mode){
+  const el=document.getElementById(mode==='prac'?'p-phase-lbl':'phase-lbl');
+  if(!el||tr.phaseIdx>=tr.phases.length) return;
+  const ph=tr.phases[tr.phaseIdx];
+  const ci=tr.ckptIdx, total=ph.ckpts.length;
+  el.textContent=ph.isDot?`Draw the ${ph.label.toLowerCase()} — tap near the circle`
+    :`${ph.label} — checkpoint ${ci+1} of ${total}`;
+}
+
+// ══════════════════════════════════════════════
+// PRACTICE MODE
+// ══════════════════════════════════════════════
+let PSEL=new Set(AL.map(l=>l.id));
+let PQUEUE=[],PQI=0,PSETS=3,PMAXATT=3,PSESH={passed:0,scores:{}};
+
+function buildSG(){
+  document.getElementById('sel-grid').innerHTML=AL.map(l=>`
+    <div class="sc${PSEL.has(l.id)?' sel':''}" id="sc-${l.id}" onclick="togSel(${l.id})">
+      <span class="sc-ch">${l.iso}</span><span class="sc-nm">${l.name}</span></div>`).join('');
+}
+function togSel(id){PSEL.has(id)?PSEL.delete(id):PSEL.add(id);document.getElementById('sc-'+id).classList.toggle('sel');}
+function selA(){AL.forEach(l=>PSEL.add(l.id));buildSG();}
+function selN(){PSEL.clear();buildSG();}
+function selP(){PSEL=new Set(AL.filter(l=>l.isp).map(l=>l.id));buildSG();}
+function selH(){PSEL=new Set([...AL].sort((a,b)=>lv(a.id)-lv(b.id)).slice(0,10).map(l=>l.id));buildSG();}
+function showPracSetup(){['prac-setup','prac-active','prac-result'].forEach((id,i)=>document.getElementById(id).style.display=i===0?'block':'none');buildSG();}
+
+function startPrac(){
+  if(!PSEL.size){toast('Select at least 1 letter');return;}
+  PSETS=+document.getElementById('psets').value;
+  PMAXATT=+document.getElementById('patts').value;
+  PQUEUE=[];
+  for(let s=0;s<PSETS;s++) PQUEUE.push(...[...PSEL].sort(()=>Math.random()-.5));
+  PQI=0; PSESH={passed:0,scores:{}};
+  document.getElementById('prac-setup').style.display='none';
+  document.getElementById('prac-result').style.display='none';
+  document.getElementById('prac-active').style.display='block';
+  const r=mkCanvas('pdc','pgc','pcc','prac-cw');
+  Object.assign(PR,r); PR.brush=16; PR.ready=true;
+  bindCanvas(PR,'prac');
+  document.fonts.ready.then(()=>loadPracLetter());
+}
+
+function loadPracLetter(){
+  const id=PQUEUE[PQI]; const l=AL[id];
+  PR.idx=id; PR.level=Math.min(TR.level,lv(id));
+  loadLetter(PR,'prac');
+  document.getElementById('pa-ch').textContent=l.iso;
+  document.getElementById('pa-nm').textContent=`${l.name} · /${l.tr}/`;
+  const si=(PQI%Math.max(PSEL.size,1))+1;
+  const sn=Math.floor(PQI/Math.max(PSEL.size,1))+1;
+  document.getElementById('pa-qn').textContent=`${PQI+1}/${PQUEUE.length}`;
+  document.getElementById('ppl').textContent=`Letter ${si} of ${PSEL.size}`;
+  document.getElementById('psl').textContent=`Set ${sn} of ${PSETS}`;
+  document.getElementById('pbf').style.width=(PQI/PQUEUE.length*100)+'%';
+  speak(l);
+}
+
+function pracAdv(){
+  PSESH.passed++;
+  const id=PQUEUE[PQI];
+  if(!PSESH.scores[id]) PSESH.scores[id]=0;
+  PSESH.scores[id]=Math.max(PSESH.scores[id],Math.round(PR.phaseIdx/Math.max(PR.phasesTotal,1)*100));
+  if(PR.rafId){cancelAnimationFrame(PR.rafId);PR.rafId=null;}
+  PQI++;
+  if(PQI>=PQUEUE.length){showPracResult();return;}
+  loadPracLetter();
+}
+function exitPrac(){if(PR.rafId){cancelAnimationFrame(PR.rafId);PR.rafId=null;}showPracSetup();}
+function showPracResult(){
+  if(PR.rafId){cancelAnimationFrame(PR.rafId);PR.rafId=null;}
+  document.getElementById('prac-active').style.display='none';
+  document.getElementById('prac-result').style.display='block';
+  const tot=PQUEUE.length,pass=PSESH.passed;
+  const pct=Math.round(pass/tot*100);
+  const sc=Object.values(PSESH.scores);
+  const avg=sc.length?Math.round(sc.reduce((a,b)=>a+b,0)/sc.length):0;
+  const[em,ti]=pct>=90?['🏆','Mastery!']:pct>=70?['⭐','Excellent!']:pct>=50?['👍','Good!']:['💪','Keep going!'];
+  document.getElementById('pre').textContent=em; document.getElementById('prt').textContent=ti;
+  document.getElementById('prsu').textContent=`${pass} passed of ${tot}`;
+  document.getElementById('prst').textContent=tot; document.getElementById('prsp').textContent=pass; document.getElementById('prsa').textContent=avg+'%';
+  const uniq=[...new Set(PQUEUE)];
+  document.getElementById('prls-g').innerHTML=uniq.map(id=>{
+    const l=AL[id]; const s=PSESH.scores[id]||0;
+    const cls=s>=70?'g':s>=40?'m':'b';
+    return`<div class="prli ${cls}"><span class="prli-ch" style="color:${l.isp?'var(--persian)':'var(--gold2)'}">${l.iso}</span><span class="prli-v">${s?s+'%':'—'}</span></div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════
+// QUIZ  — improved answer display + Latin→Persian mode
+// ══════════════════════════════════════════════
+let QQ={mode:'ltn',qs:[],cur:0,score:0,ans:false,fkn:0,fnp:0};
+function showQSetup(){['qsetup','qgame','fc-game','qresult'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display=id==='qsetup'?'block':'none'});}
+function selQM(el){document.querySelectorAll('.qmc').forEach(c=>c.classList.remove('on'));el.classList.add('on');QQ.mode=el.dataset.mode;}
+
+function startQuiz(){
+  const n=+document.getElementById('qn').value;
+  QQ.qs=[...AL].sort(()=>Math.random()-.5).slice(0,n);
+  QQ.cur=0;QQ.score=0;QQ.ans=false;QQ.fkn=0;QQ.fnp=0;
+  document.getElementById('qsetup').style.display='none'; document.getElementById('qresult').style.display='none';
+  if(QQ.mode==='fc'){
+    document.getElementById('fc-game').style.display='block'; document.getElementById('qgame').style.display='none'; renderFC();
+  } else {
+    document.getElementById('qgame').style.display='block'; document.getElementById('fc-game').style.display='none'; renderQ();
+  }
+}
+
+function renderQ(){
+  const q=QQ.qs[QQ.cur], n=QQ.qs.length, mode=QQ.mode;
+  document.getElementById('qprog').textContent=`${QQ.cur+1}/${n}`;
+  document.getElementById('qscr').textContent='Score: '+QQ.score;
+  document.getElementById('qbf').style.width=(QQ.cur/n*100)+'%';
+
+  const opts=[...AL.filter(l=>l.id!==q.id).sort(()=>Math.random()-.5).slice(0,3),q].sort(()=>Math.random()-.5);
+
+  if(mode==='ltn'){
+    // Show Persian letter → pick Name + sound
+    document.getElementById('qlbl').textContent='What is this letter called?';
+    document.getElementById('qqst').innerHTML=`<div class="qbl">${q.iso}</div>`;
+    document.getElementById('qopts').innerHTML=opts.map(o=>
+      `<button class="qob" onclick="ansQ(${o.id})" data-id="${o.id}">
+        <span>${o.name}</span><span class="osnd">/${o.tr}/</span>
+      </button>`
+    ).join('');
+  } else if(mode==='latp'){
+    // Show Latin transliteration → pick Persian letter
+    document.getElementById('qlbl').textContent='Which letter makes this sound?';
+    document.getElementById('qqst').innerHTML=`<div class="qbn">/${q.tr}/<div class="qbn2">${q.name}</div></div>`;
+    document.getElementById('qopts').innerHTML=opts.map(o=>
+      `<button class="qob" onclick="ansQ(${o.id})" data-id="${o.id}">
+        <span class="ol">${o.iso}</span><span class="osnd">/${o.tr}/</span>
+      </button>`
+    ).join('');
+  } else if(mode==='lts'){
+    // Show Persian letter → pick sound
+    document.getElementById('qlbl').textContent='What sound does this letter make?';
+    document.getElementById('qqst').innerHTML=`<div class="qbl">${q.iso}</div>`;
+    document.getElementById('qopts').innerHTML=opts.map(o=>
+      `<button class="qob" onclick="ansQ(${o.id})" data-id="${o.id}">
+        <span>/${o.tr}/</span><span class="osnd">${o.name}</span>
+      </button>`
+    ).join('');
+  }
+}
+
+function ansQ(aid){
+  if(QQ.ans) return; QQ.ans=true;
+  const ok=aid===QQ.qs[QQ.cur].id; if(ok) QQ.score++;
+  S.quiz.tot++; if(ok) S.quiz.cor++; saveS();
+  document.querySelectorAll('.qob').forEach(b=>{
+    b.disabled=true;
+    const bid=+b.dataset.id;
+    if(bid===QQ.qs[QQ.cur].id) b.classList.add('correct');
+    else if(bid===aid&&!ok) b.classList.add('wrong');
+  });
+  setTimeout(()=>{QQ.cur++;QQ.ans=false;QQ.cur>=QQ.qs.length?showQR():renderQ();},1050);
+}
+
+function renderFC(){
+  const q=QQ.qs[QQ.cur],n=QQ.qs.length;
+  document.getElementById('fcprog').textContent=`${QQ.cur+1}/${n}`;
+  document.getElementById('fcsco').textContent=`✓${QQ.fkn} ✗${QQ.fnp}`;
+  document.getElementById('fcbf').style.width=(QQ.cur/n*100)+'%';
+  document.getElementById('fcl').textContent=q.iso;
+  document.getElementById('fcn').textContent=q.name;
+  document.getElementById('fci').textContent=`${q.ipa} · /${q.tr}/`;
+  document.getElementById('flashcard').classList.remove('rev');
+  document.getElementById('fcbtns').style.display='none';
+}
+function revCard(){const c=document.getElementById('flashcard');if(!c.classList.contains('rev')){c.classList.add('rev');document.getElementById('fcbtns').style.display='grid';}}
+function fcA(knew){if(knew)QQ.fkn++;else QQ.fnp++;S.quiz.tot++;if(knew)S.quiz.cor++;saveS();QQ.cur++;QQ.cur>=QQ.qs.length?(QQ.score=QQ.fkn,showQR()):renderFC();}
+function showQR(){
+  document.getElementById('qgame').style.display='none'; document.getElementById('fc-game').style.display='none';
+  document.getElementById('qresult').style.display='block';
+  const pct=QQ.score/QQ.qs.length;
+  document.getElementById('res').textContent=`${QQ.score}/${QQ.qs.length}`;
+  const[em,msg]=pct===1?['🏆','Perfect!']:pct>=.8?['⭐','Excellent!']:pct>=.6?['👍','Good progress!']:['💪','Keep studying!'];
+  document.getElementById('ree').textContent=em; document.getElementById('remsg').textContent=msg;
+}
+function resetQuiz(){showQSetup();}
+
+// ══════════════════════════════════════════════
+// PROGRESS
+// ══════════════════════════════════════════════
+function renderProg(){
+  const tot=S.quiz.tot,cor=S.quiz.cor,pct=tot>0?Math.round(cor/tot*100):null;
+  const traced=AL.filter(l=>lv(l.id)>0).length;
+  document.getElementById('stl').textContent=`${S.learned.size}/32`;
+  document.getElementById('stt').textContent=`${traced}/32`;
+  document.getElementById('stq').textContent=tot;
+  document.getElementById('sta').textContent=pct!==null?pct+'%':'—';
+  document.getElementById('acf').style.width=(pct||0)+'%';
+  document.getElementById('acl').textContent=pct!==null?`${cor} of ${tot} correct`:'Complete a quiz first';
+  document.getElementById('pgg').innerHTML=AL.map(l=>{
+    const lvl=lv(l.id);
+    const cls=lvl>=3?'pgi master':lvl>=2?'pgi m2':lvl>=1?'pgi m1':'pgi';
+    return`<div class="${cls}" onclick="openM(${l.id})" title="${l.name}">
+      <span class="pgi-ch">${l.iso}</span><span class="pgi-nm">${l.name}</span></div>`;
+  }).join('');
+}
+function resetAll(){if(!confirm('Reset all progress?'))return;S.learned=new Set();S.quiz={tot:0,cor:0};S.prog={};saveS();renderProg();toast('Progress reset');}
+
+// UTILS
+function countUp(el,t,s){let c=0;const iv=setInterval(()=>{c=Math.min(c+Math.ceil(t/18),t);el.textContent=c+s;if(c>=t)clearInterval(iv);},18);}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2100);}
+
+// INIT
+loadS(); S.filter='all';
+renderAlpha('all'); buildSG();
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM();});
+</script>
+</body>
 </html>
