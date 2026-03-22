@@ -1003,7 +1003,7 @@ function showPracResult(){
   document.getElementById('prls-g').innerHTML=entries.map(({id,form,score})=>{const l=AL[id];const cls=score>=70?'g':score>=40?'m':'b';return`<div class="prli ${cls}"><span class="prli-ch" style="color:${l.isp?'var(--persian)':'var(--gold2)'}">${formChar(l,form)}</span><span class="prli-v" style="font-size:.5rem;color:var(--dim)">${FORM_NAMES[form]}</span><span class="prli-v">${score?score+'%':'—'}</span></div>`;}).join('');
 }
 
-// ═══════════════════════════════════════
+// ══��════════════════════════════════════
 // QUIZ
 // ═══════════════════════════════════════
 let QQ={mode:'ltn',qs:[],cur:0,score:0,ans:false,fkn:0,fnp:0};
@@ -1093,5 +1093,9 @@ function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t
 loadS();S.filter='all';renderAlpha('all');buildSG();
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM();});
 </script>
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
