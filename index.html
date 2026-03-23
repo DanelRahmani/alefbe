@@ -5,21 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>الفبا · Learn Persian</title>
 
-<!-- PWA -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0C0E2B" id="theme-meta">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="الفبا">
-
-<script defer src="/_vercel/insights/script.js"></script>
-
 <!-- SEO / sharing -->
 <meta name="description" content="Learn the Persian (Farsi) alphabet with guided tracing, quizzes, phonics, games and a mini dictionary.">
-<meta name="application-name" content="الفبا Alefba">
+<meta name="application-name" content="الفبا">
 
-<!-- Apple touch icons (fallback until real icons are added) -->
+<!-- Favicons -->
 <link rel="icon" type="image/x-icon" href="public/icons/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="public/icons/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="public/icons/favicon-16.png">
@@ -27,6 +17,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Amiri:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script defer src="/_vercel/insights/script.js"></script>
 <style>
 :root{
   --bg:#0C0E2B;--bg2:#13163A;--bg3:#1A1E4A;--card:rgba(22,27,64,.85);
@@ -269,7 +260,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:11px;heigh
 @keyframes sp{0%{transform:scale(0);opacity:0}70%{transform:scale(1.25)}100%{transform:scale(1);opacity:1}}.sp{animation:sp .38s ease forwards;opacity:0}.sp:nth-child(2){animation-delay:.11s}.sp:nth-child(3){animation-delay:.22s}
 
 /* ── THEME TOGGLE ── */
-.theme-btn{position:fixed;top:12px;right:14px;z-index:500;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:5px 11px;font-size:.7rem;font-weight:600;color:var(--dim);cursor:pointer;font-family:'Raleway',sans-serif;transition:all .2s}
+.theme-btn{position:fixed;top:18px;right:14px;z-index:500;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:8px 16px;font-size:.7rem;font-weight:600;color:var(--dim);cursor:pointer;font-family:'Raleway',sans-serif;transition:all .2s;min-height:38px;min-width:80px}
 .theme-btn:hover{border-color:var(--gold);color:var(--gold)}
 body.light{--bg:#F5F0E8;--bg2:#FFFDF7;--bg3:#EDE8DC;--card:rgba(255,252,245,.9);--gold:#B8860B;--gold2:#9A6F00;--persian:#8B4513;--blue:#2563EB;--text:#2C2416;--dim:#7A6E5A;--border:rgba(184,134,11,.2);--ok:#2E7D47;--err:#C0392B}
 body.light::before{background:radial-gradient(ellipse at 15% 15%,rgba(184,134,11,.08) 0%,transparent 55%),radial-gradient(ellipse at 85% 85%,rgba(37,99,235,.06) 0%,transparent 55%)}
@@ -1889,8 +1880,6 @@ function toggleTheme(){
   document.body.classList.toggle('light');
   const on=document.body.classList.contains('light');
   document.getElementById('theme-btn').textContent=on?'🌙 Dark':'☀️ Light';
-  // Keep browser UI in sync with the theme
-  document.getElementById('theme-meta').content=on?'#F5F0E8':'#0C0E2B';
   localStorage.setItem('alefba_theme',on?'light':'dark');
 }
 (function initTheme(){
@@ -2484,62 +2473,6 @@ function countUp(el,t,s){let c=0;const iv=setInterval(()=>{c=Math.min(c+Math.cei
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2100);}
 loadS();S.filter='all';renderAlpha('all');buildSG();
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM();});
-
-// ═══════════════════════════════════════
-// SERVICE WORKER  &  PWA INSTALL
-// ═══════════════════════════════════════
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('./sw.js').then(reg=>{
-      // When a new SW is waiting, show an update banner
-      reg.addEventListener('updatefound',()=>{
-        const newWorker=reg.installing;
-        newWorker.addEventListener('statechange',()=>{
-          if(newWorker.state==='installed'&&navigator.serviceWorker.controller){
-            showUpdateBanner();
-          }
-        });
-      });
-    }).catch(err=>console.warn('[SW] Registration failed:',err));
-
-    // Reload once the new SW has taken over
-    let refreshing=false;
-    navigator.serviceWorker.addEventListener('controllerchange',()=>{
-      if(!refreshing){refreshing=true;window.location.reload();}
-    });
-  });
-}
-
-function showUpdateBanner(){
-  const b=document.createElement('div');
-  b.style.cssText='position:fixed;bottom:0;left:0;right:0;background:#1A1E4A;border-top:1px solid rgba(212,168,67,.3);padding:11px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;z-index:9999;font-family:Raleway,sans-serif;font-size:.75rem;color:#E8E0CC';
-  b.innerHTML=`<span>✨ A new version is available</span><button onclick="applyUpdate(this.parentNode)" style="background:#D4A843;color:#0C0E2B;border:none;border-radius:7px;padding:6px 14px;font-family:Raleway,sans-serif;font-size:.72rem;font-weight:700;cursor:pointer">Update now</button>`;
-  document.body.appendChild(b);
-}
-function applyUpdate(banner){
-  banner.remove();
-  navigator.serviceWorker.controller?.postMessage('SKIP_WAITING');
-}
-
-// PWA install prompt (Android Chrome / Edge — iOS doesn't expose this)
-let _deferredInstall=null;
-window.addEventListener('beforeinstallprompt',e=>{
-  e.preventDefault();_deferredInstall=e;
-  // Show a subtle install hint after 30 s if user hasn't dismissed it
-  setTimeout(()=>{if(_deferredInstall)showInstallHint();},30000);
-});
-function showInstallHint(){
-  const b=document.createElement('div');
-  b.style.cssText='position:fixed;bottom:0;left:0;right:0;background:#13163A;border-top:1px solid rgba(212,168,67,.25);padding:11px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;z-index:9999;font-family:Raleway,sans-serif;font-size:.75rem;color:#E8E0CC';
-  b.innerHTML=`<span>📲 Add الفبا to your home screen for offline use</span><div style="display:flex;gap:6px"><button onclick="installPWA(this.closest('div[style]'))" style="background:#D4A843;color:#0C0E2B;border:none;border-radius:7px;padding:6px 14px;font-family:Raleway,sans-serif;font-size:.72rem;font-weight:700;cursor:pointer">Install</button><button onclick="this.closest('div[style]').remove();_deferredInstall=null" style="background:transparent;border:1px solid rgba(212,168,67,.3);border-radius:7px;padding:6px 10px;font-family:Raleway,sans-serif;font-size:.72rem;color:#8A82A8;cursor:pointer">✕</button></div>`;
-  document.body.appendChild(b);
-}
-function installPWA(banner){
-  if(!_deferredInstall)return;
-  _deferredInstall.prompt();
-  _deferredInstall.userChoice.then(()=>{_deferredInstall=null;banner?.remove();});
-}
-window.addEventListener('appinstalled',()=>{_deferredInstall=null;toast('App installed ✓');});
 </script>
 </body>
 </html>
