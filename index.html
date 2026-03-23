@@ -10,14 +10,15 @@
 <meta name="application-name" content="الفبا">
 
 <!-- Favicons -->
-<link rel="icon" type="image/x-icon" href="public/icons/favicon.ico">
-<link rel="icon" type="image/png" sizes="32x32" href="public/icons/favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="public/icons/favicon-16.png">
-<link rel="apple-touch-icon" href="public/icons/icon-192.png">
+<link rel="icon" type="image/x-icon" href="data/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="data/icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="data/icons/favicon-16.png">
+<link rel="apple-touch-icon" href="data/icons/icon-192.png">
+
+<script defer src="/_vercel/insights/script.js"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Amiri:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script defer src="/_vercel/insights/script.js"></script>
 <style>
 :root{
   --bg:#0C0E2B;--bg2:#13163A;--bg3:#1A1E4A;--card:rgba(22,27,64,.85);
@@ -1053,41 +1054,41 @@ function recComp(id,level){if(!S.prog[id])S.prog[id]={comp:[0,0,0]};S.prog[id].c
 // ═══════════════════════════════════════
 // ═══════════════════════════════════════
 // AUDIO
-// All audio files go in a folder named  public/audio/
-// Letter files:  public/audio/alef.mp3, public/audio/be.mp3, etc.  (see full list below)
-// Word files:    public/audio/words/ab.mp3, public/audio/words/bad.mp3, etc.
+// All audio files go in a folder named  data/audio/
+// Letter files:  data/audio/alef.mp3, data/audio/be.mp3, etc.  (see full list below)
+// Word files:    data/audio/words/ab.mp3, data/audio/words/bad.mp3, etc.
 //
-// LETTER AUDIO FILES (place in public/audio/):
-//   public/audio/alef.mp3   public/audio/be.mp3     public/audio/pe.mp3     public/audio/te.mp3
-//   public/audio/se.mp3     public/audio/jim.mp3    public/audio/che.mp3    public/audio/he-jimi.mp3
-//   public/audio/khe.mp3    public/audio/dal.mp3    public/audio/zal.mp3    public/audio/re.mp3
-//   public/audio/ze.mp3     public/audio/zhe.mp3    public/audio/sin.mp3    public/audio/shin.mp3
-//   public/audio/sad.mp3    public/audio/zad.mp3    public/audio/ta.mp3     public/audio/za.mp3
-//   public/audio/eyn.mp3    public/audio/gheyn.mp3  public/audio/fe.mp3     public/audio/qaf.mp3
-//   public/audio/kaf.mp3    public/audio/gaf.mp3    public/audio/lam.mp3    public/audio/mim.mp3
-//   public/audio/nun.mp3    public/audio/vav.mp3    public/audio/he.mp3     public/audio/ye.mp3
+// LETTER AUDIO FILES (place in data/audio/):
+//   data/audio/alef.mp3   data/audio/be.mp3     data/audio/pe.mp3     data/audio/te.mp3
+//   data/audio/se.mp3     data/audio/jim.mp3    data/audio/che.mp3    data/audio/he-jimi.mp3
+//   data/audio/khe.mp3    data/audio/dal.mp3    data/audio/zal.mp3    data/audio/re.mp3
+//   data/audio/ze.mp3     data/audio/zhe.mp3    data/audio/sin.mp3    data/audio/shin.mp3
+//   data/audio/sad.mp3    data/audio/zad.mp3    data/audio/ta.mp3     data/audio/za.mp3
+//   data/audio/eyn.mp3    data/audio/gheyn.mp3  data/audio/fe.mp3     data/audio/qaf.mp3
+//   data/audio/kaf.mp3    data/audio/gaf.mp3    data/audio/lam.mp3    data/audio/mim.mp3
+//   data/audio/nun.mp3    data/audio/vav.mp3    data/audio/he.mp3     data/audio/ye.mp3
 //
-// WORD AUDIO FILES (place in public/audio/words/):
-//   public/audio/words/ab.mp3         public/audio/words/bad.mp3        public/audio/words/dast.mp3
-//   public/audio/words/sar.mp3        public/audio/words/cheshm.mp3     public/audio/words/gol.mp3
-//   public/audio/words/mah.mp3        public/audio/words/khorshid.mp3   public/audio/words/ketab.mp3
-//   public/audio/words/dars.mp3       public/audio/words/nur.mp3        public/audio/words/shab.mp3
-//   public/audio/words/ruz.mp3        public/audio/words/khane.mp3      public/audio/words/rah.mp3
-//   public/audio/words/del.mp3        public/audio/words/zaban.mp3      public/audio/words/nam.mp3
-//   public/audio/words/mard.mp3       public/audio/words/zan.mp3        public/audio/words/bache.mp3
-//   public/audio/words/dust.mp3       public/audio/words/pedar.mp3      public/audio/words/madar.mp3
-//   public/audio/words/nan.mp3        public/audio/words/ash.mp3        public/audio/words/chai.mp3
-//   public/audio/words/mive.mp3       public/audio/words/rang.mp3       public/audio/words/zaman.mp3
-//   public/audio/words/derakht.mp3    public/audio/words/kuh.mp3        public/audio/words/darya.mp3
-//   public/audio/words/asman.mp3      public/audio/words/zamin.mp3      public/audio/words/atash.mp3
-//   public/audio/words/sang.mp3       public/audio/words/madrase.mp3    public/audio/words/shahr.mp3
-//   public/audio/words/rusta.mp3      public/audio/words/qalb.mp3       public/audio/words/eshq.mp3
-//   public/audio/words/shadi.mp3      public/audio/words/gham.mp3       public/audio/words/omid.mp3
-//   public/audio/words/sabr.mp3       public/audio/words/khub.mp3       public/audio/words/bad-adj.mp3
-//   public/audio/words/bozorg.mp3     public/audio/words/kuchak.mp3     public/audio/words/sefid.mp3
-//   public/audio/words/siyah.mp3      public/audio/words/sabz.mp3       public/audio/words/sorkh.mp3
-//   public/audio/words/abi.mp3        public/audio/words/raftan.mp3     public/audio/words/amadan.mp3
-//   public/audio/words/khandan.mp3    public/audio/words/neveshtan.mp3  public/audio/words/didan.mp3
+// WORD AUDIO FILES (place in data/audio/words/):
+//   data/audio/words/ab.mp3         data/audio/words/bad.mp3        data/audio/words/dast.mp3
+//   data/audio/words/sar.mp3        data/audio/words/cheshm.mp3     data/audio/words/gol.mp3
+//   data/audio/words/mah.mp3        data/audio/words/khorshid.mp3   data/audio/words/ketab.mp3
+//   data/audio/words/dars.mp3       data/audio/words/nur.mp3        data/audio/words/shab.mp3
+//   data/audio/words/ruz.mp3        data/audio/words/khane.mp3      data/audio/words/rah.mp3
+//   data/audio/words/del.mp3        data/audio/words/zaban.mp3      data/audio/words/nam.mp3
+//   data/audio/words/mard.mp3       data/audio/words/zan.mp3        data/audio/words/bache.mp3
+//   data/audio/words/dust.mp3       data/audio/words/pedar.mp3      data/audio/words/madar.mp3
+//   data/audio/words/nan.mp3        data/audio/words/ash.mp3        data/audio/words/chai.mp3
+//   data/audio/words/mive.mp3       data/audio/words/rang.mp3       data/audio/words/zaman.mp3
+//   data/audio/words/derakht.mp3    data/audio/words/kuh.mp3        data/audio/words/darya.mp3
+//   data/audio/words/asman.mp3      data/audio/words/zamin.mp3      data/audio/words/atash.mp3
+//   data/audio/words/sang.mp3       data/audio/words/madrase.mp3    data/audio/words/shahr.mp3
+//   data/audio/words/rusta.mp3      data/audio/words/qalb.mp3       data/audio/words/eshq.mp3
+//   data/audio/words/shadi.mp3      data/audio/words/gham.mp3       data/audio/words/omid.mp3
+//   data/audio/words/sabr.mp3       data/audio/words/khub.mp3       data/audio/words/bad-adj.mp3
+//   data/audio/words/bozorg.mp3     data/audio/words/kuchak.mp3     data/audio/words/sefid.mp3
+//   data/audio/words/siyah.mp3      data/audio/words/sabz.mp3       data/audio/words/sorkh.mp3
+//   data/audio/words/abi.mp3        data/audio/words/raftan.mp3     data/audio/words/amadan.mp3
+//   data/audio/words/khandan.mp3    data/audio/words/neveshtan.mp3  data/audio/words/didan.mp3
 // ═══════════════════════════════════════
 
 // Map letter id → audio filename (without path or extension)
@@ -1098,10 +1099,10 @@ const LETTER_AUDIO=[
 ];
 
 function playLetterAudio(id){
-  // Uncomment when audio files are available in public/audio/:
+  // Uncomment when audio files are available in data/audio/:
   // const file = LETTER_AUDIO[id];
   // if (!file) return;
-  // const audio = new Audio(`public/audio/${file}.mp3`);
+  // const audio = new Audio(`data/audio/${file}.mp3`);
   // audio.play().catch(()=>{});
 }
 // TTS is silenced until proper audio files are added.
@@ -2460,11 +2461,11 @@ function filterDict(){
 }
 function speakWord(fa){
   // Dictionary word audio — not yet available.
-  // Audio files should be placed in public/audio/words/ named by transliteration (see list below).
+  // Audio files should be placed in data/audio/words/ named by transliteration (see list below).
   // Uncomment when files are ready:
   // const wordEntry = WORDS.find(w => w.fa === fa);
   // if (!wordEntry) return;
-  // const audio = new Audio(`public/audio/words/${wordEntry.tr.replace(/\//g,'-')}.mp3`);
+  // const audio = new Audio(`data/audio/words/${wordEntry.tr.replace(/\//g,'-')}.mp3`);
   // audio.play().catch(()=>{});
 }
 
