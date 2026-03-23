@@ -1,8 +1,8 @@
 {
-  "name": "الفبا — Learn Persian",
-  "short_name": "الفبا",
+  "name": "AlefBe — Learn Persian",
+  "short_name": "AlefBe",
   "description": "Learn the Persian alphabet with tracing, quizzes, phonics and more",
-  "start_url": "./alefba.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#0C0E2B",
@@ -28,13 +28,13 @@
     {
       "name": "Trace Letters",
       "short_name": "Trace",
-      "url": "./alefba.html#trace",
+      "url": "./index.html#trace",
       "description": "Practice tracing Persian letters"
     },
     {
       "name": "Quiz",
       "short_name": "Quiz",
-      "url": "./alefba.html#quiz",
+      "url": "./index.html#quiz",
       "description": "Test your knowledge"
     }
   ]
