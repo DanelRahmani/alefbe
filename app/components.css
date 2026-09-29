@@ -646,6 +646,12 @@
   font-size: 0.93rem;
   line-height: 1.5;
 }
+.lesson-row-quiz {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.75rem;
+  color: var(--turquoise);
+}
 .todo-ring {
   width: 1.9rem;
   height: 1.9rem;
@@ -864,6 +870,49 @@
   font-size: 0.93rem;
   color: var(--muted);
 }
+/* Star, peek and copy: quiet, at the foot of each example. */
+.example-tools {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.15rem;
+  margin: 0.35rem -0.45rem -0.4rem 0;
+}
+.examples-words .example-tools {
+  justify-content: center;
+  margin-right: 0;
+}
+.dialogue-body .example-tools {
+  justify-content: flex-start;
+  margin: 0.2rem 0 0 -0.45rem;
+}
+.tool-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 2rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.tool-btn:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.tool-btn[aria-pressed="true"] {
+  color: var(--accent);
+}
+/* With transliteration on everywhere, a per-example peek has nothing to add. */
+:root[data-translit="on"] .peek-btn {
+  display: none;
+}
+.peek .tr {
+  display: inline;
+}
+.peek .tr-block {
+  display: block;
+}
 .lesson-body > .pair {
   margin-top: 1.75rem;
 }
@@ -1026,6 +1075,13 @@
 }
 .quiz-no > p:first-child {
   color: var(--err);
+}
+.quiz-summary {
+  margin-top: 1.5rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  background: var(--surface);
 }
 .finish {
   margin-top: 3rem;
@@ -1196,4 +1252,54 @@
 }
 .search-input::-webkit-search-cancel-button {
   display: none;
+}
+
+/* ── Keyboard shortcuts sheet ──────────────────────────────────────────── */
+.help-dialog {
+  max-width: 30rem;
+}
+.help-title {
+  flex: 1;
+  font-weight: 600;
+}
+.help-list {
+  padding: 0.5rem 0.9rem 0.9rem;
+}
+.help-row {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr;
+  gap: 0.75rem;
+  align-items: baseline;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.help-row:last-child {
+  border-bottom: 0;
+}
+.help-row dd {
+  color: var(--muted);
+}
+.help-kbd {
+  display: inline-block;
+  min-width: 1.6rem;
+  padding: 0.05rem 0.4rem;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  font-family: var(--font-vazirmatn), system-ui, sans-serif;
+  font-size: 0.8rem;
+  text-align: center;
+  background: var(--surface);
+}
+.shortcuts-link {
+  color: var(--accent);
+}
+.shortcuts-link:hover {
+  text-decoration: underline;
+}
+/* No keyboard to speak of on a touch screen. */
+@media (pointer: coarse) {
+  .shortcuts-link {
+    display: none;
+  }
 }

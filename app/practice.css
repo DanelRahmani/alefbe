@@ -852,3 +852,38 @@ a.letter-card:hover {
 .grammar-more .pill-link {
   padding-left: 1rem;
 }
+
+/* ── Mistake notebook ──────────────────────────────────────────────────── */
+.notebook {
+  margin-top: 1.25rem;
+  border-top: 1px solid var(--rule);
+}
+.notebook-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.15rem 0.75rem;
+  align-items: center;
+  padding: 0.7rem 0.25rem;
+  border-bottom: 1px solid var(--rule);
+}
+.notebook-what {
+  min-width: 0;
+  font-family: var(--font-literata), Georgia, serif;
+}
+.notebook-meta {
+  grid-column: 1;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.notebook-remove {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  color: var(--muted);
+}
+.notebook-remove:hover {
+  background: var(--err-soft);
+  color: var(--err);
+}

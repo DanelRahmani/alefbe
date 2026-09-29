@@ -7,6 +7,7 @@ import { LegacyMigration } from "@/components/LegacyMigration";
 import { Orosi } from "@/components/Orosi";
 import { SearchPalette } from "@/components/SearchPalette";
 import { ServiceWorker } from "@/components/ServiceWorker";
+import { Shortcuts, ShortcutsLink } from "@/components/Shortcuts";
 import { SiteNav, TabBar } from "@/components/SiteNav";
 import { PREPAINT_SCRIPT } from "@/lib/prepaint";
 import "./globals.css";
@@ -78,9 +79,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <Link href="/grammar">Grammar at a glance</Link>
             <Link href="/dictionary">Dictionary</Link>
             <Link href="/progress">Back up your progress</Link>
+            <ShortcutsLink />
           </p>
         </footer>
         <TabBar />
+        <Shortcuts />
         <LegacyMigration />
         <ServiceWorker />
         <Analytics />

@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { KIND_TITLES, search, type SearchItem } from "@/lib/search";
+import { isTyping } from "./Shortcuts";
 
 let cached: Promise<SearchItem[]> | null = null;
 /** The search index, fetched once on first use (it is a static file). */
@@ -13,9 +14,6 @@ export const loadSearchIndex = () =>
       cached = null;
       return [];
     }));
-
-const isTyping = (t: EventTarget | null) =>
-  t instanceof HTMLElement && !!t.closest("input, textarea, select, [contenteditable='true']");
 
 /** Search everything: `/` or Ctrl+K opens it; arrows move, Enter opens, Esc closes. */
 export function SearchPalette() {

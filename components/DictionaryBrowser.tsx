@@ -5,17 +5,25 @@ import { useDeferredValue, useState } from "react";
 import { TOPIC_LABELS, type Topic } from "@/content/topics";
 import { matches, rank, type DictEntry } from "@/lib/dictionary";
 import { LETTERS, letterByChar } from "@/lib/persian/letters";
+import { useStore } from "@/lib/storage";
+import { starredStore } from "@/lib/stores";
 import { FaText } from "./FaText";
+import { MyWords } from "./MyWords";
+import { StarButton } from "./StarButton";
 
 export function DictionaryBrowser({
   entries,
   units,
   initialQuery = "",
+  initialView = "all",
 }: {
   entries: DictEntry[];
   units: { slug: string; label: string }[];
   initialQuery?: string;
+  initialView?: "all" | "mine";
 }) {
+  const [view, setView] = useState(initialView);
+  const starredCount = Object.keys(useStore(starredStore)).length;
   const [query, setQuery] = useState(initialQuery);
   const [topic, setTopic] = useState<Topic | "all">("all");
   const [unit, setUnit] = useState("all");
@@ -36,8 +44,29 @@ export function DictionaryBrowser({
     .map((x) => x.e);
   const initials = new Set(entries.map((e) => e.initial));
 
+  const views = (
+    <div className="chips" role="group" aria-label="Show">
+      <button type="button" className="chip" aria-pressed={view === "all"} onClick={() => setView("all")}>
+        All words
+      </button>
+      <button type="button" className="chip" aria-pressed={view === "mine"} onClick={() => setView("mine")}>
+        My words{starredCount > 0 && ` · ${starredCount}`}
+      </button>
+    </div>
+  );
+
+  if (view === "mine") {
+    return (
+      <div className="ui">
+        {views}
+        <MyWords />
+      </div>
+    );
+  }
+
   return (
     <div className="ui">
+      {views}
       <label htmlFor="dict-search" className="sr-only">
         Search the dictionary
       </label>
@@ -135,6 +164,7 @@ export function DictionaryBrowser({
                   </p>
                 )}
                 <p className="dict-meta">
+                  <StarButton item={{ fa: e.fa, en: e.en, source: "Dictionary", href: `/dictionary?q=${encodeURIComponent(e.id)}` }} />
                   {e.topic && <span className="meta-tag meta-tag-quiet">{TOPIC_LABELS[e.topic]}</span>}
                   {e.lessons.map((l) => (
                     <Link key={l.href} href={l.href} className="meta-tag">

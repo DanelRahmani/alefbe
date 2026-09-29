@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { DrillOverview } from "@/components/drill/DrillOverview";
 import { GameCards } from "@/components/games/GameCards";
+import { MistakesCard } from "@/components/MistakesCard";
 
 export const metadata: Metadata = {
   title: "Practice",
@@ -26,6 +27,9 @@ export default function PracticePage() {
 
       <h2 className="lesson-h2 mt-10">Quick practice</h2>
       <ul className="drill-modes">
+        <li>
+          <MistakesCard />
+        </li>
         <li>
           <Link href="/practice/quiz" className="drill-mode">
             <span className="drill-mode-title">Letter quiz</span>

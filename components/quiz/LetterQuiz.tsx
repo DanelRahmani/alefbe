@@ -17,7 +17,7 @@ import {
 import { percent } from "@/lib/games";
 import { unlockedIds } from "@/lib/srs";
 import { useStore } from "@/lib/storage";
-import { deckOf, drillUiStore, logActivity, practiceUiStore, srsStore } from "@/lib/stores";
+import { deckOf, drillUiStore, logActivity, noteResult, practiceUiStore, srsStore } from "@/lib/stores";
 import type { Verdict } from "@/lib/answers";
 import { FaText } from "../FaText";
 import { Rich } from "../Rich";
@@ -86,10 +86,15 @@ export function LetterQuiz() {
     reset();
   };
 
+  const note = (ch: string, ok: boolean) => {
+    logActivity({ kind: "quiz", letter: ch, ok });
+    noteResult({ kind: "letter", type: setup.type === "flashcards" ? "letter-name" : setup.type, ch }, ok);
+  };
+
   const judge = (v: Verdict) => {
     if (!item) return;
     setVerdict(v);
-    logActivity({ kind: "quiz", letter: item.letter.ch, ok: v.ok });
+    note(item.letter.ch, v.ok);
     if (v.ok) {
       window.clearTimeout(advance.current);
       advance.current = window.setTimeout(() => {
@@ -300,7 +305,7 @@ export function LetterQuiz() {
                   className="drill-btn"
                   autoFocus
                   onClick={() => {
-                    logActivity({ kind: "quiz", letter: l.ch, ok: true });
+                    note(l.ch, true);
                     setAnswers((a) => [...a, { item, ok: true }]);
                     reset();
                   }}
@@ -311,7 +316,7 @@ export function LetterQuiz() {
                   type="button"
                   className="drill-btn drill-btn-quiet"
                   onClick={() => {
-                    logActivity({ kind: "quiz", letter: l.ch, ok: false });
+                    note(l.ch, false);
                     setAnswers((a) => [...a, { item, ok: false }]);
                     reset();
                   }}

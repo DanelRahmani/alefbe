@@ -17,6 +17,9 @@ export const BACKUP_KEYS = [
   "alefbe2:activity",
   "alefbe2:practice-ui",
   "alefbe2:games",
+  "alefbe2:lessons",
+  "alefbe2:mistakes",
+  "alefbe2:starred",
 ] as const;
 
 /** Keys the "Reset statistics" button clears; lessons, trainer and tracing stay. */

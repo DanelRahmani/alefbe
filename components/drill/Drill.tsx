@@ -6,7 +6,7 @@ import { DRILL_GROUPS, checkDrill, modeInfo, wordById, wordsFor, type DrillMode 
 import { DIGITS, FORMS, formOf, letterByChar, type Form } from "@/lib/persian/letters";
 import { answer, deckStats, nextCard, practiceCard, unlockNext, unlockedIds } from "@/lib/srs";
 import { useStore } from "@/lib/storage";
-import { deckOf, drillUiStore, logActivity, progressStore, srsStore, type SrsData } from "@/lib/stores";
+import { deckOf, drillUiStore, logActivity, noteResult, progressStore, srsStore, type SrsData } from "@/lib/stores";
 import type { Verdict } from "@/lib/answers";
 import { FaText } from "../FaText";
 import { Rich } from "../Rich";
@@ -26,7 +26,7 @@ function candidatesFor(mode: DrillMode, data: SrsData): string[] {
 
 const randomForm = (): Form => FORMS[Math.floor(Math.random() * FORMS.length)];
 
-function Prompt({ mode, id, form }: { mode: DrillMode; id: string; form: Form }) {
+export function DrillPrompt({ mode, id, form }: { mode: DrillMode; id: string; form: Form }) {
   const letter = letterByChar.get(id);
   const digit = digitByChar.get(id);
   if (mode === "sound") {
@@ -73,7 +73,7 @@ function Prompt({ mode, id, form }: { mode: DrillMode; id: string; form: Form })
   );
 }
 
-function Solution({ mode, id }: { mode: DrillMode; id: string }) {
+export function DrillSolution({ mode, id }: { mode: DrillMode; id: string }) {
   const letter = letterByChar.get(id);
   const digit = digitByChar.get(id);
   if (mode === "sound" || mode === "letter") {
@@ -162,6 +162,7 @@ export function Drill({ mode }: { mode: DrillMode }) {
     const v = checkDrill(mode, cardId, input);
     setVerdict(v);
     logActivity({ kind: "drill" });
+    noteResult({ kind: "drill", mode, id: cardId }, v.ok);
     if (practice) return;
     const s = srsStore.get();
     const groups = info.kind === "letters" ? DRILL_GROUPS : [];
@@ -289,7 +290,7 @@ export function Drill({ mode }: { mode: DrillMode }) {
         </div>
       ) : (
         <div className="drill-card">
-          <Prompt mode={mode} id={cardId} form={form} />
+          <DrillPrompt mode={mode} id={cardId} form={form} />
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -361,7 +362,7 @@ export function Drill({ mode }: { mode: DrillMode }) {
                     You typed: <span className={isFa ? "fa" : undefined}>{input}</span>
                   </p>
                 )}
-                <Solution mode={mode} id={cardId} />
+                <DrillSolution mode={mode} id={cardId} />
               </div>
             )}
           </div>

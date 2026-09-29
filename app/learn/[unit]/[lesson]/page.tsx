@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { LessonKeys } from "@/components/lesson/LessonKeys";
 import { LessonRenderer } from "@/components/lesson/LessonRenderer";
 import { MarkDone } from "@/components/MarkDone";
 import { Rich, hasFa } from "@/components/Rich";
@@ -64,7 +65,13 @@ export default async function LessonPage({ params }: PageProps<"/learn/[unit]/[l
         </p>
       </header>
 
-      <LessonRenderer blocks={l.blocks} ctx={{ register: l.register, alwaysTranslit: l.showTranslit }} />
+      <LessonRenderer blocks={l.blocks} ctx={{
+          register: l.register,
+          alwaysTranslit: l.showTranslit,
+          lessonKey: ref.key,
+          source: { label: `Lesson ${ref.number}`, href: ref.href },
+        }} />
+      <LessonKeys lessonKey={ref.key} prev={prev?.href} next={next?.href} />
 
       <section className="finish" aria-label="Finish the lesson">
         <MarkDone lessonKey={ref.key} />
