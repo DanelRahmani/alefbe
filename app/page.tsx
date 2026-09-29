@@ -1,6 +1,7 @@
 import { LegacyHash } from "@/components/LegacyHash";
 import { PathBrowser, type PathUnit } from "@/components/PathBrowser";
 import { FaText } from "@/components/FaText";
+import { OROSI_PATTERN } from "@/components/Orosi";
 import { UNITS, faNumber } from "@/content/units";
 import { splitScript } from "@/lib/markup";
 
@@ -32,14 +33,26 @@ export default function Home() {
   return (
     <>
       <section className="hero">
-        <p className="hero-fa naskh" aria-hidden="true">
-          <FaText text="اَلِفْبا" translit="none" />
-        </p>
-        <h1 className="hero-title">Iranian Persian, example first.</h1>
-        <p className="hero-lede">
-          Each lesson shows real sentences, then changes one thing and shows what that changes. Spoken Tehrani sits next
-          to written Persian, and the vowel marks can be turned down as your reading grows.
-        </p>
+        {/* An arched orosi window: the stained-glass lattice with a frosted pane. */}
+        <div className="hero-window" aria-hidden="true">
+          <svg className="hero-glass" focusable="false">
+            <rect width="100%" height="100%" fill={`url(#${OROSI_PATTERN})`} />
+          </svg>
+          <svg className="hero-frame" viewBox="0 0 100 125" preserveAspectRatio="none" focusable="false">
+            <path d="M0 125V52C0 26 30 12 50 0c20 12 50 26 50 52v73z" vectorEffect="non-scaling-stroke" />
+          </svg>
+          <p className="hero-pane glass naskh">
+            <FaText text="اَلِفْبا" translit="none" />
+          </p>
+        </div>
+        <div>
+          <p className="ui eyebrow">A course in Iranian Persian</p>
+          <h1 className="hero-title">Persian, example first.</h1>
+          <p className="hero-lede">
+            Each lesson shows real sentences, then changes one thing and shows what that changes. Spoken Tehrani sits
+            beside written Persian, and the vowel marks fade as your reading grows.
+          </p>
+        </div>
       </section>
       <PathBrowser units={units} />
       <LegacyHash />

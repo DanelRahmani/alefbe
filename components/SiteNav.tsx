@@ -38,7 +38,7 @@ export function SiteNav() {
 export function TabBar() {
   const path = usePathname() ?? "/";
   return (
-    <nav aria-label="Sections" className="ui tab-bar">
+    <nav aria-label="Sections" className="ui tab-bar glass">
       {ITEMS.map((i) => (
         <Link key={i.href} href={i.href} aria-current={isCurrent(path, i.href) ? "page" : undefined}>
           <span className="tab-fa" lang="fa" dir="rtl" aria-hidden="true">

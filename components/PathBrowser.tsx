@@ -41,7 +41,7 @@ function NextCard({ units, progress }: { units: PathUnit[]; progress: Record<str
   const next = all.find((l) => !progress[l.key]);
   if (!next) {
     return (
-      <Link href="/practice" className="next-card">
+      <Link href="/practice" className="next-card glass">
         <span className="next-mark" aria-hidden="true">
           <Seal size={64} />
         </span>
@@ -59,7 +59,7 @@ function NextCard({ units, progress }: { units: PathUnit[]; progress: Record<str
   const target = next;
   const label = started ? "Next lesson" : "First lesson";
   return (
-    <Link href={target.href} className="next-card">
+    <Link href={target.href} className="next-card glass">
       <span className="next-mark naskh" aria-hidden="true">
         <FaText text={target.mark} translit="none" force="none" />
       </span>
@@ -168,7 +168,7 @@ export function PathBrowser({ units }: { units: PathUnit[] }) {
             return (
               <li key={u.slug} id={u.slug} className={empty ? "unit-card unit-card-empty" : "unit-card"}>
                 <header className="unit-head">
-                  <span className="unit-num naskh" aria-hidden="true">
+                  <span className="unit-num khatam" aria-hidden="true">
                     {u.numberFa}
                   </span>
                   <div className="unit-head-text">

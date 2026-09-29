@@ -1,56 +1,109 @@
 @import "tailwindcss";
 
-/* ── Tokens: lapis and saffron ─────────────────────────────────────────── */
+/* ── Tokens: porcelain glaze, lapis, turquoise, saffron ("Orosi") ─────── */
+/* Light: glazed tile white with lapis ink. Dark: a night interior lit
+   through coloured glass. Every text pairing is checked for WCAG AA. */
 :root {
-  --bg: #f7f3ea; /* parchment */
-  --surface: #fffdf8;
-  --ink: #1b1f3b;
-  --muted: #585c78;
-  --rule: #e2dac8;
-  --accent: #1f4aa8; /* lapis: the red pen */
-  --accent-soft: #e4eaf7;
-  --gold: #74580d; /* saffron, darkened for AA text on parchment */
+  --bg: #f3f4f8; /* porcelain glaze */
+  --surface: #ffffff;
+  --surface-2: #f8f9fc;
+  --ink: #171b38;
+  --muted: #555a76;
+  --rule: #dde0ea;
+  --accent: #1f4aa8; /* lapis */
+  --accent-soft: #e3e9f7;
+  --turquoise: #0b6e72; /* text-safe turquoise */
+  --gold: #74580d; /* saffron, darkened for AA text */
   --ok: #2d7a4c;
   --ok-soft: #e4f2e8;
   --err: #b3261e;
   --err-soft: #f8e4e1;
   --focus: #1f4aa8;
+  /* Frosted glass */
+  --glass: rgb(255 255 255 / 0.6);
+  --glass-strong: rgb(255 255 255 / 0.82);
+  --glass-line: rgb(23 27 56 / 0.09);
+  --glass-shine: rgb(255 255 255 / 0.85);
+  --shadow: 0 1px 2px rgb(23 27 56 / 0.05), 0 10px 28px -14px rgb(23 27 56 / 0.22);
+  /* Stained-glass panes of the orosi lattice */
+  --pane-lapis: rgb(43 85 200 / 0.62);
+  --pane-turq: rgb(24 158 160 / 0.55);
+  --pane-saffron: rgb(232 176 60 / 0.62);
+  --pane-rose: rgb(206 86 116 / 0.5);
+  --pane-clear: rgb(255 255 255 / 0.5);
+  --lattice: rgb(23 27 56 / 0.35);
+  --orosi-opacity: 0.5;
+  /* Jadval: the double ruled frame of manuscripts */
+  --jadval-outer: rgb(31 74 168 / 0.28);
+  --jadval-inner: rgb(116 88 13 / 0.3);
   color-scheme: light;
 }
 
 :root[data-theme="dark"] {
-  --bg: #0c0e2b; /* night */
-  --surface: #14173d;
-  --ink: #e8e0cc;
-  --muted: #a39dbf;
-  --rule: #272b58;
+  --bg: #0a0c22; /* night */
+  --surface: #12163a;
+  --surface-2: #0f1330;
+  --ink: #ece6d6;
+  --muted: #a7a2c2;
+  --rule: #262b57;
   --accent: #e3b550; /* saffron */
   --accent-soft: #2a2944;
+  --turquoise: #5fd0cc;
   --gold: #e3b550;
   --ok: #7fd4a0;
   --ok-soft: #173327;
   --err: #f28b82;
   --err-soft: #3a1c22;
   --focus: #e3b550;
+  --glass: rgb(16 20 54 / 0.55);
+  --glass-strong: rgb(16 20 54 / 0.8);
+  --glass-line: rgb(255 255 255 / 0.07);
+  --glass-shine: rgb(255 255 255 / 0.06);
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 14px 34px -14px rgb(0 0 0 / 0.65);
+  --pane-lapis: rgb(62 104 222 / 0.75);
+  --pane-turq: rgb(40 188 184 / 0.62);
+  --pane-saffron: rgb(236 184 72 / 0.7);
+  --pane-rose: rgb(218 92 124 / 0.6);
+  --pane-clear: rgb(24 28 70 / 0.7);
+  --lattice: rgb(4 5 18 / 0.85);
+  --orosi-opacity: 0.62;
+  --jadval-outer: rgb(227 181 80 / 0.3);
+  --jadval-inner: rgb(95 208 204 / 0.25);
   color-scheme: dark;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]):not([data-theme="dark"]),
   :root[data-theme="system"] {
-    --bg: #0c0e2b;
-    --surface: #14173d;
-    --ink: #e8e0cc;
-    --muted: #a39dbf;
-    --rule: #272b58;
+    --bg: #0a0c22;
+    --surface: #12163a;
+    --surface-2: #0f1330;
+    --ink: #ece6d6;
+    --muted: #a7a2c2;
+    --rule: #262b57;
     --accent: #e3b550;
     --accent-soft: #2a2944;
+    --turquoise: #5fd0cc;
     --gold: #e3b550;
     --ok: #7fd4a0;
     --ok-soft: #173327;
     --err: #f28b82;
     --err-soft: #3a1c22;
     --focus: #e3b550;
+    --glass: rgb(16 20 54 / 0.55);
+    --glass-strong: rgb(16 20 54 / 0.8);
+    --glass-line: rgb(255 255 255 / 0.07);
+    --glass-shine: rgb(255 255 255 / 0.06);
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 14px 34px -14px rgb(0 0 0 / 0.65);
+    --pane-lapis: rgb(62 104 222 / 0.75);
+    --pane-turq: rgb(40 188 184 / 0.62);
+    --pane-saffron: rgb(236 184 72 / 0.7);
+    --pane-rose: rgb(218 92 124 / 0.6);
+    --pane-clear: rgb(24 28 70 / 0.7);
+    --lattice: rgb(4 5 18 / 0.85);
+    --orosi-opacity: 0.62;
+    --jadval-outer: rgb(227 181 80 / 0.3);
+    --jadval-inner: rgb(95 208 204 / 0.25);
     color-scheme: dark;
   }
 }
@@ -152,15 +205,117 @@ a {
   margin-inline-start: 0.2em;
 }
 
-/* ── The girih band: an eight-point star (khatam) tile ────────────────── */
-.girih {
-  height: 14px;
-  background-color: var(--accent);
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14' viewBox='0 0 28 14'%3E%3Cg fill='none' stroke='black' stroke-width='1'%3E%3Crect x='9' y='2' width='10' height='10'/%3E%3Crect x='9' y='2' width='10' height='10' transform='rotate(45 14 7)'/%3E%3Cpath d='M0 7h2M26 7h2'/%3E%3C/g%3E%3C/svg%3E")
-    repeat-x center / 28px 14px;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14' viewBox='0 0 28 14'%3E%3Cg fill='none' stroke='black' stroke-width='1'%3E%3Crect x='9' y='2' width='10' height='10'/%3E%3Crect x='9' y='2' width='10' height='10' transform='rotate(45 14 7)'/%3E%3Cpath d='M0 7h2M26 7h2'/%3E%3C/g%3E%3C/svg%3E")
-    repeat-x center / 28px 14px;
-  opacity: 0.55;
+/* ── Display type: Markazi Text, drawn for Persian, with a matching Latin ─ */
+.display,
+.page-title,
+.hero-title,
+.lesson-title,
+.unit-title,
+.brand {
+  font-family: var(--font-markazi), var(--font-literata), Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+.display .fa,
+.page-title .fa,
+.hero-title .fa,
+.lesson-title .fa,
+.unit-title .fa {
+  font-family: var(--font-markazi), var(--font-vazirmatn), serif;
+  font-size: 1em;
+}
+
+/* ── Frosted glass (only where something shows through) ────────────────── */
+.glass {
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
+  backdrop-filter: blur(18px) saturate(1.6);
+  border: 1px solid var(--glass-line);
+  box-shadow: inset 0 1px 0 var(--glass-shine), var(--shadow);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background: var(--surface);
+  }
+}
+
+/* ── The orosi: stained-glass lattice across the top of every page ─────── */
+.orosi {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 24rem;
+  z-index: -1;
+  pointer-events: none;
+  opacity: var(--orosi-opacity);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0, rgb(0 0 0 / 0.6) 4.5rem, rgb(0 0 0 / 0.16) 12rem, transparent 24rem);
+  mask-image: linear-gradient(to bottom, #000 0, rgb(0 0 0 / 0.6) 4.5rem, rgb(0 0 0 / 0.16) 12rem, transparent 24rem);
+}
+.orosi-svg {
+  display: block;
+}
+.orosi-svg polygon,
+.orosi-svg .p-clear {
+  stroke: var(--lattice);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+.p-lapis {
+  fill: var(--pane-lapis);
+}
+.p-turq {
+  fill: var(--pane-turq);
+}
+.p-saffron {
+  fill: var(--pane-saffron);
+}
+.p-rose {
+  fill: var(--pane-rose);
+}
+.p-clear,
+.p-ground {
+  fill: var(--pane-clear);
+}
+
+/* ── Jadval: the double ruled frame of Persian manuscripts ─────────────── */
+.jadval {
+  box-shadow:
+    inset 0 0 0 1px var(--jadval-outer),
+    inset 0 0 0 4px var(--surface),
+    inset 0 0 0 5px var(--jadval-inner);
+}
+
+/* ── Khatam: the eight-point star, as a badge ──────────────────────────── */
+.khatam {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  clip-path: polygon(
+    100% 50%, 85.36% 64.64%, 85.36% 85.36%, 64.64% 85.36%, 50% 100%, 35.36% 85.36%, 14.64% 85.36%, 14.64% 64.64%,
+    0% 50%, 14.64% 35.36%, 14.64% 14.64%, 35.36% 14.64%, 50% 0%, 64.64% 14.64%, 85.36% 14.64%, 85.36% 35.36%
+  );
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* A rule with a star at its centre, between the parts of a page. */
+.star-rule {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--accent);
+}
+.star-rule::before,
+.star-rule::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--jadval-outer), transparent);
+}
+.star-rule > .khatam {
+  width: 0.9rem;
+  height: 0.9rem;
 }
 
 /* ── The مُهر seal ─────────────────────────────────────────────────────── */

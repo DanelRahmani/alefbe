@@ -56,7 +56,7 @@ export function LetterChart() {
             const m = letterMastery(trace, l.ch);
             return (
               <li key={l.ch}>
-                <Link href={`/script/${l.slug}`} className={`letter-card status-${status}`}>
+                <Link href={`/script/${l.slug}`} className={`letter-card jadval status-${status}`}>
                   <span className="letter-big naskh" lang="fa" dir="rtl">
                     {l.ch}
                   </span>

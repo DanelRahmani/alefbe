@@ -292,11 +292,11 @@ a.letter-card {
   position: relative;
 }
 a.letter-card:hover {
-  border-color: var(--accent);
+  --jadval-outer: var(--accent);
 }
 .letter-card.status-learned,
 .letter-card.status-solid {
-  border-color: color-mix(in srgb, var(--ok) 55%, var(--rule));
+  --jadval-outer: color-mix(in srgb, var(--ok) 65%, transparent);
 }
 .letter-marks {
   position: absolute;
@@ -452,8 +452,7 @@ a.letter-card:hover {
 }
 .lesson-letter {
   padding: 0.9rem 1rem;
-  border: 1px solid var(--rule);
-  border-radius: 14px;
+  border-radius: 16px;
   background: var(--surface);
 }
 .lesson-letter-top {

@@ -276,7 +276,9 @@ export function analyzeWord(word: string): Analysis {
       // Rule 7: final he.
       const afterLongVowel =
         prev && (prev.ch === "ا" || prev.ch === "آ" || (prev.ch === "و" && roles[i - 1] === "vowel"));
-      if (m.has(SUKUN) || afterLongVowel) {
+      // A zir on a final he after a consonant with sukun is the ezafe on a consonant h (وَجْهِ vajh-e).
+      const hEzafe = ezafe === "kasra" && i === last && !!prev && letters[i - 1].marks.has(SUKUN);
+      if (m.has(SUKUN) || afterLongVowel || hEzafe) {
         if (ezafe === "hamza") errors.push(`«${word}»: ـهٔ is only for a silent final he`);
         consonant(i, "h");
         continue;

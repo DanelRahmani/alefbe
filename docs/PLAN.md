@@ -203,7 +203,7 @@ About 150 golden words get tests. They include هوا، پروانه، دنیا�
   - an empty state shows when everything is filtered out.
 - **Script lessons (Units 1–2)** always show transliteration under example words, since the vowel marks haven't been taught yet.
 
-## Curriculum (13 units, ~95 lessons; the titles are working titles)
+## Curriculum (15 units, ~100 lessons; the titles are working titles)
 - **0 Start here:**
   - 0.1 How this course works: vowel marks, transliteration, the seal
   - 0.2 Persian in one page: verb last, no articles, no gender
@@ -236,82 +236,67 @@ About 150 golden words get tests. They include هوا، پروانه، دنیا�
   - 3.5 ت/ط, ح/ه, غ/ق
   - 3.6 Arabic loanwords: patterns that predict spelling
   - 3.7 Punctuation and the Persian keyboard; ی/ک, not ي/ك
-- **4 Word order (SOV):**
-  - 4.1 The core sentence: the verb comes last
-  - 4.2 The invisible subject: the verb ending says who
-  - 4.3 Where time and place go
-  - 4.4 Objects and "to someone" before the verb
-  - 4.5 Negation: ن on the verb
-- **5 The ezafe:**
-  - 5.1 The ezafe links a noun to its describer
-  - 5.2 The ezafe for "of" and possession
-  - 5.3 After vowels: ـیِ and ـهٔ
-  - 5.4 Ezafe chains
-  - 5.5 Where there's no ezafe: numbers, adjectives in front, superlatives
-  - 5.6 Hearing the ezafe in unmarked text
-- **6 Prepositions and را:**
-  - 6.1 را marks the definite object *(the flagship lesson)*
-  - 6.2 No را: indefinite and general objects
-  - 6.3 را in speech: رو / ـو
-  - 6.4 The core prepositions: به از با در برای تا
-  - 6.5 Place words with ezafe: رویِ زیرِ کنارِ پیشِ توی
-  - 6.6 از in comparisons, and از…تا
-- **7 Core grammar:**
-  - 7.1 "To be": است and the short endings
-  - 7.2 هست and نیست
-  - 7.3 "To have": داشتن
-  - 7.4 Pronouns and formality
-  - 7.5 Comparatives and superlatives: ـتر، ـترین
-  - 7.6 این and آن, اینجا and آنجا
-  - 7.7 Question words, and yes/no questions
-  - 7.8 Numbers and counting words (تا، نفر)
-  - 7.9 Prices, time and dates
-- **8 Verbs:**
-  - 8.1 Infinitive and the two stems
-  - 8.2 Present tense
-  - 8.3 Irregular present stems
-  - 8.4 Simple past
-  - 8.5 Past continuous
-  - 8.6 Present perfect
-  - 8.7 The progressive: دارم می‌رم / داشتم می‌رفتم
-  - 8.8 Subjunctive
-  - 8.9 Want, can, must + subjunctive
-  - 8.10 Imperative
-  - 8.11 Future: written خواهم vs spoken present
-  - 8.12 Compound verbs
-  - 8.13 کردن vs شدن pairs
-  - 8.14 Past perfect
-- **9 Suffixes:**
-  - 9.1 Plural ـها
-  - 9.2 Plural ـان, and Arabic plurals you'll meet
-  - 9.3 Possessive endings, including after vowels
-  - 9.4 The indefinite ـی and یک…ـی
-  - 9.5 Object endings: دیدمش، بهش
-  - 9.6 Word-building: ـی، ـگاه، ـچی، ـستان
-  - 9.7 ـی + که: "the book that…"
-- **10 Spoken ↔ written:**
-  - 10.1 Why they differ
-  - 10.2 ân→un (نان→نون)
-  - 10.3 است→ـه and the verb endings
-  - 10.4 Short spoken stems
-  - 10.5 را→رو, and object endings in speech
-  - 10.6 Words that only exist in speech (یه، دیگه، اینجوری)
-  - 10.7 How Iranians type chat messages
-- **11 Culture in conversation:**
-  - 11.1 شما vs تو, and verb agreement
-  - 11.2 Greetings and goodbyes
-  - 11.3 Taarof
-  - 11.4 Set phrases (نوش جان، دستت درد نکنه)
-  - 11.5 Polite verbs: بفرمایید، تشریف آوردن
-  - 11.6 Names, titles, جان
-  - 11.7 Nowruz, Yalda and the Persian calendar
-- **12 Reading real texts** (in "none" mode, with help available):
-  - 12.1 Signs
-  - 12.2 A menu
-  - 12.3 Text messages
-  - 12.4 A headline
-  - 12.5 A short story paragraph
-  - 12.6 A line of Hafez, in the public domain; everything else is original
+### Grammar in Pareto order (owner decision, 2026-09-29)
+
+After the script (Units 0–3), grammar runs by impact: the core that covers most everyday sentences first (Units 4–9, "0 to 80"), the rarer forms later (Units 10–11). Each lesson still follows the template, with spoken Tehrani first and the written form beneath.
+
+- **4 The core sentence:**
+  - 4.1 The verb comes last, and its ending says who
+  - 4.2 "Am, is, are": است and the short endings (spoken ـه)
+  - 4.3 Not: نیست, and ن on the verb
+  - 4.4 Asking questions: intonation, آیا in writing, the question words
+  - 4.5 My, your, his: the possessive endings
+- **5 Everyday verbs, present tense:**
+  - 5.1 Two stems: every verb has a past and a present stem
+  - 5.2 The present: می‌ + stem + ending
+  - 5.3 The ten most common verbs (رفتن، آمدن، کردن، شدن، گفتن، دادن، دیدن، خواستن، دانستن، توانستن), with their spoken forms
+  - 5.4 Not doing: نمی‌
+  - 5.5 داشتن: to have
+  - 5.6 Compound verbs: noun + کردن / شدن / زدن
+- **6 Nouns and links:**
+  - 6.1 The ezafe: noun + describer
+  - 6.2 The ezafe for "of" and possession
+  - 6.3 After a vowel: ـیِ and ـهٔ
+  - 6.4 Plurals: ـها (spoken ـا) and ـان
+  - 6.5 "A, one": یه and the ending ـی
+  - 6.6 را marks a specific object *(the flagship lesson)*
+  - 6.7 را in speech: رو / ـو
+- **7 Talking about the past:**
+  - 7.1 Simple past
+  - 7.2 Not: ن on the past
+  - 7.3 Present perfect
+  - 7.4 Past continuous
+  - 7.5 In progress: دارم می‌رم, داشتم می‌رفتم
+- **8 Want, can, must:**
+  - 8.1 The subjunctive: بـ + present stem
+  - 8.2 Want to: می‌خوام + subjunctive
+  - 8.3 Can: می‌تونم + subjunctive
+  - 8.4 Must, should: باید
+  - 8.5 Commands: بیا، برو، بفرمایید
+  - 8.6 The future: spoken present, written خواهم رفت
+- **9 Where, when, how much:**
+  - 9.1 The core prepositions: به، از، با، در / تو، برای، تا
+  - 9.2 Place words with ezafe: روی، زیر، کنار، پیش، جلوی، پشت
+  - 9.3 This and that: این / آن، اینجا / آنجا
+  - 9.4 Numbers and counting words (تا، نفر)
+  - 9.5 Time, days and prices
+  - 9.6 Comparing: ـتر، ـترین، از
+- **10 Longer sentences** *(advanced)*:
+  - 10.1 "The book that…": ـی + که
+  - 10.2 که clauses: I know that…
+  - 10.3 If: اگه with real conditions
+  - 10.4 Linking words: وقتی، چون، ولی، پس
+  - 10.5 Object endings: دیدمش، بهش
+  - 10.6 Word-building: ـی، ـگاه، ـچی، ـستان
+- **11 More verb forms** *(advanced)*:
+  - 11.1 Past perfect
+  - 11.2 Past subjunctive
+  - 11.3 Unreal conditions: اگه می‌دونستم…
+  - 11.4 The passive with شدن
+  - 11.5 کردن and شدن pairs, and causatives
+- **12 Spoken ↔ written:** why they differ, ân→un, است→ـه and the verb endings, short spoken stems, spoken-only words, how Iranians type chat messages
+- **13 Culture in conversation:** شما vs تو, greetings, taarof, set phrases, polite verbs, names and جان, Nowruz, Yalda and the calendar
+- **14 Reading real texts** (in "none" mode, with help): signs, a menu, messages, a headline, a short story, a line of Hafez
 
 ## Content-accuracy process
 - **`content/STYLE.md`:**
@@ -348,11 +333,13 @@ Each phase ends with tests, typecheck, lint, the production build, a browser che
 3. **Tracing.**
 4. **Units 0–3** (Start here, Alphabet, Sounds, Writing and spelling), each reviewed. Also path filters with hide-finished, export/import, and the dictionary page with the old words checked.
    - **→ Go-live:** merge `nextgen` into `main`; the existing project deploys it to alefbe.study. Then run a smoke test on the live domain.
-5. **Vocabulary deck,** plus vocab added to the lessons already written.
-6. **Units 4–7,** each reviewed.
-7. **Conjugation trainer** and **Unit 8 Verbs,** reviewed.
-8. **Units 9–12,** each reviewed.
+5. **Units 5–6** (present verbs; nouns and links), each reviewed, with the **conjugation trainer** starting at the present tense.
+6. **Units 7–9**, completing the core grammar, and the **vocabulary deck**.
+7. **Units 10–11** (the advanced grammar).
+8. **Units 12–14** (spoken ↔ written, culture, reading).
 9. **Polish:** accessibility audit, a 375 px pass on every page, reduced motion, a Lighthouse run, and a final smoke test of alefbe.study.
+
+Phase 4 was extended mid-way at the owner's request (2026-09-29): full parity with the old app plus learner tools (4a, 4e), the "Orosi" design pass, the grammar overview, and Unit 4 so the site goes live with real grammar. The go-live waits for the owner's go-ahead.
 
 Status updates are one line per step; breakages are reported plainly.
 

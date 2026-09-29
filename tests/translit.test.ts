@@ -105,6 +105,8 @@ const GOLDEN: [string, string][] = [
   ["صَنْدَلیِ", "sandali-ye"],
   ["دانِشْجویِ", "dâneshju-ye"],
   ["خُدایِ", "khodâ-ye"],
+  ["وَجْهِ", "vajh-e"],
+  ["شَهْرِ", "shahr-e"],
 ];
 
 describe("translitWord: golden words", () => {

@@ -1,6 +1,6 @@
 import type { Lesson } from "../types";
 
-export const prepositions: Lesson[] = [
+export const nouns: Lesson[] = [
   {
     slug: "ra-specific-object",
     title: "را marks a specific direct object",
@@ -29,7 +29,7 @@ export const prepositions: Lesson[] = [
       },
       {
         type: "text",
-        text: "In the core Persian sentence the verb comes last, and the words before it need to show what role they play. The **direct object** (مَفْعولِ صَریح, the thing the action is done to) gets its tag, را, when it is **specific**: a particular one the speaker has in mind, usually one the listener can identify too, because it is named, pointed at, owned, or already mentioned. A non-specific object (any bread, some book) gets no tag. In speech را is رُو, and after a consonant it is usually said *-o*: Iranians often type کِتاب رُو but say *ketâbo* (lesson 6.3).",
+        text: "In the core Persian sentence the verb comes last, and the words before it need to show what role they play. The **direct object** (مَفْعولِ صَریح, the thing the action is done to) gets its tag, را, when it is **specific**: a particular one the speaker has in mind, usually one the listener can identify too, because it is named, pointed at, owned, or already mentioned. A non-specific object (any bread, some book) gets no tag. In speech را is رُو, and after a consonant it is usually said *-o*: Iranians often type کِتاب رُو but say *ketâbo* (more in “را in speech”, later in this unit).",
       },
       { type: "heading", text: "Core examples" },
       {
@@ -106,7 +106,7 @@ export const prepositions: Lesson[] = [
         type: "callout",
         kind: "tip",
         title: "Specific but still “a”",
-        text: "An object can be indefinite and still specific: *a certain book*, one the speaker has in mind but the listener does not know. Persian can mark that with را too, usually with یه and often a که clause: یه کِتابی رُو که دیروز دیدَم خَریدَم (I bought a book I had seen yesterday). Lesson 9.7 covers the pattern.",
+        text: "An object can be indefinite and still specific: *a certain book*, one the speaker has in mind but the listener does not know. Persian can mark that with را too, usually with یه and often a که clause: یه کِتابی رُو که دیروز دیدَم خَریدَم (I bought a book I had seen yesterday). Unit 10 covers the pattern.",
       },
       { type: "heading", text: "In real conversation" },
       {

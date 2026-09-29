@@ -67,7 +67,7 @@ function BlockView({ b, ctx }: { b: Block; ctx: Ctx }) {
   switch (b.type) {
     case "idea":
       return (
-        <div className="idea">
+        <div className="idea jadval">
           <span className="ui eyebrow">The idea</span>
           <P text={b.text} className="idea-text" />
         </div>

@@ -13,9 +13,6 @@
 .skip-link:focus {
   left: 1rem;
 }
-.site-header {
-  border-bottom: 1px solid var(--rule);
-}
 .site-header-inner .brand {
   margin-inline-end: 0.5rem;
 }
@@ -28,17 +25,29 @@
   gap: 1rem;
 }
 .brand {
-  font-weight: 650;
-  font-size: 1.35rem;
-  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.55rem;
+  line-height: 1;
   text-decoration: none;
+}
+.brand-mark {
+  width: 1.9rem;
+  height: 1.9rem;
+  font-size: 1.15rem;
+  line-height: 1;
+  padding-top: 0.1rem;
 }
 .site-header {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter: blur(8px);
+}
+.site-header.glass {
+  border: 0;
+  border-bottom: 1px solid var(--glass-line);
+  box-shadow: inset 0 -1px 0 var(--glass-shine);
 }
 .site-nav {
   flex: 1;
@@ -87,8 +96,12 @@
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   padding-bottom: env(safe-area-inset-bottom);
-  background: var(--surface);
-  border-top: 1px solid var(--rule);
+}
+.tab-bar.glass {
+  border: 0;
+  border-top: 1px solid var(--glass-line);
+  background: var(--glass-strong);
+  box-shadow: 0 -8px 24px -16px rgb(0 0 0 / 0.25);
 }
 .tab-bar a {
   display: grid;
@@ -134,10 +147,13 @@
 .site-footer {
   max-width: 46rem;
   margin: 0 auto;
-  padding: 2rem 1rem 3rem;
+  padding: 1rem 1rem 3rem;
   font-size: 0.85rem;
   color: var(--muted);
-  border-top: 1px solid var(--rule);
+  text-align: center;
+}
+.site-footer p {
+  margin-top: 1rem;
 }
 .eyebrow {
   font-size: 0.75rem;
@@ -155,12 +171,14 @@
   width: min(22rem, calc(100vw - 2rem));
   max-height: calc(100vh - 5rem);
   overflow-y: auto;
-  background: var(--surface);
   color: var(--ink);
-  border: 1px solid var(--rule);
-  border-radius: 14px;
+  border-radius: 18px;
   padding: 1rem 1.1rem 1.1rem;
-  box-shadow: 0 12px 32px rgb(0 0 0 / 0.18);
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: blur(22px) saturate(1.5);
+  backdrop-filter: blur(22px) saturate(1.5);
+  border: 1px solid var(--glass-line);
+  box-shadow: inset 0 1px 0 var(--glass-shine), 0 24px 48px -20px rgb(0 0 0 / 0.35);
 }
 .settings-panel > * + * {
   margin-top: 1.1rem;
@@ -271,26 +289,70 @@
 
 /* ── Home: hero and path ───────────────────────────────────────────────── */
 .hero {
-  padding: 2.5rem 0 2rem;
+  display: grid;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 2rem 0 2.25rem;
 }
-.hero-fa {
-  font-size: clamp(4.5rem, 22vw, 7.5rem);
-  line-height: 1.3;
-  color: var(--accent);
-  text-align: right;
-  margin: 0;
+@media (min-width: 640px) {
+  .hero {
+    grid-template-columns: 1fr auto;
+    gap: 2.5rem;
+    padding-top: 3rem;
+  }
+  .hero-window {
+    order: 2;
+  }
+}
+/* A Persian pointed arch framing the stained glass, with a frosted pane. */
+.hero-window {
+  position: relative;
+  justify-self: center;
+  width: min(12.5rem, 50vw);
+  aspect-ratio: 4 / 5;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 125' preserveAspectRatio='none'%3E%3Cpath d='M0 125V52C0 26 30 12 50 0c20 12 50 26 50 52v73z'/%3E%3C/svg%3E")
+    center / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 125' preserveAspectRatio='none'%3E%3Cpath d='M0 125V52C0 26 30 12 50 0c20 12 50 26 50 52v73z'/%3E%3C/svg%3E")
+    center / 100% 100% no-repeat;
+  background: var(--surface);
+}
+.hero-glass {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.hero-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 3;
+}
+.hero-pane {
+  position: absolute;
+  left: 13%;
+  right: 13%;
+  top: 40%;
+  bottom: 10%;
+  display: grid;
+  place-items: center;
+  border-radius: 999px 999px 10px 10px;
+  font-size: clamp(2.2rem, 11vw, 2.9rem);
+  line-height: 1.6;
+  color: var(--ink);
 }
 .hero-title {
-  font-size: clamp(1.9rem, 6vw, 2.6rem);
-  line-height: 1.15;
-  font-weight: 600;
-  letter-spacing: -0.015em;
-  margin-top: 0.25rem;
+  font-size: clamp(2.3rem, 8vw, 3.2rem);
+  line-height: 1.05;
+  margin-top: 0.4rem;
 }
 .hero-lede {
   margin-top: 0.9rem;
   color: var(--muted);
-  max-width: 34rem;
+  max-width: 32rem;
 }
 /* The next lesson: one outlined card, clearly a way in. */
 .next-card {
@@ -299,14 +361,13 @@
   gap: 1rem;
   align-items: center;
   padding: 1.1rem 1.25rem;
-  border: 1.5px solid var(--rule);
-  border-radius: 18px;
-  background: var(--surface);
+  border-radius: 20px;
   text-decoration: none;
   transition: border-color 150ms, transform 150ms;
 }
 .next-card:hover {
-  border-color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  transform: translateY(-1px);
 }
 .next-mark {
   font-size: 2.6rem;
@@ -455,9 +516,10 @@
 }
 .unit-card {
   padding: 1.1rem 1rem 0.6rem;
-  border: 1.5px solid var(--rule);
-  border-radius: 18px;
+  border: 1px solid var(--rule);
+  border-radius: 20px;
   background: var(--surface);
+  box-shadow: var(--shadow);
   transition: border-color 150ms;
 }
 .unit-card:hover,
@@ -480,21 +542,25 @@
 }
 .unit-num {
   grid-row: span 2;
-  font-size: 2.4rem;
-  line-height: 1.1;
-  color: var(--accent);
-  text-align: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  font-size: 1.35rem;
+  line-height: 1;
+  padding-top: 0.15rem;
 }
 .unit-card-empty .unit-num {
+  background: var(--rule);
   color: var(--muted);
+}
+.unit-card-empty {
+  box-shadow: none;
 }
 .unit-count {
   letter-spacing: 0.04em;
 }
 .unit-title {
-  font-size: 1.3rem;
-  font-weight: 600;
-  line-height: 1.35;
+  font-size: 1.6rem;
+  line-height: 1.2;
 }
 .unit-desc {
   margin-top: 0.1rem;
@@ -515,7 +581,9 @@
   }
   .unit-num {
     grid-row: auto;
-    font-size: 2.8rem;
+    width: 2.9rem;
+    height: 2.9rem;
+    font-size: 1.5rem;
   }
   .unit-fa {
     grid-column: 3;
@@ -604,8 +672,9 @@
 .stat {
   padding: 0.9rem 1rem;
   border: 1px solid var(--rule);
-  border-radius: 14px;
+  border-radius: 16px;
   background: var(--surface);
+  box-shadow: var(--shadow);
 }
 .stat dt {
   font-size: 0.8rem;
@@ -672,11 +741,9 @@
   font-size: 1.3rem;
 }
 .lesson-title {
-  font-size: clamp(1.8rem, 6.5vw, 2.4rem);
-  line-height: 1.25;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  margin-top: 0.25rem;
+  font-size: clamp(2.2rem, 7.5vw, 2.9rem);
+  line-height: 1.1;
+  margin-top: 0.35rem;
 }
 .lesson-title .fa,
 .lesson-row-title .fa,
@@ -711,9 +778,9 @@
 }
 .idea {
   margin-top: 2rem;
-  padding: 1.1rem 1.25rem;
-  border-radius: 14px;
-  background: var(--accent-soft);
+  padding: 1.25rem 1.4rem;
+  border-radius: 16px;
+  background: var(--surface);
 }
 .idea-text {
   margin-top: 0.3rem;

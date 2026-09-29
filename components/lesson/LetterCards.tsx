@@ -11,7 +11,7 @@ export function LetterCards({ chars }: { chars: string[] }) {
         const l = letterByChar.get(ch)!;
         const hit = formsInWord(l.key.fa).find((x) => x.ch === ch);
         return (
-          <li key={ch} className="lesson-letter">
+          <li key={ch} className="lesson-letter jadval">
             <div className="lesson-letter-top">
               <span className="lesson-letter-big naskh" lang="fa" dir="rtl">
                 {ch}
