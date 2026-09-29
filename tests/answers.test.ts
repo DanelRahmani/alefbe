@@ -45,6 +45,11 @@ describe("checkFa", () => {
     expect(r.ok).toBe(true);
     expect(r.note).toBeTruthy();
   });
+  it("points out a missing madde (آ written as ا)", () => {
+    const r = checkFa("اب", ["آب"]);
+    expect(r.ok).toBe(false);
+    expect(r.hint).toMatch(/آ/);
+  });
   it("ignores sentence punctuation", () => {
     expect(checkFa("مریم را دیدم.", ["مَرْیَم را دیدَم"])).toEqual({ ok: true });
     expect(checkFa("«چای می‌خوری؟»", ["چای می‌خُوری"])).toEqual({ ok: true });

@@ -63,6 +63,10 @@ export function checkFa(input: string, accepted: string[]): Verdict {
       return { ok: false, hint: "Nearly: the letters are right, but check the half-space (‌) and spacing." };
     }
   }
+  const noMadde = (s: string) => s.replace(/آ/g, "ا");
+  if (accs.some((a) => a.includes("آ") && noMadde(a) === noMadde(inp))) {
+    return { ok: false, hint: "Nearly: a long â that starts a word or syllable is written آ (alef with a madde), not ا." };
+  }
   for (const a of accs) {
     const x = squash(v.text);
     const y = squash(a);

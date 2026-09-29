@@ -6,6 +6,7 @@ import { DisplaySettings } from "@/components/DisplaySettings";
 import { PREPAINT_SCRIPT } from "@/lib/prepaint";
 import "./globals.css";
 import "./components.css";
+import "./drill.css";
 
 const literata = Literata({ subsets: ["latin", "latin-ext"], variable: "--font-literata", display: "swap" });
 const vazirmatn = Vazirmatn({ subsets: ["arabic", "latin"], variable: "--font-vazirmatn", display: "swap" });
@@ -49,6 +50,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </Link>
             <nav aria-label="Main" className="ui site-nav">
               <Link href="/">Path</Link>
+              <Link href="/script">Script</Link>
             </nav>
             <DisplaySettings />
           </div>

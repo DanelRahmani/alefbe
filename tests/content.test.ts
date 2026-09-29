@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { ALL_LESSONS, UNITS } from "@/content/units";
+import { DRILL_WORDS } from "@/content/drill-words";
+import { LETTERS } from "@/lib/persian/letters";
 import type { Block, Example, Lesson } from "@/content/types";
 import { parseMarkup, splitScript, type Token } from "@/lib/markup";
 import { checkReadable } from "@/lib/persian/syllables";
@@ -81,6 +83,8 @@ function lessonStrs(l: Lesson, where: string): Str[] {
 }
 
 const ALL: Str[] = [
+  ...DRILL_WORDS.flatMap((w, i) => [{ where: `drill word ${i + 1} (${w.en})`, kind: "fa" as const, s: w.fa }]),
+  ...LETTERS.map((l) => ({ where: `letter ${l.ch} hint`, kind: "rich" as const, s: l.hint })),
   ...UNITS.flatMap((u) => [
     { where: `unit ${u.slug} titleFa`, kind: "fa" as const, s: u.titleFa },
     { where: `unit ${u.slug} description`, kind: "rich" as const, s: u.description },

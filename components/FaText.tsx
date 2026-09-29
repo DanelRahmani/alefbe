@@ -48,16 +48,18 @@ export interface FaTextProps {
   translit?: "block" | "inline" | "none";
   /** Show the transliteration regardless of the setting (script lessons). */
   alwaysTranslit?: boolean;
+  /** Ignore the vowel-mark setting and always render this mode (e.g. the reading drill). */
+  force?: VowelMode;
   className?: string;
 }
 
-export function FaText({ text, tokens, translit = "block", alwaysTranslit, className }: FaTextProps) {
+export function FaText({ text, tokens, translit = "block", alwaysTranslit, force, className }: FaTextProps) {
   const toks = tokens ?? parseMarkup(text ?? "");
   const variants = variantsOf(toks);
 
   // Render each distinct variant once, tagged with the modes that use it.
   const groups: { modes: VowelMode[]; tokens: Token[] }[] = [];
-  for (const mode of VOWEL_MODES) {
+  for (const mode of force ? [force] : VOWEL_MODES) {
     const sig = variants[mode].map((t) => tokenText(t) + (t.hl ? "¹" : "")).join("\u0001");
     const g = groups.find((x) => x.modes.length && x.tokens.map((t) => tokenText(t) + (t.hl ? "¹" : "")).join("\u0001") === sig);
     if (g) g.modes.push(mode);
