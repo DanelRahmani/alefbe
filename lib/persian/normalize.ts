@@ -44,7 +44,9 @@ export function canonicalFa(input: string): string {
     .trim();
 }
 
-/** Canonical form with every optional mark removed, for comparing answers. */
+const PUNCT = /[.,!?;:«»"'()،؛؟۔]/g;
+
+/** Canonical form with every optional mark and sentence punctuation removed, for comparing answers. */
 export function normalizeFa(input: string): string {
-  return canonicalFa(input).replace(MARKS, "");
+  return canonicalFa(canonicalFa(input).replace(MARKS, "").replace(PUNCT, " "));
 }

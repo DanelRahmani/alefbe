@@ -45,6 +45,10 @@ describe("checkFa", () => {
     expect(r.ok).toBe(true);
     expect(r.note).toBeTruthy();
   });
+  it("ignores sentence punctuation", () => {
+    expect(checkFa("مریم را دیدم.", ["مَرْیَم را دیدَم"])).toEqual({ ok: true });
+    expect(checkFa("«چای می‌خوری؟»", ["چای می‌خُوری"])).toEqual({ ok: true });
+  });
   it("rejects a different word", () => {
     expect(checkFa("کتب", ["کِتاب"]).ok).toBe(false);
   });

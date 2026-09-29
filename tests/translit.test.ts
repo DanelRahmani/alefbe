@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { transliterate, translitWord } from "@/lib/translit";
+import { transliterate, transliterateWithErrors, translitWord } from "@/lib/translit";
 
 // Golden words: fully vowel-marked spelling → expected transliteration.
 // Conventions (content/STYLE.md): zabar/zir/pish on every short vowel, sukun on
@@ -140,6 +140,19 @@ describe("translitWord: spelling errors it reports", () => {
   it("rejects Arabic-style long a (zabar before ا)", () => {
     expect(translitWord("کَتاب").errors).toEqual([]); // zabar on ک itself is fine
     expect(translitWord("کِتَاب").errors).not.toEqual([]);
+  });
+});
+
+describe("transliterate: affixes and letter names", () => {
+  it("reads a tatweel-initial affix as a suffix", () => {
+    expect(transliterate("ـها")).toBe("-hâ");
+    expect(transliterate("ـی")).toBe("-i");
+    expect(transliterate("ـَم")).toBe("-am");
+    expect(transliterate("ـِ")).toBe("-e");
+  });
+  it("skips a bare single letter (a letter mentioned by name)", () => {
+    const r = transliterateWithErrors("و");
+    expect(r).toEqual({ text: "", errors: [] });
   });
 });
 

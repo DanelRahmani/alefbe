@@ -2,11 +2,20 @@
 // The rules live in lib/persian/analyze.ts and are documented in content/STYLE.md.
 
 import { analyzeWord, joinPhons } from "./persian/analyze";
-import { PERSIAN_DIGITS, PUNCT_TRANSLIT, ZWNJ, isLetter, isMark } from "./persian/chars";
+import { PERSIAN_DIGITS, PUNCT_TRANSLIT, TATWEEL, ZWNJ, isLetter, isMark } from "./persian/chars";
 
 export interface TranslitResult {
   text: string;
   errors: string[];
+}
+
+export type WordKind = "word" | "affix" | "letter";
+
+/** Affixes start with a tatweel (ـها); a bare single letter is a letter mentioned by name. */
+export function wordKind(word: string): WordKind {
+  if (word.startsWith(TATWEEL)) return "affix";
+  if ([...word].length === 1 && isLetter(word)) return "letter";
+  return "word";
 }
 
 export function translitWord(word: string): TranslitResult {
@@ -17,7 +26,13 @@ export function translitWord(word: string): TranslitResult {
   return { text, errors: a.errors };
 }
 
-const isWordChar = (ch: string) => isLetter(ch) || isMark(ch) || ch === ZWNJ;
+/** A suffix is read as if it followed a bare consonant: ـها → -hâ, ـی → -i. */
+function translitAffix(affix: string): TranslitResult {
+  const r = translitWord("ب" + affix.slice(1));
+  return { text: "-" + r.text.replace(/^b-?/, ""), errors: r.errors };
+}
+
+const isWordChar = (ch: string) => isLetter(ch) || isMark(ch) || ch === ZWNJ || ch === TATWEEL;
 
 /** Split plain Persian text into words and the characters between them. */
 export function tokenizeFa(text: string): { word: boolean; s: string }[] {
@@ -36,7 +51,9 @@ export function transliterateWithErrors(text: string): TranslitResult {
   let out = "";
   for (const tok of tokenizeFa(text)) {
     if (tok.word) {
-      const r = translitWord(tok.s);
+      const kind = wordKind(tok.s);
+      if (kind === "letter") continue;
+      const r = kind === "affix" ? translitAffix(tok.s) : translitWord(tok.s);
       errors.push(...r.errors);
       out += r.text;
     } else {

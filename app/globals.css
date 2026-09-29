@@ -1,20 +1,204 @@
 @import "tailwindcss";
 
+/* ── Tokens: lapis and saffron ─────────────────────────────────────────── */
 :root {
-  --bg: #f7f3ea;
+  --bg: #f7f3ea; /* parchment */
+  --surface: #fffdf8;
   --ink: #1b1f3b;
-  --accent: #1f4aa8;
+  --muted: #585c78;
+  --rule: #e2dac8;
+  --accent: #1f4aa8; /* lapis: the red pen */
+  --accent-soft: #e4eaf7;
+  --gold: #74580d; /* saffron, darkened for AA text on parchment */
+  --ok: #2d7a4c;
+  --ok-soft: #e4f2e8;
+  --err: #b3261e;
+  --err-soft: #f8e4e1;
+  --focus: #1f4aa8;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0c0e2b; /* night */
+  --surface: #14173d;
+  --ink: #e8e0cc;
+  --muted: #a39dbf;
+  --rule: #272b58;
+  --accent: #e3b550; /* saffron */
+  --accent-soft: #2a2944;
+  --gold: #e3b550;
+  --ok: #7fd4a0;
+  --ok-soft: #173327;
+  --err: #f28b82;
+  --err-soft: #3a1c22;
+  --focus: #e3b550;
+  color-scheme: dark;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]):not([data-theme="dark"]),
+  :root[data-theme="system"] {
     --bg: #0c0e2b;
+    --surface: #14173d;
     --ink: #e8e0cc;
+    --muted: #a39dbf;
+    --rule: #272b58;
     --accent: #e3b550;
+    --accent-soft: #2a2944;
+    --gold: #e3b550;
+    --ok: #7fd4a0;
+    --ok-soft: #173327;
+    --err: #f28b82;
+    --err-soft: #3a1c22;
+    --focus: #e3b550;
+    color-scheme: dark;
   }
 }
 
+@theme inline {
+  --font-serif: var(--font-literata), Georgia, serif;
+  --font-sans: var(--font-vazirmatn), system-ui, sans-serif;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-rule: var(--rule);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+}
+
+/* ── Base ──────────────────────────────────────────────────────────────── */
+html {
+  -webkit-text-size-adjust: 100%;
+}
 body {
   background: var(--bg);
   color: var(--ink);
+  font-family: var(--font-literata), Georgia, serif;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+a {
+  color: inherit;
+}
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.ui {
+  font-family: var(--font-vazirmatn), system-ui, sans-serif;
+}
+
+/* ── Persian runs ──────────────────────────────────────────────────────── */
+.fa {
+  font-family: var(--font-vazirmatn), system-ui, sans-serif;
+  unicode-bidi: isolate;
+  font-feature-settings: "kern";
+  /* Vazirmatn runs small next to Literata; examples set their own size. */
+  font-size: 1.12em;
+}
+.naskh,
+.naskh .fa {
+  font-family: var(--font-amiri), serif;
+}
+.naskh .fa {
+  font-size: 1em;
+}
+/* Paragraphs holding Persian get room for stacked vowel marks. */
+.has-fa {
+  line-height: 2.1;
+}
+.hl {
+  color: var(--accent);
+}
+.fa .hl {
+  font-weight: inherit; /* colour only: a weight change breaks letter joining */
+}
+
+/* Vowel-mark modes: every differing variant is rendered; CSS shows one. */
+.vm {
+  display: none;
+}
+:root[data-vowels="all"] .vm-all,
+:root[data-vowels="key"] .vm-key,
+:root[data-vowels="none"] .vm-none,
+:root:not([data-vowels]) .vm-all {
+  display: inline;
+}
+
+/* Transliteration: off by default; script lessons always show it. */
+.tr {
+  display: none;
+  font-family: var(--font-literata), Georgia, serif;
+  font-style: italic;
+  color: var(--muted);
+}
+:root[data-translit="on"] .tr,
+.tr.tr-always {
+  display: inline;
+}
+.tr-block {
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+:root[data-translit="on"] .tr-block,
+.tr-block.tr-always {
+  display: block;
+}
+.tr-inline {
+  font-size: 0.9em;
+  margin-inline-start: 0.2em;
+}
+
+/* ── The girih band: an eight-point star (khatam) tile ────────────────── */
+.girih {
+  height: 14px;
+  background-color: var(--accent);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14' viewBox='0 0 28 14'%3E%3Cg fill='none' stroke='black' stroke-width='1'%3E%3Crect x='9' y='2' width='10' height='10'/%3E%3Crect x='9' y='2' width='10' height='10' transform='rotate(45 14 7)'/%3E%3Cpath d='M0 7h2M26 7h2'/%3E%3C/g%3E%3C/svg%3E")
+    repeat-x center / 28px 14px;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14' viewBox='0 0 28 14'%3E%3Cg fill='none' stroke='black' stroke-width='1'%3E%3Crect x='9' y='2' width='10' height='10'/%3E%3Crect x='9' y='2' width='10' height='10' transform='rotate(45 14 7)'/%3E%3Cpath d='M0 7h2M26 7h2'/%3E%3C/g%3E%3C/svg%3E")
+    repeat-x center / 28px 14px;
+  opacity: 0.55;
+}
+
+/* ── The مُهر seal ─────────────────────────────────────────────────────── */
+.seal {
+  color: var(--accent);
+  transform: rotate(-8deg);
+  display: inline-block;
+}
+.seal-stamp {
+  animation: stamp 300ms cubic-bezier(0.2, 0.8, 0.2, 1.2) both;
+}
+@keyframes stamp {
+  0% {
+    transform: rotate(-8deg) scale(1.6);
+    opacity: 0;
+  }
+  70% {
+    transform: rotate(-8deg) scale(0.94);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(-8deg) scale(1);
+  }
+}
+
+/* ── Popover reset (native popover API) ────────────────────────────────── */
+[popover] {
+  inset: unset;
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

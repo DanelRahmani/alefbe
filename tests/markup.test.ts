@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseMarkup, plainOf, splitScript, translitOf } from "@/lib/markup";
+import { parseMarkup, plainOf, splitScript, tokenText, translitOf } from "@/lib/markup";
 import { variantsOf } from "@/lib/persian/marks";
 
 describe("parseMarkup", () => {
@@ -60,7 +60,7 @@ describe("splitScript", () => {
 
 describe("variantsOf: vowel-mark modes", () => {
   const strip = (mode: "all" | "key" | "none", s: string) =>
-    variantsOf(parseMarkup(s))[mode].map((t) => t.text).join("");
+    variantsOf(parseMarkup(s))[mode].map(tokenText).join("");
 
   it("all keeps every mark", () => {
     expect(strip("all", "کِتابِ {مَن}")).toBe("کِتابِ مَن");
