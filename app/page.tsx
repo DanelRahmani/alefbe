@@ -1,11 +1,16 @@
 import { PathBrowser, type PathUnit } from "@/components/PathBrowser";
 import { FaText } from "@/components/FaText";
 import { UNITS, faNumber } from "@/content/units";
+import { splitScript } from "@/lib/markup";
+
+/** A lesson's mark: the first Persian run in its title, else the unit's Persian title. */
+const markOf = (title: string, fallback: string) => splitScript(title).find((r) => r.fa)?.s ?? fallback;
 
 // Only what the path needs goes to the browser, not whole lessons.
 const units: PathUnit[] = UNITS.map((u, i) => ({
   slug: u.slug,
   number: i,
+  numberFa: faNumber(String(i)),
   title: u.title,
   titleFa: u.titleFa,
   description: u.description,
@@ -17,6 +22,8 @@ const units: PathUnit[] = UNITS.map((u, i) => ({
     title: l.title,
     summary: l.summary,
     kinds: l.kinds,
+    mark: markOf(l.title, u.titleFa),
+    unitTitle: u.title,
   })),
 }));
 

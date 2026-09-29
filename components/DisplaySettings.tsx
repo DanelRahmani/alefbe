@@ -8,7 +8,7 @@ import { FaText } from "./FaText";
 
 const VOWEL_OPTIONS: { value: VowelMode; label: string; hint: string }[] = [
   { value: "all", label: "All marks", hint: "Every short vowel shown, like a first reader." },
-  { value: "key", label: "Key words only", hint: "Marks on the highlighted words and the ezafe." },
+  { value: "key", label: "Key words", hint: "Marks on the highlighted words and the ezafe." },
   { value: "none", label: "None", hint: "Real-world text, as Iranians write it." },
 ];
 
@@ -39,24 +39,25 @@ export function DisplaySettings() {
       <div id="display-settings" popover="auto" className="ui settings-panel" aria-label="Display settings">
         <fieldset>
           <legend className="font-medium">Vowel marks</legend>
-          <p className="settings-preview has-fa">
-            <FaText text="این {کِتابِ} مَن اَسْت." translit="none" />
-          </p>
-          {VOWEL_OPTIONS.map((o) => (
-            <label key={o.value} className="settings-option">
-              <input
-                type="radio"
-                name="vowels"
-                value={o.value}
-                checked={s.vowels === o.value}
-                onChange={() => updateSettings({ vowels: o.value })}
-              />
-              <span>
-                <span className="block">{o.label}</span>
-                <span className="block text-sm text-muted">{o.hint}</span>
-              </span>
-            </label>
-          ))}
+          <div className="mode-cards">
+            {VOWEL_OPTIONS.map((o) => (
+              <label key={o.value} className="mode-card">
+                <input
+                  type="radio"
+                  name="vowels"
+                  value={o.value}
+                  checked={s.vowels === o.value}
+                  onChange={() => updateSettings({ vowels: o.value })}
+                  className="sr-only"
+                />
+                <span className="mode-preview has-fa">
+                  <FaText text="{کِتابِ} مَن" translit="none" force={o.value} />
+                </span>
+                <span className="mode-label">{o.label}</span>
+              </label>
+            ))}
+          </div>
+          <p className="mt-2 text-sm text-muted">{VOWEL_OPTIONS.find((o) => o.value === s.vowels)?.hint}</p>
         </fieldset>
 
         <div className="settings-row">

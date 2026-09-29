@@ -2,8 +2,11 @@
 
 import Link from "next/link";
 import { KIND_LABELS, type LessonKind } from "@/content/types";
+import { DRILL_GROUPS } from "@/lib/drill";
+import { deckStats, unlockedIds } from "@/lib/srs";
 import { useStore } from "@/lib/storage";
-import { pathFilterStore, progressStore } from "@/lib/stores";
+import { deckOf, pathFilterStore, progressStore, srsStore } from "@/lib/stores";
+import { useMinuteClock } from "./drill/useDrillClock";
 import { FaText } from "./FaText";
 import { Rich } from "./Rich";
 import { Seal } from "./Seal";
@@ -16,20 +19,59 @@ export interface PathLesson {
   title: string;
   summary: string;
   kinds: LessonKind[];
+  /** A short Persian mark for the lesson (its key word). */
+  mark: string;
+  unitTitle: string;
 }
 
 export interface PathUnit {
   slug: string;
   number: number;
+  numberFa: string;
   title: string;
   titleFa: string;
   description: string;
   lessons: PathLesson[];
 }
 
+function NextCard({ units, progress }: { units: PathUnit[]; progress: Record<string, true> }) {
+  const all = units.flatMap((u) => u.lessons);
+  if (!all.length) return null;
+  const started = all.some((l) => progress[l.key]);
+  const next = all.find((l) => !progress[l.key]);
+  const target = next ?? all[0];
+  const label = !next ? "Every lesson finished · review" : started ? "Next lesson" : "First lesson";
+  return (
+    <Link href={target.href} className="next-card">
+      <span className="next-mark naskh" aria-hidden="true">
+        <FaText text={target.mark} translit="none" force="none" />
+      </span>
+      <span className="next-text">
+        <span className="ui eyebrow">
+          {label} · {target.number} · <Rich text={target.unitTitle} translit={false} />
+        </span>
+        <span className="next-title has-fa">
+          <Rich text={target.title} translit={false} />
+        </span>
+        <span className="next-summary">
+          <Rich text={target.summary} translit={false} />
+        </span>
+      </span>
+      <span className="next-arrow" aria-hidden="true">
+        →
+      </span>
+    </Link>
+  );
+}
+
 export function PathBrowser({ units }: { units: PathUnit[] }) {
   const filter = useStore(pathFilterStore);
   const progress = useStore(progressStore);
+  const srs = useStore(srsStore);
+  const now = useMinuteClock();
+
+  const soundDeck = deckOf(srs, "sound");
+  const due = deckStats(unlockedIds(DRILL_GROUPS, soundDeck), soundDeck, now).due;
 
   const kindsPresent = (Object.keys(KIND_LABELS) as LessonKind[]).filter((k) =>
     units.some((u) => u.lessons.some((l) => l.kinds.includes(k))),
@@ -50,20 +92,27 @@ export function PathBrowser({ units }: { units: PathUnit[] }) {
 
   return (
     <div>
-      <div className="ui path-controls">
-        <div className="chips" role="group" aria-label="Show lessons of type">
-          {(["all", ...kindsPresent] as const).map((k) => (
-            <button
-              key={k}
-              type="button"
-              aria-pressed={filter.kind === k}
-              onClick={() => pathFilterStore.set((f) => ({ ...f, kind: k }))}
-              className="chip"
-            >
-              {k === "all" ? "All" : KIND_LABELS[k]}
-            </button>
-          ))}
-        </div>
+      <NextCard units={units} progress={progress} />
+
+      <div className="ui quick-links">
+        <Link href="/script/drill/sound" className="pill-link">
+          <span className="pill-count" aria-label={`${due} due`}>
+            {due}
+          </span>
+          Letter trainer <span aria-hidden="true">→</span>
+        </Link>
+        <Link href="/script/trace" className="pill-link">
+          <span className="pill-count pill-count-quiet naskh" aria-hidden="true">
+            ب
+          </span>
+          Trace the letters <span aria-hidden="true">→</span>
+        </Link>
+      </div>
+
+      <div className="ui path-head">
+        <h2 className="eyebrow">
+          The path · {finished}/{total} finished
+        </h2>
         <label className="hide-done">
           <input
             type="checkbox"
@@ -72,9 +121,19 @@ export function PathBrowser({ units }: { units: PathUnit[] }) {
           />
           Hide finished lessons
         </label>
-        <p className="text-sm text-muted" aria-live="polite">
-          {finished} of {total} lessons finished
-        </p>
+      </div>
+      <div className="ui chips" role="group" aria-label="Show lessons of type">
+        {(["all", ...kindsPresent] as const).map((k) => (
+          <button
+            key={k}
+            type="button"
+            aria-pressed={filter.kind === k}
+            onClick={() => pathFilterStore.set((f) => ({ ...f, kind: k }))}
+            className="chip"
+          >
+            {k === "all" ? "All" : KIND_LABELS[k]}
+          </button>
+        ))}
       </div>
 
       {shown.length === 0 ? (
@@ -86,52 +145,70 @@ export function PathBrowser({ units }: { units: PathUnit[] }) {
         </div>
       ) : (
         <ol className="units">
-          {shown.map((u) => (
-            <li key={u.slug} className="unit">
-              <div className="girih" aria-hidden="true" />
-              <header className="unit-head">
-                <div>
-                  <p className="ui eyebrow">Unit {u.number}</p>
-                  <h2 className="unit-title">
-                    <Rich text={u.title} translit={false} />
-                  </h2>
-                  <p className="unit-desc has-fa">
-                    <Rich text={u.description} translit={false} />
+          {shown.map((u) => {
+            const done = u.lessons.filter((l) => progress[l.key]).length;
+            const empty = u.lessons.length === 0;
+            return (
+              <li key={u.slug} id={u.slug} className={empty ? "unit-card unit-card-empty" : "unit-card"}>
+                <header className="unit-head">
+                  <span className="unit-num naskh" aria-hidden="true">
+                    {u.numberFa}
+                  </span>
+                  <div className="unit-head-text">
+                    <p className="ui eyebrow">
+                      Unit {u.number}
+                      {!empty && (
+                        <span className="unit-count">
+                          {" "}
+                          · {done}/{u.lessons.length}
+                        </span>
+                      )}
+                    </p>
+                    <h3 className="unit-title">
+                      <Rich text={u.title} translit={false} />
+                    </h3>
+                    <p className="unit-desc has-fa">
+                      <Rich text={u.description} translit={false} />
+                    </p>
+                  </div>
+                  <p className="unit-fa naskh" aria-hidden="true">
+                    <FaText text={u.titleFa} translit="none" force="none" />
                   </p>
-                </div>
-                <p className="unit-fa naskh" aria-hidden="true">
-                  <FaText text={u.titleFa} translit="none" />
-                </p>
-              </header>
-              {u.lessons.length === 0 ? (
-                <p className="ui coming-soon">Lessons in preparation</p>
-              ) : (
-                <ol className="lessons">
-                  {u.lessons.map((l) => (
-                    <li key={l.key}>
-                      <Link href={l.href} className="lesson-row">
-                        <span className="lesson-row-num ui">
-                          <span>{l.number}</span>
-                          <span className="fa" lang="fa">
-                            {l.numberFa}
+                </header>
+                {empty ? (
+                  <p className="ui coming-soon">Lessons in preparation</p>
+                ) : (
+                  <ol className="lessons">
+                    {u.lessons.map((l) => (
+                      <li key={l.key}>
+                        <Link href={l.href} className="lesson-row">
+                          <span className="lesson-row-num ui">
+                            <span>{l.number}</span>
+                            <span className="fa" lang="fa">
+                              {l.numberFa}
+                            </span>
                           </span>
-                        </span>
-                        <span className="lesson-row-text">
-                          <span className="lesson-row-title has-fa">
-                            <Rich text={l.title} translit={false} />
+                          <span className="lesson-row-text">
+                            <span className="lesson-row-title has-fa">
+                              <Rich text={l.title} translit={false} />
+                            </span>
+                            <span className="lesson-row-summary">
+                              <Rich text={l.summary} translit={false} />
+                            </span>
                           </span>
-                          <span className="lesson-row-summary">
-                            <Rich text={l.summary} translit={false} />
-                          </span>
-                        </span>
-                        {progress[l.key] && <Seal size={44} label="Finished" />}
-                      </Link>
-                    </li>
-                  ))}
-                </ol>
-              )}
-            </li>
-          ))}
+                          {progress[l.key] ? (
+                            <Seal size={44} label="Finished" />
+                          ) : (
+                            <span className="todo-ring" aria-label="Not finished yet" role="img" />
+                          )}
+                        </Link>
+                      </li>
+                    ))}
+                  </ol>
+                )}
+              </li>
+            );
+          })}
         </ol>
       )}
     </div>

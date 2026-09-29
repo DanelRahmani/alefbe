@@ -51,6 +51,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <nav aria-label="Main" className="ui site-nav">
               <Link href="/">Path</Link>
               <Link href="/script">Script</Link>
+              <Link href="/progress">Progress</Link>
             </nav>
             <DisplaySettings />
           </div>

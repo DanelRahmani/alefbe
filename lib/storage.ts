@@ -8,6 +8,8 @@ export interface Store<T> {
   getServer(): T;
   set(next: T | ((prev: T) => T)): void;
   subscribe(listener: () => void): () => void;
+  /** Re-read localStorage (after an import or reset) and notify subscribers. */
+  refresh(): void;
 }
 
 interface Envelope<T> {
@@ -71,6 +73,10 @@ export function createPersistentStore<T>(
       const prev = cache ??= load();
       cache = typeof next === "function" ? (next as (p: T) => T)(prev) : next;
       save(cache);
+      emit();
+    },
+    refresh() {
+      cache = load();
       emit();
     },
     subscribe(listener) {

@@ -58,6 +58,9 @@ export interface DrillUi {
 
 export const drillUiStore = createPersistentStore<DrillUi>("alefbe2:drill-ui", { keyboard: false, wordsOpen: false });
 
+/** Best tracing score per letter form, keyed "ب:initial". */
+export const traceStore = createPersistentStore<Record<string, number>>("alefbe2:trace", {});
+
 export interface PathFilter {
   kind: LessonKind | "all";
   hideDone: boolean;
@@ -67,3 +70,6 @@ export const pathFilterStore = createPersistentStore<PathFilter>("alefbe2:path-f
   kind: "all",
   hideDone: false,
 });
+
+/** Every store, for refreshing after an import or reset. */
+export const ALL_STORES = [settingsStore, progressStore, srsStore, drillUiStore, traceStore, pathFilterStore];

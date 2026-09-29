@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { DrillOverview } from "@/components/drill/DrillOverview";
 import { DIGITS, LETTERS, formOf } from "@/lib/persian/letters";
 
@@ -22,6 +23,20 @@ export default function ScriptPage() {
 
       <h2 className="lesson-h2 mt-8">Trainer</h2>
       <DrillOverview />
+
+      <Link href="/script/trace" className="next-card mt-4">
+        <span className="next-mark naskh" aria-hidden="true">
+          ب
+        </span>
+        <span className="next-text">
+          <span className="ui eyebrow">Tracing</span>
+          <span className="next-title">Trace the letters</span>
+          <span className="next-summary">Write each letter in all its forms along a guided path, then from memory.</span>
+        </span>
+        <span className="next-arrow" aria-hidden="true">
+          →
+        </span>
+      </Link>
 
       <h2 className="lesson-h2 mt-12">The alphabet</h2>
       <p className="ui mt-1 text-sm text-muted">Isolated form large (Naskh book style), then initial, medial and final.</p>
