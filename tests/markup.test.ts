@@ -73,6 +73,15 @@ describe("variantsOf: vowel-mark modes", () => {
     expect(strip("key", "کِتابِ {مَن} را")).toBe("کتابِ مَن را");
     expect(strip("key", "صَنْدَلیِ سَبْز")).toBe("صندلیِ سبز");
   });
+  it("never shows the pish that marks an o-spelling و (primers don't write it)", () => {
+    expect(strip("all", "تُو خُود رُو")).toBe("تو خود رو");
+    expect(strip("all", "اُتُوبوس")).toBe("اُتوبوس");
+    expect(strip("key", "{رُو}")).toBe("رو");
+  });
+  it("keeps a pish when the و after it carries its own mark", () => {
+    expect(strip("all", "دُوُم")).toBe("دُوُم");
+    expect(strip("all", "کُجا")).toBe("کُجا");
+  });
   it("key strips an ezafe-looking kasra only when it is not word-final", () => {
     expect(strip("key", "بِگو")).toBe("بگو");
   });

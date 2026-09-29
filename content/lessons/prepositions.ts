@@ -108,13 +108,6 @@ export const prepositions: Lesson[] = [
         title: "Specific but still “a”",
         text: "An object can be indefinite and still specific: *a certain book*, one the speaker has in mind but the listener does not know. Persian can mark that with را too, usually with یه and often a که clause: یه کِتابی رُو که دیروز دیدَم خَریدَم (I bought a book I had seen yesterday). Lesson 9.7 covers the pattern.",
       },
-      {
-        type: "callout",
-        kind: "dari",
-        title: "In Dari",
-        text: "Dari also marks specific objects with را. In Kabul speech it is usually said *ra* (often typed رَه) where Tehran says *ro* or *-o*.",
-        checked: false,
-      },
       { type: "heading", text: "In real conversation" },
       {
         type: "dialogue",

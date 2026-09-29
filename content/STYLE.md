@@ -33,7 +33,7 @@ Every lesson also carries:
 ## Spoken and written
 
 - **`both`:** the example's `fa` is the spoken (Tehrani) form and `written` is the written form, shown beneath it. If the two are identical, omit `written`.
-- **Spoken spelling:** follow how Iranians actually type colloquial Persian, e.g. می‌خوام, خونه, رو, یه. Where the spoken spelling hides the pronunciation (خونه‌ش is *khunash*), use a `[base|translit]` override and list it under "For the owner to confirm" below.
+- **Spoken spelling:** follow how Iranians actually type colloquial Persian, e.g. می‌خوام, خونه, رو, یه. Where the spoken spelling hides the pronunciation, use a `[base|translit]` override, but only with a source for the pronunciation. Contracted forms whose pronunciation is unconfirmed (e.g. خونه‌ش) stay out of lessons.
 
 ## Markup
 
@@ -54,7 +54,7 @@ Every Persian string is written **fully vowel-marked** in its real spelling. The
 - **Short vowels:** zabar ـَ (*a*), zir ـِ (*e*), pish ـُ (*o*) on every consonant that has one.
 - **Sukun ـْ:** on every syllable-final consonant *except the last letter of a word or of a half-space-separated part*: دوسْت, پَرْوانه, روزْها. This makes every word read one way only.
 - **Long vowels:** ا (*â*), و (*u*), ی (*i*) carry no mark on the letter before them. Arabic-style marking (ـَا, or ـِی before a consonant) is an error.
-- **و that spells o** (واوِ بَیانِ حَرَکَت): pish on the consonant, then a bare و, as in تُو (*to*, you), دُو, خُود, رُو, چِطُوری. A bare و after a bare consonant is *u*: تو (*tu*, inside).
+- **و that spells o** (واوِ بَیانِ حَرَکَت): pish on the consonant, then a bare و, as in تُو (*to*, you), دُو, خُود, رُو, چِطُوری. A bare و after a bare consonant is *u*: تو (*tu*, inside). This pish is an **authoring marker only**: Iranian primers don't write it, so it is never displayed, not even in "All marks" mode. It only tells the engine how to read the word. Learners meet these words as a set to learn (lesson 2.5), with the transliteration as the guide.
 - **Silent و after خ** (واوِ مَعْدوله): خوا (*khâ*) and خوی (*khi*), with no mark on خ.
 - **Diphthongs:** zabar followed by a bare و or ی gives *ow* / *ey* (نَوروز *nowruz*, کَی *key*), unless a vowel letter follows (هَوا *havâ*).
 - **Final ه:** silent by default. It reads *e* after an unmarked consonant (خانه *khâne*, به *be*), or nothing when the consonant before it already has a mark (نَه *na*). It is the consonant *h* only after ا or a vowel و (ماه, کوه) or with a sukun (دَهْ *dah*, شَبیهْ *shabih*).
@@ -133,7 +133,7 @@ Answers typed in the drills are lenient:
   - the Academy's دستورِ خَطِّ فارسی;
   - Dehkhoda and Sokhan for vowel marks.
 - **Review:** after each unit, a fresh reviewer agent checks grammar, Tehrani naturalness, vowel marks, spoken/written pairs, translation nuance, over-general rules and quiz answers. Anything it can't verify is flagged, not guessed.
-- **Dari notes** (`callout` kind `dari`) ship with `checked: false` and show a "Draft" tag until the owner confirms them.
+- **Dari notes** (`callout` kind `dari`) ship only when the owner has confirmed them (`checked: true`) or a named Dari source backs every claim in them (cite it in the lesson's `source`). Unverifiable Dari notes are left out, not shipped as drafts.
 
 ## Corrected, not copied: the old Alefbe app
 
@@ -147,11 +147,10 @@ The old app's letter table and words were checked before any reuse. Errors found
 
 (The grammar page and the 60-word list are checked in Phase 4, when their content is reused.)
 
-## For the owner to confirm
+## Owner decisions (2026-09-29)
 
-- Tehrani خونه‌ش is *khunash* and خونه‌م is *khunam*.
-- *nowruz* (current) or *noruz*.
-- Marking the o-spelling و as تُو / دُو matches the primers you know.
-- Dari notes: 6.1 (را said *ra*, typed رَه, in Kabul speech). The reviewer also asked:
-  - Does Kabuli reduce it to *-a* after a consonant (کتابه), as Tehrani does to *-o*?
-  - Should the note mention that Dari also marks some recipients with را (او را گفتم)?
+- **Diphthong transliteration:** *nowruz* (the *ow* diphthong is kept).
+- **The o-spelling و:** primers don't write تُو / دُو with a pish, so that pish is authoring-only and never displayed.
+- **Unconfirmed forms:**
+  - Tehrani خونه‌ش (*khunash*?) and similar contracted possessives are unconfirmed and stay out of lessons.
+  - The 6.1 Dari note (را said *ra* / typed ره in Kabul, reduced to *-a*, recipients with را) couldn't be confirmed and was removed.
