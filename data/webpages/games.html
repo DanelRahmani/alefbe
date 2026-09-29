@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>AlefBe · Games</title>
+<meta name="description" content="Play Persian alphabet games: Word Builder, Connect the Script, and Speed Drill.">
+<link rel="icon" type="image/x-icon" href="../../data/icons/favicon.ico">
+<link rel="apple-touch-icon" href="../../data/icons/icon-192.png">
+<script defer src="/_vercel/insights/script.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Amiri:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../data/css/styles.css">
+</head>
+<body>
+
+<button class="theme-btn" onclick="toggleTheme()" id="theme-btn">☀️ Light</button>
+
+<div class="app">
+  <header>
+    <div class="logo">الفبا</div>
+    <div class="logo-sub">AlefBe · Learn Persian</div>
+  </header>
+
+  <nav>
+    <a href="../../index.html">📚 Learn</a>
+    <a href="trace.html">✍️ Trace</a>
+    <a href="practice.html">🎯 Practice</a>
+    <a href="quiz.html">📝 Quiz</a>
+    <a href="phonics.html">🔤 Phonics</a>
+    <a class="active" href="games.html">🎮 Games</a>
+    <a href="dictionary.html">📖 Dict</a>
+    <a href="references.html">🔣 Ref</a>
+    <a href="grammar.html">📜 Grammar</a>
+    <a href="progress.html">📊 Progress</a>
+    <a href="stats.html">📈 Stats</a>
+  </nav>
+
+  <div class="page-content">
+
+    <!-- ── Game selector ── -->
+    <div id="games-menu">
+      <div class="game-hdr"><h2>Games</h2></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px">
+        <div class="qmc" onclick="startGame('wb')" style="cursor:pointer">
+          <div class="qmi">🔀</div>
+          <div class="qmt">Word Builder</div>
+          <div class="qmd">Unscramble the letters to form a word</div>
+        </div>
+        <div class="qmc" onclick="startGame('cs')" style="cursor:pointer">
+          <div class="qmi">🔗</div>
+          <div class="qmt">Connect the Script</div>
+          <div class="qmd">Identify letters inside connected words</div>
+        </div>
+        <div class="qmc" onclick="startGame('sd')" style="cursor:pointer">
+          <div class="qmi">⚡</div>
+          <div class="qmt">Speed Drill</div>
+          <div class="qmd">Flash cards — identify letters fast</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Word Builder ── -->
+    <div id="wb-panel" style="display:none">
+      <div class="game-hdr">
+        <h2>Word Builder</h2>
+        <span class="game-score" id="wb-score">0/0</span>
+      </div>
+      <div class="game-bar"><div class="game-bar-fill" id="wb-bar" style="width:0%"></div></div>
+      <div class="ph-hint" id="wb-hint"></div>
+      <div class="wb-display" id="wb-slots"></div>
+      <div class="wb-letters" id="wb-tiles"></div>
+      <div class="ph-ctrl">
+        <button class="tbtn danger" onclick="wbBackspace()">⌫</button>
+        <button class="tbtn check ready" id="wb-check" onclick="checkWB()" disabled>✓ Check</button>
+        <button class="type-skip" onclick="skipWB()">Skip →</button>
+      </div>
+      <div class="type-feedback" id="wb-fb"></div>
+    </div>
+
+    <!-- ── Connect the Script ── -->
+    <div id="cs-panel" style="display:none">
+      <div class="game-hdr">
+        <h2>Connect the Script</h2>
+        <span class="game-score" id="cs-score">0/0</span>
+      </div>
+      <div class="game-bar"><div class="game-bar-fill" id="cs-bar" style="width:0%"></div></div>
+      <div class="cs-word-display" id="cs-word"></div>
+      <div class="cs-question" id="cs-question"></div>
+      <div class="cs-letters" id="cs-opts"></div>
+      <div class="type-feedback" id="cs-fb"></div>
+    </div>
+
+    <!-- ── Speed Drill ── -->
+    <div id="sd-panel" style="display:none">
+      <div class="game-hdr">
+        <h2>Speed Drill</h2>
+        <span class="game-score" id="sd-score">0/0</span>
+      </div>
+      <div class="sd-speed-row">
+        <button class="sd-spbtn on" onclick="setSDSpeed(2000,this)">Slow</button>
+        <button class="sd-spbtn" onclick="setSDSpeed(1200,this)">Medium</button>
+        <button class="sd-spbtn" onclick="setSDSpeed(600,this)">Fast</button>
+      </div>
+      <div class="sd-card"><div class="sd-letter" id="sd-letter">ب</div></div>
+      <div class="sd-timer-bar"><div class="sd-timer-fill" id="sd-timer-fill" style="width:100%"></div></div>
+      <div class="sd-choices" id="sd-choices"></div>
+      <div class="type-feedback" id="sd-fb"></div>
+    </div>
+
+    <!-- ── Shared result ── -->
+    <div id="game-result" style="display:none" class="game-result">
+      <div class="pre" id="gr-ree">🌟</div>
+      <div class="prt" id="gr-rtt">Complete!</div>
+      <div class="prsu" id="gr-rsu"></div>
+      <div class="prbtns">
+        <button class="bsec" id="gr-again" onclick="restartGame()">Again</button>
+        <button class="sbtn" onclick="backToGames()">All Games</button>
+      </div>
+    </div>
+
+  </div><!-- .page-content -->
+</div><!-- .app -->
+
+<div class="toast" id="toast"></div>
+
+<script src="../../data/js/shared.js"></script>
+<script>
+// Override backToGames to also show the menu panel
+const _origBackToGames = backToGames;
+function backToGames() {
+  _origBackToGames();
+  document.getElementById('games-menu').style.display = 'block';
+}
+
+// Override startGame to hide the menu when a game starts
+const _origStartGame = startGame;
+function startGame(mode) {
+  document.getElementById('games-menu').style.display = 'none';
+  _origStartGame(mode);
+}
+</script>
+</body>
+</html>

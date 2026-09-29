@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>AlefBe · Dictionary</title>
+<meta name="description" content="Mini Persian dictionary with letter breakdown and pronunciation.">
+<link rel="icon" type="image/x-icon" href="../../data/icons/favicon.ico">
+<link rel="apple-touch-icon" href="../../data/icons/icon-192.png">
+<script defer src="/_vercel/insights/script.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Amiri:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../data/css/styles.css">
+</head>
+<body>
+
+<button class="theme-btn" onclick="toggleTheme()" id="theme-btn">☀️ Light</button>
+
+<div class="app">
+  <header>
+    <div class="logo">الفبا</div>
+    <div class="logo-sub">AlefBe · Learn Persian</div>
+  </header>
+
+  <nav>
+    <a href="../../index.html">📚 Learn</a>
+    <a href="trace.html">✍️ Trace</a>
+    <a href="practice.html">🎯 Practice</a>
+    <a href="quiz.html">📝 Quiz</a>
+    <a href="phonics.html">🔤 Phonics</a>
+    <a href="games.html">🎮 Games</a>
+    <a class="active" href="dictionary.html">📖 Dict</a>
+    <a href="references.html">🔣 Ref</a>
+    <a href="grammar.html">📜 Grammar</a>
+    <a href="progress.html">📊 Progress</a>
+    <a href="stats.html">📈 Stats</a>
+  </nav>
+
+  <div class="page-content">
+    <div class="pgh"><h2>Mini Dictionary</h2><p>Common Persian words with letter breakdown</p></div>
+    <input class="dict-search" id="dict-search"
+           placeholder="Search word, meaning, or letter…"
+           oninput="filterDict()" autocomplete="off">
+    <div class="dict-cat" id="dict-cats"></div>
+    <div class="dict-grid" id="dict-grid"></div>
+  </div>
+</div>
+
+<!-- Letter detail modal -->
+<div class="modal-wrap" id="modal-wrap" onclick="if(event.target===this)closeM()">
+  <div class="modal">
+    <button class="mclose" onclick="closeM()">✕</button>
+    <div class="ml" id="ml"></div>
+    <div id="mbadge"></div>
+    <div class="mt" id="mt"></div>
+    <div class="mipa" id="mipa"></div>
+    <div class="msec"><h3>Letter Forms</h3><div class="forms-grid" id="mforms"></div></div>
+    <div class="msec"><h3>Pronunciation</h3>
+      <div class="snd-row"><span>🔊</span><span id="msnd"></span><button class="spk" onclick="speak()">▶ Listen</button></div>
+    </div>
+    <div class="msec"><h3>Example Word</h3>
+      <div class="ex-row">
+        <div class="ex-fa" id="mex-fa"></div>
+        <div><div class="ex-t" id="mex-t"></div><div class="ex-m" id="mex-m"></div></div>
+      </div>
+    </div>
+    <button class="mlearn" id="mlearnbtn" onclick="togLearned()"></button>
+    <button class="mtrace" onclick="traceFromM()">✍️ Trace This Letter</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="../../data/js/shared.js"></script>
+<script>
+renderDict();
+</script>
+</body>
+</html>

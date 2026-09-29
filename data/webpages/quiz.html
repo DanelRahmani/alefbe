@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>AlefBe · Quiz</title>
+<meta name="description" content="Test your Persian alphabet knowledge with multiple quiz modes.">
+<link rel="icon" type="image/x-icon" href="../../data/icons/favicon.ico">
+<link rel="apple-touch-icon" href="../../data/icons/icon-192.png">
+<script defer src="/_vercel/insights/script.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Amiri:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../data/css/styles.css">
+</head>
+<body>
+
+<button class="theme-btn" onclick="toggleTheme()" id="theme-btn">☀️ Light</button>
+
+<div class="app">
+  <header>
+    <div class="logo">الفبا</div>
+    <div class="logo-sub">AlefBe · Learn Persian</div>
+  </header>
+
+  <nav>
+    <a href="../../index.html">📚 Learn</a>
+    <a href="trace.html">✍️ Trace</a>
+    <a href="practice.html">🎯 Practice</a>
+    <a class="active" href="quiz.html">📝 Quiz</a>
+    <a href="phonics.html">🔤 Phonics</a>
+    <a href="games.html">🎮 Games</a>
+    <a href="dictionary.html">📖 Dict</a>
+    <a href="references.html">🔣 Ref</a>
+    <a href="grammar.html">📜 Grammar</a>
+    <a href="progress.html">📊 Progress</a>
+    <a href="stats.html">📈 Stats</a>
+  </nav>
+
+  <div class="page-content">
+
+    <!-- ── Setup ── -->
+    <div class="qsetup" id="qsetup">
+      <h2>Test Yourself</h2>
+      <p>Choose your mode</p>
+      <div class="qmodes" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="qmc on" data-mode="ltn" onclick="selQM(this)">
+          <div class="qmi">ب → ?</div><div class="qmt">Letter → Name</div>
+          <div class="qmd">See letter, pick the name + sound</div>
+        </div>
+        <div class="qmc" data-mode="latp" onclick="selQM(this)">
+          <div class="qmi">b → ب</div><div class="qmt">Latin → Persian</div>
+          <div class="qmd">See Latin sound, pick the letter</div>
+        </div>
+        <div class="qmc" data-mode="fc" onclick="selQM(this)">
+          <div class="qmi">🃏</div><div class="qmt">Flashcards</div>
+          <div class="qmd">Flip to recall</div>
+        </div>
+        <div class="qmc" data-mode="lts" onclick="selQM(this)">
+          <div class="qmi">ب → 🔊</div><div class="qmt">Letter → Sound</div>
+          <div class="qmd">Pick the correct sound</div>
+        </div>
+        <div class="qmc" data-mode="stp" onclick="selQM(this)">
+          <div class="qmi">🔊 → ب</div><div class="qmt">Sound → Letter</div>
+          <div class="qmd">Hear sound, pick the Persian letter</div>
+        </div>
+        <div class="qmc" data-mode="ptl" onclick="selQM(this)">
+          <div class="qmi">ب → type</div><div class="qmt">Letter → Type Latin</div>
+          <div class="qmd">See Persian, type the Latin sound</div>
+        </div>
+        <div class="qmc" data-mode="lttp" onclick="selQM(this)">
+          <div class="qmi">b → type</div><div class="qmt">Latin → Type Persian</div>
+          <div class="qmd">See Latin sound, type the Persian letter</div>
+        </div>
+      </div>
+      <div class="qopt">
+        <label>Questions</label>
+        <select id="qn">
+          <option value="10">10</option>
+          <option value="16">16</option>
+          <option value="32">All 32</option>
+        </select>
+      </div>
+      <button class="sbtn" onclick="startQuiz()">Begin</button>
+    </div>
+
+    <!-- ── Multiple-choice game ── -->
+    <div class="qgame" id="qgame">
+      <div class="qhdr">
+        <span class="qprog" id="qprog">1/10</span>
+        <span class="qscr" id="qscr">0</span>
+      </div>
+      <div class="qbar"><div class="qbarfill" id="qbf" style="width:0%"></div></div>
+      <div class="qcard">
+        <div class="qlbl" id="qlbl"></div>
+        <div id="qqst"></div>
+      </div>
+      <div class="qopts" id="qopts"></div>
+    </div>
+
+    <!-- ── Flashcard game ── -->
+    <div id="fc-game" style="display:none">
+      <div class="qhdr">
+        <span class="qprog" id="fcprog">1/10</span>
+        <span class="qscr" id="fcsco">✓0 ✗0</span>
+      </div>
+      <div class="qbar"><div class="qbarfill" id="fcbf" style="width:0%"></div></div>
+      <div class="flashcard" id="flashcard" onclick="revCard()">
+        <div class="fcl" id="fcl"></div>
+        <div class="fcrev">
+          <div class="fcn" id="fcn"></div>
+          <div class="fci" id="fci"></div>
+        </div>
+        <div class="fch">Tap to reveal</div>
+      </div>
+      <div class="fcbtns" id="fcbtns" style="display:none">
+        <button class="fcbtn nope" onclick="fcA(false)">✗ Didn't Know</button>
+        <button class="fcbtn knew" onclick="fcA(true)">✓ Got It</button>
+      </div>
+    </div>
+
+    <!-- ── Type game (ptl / lttp modes) ── -->
+    <div class="type-game" id="type-game">
+      <div class="qhdr">
+        <span class="qprog" id="tprog">1/10</span>
+        <span class="qscr" id="tscr">0</span>
+      </div>
+      <div class="qbar"><div class="qbarfill" id="tbf" style="width:0%"></div></div>
+      <div class="type-prompt" id="type-prompt"></div>
+      <div class="type-feedback" id="type-feedback"></div>
+      <div class="type-input-wrap">
+        <input id="type-input" class="type-input"
+               autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+               placeholder="Type your answer…"
+               oninput="onTypeInput()" onkeydown="onTypeKey(event)">
+      </div>
+      <!-- Persian on-screen keyboard (lttp mode) -->
+      <div class="fa-kbd" id="fa-kbd" style="display:none">
+        <div class="fa-kbd-row">
+          <div class="fa-key" onclick="faKbdPress('ض')">ض</div>
+          <div class="fa-key" onclick="faKbdPress('ص')">ص</div>
+          <div class="fa-key" onclick="faKbdPress('ث')">ث</div>
+          <div class="fa-key" onclick="faKbdPress('ق')">ق</div>
+          <div class="fa-key" onclick="faKbdPress('ف')">ف</div>
+          <div class="fa-key" onclick="faKbdPress('غ')">غ</div>
+          <div class="fa-key" onclick="faKbdPress('ع')">ع</div>
+          <div class="fa-key" onclick="faKbdPress('ه')">ه</div>
+          <div class="fa-key" onclick="faKbdPress('خ')">خ</div>
+          <div class="fa-key" onclick="faKbdPress('ح')">ح</div>
+          <div class="fa-key" onclick="faKbdPress('ج')">ج</div>
+          <div class="fa-key" onclick="faKbdPress('چ')">چ</div>
+        </div>
+        <div class="fa-kbd-row">
+          <div class="fa-key" onclick="faKbdPress('ش')">ش</div>
+          <div class="fa-key" onclick="faKbdPress('س')">س</div>
+          <div class="fa-key" onclick="faKbdPress('ی')">ی</div>
+          <div class="fa-key" onclick="faKbdPress('ب')">ب</div>
+          <div class="fa-key" onclick="faKbdPress('ل')">ل</div>
+          <div class="fa-key" onclick="faKbdPress('ا')">ا</div>
+          <div class="fa-key" onclick="faKbdPress('ت')">ت</div>
+          <div class="fa-key" onclick="faKbdPress('ن')">ن</div>
+          <div class="fa-key" onclick="faKbdPress('م')">م</div>
+          <div class="fa-key" onclick="faKbdPress('ک')">ک</div>
+          <div class="fa-key" onclick="faKbdPress('گ')">گ</div>
+        </div>
+        <div class="fa-kbd-row">
+          <div class="fa-key" onclick="faKbdPress('ظ')">ظ</div>
+          <div class="fa-key" onclick="faKbdPress('ط')">ط</div>
+          <div class="fa-key" onclick="faKbdPress('ژ')">ژ</div>
+          <div class="fa-key" onclick="faKbdPress('ز')">ز</div>
+          <div class="fa-key" onclick="faKbdPress('ر')">ر</div>
+          <div class="fa-key" onclick="faKbdPress('ذ')">ذ</div>
+          <div class="fa-key" onclick="faKbdPress('د')">د</div>
+          <div class="fa-key" onclick="faKbdPress('پ')">پ</div>
+          <div class="fa-key" onclick="faKbdPress('و')">و</div>
+          <div class="fa-key del-key" onclick="faKbdDel()">⌫ Del</div>
+        </div>
+      </div>
+      <div class="type-btns">
+        <button class="type-submit" id="type-submit" onclick="submitType()" disabled>Submit</button>
+        <button class="type-skip" onclick="skipType()">Skip →</button>
+      </div>
+    </div>
+
+    <!-- ── Result ── -->
+    <div class="qresult" id="qresult">
+      <div class="ree" id="ree">🌟</div>
+      <div class="res" id="res">8/10</div>
+      <div class="rel">correct</div>
+      <div class="remsg" id="remsg"></div>
+      <div class="rebtns">
+        <button class="bsec" onclick="resetQuiz()">Try Again</button>
+        <button class="sbtn" onclick="location.href='../../index.html'">Keep Learning</button>
+      </div>
+    </div>
+
+  </div><!-- .page-content -->
+</div><!-- .app -->
+
+<div class="toast" id="toast"></div>
+
+<script src="../../data/js/shared.js"></script>
+<script>
+showQSetup();
+</script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>AlefBe · Practice</title>
+<meta name="description" content="Practice tracing Persian letters in customisable sets.">
+<link rel="icon" type="image/x-icon" href="../../data/icons/favicon.ico">
+<link rel="apple-touch-icon" href="../../data/icons/icon-192.png">
+<script defer src="/_vercel/insights/script.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Amiri:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../data/css/styles.css">
+</head>
+<body>
+
+<button class="theme-btn" onclick="toggleTheme()" id="theme-btn">☀️ Light</button>
+
+<div class="app">
+  <header>
+    <div class="logo">الفبا</div>
+    <div class="logo-sub">AlefBe · Learn Persian</div>
+  </header>
+
+  <nav>
+    <a href="../../index.html">📚 Learn</a>
+    <a href="trace.html">✍️ Trace</a>
+    <a class="active" href="practice.html">🎯 Practice</a>
+    <a href="quiz.html">📝 Quiz</a>
+    <a href="phonics.html">🔤 Phonics</a>
+    <a href="games.html">🎮 Games</a>
+    <a href="dictionary.html">📖 Dict</a>
+    <a href="references.html">🔣 Ref</a>
+    <a href="grammar.html">📜 Grammar</a>
+    <a href="progress.html">📊 Progress</a>
+    <a href="stats.html">📈 Stats</a>
+  </nav>
+
+  <div class="page-content">
+
+    <!-- ── Setup screen ── -->
+    <div id="prac-setup">
+      <div class="prac-hdr"><h2>Practice Sets</h2><p>Pick letters and run sets</p></div>
+      <div class="sel-row">
+        <button class="sqb" onclick="selA()">All</button>
+        <button class="sqb" onclick="selN()">None</button>
+        <button class="sqb" onclick="selP()">Persian only</button>
+        <button class="sqb" onclick="selH()">Hardest</button>
+      </div>
+      <div class="sg" id="sel-grid"></div>
+      <div class="pop">
+        <div class="po">
+          <label>Sets per letter</label>
+          <select id="psets">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3" selected>3</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+        <div class="po">
+          <label>Attempts</label>
+          <select id="patts">
+            <option value="2">2</option>
+            <option value="3" selected>3</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+        <div class="po">
+          <label>Letter form</label>
+          <select id="pform">
+            <option value="0">Isolated</option>
+            <option value="1">Initial</option>
+            <option value="2">Medial</option>
+            <option value="3">Final</option>
+            <option value="4">All forms</option>
+          </select>
+        </div>
+      </div>
+      <button class="sbtn" onclick="startPrac()">Start Practice</button>
+    </div>
+
+    <!-- ── Active practice ── -->
+    <div id="prac-active" style="display:none">
+      <div class="pa-top">
+        <div>
+          <div class="pa-letter" id="pa-ch"></div>
+          <div class="pa-nm" id="pa-nm"></div>
+        </div>
+        <div style="text-align:right">
+          <div class="pa-qn" id="pa-qn"></div>
+          <div class="adots" id="adots"></div>
+        </div>
+      </div>
+      <div class="progbar">
+        <div class="pbl"><span id="ppl">1 of 8</span><span id="psl">Set 1</span></div>
+        <div class="pb"><div class="pbf" id="pbf" style="width:0%"></div></div>
+      </div>
+      <div class="form-tabs">
+        <button class="ftab" id="pf0">Isolated</button>
+        <button class="ftab" id="pf1">Initial</button>
+        <button class="ftab" id="pf2">Medial</button>
+        <button class="ftab" id="pf3">Final</button>
+      </div>
+      <div class="clbl" id="p-clbl"></div>
+      <div class="cw" id="prac-cw">
+        <canvas id="pgc"></canvas>
+        <canvas id="pcc"></canvas>
+        <canvas id="pdc" class="dc"></canvas>
+        <div class="rov" id="p-rov">
+          <div class="rov-sc" id="provsc">—</div>
+          <div class="rov-lbl">Score</div>
+          <div class="rov-stars" id="provstars"></div>
+          <div class="rov-msg" id="provmsg"></div>
+          <div class="rov-btns">
+            <button class="rovbtn sec" onclick="resetT('prac')">↺ Retry</button>
+            <button class="rovbtn" id="prov-next" onclick="pracAdv()">Next →</button>
+          </div>
+        </div>
+        <div class="cf" id="p-cf">
+          <span class="cf-char" id="p-cfch" style="font-size:160px"></span>
+        </div>
+      </div>
+      <div class="ttools">
+        <button class="tbtn check" id="p-check" onclick="pressCheck('prac')" disabled>✓ Check</button>
+        <button class="tbtn danger" onclick="resetT('prac')">↺ Reset</button>
+        <div class="br">
+          <label>Brush</label>
+          <input type="range" id="pbr" min="8" max="28" value="16" oninput="PR.brush=+this.value">
+        </div>
+      </div>
+      <button class="bsec" style="width:100%;margin-top:7px" onclick="exitPrac()">✕ Exit</button>
+    </div>
+
+    <!-- ── Results screen ── -->
+    <div id="prac-result" style="display:none" class="pres">
+      <div class="pre" id="pre">🏆</div>
+      <div class="prt" id="prt">Complete!</div>
+      <div class="prsu" id="prsu"></div>
+      <div class="prstats">
+        <div class="prsc"><div class="prscv" id="prst">0</div><div class="prscl">Traced</div></div>
+        <div class="prsc"><div class="prscv" id="prsp">0</div><div class="prscl">Passed</div></div>
+        <div class="prsc"><div class="prscv" id="prsa">—</div><div class="prscl">Avg</div></div>
+      </div>
+      <div class="prls">
+        <h3>Letter Scores</h3>
+        <div class="prls-g" id="prls-g"></div>
+      </div>
+      <div class="prbtns">
+        <button class="bsec" onclick="showPracSetup()">Again</button>
+        <button class="sbtn" onclick="location.href='../../index.html'">Keep Learning</button>
+      </div>
+    </div>
+
+  </div><!-- .page-content -->
+</div><!-- .app -->
+
+<div class="toast" id="toast"></div>
+
+<script src="../../data/js/shared.js"></script>
+<script>
+buildSG();
+</script>
+</body>
+</html>

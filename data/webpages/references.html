@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>AlefBe · Reference</title>
+<meta name="description" content="Persian script reference: diacritics, numerals, and script notes.">
+<link rel="icon" type="image/x-icon" href="../../data/icons/favicon.ico">
+<link rel="apple-touch-icon" href="../../data/icons/icon-192.png">
+<script defer src="/_vercel/insights/script.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Amiri:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../data/css/styles.css">
+</head>
+<body>
+
+<button class="theme-btn" onclick="toggleTheme()" id="theme-btn">☀️ Light</button>
+
+<div class="app">
+  <header>
+    <div class="logo">الفبا</div>
+    <div class="logo-sub">AlefBe · Learn Persian</div>
+  </header>
+
+  <nav>
+    <a href="../../index.html">📚 Learn</a>
+    <a href="trace.html">✍️ Trace</a>
+    <a href="practice.html">🎯 Practice</a>
+    <a href="quiz.html">📝 Quiz</a>
+    <a href="phonics.html">🔤 Phonics</a>
+    <a href="games.html">🎮 Games</a>
+    <a href="dictionary.html">📖 Dict</a>
+    <a class="active" href="references.html">🔣 Ref</a>
+    <a href="grammar.html">📜 Grammar</a>
+    <a href="progress.html">📊 Progress</a>
+    <a href="stats.html">📈 Stats</a>
+  </nav>
+
+  <div class="page-content">
+    <div class="pgh"><h2>Reference</h2><p>Diacritics (harakat), numbers &amp; script notes</p></div>
+
+    <div class="ref-section">
+      <h3>What are diacritics?</h3>
+      <div class="ref-note">
+        Persian is normally written <b>without</b> short vowel marks — readers infer vowels from context.
+        Diacritics (<b>harakat / اعراب</b>) are small marks placed above or below letters to indicate exact
+        pronunciation. They appear in the Qur'an, children's books, dictionaries, and wherever precise reading
+        is required. Knowing them helps you decode any fully-voweled Persian or Arabic text.
+      </div>
+    </div>
+
+    <div class="ref-section">
+      <h3>Short vowel marks (harakat)</h3>
+      <div class="diac-grid" id="diac-grid"></div>
+    </div>
+
+    <div class="ref-section">
+      <h3>Other marks</h3>
+      <div class="diac-grid" id="diac-other-grid"></div>
+    </div>
+
+    <div class="ref-section">
+      <h3>Persian / Farsi numerals</h3>
+      <div class="ref-note">
+        Persian uses <b>Eastern Arabic numerals</b> (۰–۹), distinct from Western Arabic (0–9). They are written
+        left-to-right like Western numbers. Dates, prices, and page numbers in Persian text all use these forms.
+        The shapes differ slightly from Arabic numerals — compare ۴ (four) and ۶ (six) especially.
+      </div>
+      <div class="num-grid" id="num-grid"></div>
+    </div>
+
+    <div class="ref-section">
+      <h3>Script notes</h3>
+      <div class="ref-note">
+        <b>Direction:</b> Persian is written right-to-left. Only numbers and foreign words embedded in Persian
+        text run left-to-right.<br>
+        <b>Cursive:</b> Letters connect to their neighbours in almost all cases. Non-connecting letters
+        (ا، د، ذ، ر، ز، ژ، و) only connect to the letter on their right.<br>
+        <b>No capital letters:</b> Persian has no upper/lower case distinction.<br>
+        <b>Hamza (ء):</b> A glottal stop mark, can appear on its own or on a carrier letter (أ، إ، ؤ، ئ).
+        In modern Persian its use is simplified compared to Arabic.<br>
+        <b>Alef variants:</b> آ (alef with madda, /â/) is a very common initial vowel. اَ (alef with fatha)
+        and اِ (alef with kasra) appear in fully voweled text.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="../../data/js/shared.js"></script>
+<script>
+renderRef();
+</script>
+</body>
+</html>

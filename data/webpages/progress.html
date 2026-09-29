@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>AlefBe · Progress</title>
+<meta name="description" content="Track your Persian alphabet learning progress across all 32 letters.">
+<link rel="icon" type="image/x-icon" href="../../data/icons/favicon.ico">
+<link rel="apple-touch-icon" href="../../data/icons/icon-192.png">
+<script defer src="/_vercel/insights/script.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Amiri:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../data/css/styles.css">
+</head>
+<body>
+
+<button class="theme-btn" onclick="toggleTheme()" id="theme-btn">☀️ Light</button>
+
+<div class="app">
+  <header>
+    <div class="logo">الفبا</div>
+    <div class="logo-sub">AlefBe · Learn Persian</div>
+  </header>
+
+  <nav>
+    <a href="../../index.html">📚 Learn</a>
+    <a href="trace.html">✍️ Trace</a>
+    <a href="practice.html">🎯 Practice</a>
+    <a href="quiz.html">📝 Quiz</a>
+    <a href="phonics.html">🔤 Phonics</a>
+    <a href="games.html">🎮 Games</a>
+    <a href="dictionary.html">📖 Dict</a>
+    <a href="references.html">🔣 Ref</a>
+    <a href="grammar.html">📜 Grammar</a>
+    <a class="active" href="progress.html">📊 Progress</a>
+    <a href="stats.html">📈 Stats</a>
+  </nav>
+
+  <div class="page-content">
+    <div class="pgh"><h2>Your Progress</h2><p>32 Persian letters</p></div>
+
+    <div class="stg">
+      <div class="stc"><div class="stv" id="stl">0</div><div class="stl">Learned</div></div>
+      <div class="stc"><div class="stv" id="stt">0</div><div class="stl">Traced</div></div>
+      <div class="stc"><div class="stv" id="stq">0</div><div class="stl">Quizzed</div></div>
+      <div class="stc"><div class="stv" id="sta">—</div><div class="stl">Accuracy</div></div>
+    </div>
+
+    <div class="acw">
+      <h3>Quiz Accuracy</h3>
+      <div class="acbar"><div class="acfill" id="acf" style="width:0%"></div></div>
+      <div class="acl" id="acl">No quiz data yet</div>
+    </div>
+
+    <div class="pgleg">
+      <span><i style="background:var(--dim)"></i>Not traced</span>
+      <span><i style="background:var(--ok)"></i>Guided</span>
+      <span><i style="background:var(--blue)"></i>Outline</span>
+      <span><i style="background:var(--gold)"></i>Mastered</span>
+    </div>
+
+    <div class="pgsec">
+      <h3>Letter Mastery</h3>
+      <div class="pgg" id="pgg"></div>
+    </div>
+
+    <button class="rbtn" onclick="resetAll()">Reset All Progress</button>
+  </div>
+</div>
+
+<!-- Letter detail modal -->
+<div class="modal-wrap" id="modal-wrap" onclick="if(event.target===this)closeM()">
+  <div class="modal">
+    <button class="mclose" onclick="closeM()">✕</button>
+    <div class="ml" id="ml"></div>
+    <div id="mbadge"></div>
+    <div class="mt" id="mt"></div>
+    <div class="mipa" id="mipa"></div>
+    <div class="msec"><h3>Letter Forms</h3><div class="forms-grid" id="mforms"></div></div>
+    <div class="msec"><h3>Pronunciation</h3>
+      <div class="snd-row"><span>🔊</span><span id="msnd"></span><button class="spk" onclick="speak()">▶ Listen</button></div>
+    </div>
+    <div class="msec"><h3>Example Word</h3>
+      <div class="ex-row">
+        <div class="ex-fa" id="mex-fa"></div>
+        <div><div class="ex-t" id="mex-t"></div><div class="ex-m" id="mex-m"></div></div>
+      </div>
+    </div>
+    <button class="mlearn" id="mlearnbtn" onclick="togLearned()"></button>
+    <button class="mtrace" onclick="traceFromM()">✍️ Trace This Letter</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="../../data/js/shared.js"></script>
+<script>
+renderProg();
+</script>
+</body>
+</html>

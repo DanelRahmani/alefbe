@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>AlefBe · Trace</title>
+<meta name="description" content="Trace Persian letters with guided, outline and freehand modes.">
+<link rel="icon" type="image/x-icon" href="../../data/icons/favicon.ico">
+<link rel="apple-touch-icon" href="../../data/icons/icon-192.png">
+<script defer src="/_vercel/insights/script.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Amiri:ital,wght@0,400;0,700;1,400&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../data/css/styles.css">
+</head>
+<body>
+
+<button class="theme-btn" onclick="toggleTheme()" id="theme-btn">☀️ Light</button>
+
+<div class="app">
+  <header>
+    <div class="logo">الفبا</div>
+    <div class="logo-sub">AlefBe · Learn Persian</div>
+  </header>
+
+  <nav>
+    <a href="../../index.html">📚 Learn</a>
+    <a class="active" href="trace.html">✍️ Trace</a>
+    <a href="practice.html">🎯 Practice</a>
+    <a href="quiz.html">📝 Quiz</a>
+    <a href="phonics.html">🔤 Phonics</a>
+    <a href="games.html">🎮 Games</a>
+    <a href="dictionary.html">📖 Dict</a>
+    <a href="references.html">🔣 Ref</a>
+    <a href="grammar.html">📜 Grammar</a>
+    <a href="progress.html">📊 Progress</a>
+    <a href="stats.html">📈 Stats</a>
+  </nav>
+
+  <div class="page-content">
+    <div class="trace-header">
+      <div>
+        <h2 id="tlvlname">Guided Trace</h2>
+        <div style="font-size:.59rem;color:var(--dim);margin-top:1px" id="tlvldesc">Trace the full letter then press ✓ Check</div>
+      </div>
+      <div class="lv-tabs">
+        <button class="lvtab on" onclick="setLv(0,this)">Guided</button>
+        <button class="lvtab" onclick="setLv(1,this)">Outline</button>
+        <button class="lvtab" onclick="setLv(2,this)">Freehand</button>
+      </div>
+    </div>
+
+    <div class="lnav-bar">
+      <button class="lnbtn" onclick="fNav(-1)">‹</button>
+      <div class="lnc">
+        <span class="lnchar" id="tnchar"></span>
+        <span class="lnsub" id="tnsub"></span>
+      </div>
+      <button class="lnbtn" onclick="fNav(1)">›</button>
+    </div>
+
+    <div class="dot-nav" id="t-dots"></div>
+
+    <div class="form-tabs" id="t-form-tabs">
+      <button class="ftab on" id="tf0" onclick="setForm(0,this)">Isolated</button>
+      <button class="ftab" id="tf1" onclick="setForm(1,this)">Initial</button>
+      <button class="ftab" id="tf2" onclick="setForm(2,this)">Medial</button>
+      <button class="ftab" id="tf3" onclick="setForm(3,this)">Final</button>
+    </div>
+
+    <div class="clbl" id="t-clbl"></div>
+
+    <div class="cw" id="trace-cw">
+      <canvas id="gc"></canvas>
+      <canvas id="cc"></canvas>
+      <canvas id="dc" class="dc"></canvas>
+      <div class="rov" id="t-rov">
+        <div class="rov-sc" id="rovsc">—</div>
+        <div class="rov-lbl">Score</div>
+        <div class="rov-stars" id="rovstars"></div>
+        <div class="rov-msg" id="rovmsg"></div>
+        <div class="rov-btns" id="t-rov-btns">
+          <button class="rovbtn sec" onclick="resetT('free')">↺ Retry</button>
+          <button class="rovbtn" id="rov-next" onclick="nextFree()">Next →</button>
+        </div>
+      </div>
+      <div class="cf" id="t-cf">
+        <span class="cf-char" id="t-cfch" style="font-size:160px"></span>
+      </div>
+    </div>
+
+    <div class="ttools">
+      <button class="tbtn check" id="t-check" onclick="pressCheck('free')" disabled>✓ Check</button>
+      <button class="tbtn" onclick="doHint()">💡 Hint</button>
+      <button class="tbtn danger" onclick="resetT('free')">↺ Reset</button>
+      <div class="br">
+        <label>Brush</label>
+        <input type="range" id="tbr" min="8" max="28" value="16" oninput="TR.brush=+this.value">
+      </div>
+    </div>
+
+    <div class="hint-txt">Draw through the numbered circles • Press ✓ Check when you've drawn the full letter</div>
+  </div>
+</div>
+
+<!-- Letter detail modal (so openM() works from dot-nav) -->
+<div class="modal-wrap" id="modal-wrap" onclick="if(event.target===this)closeM()">
+  <div class="modal">
+    <button class="mclose" onclick="closeM()">✕</button>
+    <div class="ml" id="ml"></div>
+    <div id="mbadge"></div>
+    <div class="mt" id="mt"></div>
+    <div class="mipa" id="mipa"></div>
+    <div class="msec"><h3>Letter Forms</h3><div class="forms-grid" id="mforms"></div></div>
+    <div class="msec"><h3>Pronunciation</h3>
+      <div class="snd-row"><span>🔊</span><span id="msnd"></span><button class="spk" onclick="speak()">▶ Listen</button></div>
+    </div>
+    <div class="msec"><h3>Example Word</h3>
+      <div class="ex-row">
+        <div class="ex-fa" id="mex-fa"></div>
+        <div><div class="ex-t" id="mex-t"></div><div class="ex-m" id="mex-m"></div></div>
+      </div>
+    </div>
+    <button class="mlearn" id="mlearnbtn" onclick="togLearned()"></button>
+    <button class="mtrace" onclick="closeM()">✍️ Trace This Letter</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="../../data/js/shared.js"></script>
+<script>
+// ── Read any letter jump passed from index.html via localStorage ──
+const _jumpId = localStorage.getItem('alefbe_trace_id');
+if (_jumpId !== null) {
+  TR.idx = Math.max(0, Math.min(31, parseInt(_jumpId, 10) || 0));
+  TR.form = 0;
+  localStorage.removeItem('alefbe_trace_id');
+}
+
+// ── Boot the tracer ──
+initTracer();
+
+// ── Modal "Trace This Letter" just closes the modal (already on trace page) ──
+// Override traceFromM to jump in-page instead of navigating away
+function traceFromM() {
+  const id = CL.id;
+  closeM();
+  jumpFree(id);
+}
+</script>
+</body>
+</html>
