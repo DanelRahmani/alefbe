@@ -10,17 +10,17 @@ export const prepositions: Lesson[] = [
     source:
       "Mahootian, Persian (Routledge Descriptive Grammars), on را and specificity; Lazard, A Grammar of Contemporary Persian, on را and definiteness; Stilo, Talattof and Clinton, Modern Persian: Spoken and Written, on spoken رُو / -o.",
     vocab: [
-      { fa: "کِتاب", en: "book" },
-      { fa: "خَریدَن", en: "to buy" },
-      { fa: "دیدَن", en: "to see" },
-      { fa: "دَر", en: "door" },
-      { fa: "بَسْتَن", en: "to close" },
-      { fa: "آهَنْگ", en: "song" },
-      { fa: "نامه", en: "letter" },
-      { fa: "مُعَلِّم", en: "teacher" },
-      { fa: "نون", written: "نان", en: "bread" },
-      { fa: "چایی", written: "چای", en: "tea" },
-      { fa: "آشْپَزْخونه", written: "آشْپَزْخانه", en: "kitchen" },
+      { fa: "کِتاب", en: "book", topic: "learning" },
+      { fa: "خَریدَن", en: "to buy", topic: "verbs" },
+      { fa: "دیدَن", en: "to see", topic: "verbs" },
+      { fa: "دَر", en: "door", topic: "home" },
+      { fa: "بَسْتَن", en: "to close", topic: "verbs" },
+      { fa: "آهَنْگ", en: "song", topic: "everyday" },
+      { fa: "نامه", en: "letter (mail)", topic: "everyday" },
+      { fa: "مُعَلِّم", en: "teacher", topic: "people" },
+      { fa: "نون", written: "نان", en: "bread", topic: "food" },
+      { fa: "چایی", written: "چای", en: "tea", topic: "food" },
+      { fa: "آشْپَزْخونه", written: "آشْپَزْخانه", en: "kitchen", topic: "home" },
     ],
     blocks: [
       {

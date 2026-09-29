@@ -2,7 +2,7 @@
 
 import { DRILL_WORDS } from "@/content/drill-words";
 import { checkFa, checkTranslit, type Verdict } from "./answers";
-import { DIGITS, DRILL_GROUPS, LETTERS, letterByChar } from "./persian/letters";
+import { DIGITS, DRILL_GROUPS, LETTERS, SAME_SOUND, letterByChar } from "./persian/letters";
 import { normalizeFa } from "./persian/normalize";
 import { transliterate } from "./translit";
 
@@ -61,7 +61,6 @@ export function wordsFor(unlocked: Set<string>): WordCard[] {
 }
 
 // Same-sound families, for naming the slip in "sound → letter".
-const SAME_SOUND = [["س", "ص", "ث"], ["ز", "ذ", "ض", "ظ"], ["ت", "ط"], ["ح", "ه"], ["غ", "ق"]];
 const family = (ch: string) => SAME_SOUND.find((f) => f.includes(ch));
 
 export function checkDrill(mode: DrillMode, id: string, input: string): Verdict {

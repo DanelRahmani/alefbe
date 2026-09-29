@@ -60,3 +60,43 @@ export const onPath = (samples: Pt[], p: Pt, radius: number) => samples.some((s)
 export function glyphLayout(size: number) {
   return { fontPx: size * 0.62, x: size / 2, y: size / 2 + size * 0.06 - (23 * size) / 360 };
 }
+
+/** Best scores are kept per letter, form and level: "ب:initial:outline". */
+export const traceKey = (ch: string, form: Form, level: TraceLevel) => `${ch}:${form}:${level}`;
+
+/** Version 1 kept one best score per form; those were guided traces. */
+export function migrateTraceV1(old: unknown): Record<string, number> {
+  const out: Record<string, number> = {};
+  if (!old || typeof old !== "object") return out;
+  for (const [k, v] of Object.entries(old as Record<string, unknown>)) {
+    if (typeof v !== "number") continue;
+    out[k.split(":").length === 2 ? `${k}:guided` : k] = v;
+  }
+  return out;
+}
+
+/** The hardest level at which any form of a letter has been passed. */
+export function letterMastery(best: Record<string, number>, ch: string): TraceLevel | null {
+  let top = -1;
+  for (const [k, v] of Object.entries(best)) {
+    const [c, , lv] = k.split(":");
+    if (c !== ch || v < PASS_SCORE) continue;
+    top = Math.max(top, TRACE_LEVELS.findIndex((l) => l.id === lv));
+  }
+  return top >= 0 ? TRACE_LEVELS[top].id : null;
+}
+
+export interface FormBest {
+  score: number;
+  level: TraceLevel;
+}
+
+/** A letter form's best: the hardest level passed, else the highest score so far. */
+export function bestForForm(best: Record<string, number>, ch: string, form: Form): FormBest | null {
+  const tries = TRACE_LEVELS.map((l) => ({ score: best[traceKey(ch, form, l.id)], level: l.id })).filter(
+    (t): t is FormBest => t.score !== undefined,
+  );
+  const passed = tries.filter((t) => t.score >= PASS_SCORE);
+  if (passed.length) return passed[passed.length - 1];
+  return tries.reduce<FormBest | null>((a, t) => (!a || t.score > a.score ? t : a), null);
+}

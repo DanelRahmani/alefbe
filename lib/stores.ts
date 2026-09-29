@@ -6,6 +6,9 @@ import { SETTINGS_KEY } from "./prepaint";
 import { createPersistentStore } from "./storage";
 import { emptyDeck, type DeckState } from "./srs";
 import type { DrillMode } from "./drill";
+import { emptyActivity, record, type ActivityData, type ActivityEvent } from "./activity";
+import { migrateTraceV1 } from "./trace";
+import { DEFAULT_QUIZ, type QuizSetup } from "./quiz";
 
 export type Theme = "system" | "light" | "dark";
 
@@ -58,8 +61,12 @@ export interface DrillUi {
 
 export const drillUiStore = createPersistentStore<DrillUi>("alefbe2:drill-ui", { keyboard: false, wordsOpen: false });
 
-/** Best tracing score per letter form, keyed "ب:initial". */
-export const traceStore = createPersistentStore<Record<string, number>>("alefbe2:trace", {});
+/** Best tracing score per letter form and level, keyed "ب:initial:guided" (lib/trace.ts traceKey). */
+export const traceStore = createPersistentStore<Record<string, number>>(
+  "alefbe2:trace",
+  {},
+  { version: 2, migrate: (old, from) => (from === 1 ? migrateTraceV1(old) : undefined) },
+);
 
 export interface PathFilter {
   kind: LessonKind | "all";
@@ -71,5 +78,43 @@ export const pathFilterStore = createPersistentStore<PathFilter>("alefbe2:path-f
   hideDone: false,
 });
 
+/** What the learner practised, day by day (lib/activity.ts). */
+export const activityStore = createPersistentStore<ActivityData>("alefbe2:activity", emptyActivity());
+
+export function logActivity(e: ActivityEvent) {
+  activityStore.set((a) => record(a, e, new Date()));
+}
+
+export type ChartFilter = "all" | "persian" | "non-joining" | "to-learn";
+export type PenSize = "thin" | "medium" | "thick";
+
+/** Remembered choices on the practice pages. */
+export interface PracticeUi {
+  chart: ChartFilter;
+  pen: PenSize;
+  quiz: QuizSetup;
+  flashSpeed: number;
+}
+
+export const practiceUiStore = createPersistentStore<PracticeUi>("alefbe2:practice-ui", {
+  chart: "all",
+  pen: "medium",
+  quiz: DEFAULT_QUIZ,
+  flashSpeed: 1200,
+});
+
+/** Best score per game, keyed by game id. */
+export const gamesStore = createPersistentStore<Record<string, { best: number; played: number }>>("alefbe2:games", {});
+
 /** Every store, for refreshing after an import or reset. */
-export const ALL_STORES = [settingsStore, progressStore, srsStore, drillUiStore, traceStore, pathFilterStore];
+export const ALL_STORES = [
+  settingsStore,
+  progressStore,
+  srsStore,
+  drillUiStore,
+  traceStore,
+  pathFilterStore,
+  activityStore,
+  practiceUiStore,
+  gamesStore,
+];

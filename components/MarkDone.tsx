@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useStore } from "@/lib/storage";
-import { progressStore } from "@/lib/stores";
+import { logActivity, progressStore } from "@/lib/stores";
 import { Seal } from "./Seal";
 
 export function MarkDone({ lessonKey }: { lessonKey: string }) {
@@ -12,6 +12,7 @@ export function MarkDone({ lessonKey }: { lessonKey: string }) {
 
   const finish = () => {
     progressStore.set((p) => ({ ...p, [lessonKey]: true }));
+    logActivity({ kind: "lesson" });
     setJustStamped(true);
   };
   const undo = () => {

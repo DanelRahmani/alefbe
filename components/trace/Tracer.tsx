@@ -1,15 +1,40 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { LETTERS, formOf, type Form } from "@/lib/persian/letters";
-import { PASS_SCORE, TRACE_LEVELS, coverAt, glyphLayout, onPath, snapToPath, starsFor, type TraceLevel } from "@/lib/trace";
+import { FORM_LABELS, LETTERS, formOf, formsOf, type Form } from "@/lib/persian/letters";
+import {
+  PASS_SCORE,
+  TRACE_LEVELS,
+  coverAt,
+  glyphLayout,
+  letterMastery,
+  onPath,
+  snapToPath,
+  starsFor,
+  traceKey,
+  type TraceLevel,
+} from "@/lib/trace";
 import { traceScore, type Pt, type TracePaths } from "@/lib/trace-path";
 import { computePaths } from "./paths";
 import { useStore } from "@/lib/storage";
-import { settingsStore, traceStore } from "@/lib/stores";
+import { logActivity, practiceUiStore, settingsStore, traceStore, type PenSize } from "@/lib/stores";
 
-const FORM_LABEL: Record<Form, string> = { isolated: "Isolated", initial: "Initial", medial: "Medial", final: "Final" };
-const formsFor = (i: number): Form[] => (LETTERS[i].joins ? ["isolated", "initial", "medial", "final"] : ["isolated", "final"]);
+const FORM_LABEL = FORM_LABELS;
+const formsFor = (i: number): Form[] => formsOf(LETTERS[i]);
+const PEN: Record<PenSize, number> = { thin: 0.03, medium: 0.045, thick: 0.065 };
+const MASTERY_LABEL: Record<TraceLevel, string> = { guided: "passed guided", outline: "passed in outline", freehand: "written from memory" };
+
+export interface TraceStart {
+  index: number;
+  form: Form;
+  level?: TraceLevel;
+}
+
+/** A tracing session drives the tracer one letter form at a time. */
+export interface TraceSessionHooks {
+  /** Called once per item: the best score reached, and whether it passed (null score: skipped untried). */
+  onFinish(result: { score: number | null; passed: boolean }): void;
+}
 /** Dots weigh as much as this many path samples. */
 const DOT_WEIGHT = 4;
 
@@ -27,10 +52,10 @@ interface Progress {
   dots: boolean[];
 }
 
-export function Tracer() {
-  const [index, setIndex] = useState(0);
-  const [form, setForm] = useState<Form>("isolated");
-  const [level, setLevel] = useState<TraceLevel>("guided");
+export function Tracer({ initial, session }: { initial?: TraceStart; session?: TraceSessionHooks } = {}) {
+  const [index, setIndex] = useState(initial?.index ?? 0);
+  const [form, setForm] = useState<Form>(initial?.form ?? "isolated");
+  const [level, setLevel] = useState<TraceLevel>(initial?.level ?? "guided");
   const [size, setSize] = useState(320);
   const [paths, setPaths] = useState<(TracePaths & { key: string }) | null>(null);
   const [progress, setProgress] = useState<Progress>({ covered: [], dots: [] });
@@ -40,6 +65,9 @@ export function Tracer() {
   const [demo, setDemo] = useState(0);
   const best = useStore(traceStore);
   const settings = useStore(settingsStore);
+  const ui = useStore(practiceUiStore);
+  const attemptBest = useRef<number | null>(null);
+  const finished = useRef(false);
 
   const wrapRef = useRef<HTMLDivElement>(null);
   const guideRef = useRef<HTMLCanvasElement>(null);
@@ -55,7 +83,7 @@ export function Tracer() {
   const key = `${index}:${form}:${size}`;
   const ready = paths?.key === key ? paths : null;
   const samples = useMemo(() => (ready ? ready.strokes.flat() : []), [ready]);
-  const bestKey = `${letter.ch}:${form}`;
+  const bestKey = traceKey(letter.ch, form, level);
   const hitR = size * 0.06;
 
   useEffect(() => {
@@ -301,6 +329,7 @@ export function Tracer() {
 
   const load = (i: number, f: Form) => {
     window.clearTimeout(autoCheck.current);
+    attemptBest.current = null;
     locked.current = false;
     pen.current = { down: false, lx: 0, ly: 0, mx: 0, my: 0, total: 0, on: 0 };
     setIndex(i);
@@ -311,7 +340,7 @@ export function Tracer() {
     setDemo(0);
   };
 
-  const check = useCallback(() => {
+  const check = () => {
     window.clearTimeout(autoCheck.current);
     const { covered, dots } = progressRef.current;
     const got = covered.filter(Boolean).length + DOT_WEIGHT * dots.filter(Boolean).length;
@@ -320,11 +349,21 @@ export function Tracer() {
     const score = traceScore(all ? got / all : 0, accuracy);
     const passed = score >= PASS_SCORE;
     setResult({ score, passed });
+    attemptBest.current = Math.max(attemptBest.current ?? 0, score);
+    traceStore.set((b) => (score > (b[bestKey] ?? -1) ? { ...b, [bestKey]: score } : b));
     if (passed) {
       locked.current = true;
-      traceStore.set((b) => ({ ...b, [bestKey]: Math.max(b[bestKey] ?? 0, score) }));
+      logActivity({ kind: "trace", letter: letter.ch, form });
+      if (session) window.setTimeout(() => finish(true), 1400);
     }
-  }, [bestKey]);
+  };
+
+  /** Session mode: report this item once, then the parent moves on. */
+  const finish = (passed: boolean) => {
+    if (!session || finished.current) return;
+    finished.current = true;
+    session.onFinish({ score: attemptBest.current, passed });
+  };
 
   const record = (p: Pt) => {
     if (!ready) return;
@@ -356,7 +395,7 @@ export function Tracer() {
     const p = { x: ((e.clientX - rect.left) / rect.width) * size, y: ((e.clientY - rect.top) / rect.height) * size };
     return snapToPath(samples, p, hitR * 1.5, strength);
   };
-  const brush = () => Math.max(10, size * 0.045);
+  const brush = () => Math.max(6, size * PEN[ui.pen]);
   const inkColor = () => rgba(cssVar("--ink") || "#1b1f3b", 0.55);
 
   const onDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
@@ -403,6 +442,7 @@ export function Tracer() {
   };
 
   const next = () => {
+    if (session) return finish(!!result?.passed);
     const forms = formsFor(index);
     const k = forms.indexOf(form);
     if (k < forms.length - 1) load(index, forms[k + 1]);
@@ -430,17 +470,25 @@ export function Tracer() {
 
   return (
     <div className="tracer">
+      {!session && (
       <div className="ui tracer-controls">
-        <label className="tracer-pick">
-          <span className="sr-only">Letter</span>
-          <select value={index} onChange={(e) => load(Number(e.target.value), "isolated")}>
-            {LETTERS.map((l, i) => (
-              <option key={l.ch} value={i}>
-                {l.ch} {l.name}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div className="letter-strip" role="group" aria-label="Letter" dir="rtl">
+          {LETTERS.map((l, i) => {
+            const m = letterMastery(best, l.ch);
+            return (
+              <button
+                key={l.ch}
+                type="button"
+                className={`letter-strip-btn naskh${m ? ` mastery-${m}` : ""}`}
+                aria-pressed={i === index}
+                aria-label={`${l.name}${m ? `, ${MASTERY_LABEL[m]}` : ""}`}
+                onClick={() => load(i, "isolated")}
+              >
+                {l.ch}
+              </button>
+            );
+          })}
+        </div>
         <div className="tracer-tabs" role="group" aria-label="Letter form">
           {formsFor(index).map((f) => (
             <button key={f} type="button" aria-pressed={form === f} onClick={() => load(index, f)}>
@@ -464,7 +512,21 @@ export function Tracer() {
             </button>
           ))}
         </div>
+        <div className="tracer-tabs" role="group" aria-label="Pen size">
+          {(["thin", "medium", "thick"] as PenSize[]).map((p) => (
+            <button
+              key={p}
+              type="button"
+              aria-pressed={ui.pen === p}
+              onClick={() => practiceUiStore.set((u) => ({ ...u, pen: p }))}
+            >
+              <span aria-hidden="true" className="pen-dot" style={{ width: PEN[p] * 160, height: PEN[p] * 160 }} />
+              <span className="sr-only">{p} pen</span>
+            </button>
+          ))}
+        </div>
       </div>
+      )}
 
       <p className="ui tracer-now">
         <span className="naskh tracer-now-glyph" lang="fa" dir="rtl">
@@ -472,7 +534,8 @@ export function Tracer() {
         </span>
         <span>
           <strong>{letter.name}</strong>, {FORM_LABEL[form].toLowerCase()} form
-          {bestScore ? (
+          {session ? <span className="text-muted"> · {TRACE_LEVELS.find((l) => l.id === level)!.label.toLowerCase()}</span> : null}
+          {bestScore !== undefined ? (
             <span className="text-muted">
               {" "}
               · best {"★".repeat(starsFor(bestScore)) || "☆"} {bestScore}%
@@ -511,12 +574,12 @@ export function Tracer() {
         <button type="button" className="drill-btn drill-btn-quiet" onClick={() => setDemo((d) => d + 1)} disabled={!ready}>
           Show me
         </button>
-        {level !== "guided" && (
+        {level !== "guided" && !result?.passed && (
           <button type="button" className="drill-btn drill-btn-quiet" onClick={showLetter}>
             Show the letter
           </button>
         )}
-        <button type="button" className="drill-btn drill-btn-quiet" onClick={next}>
+        <button type="button" className={result?.passed ? "drill-btn" : "drill-btn drill-btn-quiet"} onClick={next}>
           {result?.passed ? "Next" : "Skip"}
         </button>
       </div>

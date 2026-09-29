@@ -144,6 +144,11 @@ The old app's letter table and words were checked before any reuse. Errors found
 - ع was given only as a glottal stop. In everyday Persian it is often just a break or a lengthened vowel.
 - ضعیف was transliterated *zaif*; it is *za'if*.
 - چای was *châi*; in this scheme it is *chây*.
+- The Reference view read kasra as "/e/i/" and damma as "/o/u/". In Persian, zir is *e* and pish is *o*; the long *i* and *u* are written with ی and و.
+- It listed three tanvins (-an, -en, -on). Persian writes only the *-an* one (ـاً, as in لُطْفاً), in some Arabic loanwords.
+- Its tashdid example was the Arabic کَبَّر; the course uses Persian words (بَچّه).
+- It listed ٪ among the marks; it is the per-cent sign.
+- The letter examples ضعیف *zaif* and چای *châi* are corrected as above; ژاپن, the old key word for ژ, stays in the word list, and the letter pages use ژاکَت.
 
 (The grammar page and the 60-word list are checked in Phase 4, when their content is reused.)
 

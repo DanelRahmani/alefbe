@@ -1,3 +1,4 @@
+import { LegacyHash } from "@/components/LegacyHash";
 import { PathBrowser, type PathUnit } from "@/components/PathBrowser";
 import { FaText } from "@/components/FaText";
 import { UNITS, faNumber } from "@/content/units";
@@ -41,6 +42,7 @@ export default function Home() {
         </p>
       </section>
       <PathBrowser units={units} />
+      <LegacyHash />
     </>
   );
 }

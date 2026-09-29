@@ -6,12 +6,12 @@ import { DRILL_GROUPS, checkDrill, modeInfo, wordById, wordsFor, type DrillMode 
 import { DIGITS, FORMS, formOf, letterByChar, type Form } from "@/lib/persian/letters";
 import { answer, deckStats, nextCard, practiceCard, unlockNext, unlockedIds } from "@/lib/srs";
 import { useStore } from "@/lib/storage";
-import { deckOf, drillUiStore, progressStore, srsStore, type SrsData } from "@/lib/stores";
+import { deckOf, drillUiStore, logActivity, progressStore, srsStore, type SrsData } from "@/lib/stores";
 import type { Verdict } from "@/lib/answers";
 import { FaText } from "../FaText";
 import { Rich } from "../Rich";
 import { PersianKeyboard } from "./PersianKeyboard";
-import { formatWait, useLegacyMigration, useMinuteClock } from "./useDrillClock";
+import { formatWait, useMinuteClock } from "./useDrillClock";
 
 /** The lesson that teaches the vowel marks the word drills rely on. */
 export const WORD_GATE_LESSON = "sounds/long-vowels";
@@ -106,7 +106,6 @@ export function Drill({ mode }: { mode: DrillMode }) {
   const ui = useStore(drillUiStore);
   const progress = useStore(progressStore);
   const now = useMinuteClock();
-  useLegacyMigration();
 
   const [started, setStarted] = useState(false);
   const [cardId, setCardId] = useState<string | null>(null);
@@ -162,6 +161,7 @@ export function Drill({ mode }: { mode: DrillMode }) {
     }
     const v = checkDrill(mode, cardId, input);
     setVerdict(v);
+    logActivity({ kind: "drill" });
     if (practice) return;
     const s = srsStore.get();
     const groups = info.kind === "letters" ? DRILL_GROUPS : [];
@@ -280,7 +280,7 @@ export function Drill({ mode }: { mode: DrillMode }) {
           {info.kind === "words" && (
             <p className="mt-3 text-sm text-muted">
               More words open as you unlock letters in{" "}
-              <Link href="/script/drill/sound" className="hl underline underline-offset-4">
+              <Link href="/practice/drill/sound" className="hl underline underline-offset-4">
                 Letter → sound
               </Link>
               .

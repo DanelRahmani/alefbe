@@ -2,7 +2,7 @@
 // The rules live in lib/persian/analyze.ts and are documented in content/STYLE.md.
 
 import { analyzeWord, joinPhons } from "./persian/analyze";
-import { PERSIAN_DIGITS, PUNCT_TRANSLIT, TATWEEL, ZWNJ, isLetter, isMark } from "./persian/chars";
+import { PERSIAN_DIGITS, PUNCT_TRANSLIT, TATWEEL, ZWJ, ZWNJ, isLetter, isMark } from "./persian/chars";
 
 export interface TranslitResult {
   text: string;
@@ -11,10 +11,15 @@ export interface TranslitResult {
 
 export type WordKind = "word" | "affix" | "letter";
 
-/** Affixes start with a tatweel (ـها); a bare single letter is a letter mentioned by name. */
+/**
+ * Affixes start with a tatweel (ـها). A bare single letter is a letter
+ * mentioned by name, and so is a joining form that ends in a tatweel
+ * (initial بـ, medial ـبـ); a final form (ـب) reads like an affix.
+ */
 export function wordKind(word: string): WordKind {
+  const bare = word.split(TATWEEL).join("").split(ZWJ).join("");
+  if ([...bare].length === 1 && isLetter(bare) && (word === bare || word.endsWith(TATWEEL))) return "letter";
   if (word.startsWith(TATWEEL)) return "affix";
-  if ([...word].length === 1 && isLetter(word)) return "letter";
   return "word";
 }
 

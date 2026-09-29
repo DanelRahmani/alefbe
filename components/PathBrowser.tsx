@@ -39,8 +39,25 @@ function NextCard({ units, progress }: { units: PathUnit[]; progress: Record<str
   if (!all.length) return null;
   const started = all.some((l) => progress[l.key]);
   const next = all.find((l) => !progress[l.key]);
-  const target = next ?? all[0];
-  const label = !next ? "Every lesson finished · review" : started ? "Next lesson" : "First lesson";
+  if (!next) {
+    return (
+      <Link href="/practice" className="next-card">
+        <span className="next-mark" aria-hidden="true">
+          <Seal size={64} />
+        </span>
+        <span className="next-text">
+          <span className="ui eyebrow">Every lesson finished</span>
+          <span className="next-title">Every lesson carries its seal.</span>
+          <span className="next-summary">Keep the letters sharp in the trainer, or revisit any lesson below.</span>
+        </span>
+        <span className="next-arrow" aria-hidden="true">
+          →
+        </span>
+      </Link>
+    );
+  }
+  const target = next;
+  const label = started ? "Next lesson" : "First lesson";
   return (
     <Link href={target.href} className="next-card">
       <span className="next-mark naskh" aria-hidden="true">
@@ -95,13 +112,13 @@ export function PathBrowser({ units }: { units: PathUnit[] }) {
       <NextCard units={units} progress={progress} />
 
       <div className="ui quick-links">
-        <Link href="/script/drill/sound" className="pill-link">
+        <Link href="/practice/drill/sound" className="pill-link">
           <span className="pill-count" aria-label={`${due} due`}>
             {due}
           </span>
           Letter trainer <span aria-hidden="true">→</span>
         </Link>
-        <Link href="/script/trace" className="pill-link">
+        <Link href="/practice/trace" className="pill-link">
           <span className="pill-count pill-count-quiet naskh" aria-hidden="true">
             ب
           </span>

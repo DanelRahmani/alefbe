@@ -16,6 +16,9 @@
 .site-header {
   border-bottom: 1px solid var(--rule);
 }
+.site-header-inner .brand {
+  margin-inline-end: 0.5rem;
+}
 .site-header-inner {
   max-width: 46rem;
   margin: 0 auto;
@@ -30,18 +33,98 @@
   letter-spacing: -0.01em;
   text-decoration: none;
 }
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px);
+}
 .site-nav {
   flex: 1;
-  display: flex;
-  gap: 1rem;
+  display: none;
+  gap: 1.1rem;
   font-size: 0.95rem;
 }
 .site-nav a {
+  position: relative;
   text-decoration: none;
   color: var(--muted);
 }
-.site-nav a:hover {
+.site-nav a:hover,
+.site-nav a[aria-current="page"] {
   color: var(--ink);
+}
+.site-nav a[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.35rem;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+.header-spacer {
+  flex: 1;
+}
+@media (min-width: 720px) {
+  .site-nav {
+    display: flex;
+  }
+  .header-spacer {
+    display: none;
+  }
+}
+
+/* Phones: the sections as a tab bar at the foot of the screen. */
+.tab-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  padding-bottom: env(safe-area-inset-bottom);
+  background: var(--surface);
+  border-top: 1px solid var(--rule);
+}
+.tab-bar a {
+  display: grid;
+  justify-items: center;
+  gap: 0.05rem;
+  padding: 0.35rem 0.1rem 0.45rem;
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 0.7rem;
+}
+.tab-fa {
+  font-family: var(--font-vazirmatn), system-ui, sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+.tab-bar a[aria-current="page"] {
+  color: var(--accent);
+}
+.tab-bar a[aria-current="page"] .tab-label {
+  font-weight: 600;
+}
+@media (min-width: 720px) {
+  .tab-bar {
+    display: none;
+  }
+}
+@media (max-width: 719px) {
+  body {
+    padding-bottom: calc(3.6rem + env(safe-area-inset-bottom));
+  }
+}
+@media print {
+  .tab-bar,
+  .site-header {
+    display: none;
+  }
 }
 .site-main {
   max-width: 46rem;
@@ -898,4 +981,9 @@
 .lesson-nav a {
   color: var(--accent);
   text-decoration: none;
+}
+
+/* The header is sticky: anchored sections stop below it. */
+[id] {
+  scroll-margin-top: 4.5rem;
 }

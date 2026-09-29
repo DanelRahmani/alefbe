@@ -35,9 +35,9 @@ export default async function LessonPage({ params }: PageProps<"/learn/[unit]/[l
       <nav aria-label="Breadcrumb" className="ui breadcrumb">
         <Link href="/">Path</Link>
         <span aria-hidden="true"> / </span>
-        <span className="has-fa">
+        <Link href={`/#${ref.unit.slug}`} className="has-fa">
           Unit {ref.unitIndex}: <Rich text={ref.unit.title} translit={false} />
-        </span>
+        </Link>
       </nav>
 
       <header className="lesson-head">

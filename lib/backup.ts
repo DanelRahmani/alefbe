@@ -2,7 +2,10 @@
 // of both this format and the old Alefbe app's export. Pure: storage access is
 // passed in, so it runs in tests and in the browser alike.
 
+import { emptyActivity, type ActivityData } from "./activity";
 import { legacyUnlockedGroups } from "./drill";
+import { mergeLegacyActivity, mergeLegacyTrace, parseLegacyExport, type LegacyData } from "./legacy";
+import { migrateTraceV1 } from "./trace";
 
 export const BACKUP_KEYS = [
   "alefbe2:settings",
@@ -11,7 +14,13 @@ export const BACKUP_KEYS = [
   "alefbe2:trace",
   "alefbe2:path-filter",
   "alefbe2:drill-ui",
+  "alefbe2:activity",
+  "alefbe2:practice-ui",
+  "alefbe2:games",
 ] as const;
+
+/** Keys the "Reset statistics" button clears; lessons, trainer and tracing stay. */
+export const STATS_KEYS = ["alefbe2:activity", "alefbe2:games"] as const;
 
 export interface Backup {
   app: "alefbe";
@@ -23,7 +32,7 @@ export interface Backup {
 
 export type Parsed =
   | { kind: "alefbe"; exported: string; stores: Backup["stores"] }
-  | { kind: "legacy"; exported?: string; learned: number[] }
+  | { kind: "legacy"; exported?: string; data: LegacyData }
   | { kind: "invalid"; reason: string };
 
 type Read = (key: string) => string | null;
@@ -67,11 +76,40 @@ export function parseBackup(text: string): Parsed {
     }
     return { kind: "alefbe", exported: String(d.exported ?? ""), stores: stores as Backup["stores"] };
   }
-  if (typeof d.version === "number" && Array.isArray(d.learned)) {
-    const learned = d.learned.filter((n): n is number => Number.isInteger(n) && n >= 0 && n < 32);
-    return { kind: "legacy", exported: typeof d.exported === "string" ? d.exported : undefined, learned };
-  }
+  const legacy = parseLegacyExport(d);
+  if (legacy) return { kind: "legacy", exported: typeof d.exported === "string" ? d.exported : undefined, data: legacy };
   return { kind: "invalid", reason: "This file isn't an Alefbe backup." };
+}
+
+/** A store's envelope {v, data}, or undefined. */
+function readEnvelope<T>(read: Read, key: string): { v: number; data: T } | undefined {
+  try {
+    const raw = read(key);
+    return raw ? (JSON.parse(raw) as { v: number; data: T }) : undefined;
+  } catch {
+    return undefined;
+  }
+}
+const readData = <T,>(read: Read, key: string): T | undefined => readEnvelope<T>(read, key)?.data;
+
+/** Fold the old app's data into the stores: groups, tracing, activity. */
+export function applyLegacy(d: LegacyData, read: Read, write: Write) {
+  const open = legacyUnlockedGroups(JSON.stringify({ l: d.learned }));
+  const srs = readData<{ decks: Record<string, { cards: object; unlocked: number }>; legacyChecked?: boolean }>(read, "alefbe2:srs") ?? {
+    decks: {},
+  };
+  const lift = (mode: string) => {
+    const deck = srs.decks[mode] ?? { cards: {}, unlocked: 1 };
+    return { ...deck, unlocked: Math.max(deck.unlocked ?? 1, open ?? 1) };
+  };
+  write("alefbe2:srs", JSON.stringify({ v: 1, data: { ...srs, legacyChecked: true, decks: { ...srs.decks, sound: lift("sound"), letter: lift("letter") } } }));
+
+  const env = readEnvelope<Record<string, number>>(read, "alefbe2:trace");
+  const trace = env?.v === 2 ? env.data : migrateTraceV1(env?.data);
+  write("alefbe2:trace", JSON.stringify({ v: 2, data: mergeLegacyTrace(trace, d) }));
+
+  const activity = readData<ActivityData>(read, "alefbe2:activity") ?? emptyActivity();
+  write("alefbe2:activity", JSON.stringify({ v: 1, data: { ...mergeLegacyActivity({ ...emptyActivity(), ...activity }, d), legacy: true } }));
 }
 
 /** Write a parsed backup into storage. */
@@ -80,20 +118,5 @@ export function applyBackup(p: Parsed, read: Read, write: Write) {
     for (const [k, v] of Object.entries(p.stores)) if (v !== undefined) write(k, v);
     return;
   }
-  if (p.kind === "legacy") {
-    const open = legacyUnlockedGroups(JSON.stringify({ l: p.learned })) ?? 1;
-    let srs: { decks: Record<string, { cards: object; unlocked: number }>; legacyChecked?: boolean } = { decks: {} };
-    try {
-      const raw = read("alefbe2:srs");
-      if (raw) srs = JSON.parse(raw).data ?? srs;
-    } catch {
-      // Unreadable: start from empty decks.
-    }
-    const lift = (mode: string) => {
-      const d = srs.decks[mode] ?? { cards: {}, unlocked: 1 };
-      return { ...d, unlocked: Math.max(d.unlocked ?? 1, open) };
-    };
-    const next = { ...srs, legacyChecked: true, decks: { ...srs.decks, sound: lift("sound"), letter: lift("letter") } };
-    write("alefbe2:srs", JSON.stringify({ v: 1, data: next }));
-  }
+  if (p.kind === "legacy") applyLegacy(p.data, read, write);
 }

@@ -1,7 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { ALL_LESSONS, UNITS } from "@/content/units";
 import { DRILL_WORDS } from "@/content/drill-words";
-import { LETTERS } from "@/lib/persian/letters";
+import { LETTERS, letterByChar } from "@/lib/persian/letters";
+import { MARKS, SIGNS } from "@/content/reference";
+import { STATIC_PAGES, isPage } from "@/content/routes";
+import { readdirSync } from "node:fs";
+import { join } from "node:path";
+
+/** Lessons the marks table points at that are planned but not written yet. */
+const FUTURE_LESSONS = new Set(["sounds/short-vowels", "sounds/tashdid-sukun-tanvin", "sounds/vowel-carriers", "sounds/hamze-and-eyn", "ezafe/after-vowels"]);
 import type { Block, Example, Lesson } from "@/content/types";
 import { parseMarkup, splitScript, type Token } from "@/lib/markup";
 import { checkReadable } from "@/lib/persian/syllables";
@@ -62,6 +69,8 @@ function blockStrs(b: Block, where: string): Str[] {
       ];
     case "link":
       return b.text ? [{ where, kind: "rich", s: b.text }] : [];
+    case "letters":
+      return [];
     case "quiz":
       return b.questions.flatMap((q, i) => [
         { where: `${where} q${i + 1}`, kind: "rich" as const, s: q.prompt },
@@ -84,7 +93,16 @@ function lessonStrs(l: Lesson, where: string): Str[] {
 
 const ALL: Str[] = [
   ...DRILL_WORDS.flatMap((w, i) => [{ where: `drill word ${i + 1} (${w.en})`, kind: "fa" as const, s: w.fa }]),
-  ...LETTERS.map((l) => ({ where: `letter ${l.ch} hint`, kind: "rich" as const, s: l.hint })),
+  ...LETTERS.flatMap((l) => [
+    { where: `letter ${l.ch} hint`, kind: "rich" as const, s: l.hint },
+    { where: `letter ${l.ch} key word`, kind: "fa" as const, s: l.key.fa },
+  ]),
+  ...MARKS.flatMap((m) => [
+    { where: `mark ${m.name}`, kind: "fa" as const, s: m.fa },
+    { where: `mark ${m.name} example`, kind: "fa" as const, s: m.example },
+    { where: `mark ${m.name} does`, kind: "rich" as const, s: m.does },
+  ]),
+  ...SIGNS.map((x) => ({ where: `sign ${x.name}`, kind: "rich" as const, s: x.does })),
   ...UNITS.flatMap((u) => [
     { where: `unit ${u.slug} titleFa`, kind: "fa" as const, s: u.titleFa },
     { where: `unit ${u.slug} description`, kind: "rich" as const, s: u.description },
@@ -249,10 +267,29 @@ describe("content: structure", () => {
   });
 
   it("internal links point at real pages", () => {
-    const pages = new Set(["/", ...ALL_LESSONS.map((r) => r.href)]);
     const bad: string[] = [];
     for (const r of ALL_LESSONS)
-      for (const b of r.lesson.blocks) if (b.type === "link" && b.href.startsWith("/") && !pages.has(b.href)) bad.push(`${r.number}: ${b.href}`);
+      for (const b of r.lesson.blocks) if (b.type === "link" && b.href.startsWith("/") && !isPage(b.href)) bad.push(`${r.number}: ${b.href}`);
+    for (const m of MARKS) if (m.lesson && !isPage(`/learn/${m.lesson}`) && !FUTURE_LESSONS.has(m.lesson)) bad.push(`mark ${m.name}: ${m.lesson}`);
+    expect(bad).toEqual([]);
+  });
+
+  it("the page list matches the app folder", () => {
+    const found: string[] = [];
+    const walk = (dir: string, route: string) => {
+      for (const e of readdirSync(dir, { withFileTypes: true })) {
+        if (e.isDirectory() && !e.name.startsWith("[")) walk(join(dir, e.name), `${route}/${e.name}`);
+        if (e.isFile() && e.name === "page.tsx") found.push(route || "/");
+      }
+    };
+    walk("app", "");
+    expect(found.sort()).toEqual([...STATIC_PAGES].sort());
+  });
+
+  it("letters in lesson letter cards are letters of the alphabet", () => {
+    const bad: string[] = [];
+    for (const r of ALL_LESSONS)
+      for (const b of r.lesson.blocks) if (b.type === "letters") for (const ch of b.chars) if (!letterByChar.has(ch)) bad.push(`${r.number}: ${ch}`);
     expect(bad).toEqual([]);
   });
 });

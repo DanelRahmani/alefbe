@@ -1,3 +1,5 @@
+import type { Topic } from "./topics";
+
 /** Persian with markup, fully vowel-marked (see content/STYLE.md). */
 export type Fa = string;
 /** English with markup; Persian runs inside it are detected automatically. */
@@ -82,12 +84,16 @@ export type Block =
     }
   | { type: "dialogue"; title?: Rich; lines: DialogueLine[]; note?: Rich }
   | { type: "link"; href: string; label: string; text?: Rich }
-  | { type: "quiz"; questions: QuizQuestion[] };
+  | { type: "quiz"; questions: QuizQuestion[] }
+  /** Letter cards (forms, name, sound, key word) for letters of the alphabet. */
+  | { type: "letters"; chars: string[] };
 
 export interface VocabItem {
   fa: Fa;
   en: string;
   written?: Fa;
+  /** Dictionary topic. */
+  topic?: Topic;
 }
 
 export interface Lesson {

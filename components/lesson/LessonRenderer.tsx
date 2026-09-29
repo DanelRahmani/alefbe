@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { Block, Example, Register } from "@/content/types";
 import { FaText } from "../FaText";
 import { Rich, hasFa } from "../Rich";
+import { LetterCards } from "./LetterCards";
 import { Quiz } from "./Quiz";
 
 interface Ctx {
@@ -204,6 +205,8 @@ function BlockView({ b, ctx }: { b: Block; ctx: Ctx }) {
       );
     case "quiz":
       return <Quiz questions={b.questions} />;
+    case "letters":
+      return <LetterCards chars={b.chars} />;
   }
 }
 

@@ -39,7 +39,7 @@ describe("parseBackup", () => {
   });
   it("recognises an export from the old Alefbe app", () => {
     const p = parseBackup(JSON.stringify({ version: 2, exported: "2026-03-01T00:00:00Z", learned: [0, 1, 2], quiz: {} }));
-    expect(p).toMatchObject({ kind: "legacy", learned: [0, 1, 2], exported: "2026-03-01T00:00:00Z" });
+    expect(p).toMatchObject({ kind: "legacy", data: { learned: [0, 1, 2] }, exported: "2026-03-01T00:00:00Z" });
   });
   it("rejects files that are not Alefbe backups", () => {
     expect(parseBackup("not json").kind).toBe("invalid");
@@ -75,5 +75,29 @@ describe("applyBackup", () => {
     const srs = JSON.parse(to.map.get("alefbe2:srs")!).data;
     expect(srs.decks.sound.unlocked).toBe(5);
     expect(srs.decks.sound.cards["ا"].box).toBe(3);
+  });
+  it("carries an old export's quiz, tracing and stats across", () => {
+    const to = fakeStorage();
+    const old = {
+      version: 2,
+      learned: [0],
+      quiz: { tot: 12, cor: 9 },
+      prog: { "1": { comp: [1, 0, 0] } },
+      stats: { sessions: { "1": 2 }, forms: { "0": 2 }, days: ["2026-02-01"] },
+    };
+    applyBackup(parseBackup(JSON.stringify(old)), to.read, to.write);
+    expect(JSON.parse(to.map.get("alefbe2:trace")!)).toEqual({ v: 2, data: { "ب:isolated:guided": 70 } });
+    const act = JSON.parse(to.map.get("alefbe2:activity")!).data;
+    expect(act.legacyQuiz).toEqual([9, 12]);
+    expect(act.traced).toEqual({ ب: 2 });
+    expect(act.days).toEqual({ "2026-02-01": { trace: 1 } });
+  });
+});
+
+describe("applyBackup: tracing scores in the older format", () => {
+  it("upgrades them before adding the old app's passes", () => {
+    const to = fakeStorage({ "alefbe2:trace": JSON.stringify({ v: 1, data: { "ب:isolated": 92 } }) });
+    applyBackup(parseBackup(JSON.stringify({ version: 2, learned: [], prog: { "3": { comp: [1, 0, 0] } } })), to.read, to.write);
+    expect(JSON.parse(to.map.get("alefbe2:trace")!)).toEqual({ v: 2, data: { "ب:isolated:guided": 92, "ت:isolated:guided": 70 } });
   });
 });

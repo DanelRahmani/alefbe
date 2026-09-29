@@ -1,11 +1,15 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { BACKUP_KEYS, applyBackup, backupFileName, makeBackup, parseBackup, type Parsed } from "@/lib/backup";
-import { DRILL_GROUPS } from "@/lib/drill";
-import { PASS_SCORE } from "@/lib/trace";
+import Link from "next/link";
+import { BACKUP_KEYS, STATS_KEYS, applyBackup, backupFileName, makeBackup, parseBackup, type Parsed } from "@/lib/backup";
+import { calendar, emptyActivity, quizTotals, streak, totals } from "@/lib/activity";
+import { FORM_LABELS, FORMS, LETTERS } from "@/lib/persian/letters";
+import { letterMastery } from "@/lib/trace";
+import { letterStatus, STATUS_LABEL } from "@/lib/letter-status";
 import { useStore } from "@/lib/storage";
-import { ALL_STORES, applySettings, deckOf, progressStore, settingsStore, srsStore, traceStore } from "@/lib/stores";
+import { ALL_STORES, activityStore, applySettings, deckOf, progressStore, settingsStore, srsStore, traceStore } from "@/lib/stores";
+import { useMinuteClock } from "./drill/useDrillClock";
 
 const read = (k: string) => {
   try {
@@ -33,12 +37,22 @@ export function ProgressPanel({ totalLessons }: { totalLessons: number }) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [pending, setPending] = useState<Exclude<Parsed, { kind: "invalid" }> | null>(null);
   const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
-  const [confirmReset, setConfirmReset] = useState(false);
+  const [confirmReset, setConfirmReset] = useState<"all" | "stats" | null>(null);
+  const activity = useStore(activityStore);
+  const clock = useMinuteClock();
+  const now = clock ? new Date(clock) : null;
 
   const finished = Object.keys(progress).length;
-  const learnt = Object.values(srs.decks).reduce((n, d) => n + Object.values(d?.cards ?? {}).filter((c) => c.box >= 3).length, 0);
-  const groupsOpen = deckOf(srs, "sound").unlocked;
-  const traced = Object.values(trace).filter((s) => s >= PASS_SCORE).length;
+  const soundDeck = deckOf(srs, "sound");
+  const learnt = LETTERS.filter((l) => ["learned", "solid"].includes(letterStatus(soundDeck, l.ch))).length;
+  const tracedLetters = LETTERS.filter((l) => letterMastery(trace, l.ch)).length;
+  const [qRight, qTotal] = quizTotals(activity);
+  const sums = totals(activity);
+  const exercises = sums.drill + sums.trace + sums.quiz + sums.game;
+  const days = now ? streak(activity, now) : 0;
+  const weeks = now ? calendar(activity, now, 8) : [];
+  const maxDay = Math.max(1, ...weeks.flat().map((d) => d.total));
+  const formMax = Math.max(1, ...FORMS.map((f) => activity.forms[f] ?? 0));
 
   const download = () => {
     try {
@@ -59,7 +73,7 @@ export function ProgressPanel({ totalLessons }: { totalLessons: number }) {
   };
 
   const choose = async (file: File | undefined) => {
-    setConfirmReset(false);
+    setConfirmReset(null);
     if (!file) return;
     const parsed = parseBackup(await file.text());
     if (fileRef.current) fileRef.current.value = "";
@@ -81,7 +95,7 @@ export function ProgressPanel({ totalLessons }: { totalLessons: number }) {
         ok: true,
         text:
           pending.kind === "legacy"
-            ? "Imported the letters you learned in the old Alefbe app; the trainer has opened their groups."
+            ? "Imported your old Alefbe progress: the trainer has opened your letters, and your tracing and quiz history is added."
             : "Backup restored: lessons, trainer, tracing and settings.",
       });
     } catch {
@@ -90,20 +104,22 @@ export function ProgressPanel({ totalLessons }: { totalLessons: number }) {
     setPending(null);
   };
 
-  const reset = () => {
+  const reset = (what: "all" | "stats") => {
     try {
-      BACKUP_KEYS.forEach((k) => window.localStorage.removeItem(k));
+      (what === "all" ? BACKUP_KEYS : STATS_KEYS).forEach((k) => window.localStorage.removeItem(k));
+      // Either way the old app's data stays imported-once, so it doesn't come back on the next visit.
+      activityStore.set(() => ({ ...emptyActivity(), legacy: true }));
       refreshAll();
-      setMessage({ ok: true, text: "All progress cleared." });
+      setMessage({ ok: true, text: what === "all" ? "All progress cleared." : "Statistics cleared. Lessons, trainer and tracing are kept." });
     } catch {
       setMessage({ ok: false, text: "Progress couldn't be cleared. Your browser may be blocking storage." });
     }
-    setConfirmReset(false);
+    setConfirmReset(null);
   };
 
   return (
     <div className="ui">
-      <dl className="stat-grid">
+      <dl className="stat-grid stat-grid-6">
         <div className="stat">
           <dt>Lessons finished</dt>
           <dd>
@@ -111,20 +127,108 @@ export function ProgressPanel({ totalLessons }: { totalLessons: number }) {
           </dd>
         </div>
         <div className="stat">
-          <dt>Letter groups open</dt>
+          <dt>Day streak</dt>
           <dd>
-            {groupsOpen} <span>of {DRILL_GROUPS.length}</span>
+            {days} <span>{days === 1 ? "day" : "days"}</span>
           </dd>
         </div>
         <div className="stat">
-          <dt>Cards learnt (box 3+)</dt>
-          <dd>{learnt}</dd>
+          <dt>Letters learned</dt>
+          <dd>
+            {learnt} <span>of 32</span>
+          </dd>
         </div>
         <div className="stat">
-          <dt>Letter forms traced</dt>
-          <dd>{traced}</dd>
+          <dt>Letters traced</dt>
+          <dd>
+            {tracedLetters} <span>of 32</span>
+          </dd>
+        </div>
+        <div className="stat">
+          <dt>Quiz accuracy</dt>
+          <dd>
+            {qTotal ? (
+              <>
+                {Math.round((100 * qRight) / qTotal)}%<span> of {qTotal}</span>
+              </>
+            ) : (
+              <span>no quiz yet</span>
+            )}
+          </dd>
+        </div>
+        <div className="stat">
+          <dt>Exercises done</dt>
+          <dd>{exercises}</dd>
         </div>
       </dl>
+
+      <section className="backup">
+        <h2 className="lesson-h2">The last eight weeks</h2>
+        <div
+          className="activity-cal"
+          role="img"
+          aria-label={`Practice on ${weeks.flat().filter((d) => d.total > 0).length} of the last ${weeks.length * 7} days`}
+        >
+          <div className="activity-days" aria-hidden="true">
+            {["Mon", "", "Wed", "", "Fri", "", "Sun"].map((d, i) => (
+              <span key={i}>{d}</span>
+            ))}
+          </div>
+          {weeks.map((w, i) => (
+            <div key={i} className="activity-week">
+              {w.map((d) => (
+                <span
+                  key={d.key}
+                  className={`activity-day${d.future ? " is-future" : ""}${d.total ? " is-on" : ""}`}
+                  style={d.total ? { opacity: 0.35 + (0.65 * d.total) / maxDay } : undefined}
+                  title={d.future ? undefined : `${d.key}: ${d.total} ${d.total === 1 ? "activity" : "activities"}`}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="backup">
+        <h2 className="lesson-h2">Letters</h2>
+        <p className="mt-1 text-sm text-muted">
+          Colour shows the trainer (letter → sound); ✎ shows tracing; the small number is how often you traced the letter.
+        </p>
+        <ol className="mastery-grid" dir="rtl">
+          {LETTERS.map((l) => {
+            const st = letterStatus(soundDeck, l.ch);
+            const m = letterMastery(trace, l.ch);
+            const n = activity.traced[l.ch] ?? 0;
+            return (
+              <li key={l.ch}>
+                <Link
+                  href={`/script/${l.slug}`}
+                  className={`mastery-tile status-${st}`}
+                  aria-label={`${l.name}: ${STATUS_LABEL[st]}${m ? ", traced" : ""}${n ? `, traced ${n} times` : ""}`}
+                >
+                  <span className="naskh" lang="fa">
+                    {l.ch}
+                  </span>
+                  {m && <span className={`trace-mark trace-${m}`}>✎</span>}
+                  {n > 0 && <span className="mastery-count">{n}</span>}
+                </Link>
+              </li>
+            );
+          })}
+        </ol>
+        <h3 className="ui eyebrow mt-6">Tracing by form</h3>
+        <ul className="form-bars">
+          {FORMS.map((f) => (
+            <li key={f}>
+              <span>{FORM_LABELS[f]}</span>
+              <span className="form-bar" aria-hidden="true">
+                <span style={{ width: `${(100 * (activity.forms[f] ?? 0)) / formMax}%` }} />
+              </span>
+              <span className="tabular-nums">{activity.forms[f] ?? 0}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
 
       <section className="backup">
         <h2 className="lesson-h2">Back up and restore</h2>
@@ -152,19 +256,19 @@ export function ProgressPanel({ totalLessons }: { totalLessons: number }) {
           <div className="confirm-box" role="alertdialog" aria-labelledby="import-q">
             <p id="import-q" className="font-medium">
               {pending.kind === "legacy"
-                ? `Import ${pending.learned.length} learned letters from the old Alefbe app${
+                ? `Import your progress from the old Alefbe app (${pending.data.learned.length} learned letters)${
                     dateOf(pending.exported) ? ` (${dateOf(pending.exported)})` : ""
                   }?`
                 : `Replace your current progress with the backup from ${dateOf(pending.exported) ?? "an unknown date"}?`}
             </p>
             <p className="mt-1 text-sm text-muted">
               {pending.kind === "legacy"
-                ? "This opens the matching letter groups in the trainer. Nothing else changes."
+                ? "This opens the matching letter groups in the trainer and adds your old tracing, quiz and practice history. Nothing is removed."
                 : "Your lessons, trainer, tracing and settings in this browser are overwritten."}
             </p>
             <div className="mt-3 flex gap-2">
               <button type="button" className="drill-btn" onClick={confirmImport}>
-                {pending.kind === "legacy" ? "Import letters" : "Replace progress"}
+                {pending.kind === "legacy" ? "Import" : "Replace progress"}
               </button>
               <button type="button" className="drill-btn drill-btn-quiet" onClick={() => setPending(null)}>
                 Cancel
@@ -183,22 +287,31 @@ export function ProgressPanel({ totalLessons }: { totalLessons: number }) {
         {confirmReset ? (
           <div className="confirm-box" role="alertdialog" aria-labelledby="reset-q">
             <p id="reset-q" className="font-medium">
-              Clear all progress in this browser?
+              {confirmReset === "all" ? "Clear all progress in this browser?" : "Clear your statistics?"}
             </p>
-            <p className="mt-1 text-sm text-muted">Finished lessons, trainer cards, tracing scores and settings are removed.</p>
+            <p className="mt-1 text-sm text-muted">
+              {confirmReset === "all"
+                ? "Finished lessons, trainer cards, tracing scores, statistics and settings are removed."
+                : "The streak, calendar, quiz accuracy, counts and game scores are removed. Lessons, trainer and tracing stay."}
+            </p>
             <div className="mt-3 flex gap-2">
-              <button type="button" className="drill-btn danger-btn" onClick={reset}>
-                Clear everything
+              <button type="button" className="drill-btn danger-btn" onClick={() => reset(confirmReset)}>
+                {confirmReset === "all" ? "Clear everything" : "Clear statistics"}
               </button>
-              <button type="button" className="drill-btn drill-btn-quiet" onClick={() => setConfirmReset(false)}>
-                Keep my progress
+              <button type="button" className="drill-btn drill-btn-quiet" onClick={() => setConfirmReset(null)}>
+                Keep them
               </button>
             </div>
           </div>
         ) : (
-          <button type="button" className="drill-btn drill-btn-quiet mt-3" onClick={() => setConfirmReset(true)}>
-            Clear all progress
-          </button>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <button type="button" className="drill-btn drill-btn-quiet" onClick={() => setConfirmReset("stats")}>
+              Reset statistics
+            </button>
+            <button type="button" className="drill-btn drill-btn-quiet" onClick={() => setConfirmReset("all")}>
+              Clear all progress
+            </button>
+          </div>
         )}
       </section>
     </div>

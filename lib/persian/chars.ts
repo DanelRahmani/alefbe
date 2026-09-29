@@ -34,6 +34,9 @@ export const PUNCT_TRANSLIT: Record<string, string> = {
   "؟": "?",
   "«": '"',
   "»": '"',
+  "٫": ".", // momayyez, the decimal point
+  "٬": ",", // thousands separator
+  "٪": "%",
 };
 
 /** Consonant letters and their transliteration (و ی ه ا آ ع and hamze are handled by rules). */

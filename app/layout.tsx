@@ -3,10 +3,14 @@ import Link from "next/link";
 import { Amiri, Literata, Vazirmatn } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { DisplaySettings } from "@/components/DisplaySettings";
+import { LegacyMigration } from "@/components/LegacyMigration";
+import { ServiceWorker } from "@/components/ServiceWorker";
+import { SiteNav, TabBar } from "@/components/SiteNav";
 import { PREPAINT_SCRIPT } from "@/lib/prepaint";
 import "./globals.css";
 import "./components.css";
 import "./drill.css";
+import "./practice.css";
 
 const literata = Literata({ subsets: ["latin", "latin-ext"], variable: "--font-literata", display: "swap" });
 const vazirmatn = Vazirmatn({ subsets: ["arabic", "latin"], variable: "--font-vazirmatn", display: "swap" });
@@ -48,11 +52,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <Link href="/" className="brand">
               Alefbe
             </Link>
-            <nav aria-label="Main" className="ui site-nav">
-              <Link href="/">Path</Link>
-              <Link href="/script">Script</Link>
-              <Link href="/progress">Progress</Link>
-            </nav>
+            <SiteNav />
+            <span className="header-spacer" />
             <DisplaySettings />
           </div>
         </header>
@@ -62,6 +63,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <footer className="ui site-footer">
           <p>Iranian Persian, explained in English. Progress is saved in this browser only.</p>
         </footer>
+        <TabBar />
+        <LegacyMigration />
+        <ServiceWorker />
         <Analytics />
       </body>
     </html>

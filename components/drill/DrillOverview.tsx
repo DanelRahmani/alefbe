@@ -5,12 +5,11 @@ import { DRILL_GROUPS, MODES, wordsFor } from "@/lib/drill";
 import { deckStats, unlockedIds } from "@/lib/srs";
 import { useStore } from "@/lib/storage";
 import { deckOf, srsStore } from "@/lib/stores";
-import { useLegacyMigration, useMinuteClock } from "./useDrillClock";
+import { useMinuteClock } from "./useDrillClock";
 
 export function DrillOverview() {
   const data = useStore(srsStore);
   const now = useMinuteClock();
-  useLegacyMigration();
   const letters = new Set(unlockedIds(DRILL_GROUPS, deckOf(data, "sound")));
 
   return (
@@ -21,7 +20,7 @@ export function DrillOverview() {
         const s = deckStats(cands, deck, now);
         return (
           <li key={m.id}>
-            <Link href={`/script/drill/${m.id}`} className="drill-mode">
+            <Link href={`/practice/drill/${m.id}`} className="drill-mode">
               <span className="drill-mode-title">{m.title}</span>
               <span className="drill-mode-blurb">{m.blurb}</span>
               <span className="ui drill-mode-stats">
