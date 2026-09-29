@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { ALL_LESSONS, UNITS } from "@/content/units";
 import { DRILL_WORDS } from "@/content/drill-words";
-import { LETTERS, letterByChar } from "@/lib/persian/letters";
+import { DRILL_GROUPS, LETTERS, letterByChar } from "@/lib/persian/letters";
 import { MARKS, SIGNS } from "@/content/reference";
+import { GRAMMAR } from "@/content/grammar";
 import { STATIC_PAGES, isPage } from "@/content/routes";
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -10,10 +11,10 @@ import { join } from "node:path";
 /** Lessons the marks table points at that are planned but not written yet. */
 const FUTURE_LESSONS = new Set(["sounds/short-vowels", "sounds/tashdid-sukun-tanvin", "sounds/vowel-carriers", "sounds/hamze-and-eyn", "ezafe/after-vowels"]);
 import type { Block, Example, Lesson } from "@/content/types";
-import { parseMarkup, splitScript, type Token } from "@/lib/markup";
+import { parseMarkup, splitScript, translitWithErrors, type Token } from "@/lib/markup";
 import { checkReadable } from "@/lib/persian/syllables";
 import { NON_JOINING, ZWNJ } from "@/lib/persian/chars";
-import { tokenizeFa, transliterateWithErrors, wordKind } from "@/lib/translit";
+import { tokenizeFa, wordKind } from "@/lib/translit";
 import { normalizeFa } from "@/lib/persian/normalize";
 
 // ── Collect every string in the course, tagged Persian (fa) or English (rich).
@@ -70,7 +71,21 @@ function blockStrs(b: Block, where: string): Str[] {
     case "link":
       return b.text ? [{ where, kind: "rich", s: b.text }] : [];
     case "letters":
+    case "syllables":
+    case "display":
       return [];
+    case "build":
+      return b.items.flatMap((it, i) => [
+        { where: `${where} #${i + 1}`, kind: "fa" as const, s: it.word },
+        { where: `${where} #${i + 1} en`, kind: "rich" as const, s: it.en },
+      ]);
+    case "practice":
+      return b.text ? [{ where, kind: "rich", s: b.text }] : [];
+    case "skip":
+      return [
+        { where, kind: "rich", s: b.text },
+        { where: where + " label", kind: "rich", s: b.label },
+      ];
     case "quiz":
       return b.questions.flatMap((q, i) => [
         { where: `${where} q${i + 1}`, kind: "rich" as const, s: q.prompt },
@@ -103,6 +118,7 @@ const ALL: Str[] = [
     { where: `mark ${m.name} does`, kind: "rich" as const, s: m.does },
   ]),
   ...SIGNS.map((x) => ({ where: `sign ${x.name}`, kind: "rich" as const, s: x.does })),
+  ...GRAMMAR.flatMap((t) => t.blocks.flatMap((b, i) => blockStrs(b, `grammar ${t.slug} block ${i + 1} (${b.type})`))),
   ...UNITS.flatMap((u) => [
     { where: `unit ${u.slug} titleFa`, kind: "fa" as const, s: u.titleFa },
     { where: `unit ${u.slug} description`, kind: "rich" as const, s: u.description },
@@ -180,12 +196,11 @@ describe("content: readable in 'all marks' mode", () => {
     const problems: string[] = [];
     for (const str of ALL) {
       for (const run of persianRuns(str)) {
-        for (const t of run) {
-          if (t.kind === "override") continue;
-          for (const tok of tokenizeFa(t.text)) {
-            if (!tok.word || wordKind(tok.s) !== "word") continue;
-            for (const e of checkReadable(tok.s)) problems.push(`${str.where}: ${e}`);
-          }
+        // A highlight can split a word (می‌{رَوَم}); check whole words, with overrides as breaks.
+        const text = run.map((t) => (t.kind === "override" ? " " : t.text)).join("");
+        for (const tok of tokenizeFa(text)) {
+          if (!tok.word || wordKind(tok.s) !== "word") continue;
+          for (const e of checkReadable(tok.s)) problems.push(`${str.where}: ${e}`);
         }
       }
     }
@@ -198,17 +213,10 @@ describe("content: transliteration", () => {
     const problems: string[] = [];
     for (const str of ALL) {
       for (const run of persianRuns(str)) {
-        let text = "";
-        for (const t of run) {
-          if (t.kind === "override") {
-            text += t.translit;
-            continue;
-          }
-          const r = transliterateWithErrors(t.text);
-          problems.push(...r.errors.map((e) => `${str.where}: ${e}`));
-          text += r.text;
-        }
-        if (/[؀-ۿ]/.test(text)) problems.push(`${str.where}: leftover Persian in "${text}"`);
+        // The renderer's own transliteration: highlighted pieces of one word are read together.
+        const r = translitWithErrors(run);
+        problems.push(...r.errors.map((e) => `${str.where}: ${e}`));
+        if (/[؀-ۿ]/.test(r.text)) problems.push(`${str.where}: leftover Persian in "${r.text}"`);
       }
     }
     expect(problems).toEqual([]);
@@ -274,6 +282,16 @@ describe("content: structure", () => {
     expect(bad).toEqual([]);
   });
 
+  it("grammar topics point at real units and lessons", () => {
+    const bad: string[] = [];
+    const units = new Set(UNITS.map((u) => u.slug));
+    for (const t of GRAMMAR) {
+      if (!units.has(t.unit)) bad.push(`${t.slug}: unit ${t.unit}`);
+      if (t.lesson && !ALL_LESSONS.some((r) => r.key === t.lesson)) bad.push(`${t.slug}: lesson ${t.lesson}`);
+    }
+    expect(bad).toEqual([]);
+  });
+
   it("the page list matches the app folder", () => {
     const found: string[] = [];
     const walk = (dir: string, route: string) => {
@@ -286,10 +304,16 @@ describe("content: structure", () => {
     expect(found.sort()).toEqual([...STATIC_PAGES].sort());
   });
 
-  it("letters in lesson letter cards are letters of the alphabet", () => {
+  it("letter blocks name real letters, groups and units", () => {
     const bad: string[] = [];
+    const units = new Set(UNITS.map((u) => u.slug));
     for (const r of ALL_LESSONS)
-      for (const b of r.lesson.blocks) if (b.type === "letters") for (const ch of b.chars) if (!letterByChar.has(ch)) bad.push(`${r.number}: ${ch}`);
+      for (const b of r.lesson.blocks) {
+        if (b.type === "letters") for (const ch of b.chars) if (!letterByChar.has(ch)) bad.push(`${r.number}: ${ch}`);
+        if (b.type === "syllables") for (const ch of b.consonants) if (!letterByChar.has(ch)) bad.push(`${r.number}: ${ch}`);
+        if (b.type === "practice" && !(b.group >= 0 && b.group < DRILL_GROUPS.length)) bad.push(`${r.number}: group ${b.group}`);
+        if (b.type === "skip") for (const u of b.units) if (!units.has(u)) bad.push(`${r.number}: unit ${u}`);
+      }
     expect(bad).toEqual([]);
   });
 });

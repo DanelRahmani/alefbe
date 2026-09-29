@@ -2,7 +2,7 @@
 // the old app's table (corrections noted in content/STYLE.md): ص ض ط ظ are not
 // "emphatic" in Persian, and ق / غ share one sound in Iranian speech.
 
-import { NON_JOINING, TATWEEL, isLetter, isMark } from "./chars";
+import { CONSONANTS, NON_JOINING, TATWEEL, isLetter, isMark } from "./chars";
 
 export interface Letter {
   ch: string;
@@ -163,3 +163,25 @@ export function highlightLetter(word: string, l: LetterInWord): string {
   const end = l.at + 1 + l.marks.length;
   return `${word.slice(0, l.at)}{${word.slice(l.at, end)}}${word.slice(end)}`;
 }
+
+export type SyllableVowel = "a" | "e" | "o" | "â" | "i" | "u";
+
+export const SYLLABLE_VOWELS: { v: SyllableVowel; label: string; how: string }[] = [
+  { v: "a", label: "a", how: "zabar" },
+  { v: "e", label: "e", how: "zir" },
+  { v: "o", label: "o", how: "pish" },
+  { v: "â", label: "â", how: "ا" },
+  { v: "i", label: "i", how: "ی" },
+  { v: "u", label: "u", how: "و" },
+];
+
+/** A consonant with one vowel, fully marked: بَ بِ بُ با بی بو (after alef: اَ اِ اُ آ ای او). */
+export function syllable(c: string, v: SyllableVowel): string {
+  if (c === "ا") return { a: "اَ", e: "اِ", o: "اُ", â: "آ", i: "ای", u: "او" }[v];
+  return { a: c + "َ", e: c + "ِ", o: c + "ُ", â: c + "ا", i: c + "ی", u: c + "و" }[v];
+}
+
+const SYLLABLE_ONSET: Record<string, string> = { ...CONSONANTS, و: "v", ی: "y", ه: "h", ا: "", ع: "" };
+
+/** How a grid syllable sounds (a lone بِ would otherwise read as an ezafe). */
+export const syllableSound = (c: string, v: SyllableVowel) => (SYLLABLE_ONSET[c] ?? "") + v;

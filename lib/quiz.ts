@@ -134,13 +134,23 @@ export function checkQuizTyped(type: QuizType, l: Letter, input: string): Verdic
     if (fam?.includes(typed)) return { ok: false, hint: `Same sound, other letter: ${l.ch} (${l.name}) not ${typed}.` };
     return { ok: false };
   }
-  if (type === "letter-sound") return checkTranslit(input, [...l.sounds, ...namesOf(l)]);
-  return checkTranslit(input, namesOf(l));
+  const names = namesOf(l);
+  const exact = checkTranslit(input, type === "letter-sound" ? [...l.sounds, ...names] : names);
+  if (exact.ok) return exact;
+  // A name typed with a plain a for â (dal for dâl) is right, with a reminder.
+  const plain = (s: string) => s.replace(/â/g, "a");
+  if (checkTranslit(plain(input), names.map(plain)).ok) return { ok: true, note: `The name is ${l.name}, with a long â.` };
+  return exact;
 }
 
-/** A letter's names as typed answers; "he-ye jimi" may also be typed "he jimi". */
+/**
+ * A letter's names as typed answers: "he-ye jimi" may also be typed "he jimi",
+ * and both ح and ه are simply "he" when the alphabet is recited.
+ */
 export const namesOf = (l: Letter): string[] =>
-  [l.name, ...(l.altNames ?? [])].flatMap((n) => (n.includes("-ye ") ? [n, n.replace("-ye ", " ")] : [n]));
+  [l.name, ...(l.altNames ?? [])].flatMap((n) =>
+    n.startsWith("he-ye ") ? [n, n.replace("-ye ", " "), "he"] : n.includes("-ye ") ? [n, n.replace("-ye ", " ")] : [n],
+  );
 
 export interface QuizResult {
   right: number;

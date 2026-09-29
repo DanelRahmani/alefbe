@@ -31,7 +31,7 @@ export default async function LessonPage({ params }: PageProps<"/learn/[unit]/[l
   const next = ALL_LESSONS[i + 1];
 
   return (
-    <article className="lesson">
+    <article className={l.showMarks ? "lesson marks-all" : "lesson"}>
       <nav aria-label="Breadcrumb" className="ui breadcrumb">
         <Link href="/">Path</Link>
         <span aria-hidden="true"> / </span>
@@ -60,6 +60,7 @@ export default async function LessonPage({ params }: PageProps<"/learn/[unit]/[l
               {KIND_LABELS[k]}
             </span>
           ))}
+          {l.showMarks && <span className="meta-tag meta-tag-quiet">Every vowel mark shown</span>}
         </p>
       </header>
 

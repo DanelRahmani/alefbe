@@ -7,8 +7,16 @@ import { matches, rank, type DictEntry } from "@/lib/dictionary";
 import { LETTERS, letterByChar } from "@/lib/persian/letters";
 import { FaText } from "./FaText";
 
-export function DictionaryBrowser({ entries, units }: { entries: DictEntry[]; units: { slug: string; label: string }[] }) {
-  const [query, setQuery] = useState("");
+export function DictionaryBrowser({
+  entries,
+  units,
+  initialQuery = "",
+}: {
+  entries: DictEntry[];
+  units: { slug: string; label: string }[];
+  initialQuery?: string;
+}) {
+  const [query, setQuery] = useState(initialQuery);
   const [topic, setTopic] = useState<Topic | "all">("all");
   const [unit, setUnit] = useState("all");
   const [initial, setInitial] = useState<string | null>(null);

@@ -73,6 +73,8 @@ Every Persian string is written **fully vowel-marked** in its real spelling. The
 - **All:** as written.
 - **Key words only:** marks only inside `{highlights}`; the ezafe zir and ـهٔ are kept everywhere.
 - **None:** zabar, zir, pish, sukun, tashdid and the dagger alef are removed. Tanvin and hamze stay, because standard spelling writes them.
+- A mark shown on a bare stroke (ـَ ـّ ـْ) is being named, so every mode shows it. Sukun and tashdid on a stroke have no transliteration; a short vowel on one reads as a suffix (ـِ *-e*), so prose that only names it uses an empty override: `[ـِ|]`.
+- Lessons about the marks (Unit 2) set `showMarks`, which shows every mark whatever the setting.
 
 ## Transliteration (the â-scheme)
 
@@ -115,8 +117,8 @@ Answers typed in the drills are lenient:
 - **Half-space (ZWNJ):**
   - after the verb prefixes می / نمی (می‌رَوَم);
   - before ـها after a joining letter (کِتاب‌ها);
-  - before ـام ـای ـاست after a silent ه (خانه‌اَم);
-  - before ـتر / ـترین;
+  - before اَم ای اَنْد (and ایم اید) after a silent ه or a final ی (خانه‌اَم، قَدیمی‌اَنْد); اَسْت is a separate word (خانه اَسْت);
+  - before ـتر / ـترین, except in بهتر، بیشتر، کمتر، مهتر، کهتر;
   - in compounds (بی‌کار).
 - **Where it never goes:** next to a space, doubled, or after a non-joining letter (روزها needs none).
 - **Ezafe after a silent ه:** ـهٔ, not ـه‌ی. Typed answers accept ـه‌ی with a note.
@@ -150,7 +152,15 @@ The old app's letter table and words were checked before any reuse. Errors found
 - It listed ٪ among the marks; it is the per-cent sign.
 - The letter examples ضعیف *zaif* and چای *châi* are corrected as above; ژاپن, the old key word for ژ, stays in the word list, and the letter pages use ژاکَت.
 
-(The grammar page and the 60-word list are checked in Phase 4, when their content is reused.)
+The old **Grammar** view (14 topics) became the grammar overview (content/grammar.ts, /grammar), corrected:
+
+- Its "Prepositions & Postpositions" topic covered no postposition; Persian's one common postposition, را, now has its own topic.
+- "To be" gave the full forms (هستم …) as the norm; the everyday forms are the short endings, with اَسْت written and ـه spoken for *is*.
+- Plural ـان was "for animate nouns"; it is a written plural for people and some other words, while ـها works for everything.
+- Transliterations like *chetour* follow the course scheme (*chetor*), and every example now shows the spoken form next to the written one.
+- Numbers with nouns gained the spoken counting word تا (سه تا کِتاب).
+
+The old **60 words** are in content/drill-words.ts, checked (بَچّه *bachche*, مَدْرِسه *madrese*, چای *chây*, کوچَک said *kuchik* in Tehran) and tagged with the old categories as dictionary topics.
 
 ## Owner decisions (2026-09-29)
 

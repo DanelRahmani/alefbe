@@ -4,8 +4,14 @@ import Link from "next/link";
 import type { Block, Example, Register } from "@/content/types";
 import { FaText } from "../FaText";
 import { Rich, hasFa } from "../Rich";
+import { ALL_LESSONS } from "@/content/units";
+import { DisplayControls } from "../DisplayControls";
+import { BuildBlock } from "./BuildBlock";
 import { LetterCards } from "./LetterCards";
+import { PracticeLinks } from "./PracticeLinks";
 import { Quiz } from "./Quiz";
+import { SkipAhead } from "./SkipAhead";
+import { SyllableGrid } from "./SyllableGrid";
 
 interface Ctx {
   register: Register;
@@ -80,14 +86,17 @@ function BlockView({ b, ctx }: { b: Block; ctx: Ctx }) {
       );
     case "text":
       return <P text={b.text} className="lesson-text" />;
-    case "examples":
+    case "examples": {
+      // Single words (the script units) sit in a compact grid; sentences stay full width.
+      const words = b.items.every((e) => !e.written && !/\s/.test(e.fa.trim()));
       return (
-        <div className="examples">
+        <div className={words ? "examples examples-words" : "examples"}>
           {b.items.map((e, i) => (
             <ExampleCard key={i} e={e} ctx={ctx} />
           ))}
         </div>
       );
+    }
     case "pair":
       return (
         <div className="pair">
@@ -207,6 +216,27 @@ function BlockView({ b, ctx }: { b: Block; ctx: Ctx }) {
       return <Quiz questions={b.questions} />;
     case "letters":
       return <LetterCards chars={b.chars} />;
+    case "build":
+      return <BuildBlock items={b.items} />;
+    case "syllables":
+      return <SyllableGrid consonants={b.consonants} vowels={b.vowels} caption={b.caption} />;
+    case "practice":
+      return <PracticeLinks group={b.group} text={b.text} />;
+    case "display":
+      return (
+        <div className="ui display-inline glass">
+          <DisplayControls theme={false} />
+        </div>
+      );
+    case "skip":
+      return (
+        <SkipAhead
+          keys={ALL_LESSONS.filter((r) => b.units.includes(r.unit.slug)).map((r) => r.key)}
+          groups={b.groups}
+          label={b.label}
+          text={b.text}
+        />
+      );
   }
 }
 

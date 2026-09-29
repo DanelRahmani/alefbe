@@ -124,6 +124,12 @@ export function PathBrowser({ units }: { units: PathUnit[] }) {
           </span>
           Trace the letters <span aria-hidden="true">→</span>
         </Link>
+        <Link href="/grammar" className="pill-link">
+          <span className="pill-count pill-count-quiet naskh" aria-hidden="true">
+            د
+          </span>
+          Grammar at a glance <span aria-hidden="true">→</span>
+        </Link>
       </div>
 
       <div className="ui path-head">

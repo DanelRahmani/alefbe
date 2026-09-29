@@ -2,7 +2,7 @@
 // The rules live in lib/persian/analyze.ts and are documented in content/STYLE.md.
 
 import { analyzeWord, joinPhons } from "./persian/analyze";
-import { PERSIAN_DIGITS, PUNCT_TRANSLIT, TATWEEL, ZWJ, ZWNJ, isLetter, isMark } from "./persian/chars";
+import { PERSIAN_DIGITS, PUNCT_TRANSLIT, SHORT_VOWELS, TATWEEL, ZWJ, ZWNJ, isLetter, isMark } from "./persian/chars";
 
 export interface TranslitResult {
   text: string;
@@ -11,14 +11,26 @@ export interface TranslitResult {
 
 export type WordKind = "word" | "affix" | "letter";
 
+/** One-letter suffixes that read as affixes even unmarked: ـی (-i) and ـه (-e). */
+const SUFFIX_LETTERS = new Set(["ی", "ه"]);
+
 /**
- * Affixes start with a tatweel (ـها). A bare single letter is a letter
- * mentioned by name, and so is a joining form that ends in a tatweel
- * (initial بـ, medial ـبـ); a final form (ـب) reads like an affix.
+ * Affixes start with a tatweel (ـها, ـَم, ـی). A single letter, alone or in a
+ * joining form (ب بـ ـبـ ـب), is a letter mentioned by name; a one-letter
+ * suffix other than ـی and ـه needs its vowel mark to read as an affix (ـَم).
+ * A stroke with no letter on it (ـ, or ـّ ـْ, marks with no sound of their
+ * own) is mentioned by name too; a short vowel on a stroke reads as an
+ * affix (ـِ, the ezafe, is -e).
  */
 export function wordKind(word: string): WordKind {
   const bare = word.split(TATWEEL).join("").split(ZWJ).join("");
-  if ([...bare].length === 1 && isLetter(bare) && (word === bare || word.endsWith(TATWEEL))) return "letter";
+  if (word.includes(TATWEEL) && ![...bare].some((ch) => isLetter(ch) || ch in SHORT_VOWELS)) return "letter";
+  // A single unmarked letter, alone or as a joining form (بـ ـبـ ـب), is mentioned by name,
+  // except the one-letter suffixes ـی (-i) and ـه (-e).
+  if ([...bare].length === 1 && isLetter(bare)) {
+    const suffix = word.startsWith(TATWEEL) && !word.endsWith(TATWEEL) && SUFFIX_LETTERS.has(bare);
+    return suffix ? "affix" : "letter";
+  }
   if (word.startsWith(TATWEEL)) return "affix";
   return "word";
 }

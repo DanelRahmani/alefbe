@@ -121,7 +121,8 @@ export default async function LetterPage({ params }: PageProps<"/script/[letter]
       {!l.joins && (
         <p className="ui mt-2 text-sm text-muted">
           {l.name} never joins the letter after it, so it has no separate initial or medial form: at the start of a word it
-          looks isolated, and inside a word it looks final and leaves a small gap after it.
+          looks isolated; after a joining letter it takes its final form, and after another non-joiner it stands alone.
+          Either way it leaves a small gap after it.
         </p>
       )}
 

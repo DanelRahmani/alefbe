@@ -28,7 +28,7 @@ function Question({ q, n }: { q: QuizQuestion; n: number }) {
       <form onSubmit={submit} noValidate>
         <label htmlFor={id} className={hasFa(q.prompt) ? "block has-fa" : "block"}>
           <span className="ui mr-2 text-sm text-muted">{n}.</span>
-          <Rich text={q.prompt} />
+          <Rich text={q.prompt} translit={q.lang !== "translit"} force="all" />
         </label>
         <div className="mt-2 flex gap-2">
           <input

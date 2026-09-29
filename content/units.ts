@@ -1,5 +1,10 @@
 import type { Lesson, Unit } from "./types";
+import { alphabet } from "./lessons/alphabet";
+import { coreSentence } from "./lessons/core-sentence";
 import { nouns } from "./lessons/nouns";
+import { sounds } from "./lessons/sounds";
+import { spelling } from "./lessons/spelling";
+import { startHere } from "./lessons/start-here";
 
 // The course order. A unit's number is its position here (Start here is 0),
 // so every unit is listed even before its lessons are written.
@@ -9,28 +14,28 @@ export const UNITS: Unit[] = [
     title: "Start here",
     titleFa: "اَز اینْجا شُروع کُنید",
     description: "How the course works, Persian in one page, and a fast track for people who already speak it.",
-    lessons: [],
+    lessons: startHere,
   },
   {
     slug: "alphabet",
     title: "The alphabet",
     titleFa: "اَلِفْبا",
     description: "All 32 letters in alphabet order, with their four joining forms, and the Persian digits.",
-    lessons: [],
+    lessons: alphabet,
   },
   {
     slug: "sounds",
     title: "Sounds and vowel marks",
     titleFa: "صِداها وَ حَرَکات",
     description: "Short and long vowels, و and ی as consonant or vowel, tashdid, sukun, hamze, and stress.",
-    lessons: [],
+    lessons: sounds,
   },
   {
     slug: "spelling",
     title: "Writing and spelling",
     titleFa: "نِوِشْتَن وَ اِمْلا",
     description: "The half-space, letters that share a sound, loanword patterns, punctuation and the keyboard.",
-    lessons: [],
+    lessons: spelling,
   },
   // Grammar in Pareto order: the core that covers most everyday sentences
   // first (Units 4–9), the rarer forms after (10–11). See docs/PLAN.md.
@@ -39,7 +44,7 @@ export const UNITS: Unit[] = [
     title: "The core sentence",
     titleFa: "جُمْلهٔ پایه",
     description: "The verb comes last and its ending says who; is and are; not; questions; my and your.",
-    lessons: [],
+    lessons: coreSentence,
   },
   {
     slug: "present",

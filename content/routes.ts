@@ -15,6 +15,7 @@ export const STATIC_PAGES = [
   "/practice/trace",
   "/practice/trace/session",
   "/dictionary",
+  "/grammar",
   "/progress",
   "/offline",
 ];

@@ -1,4 +1,5 @@
 import type { Topic } from "./topics";
+import type { SyllableVowel } from "@/lib/persian/letters";
 
 /** Persian with markup, fully vowel-marked (see content/STYLE.md). */
 export type Fa = string;
@@ -86,7 +87,17 @@ export type Block =
   | { type: "link"; href: string; label: string; text?: Rich }
   | { type: "quiz"; questions: QuizQuestion[] }
   /** Letter cards (forms, name, sound, key word) for letters of the alphabet. */
-  | { type: "letters"; chars: string[] };
+  | { type: "letters"; chars: string[] }
+  /** Words built letter by letter: the separate letters, the form each takes, then the joined word. */
+  | { type: "build"; items: { word: Fa; en: string }[] }
+  /** A grid of consonants × vowels, generated and transliterated (بَ بِ بُ با بی بو). */
+  | { type: "syllables"; consonants: string[]; vowels: SyllableVowel[]; caption?: Rich }
+  /** Ways into practice for one drill group: trainer, quiz, tracing and games. */
+  | { type: "practice"; group: number; text?: Rich }
+  /** The Display settings (vowel marks, transliteration), inline. */
+  | { type: "display" }
+  /** Fast track: mark whole units finished and open trainer groups, after a confirmation. */
+  | { type: "skip"; units: string[]; groups: number; label: string; text: Rich };
 
 export interface VocabItem {
   fa: Fa;
@@ -107,6 +118,8 @@ export interface Lesson {
   source: string;
   /** Script units show transliteration under examples regardless of the setting. */
   showTranslit?: boolean;
+  /** Lessons about the vowel marks show every mark regardless of the setting. */
+  showMarks?: boolean;
   vocab?: VocabItem[];
   blocks: Block[];
 }
