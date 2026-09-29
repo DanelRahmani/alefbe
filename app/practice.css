@@ -1,0 +1,689 @@
+/* Practice: letter strip, sessions, quiz, games, letter pages, dictionary, stats. */
+
+/* ── Letter strip (tracer, custom picks, dictionary index) ─────────────── */
+.letter-strip {
+  display: flex;
+  gap: 0.3rem;
+  overflow-x: auto;
+  padding: 2px 2px 0.4rem;
+  scrollbar-width: thin;
+}
+.letter-strip-wrap {
+  flex-wrap: wrap;
+  overflow: visible;
+}
+.letter-strip-btn {
+  flex: none;
+  width: 2.4rem;
+  height: 2.6rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: var(--surface);
+  font-size: 1.35rem;
+  line-height: 1;
+  padding-bottom: 0.2rem;
+}
+.letter-strip-btn:hover {
+  border-color: var(--accent);
+}
+.letter-strip-btn[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+}
+.letter-strip-btn.mastery-guided {
+  box-shadow: inset 0 -3px 0 color-mix(in srgb, var(--ok) 45%, transparent);
+}
+.letter-strip-btn.mastery-outline {
+  box-shadow: inset 0 -3px 0 color-mix(in srgb, var(--ok) 75%, transparent);
+}
+.letter-strip-btn.mastery-freehand {
+  box-shadow: inset 0 -3px 0 var(--gold);
+}
+.pen-dot {
+  display: inline-block;
+  border-radius: 999px;
+  background: currentColor;
+  vertical-align: middle;
+}
+
+/* ── Sessions and setup screens ────────────────────────────────────────── */
+.session-setup {
+  display: grid;
+  gap: 1.1rem;
+  justify-items: start;
+  margin-top: 1rem;
+}
+.session-setup fieldset {
+  width: 100%;
+}
+.session-setup legend {
+  margin-bottom: 0.4rem;
+}
+.chips.chips-wrap {
+  flex-wrap: wrap;
+  overflow: visible;
+}
+.fa-chip .fa {
+  font-size: 1.1rem;
+  word-spacing: 0.2em;
+}
+.session-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.session-bar {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--rule);
+  overflow: hidden;
+}
+.session-bar span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 200ms ease;
+}
+.session-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.session-results li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 10px;
+  border: 1px solid var(--rule);
+}
+.session-results .is-pass {
+  background: var(--ok-soft);
+}
+.session-results .is-miss {
+  background: var(--err-soft);
+}
+.session-glyph {
+  font-size: 1.8rem;
+  line-height: 1.4;
+  min-width: 2.2rem;
+  text-align: center;
+}
+.trace-session .tracer-now {
+  margin-top: 0.5rem;
+}
+
+/* ── Quiz ──────────────────────────────────────────────────────────────── */
+.quiz-types {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: 0.5rem;
+}
+.quiz-type {
+  display: grid;
+  gap: 0.15rem;
+  text-align: left;
+  padding: 0.65rem 0.8rem;
+}
+.quiz-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.quiz-option {
+  width: 100%;
+  min-height: 3.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.7rem;
+  border: 1.5px solid var(--rule);
+  border-radius: 12px;
+  background: var(--surface);
+  position: relative;
+}
+.quiz-option:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+.quiz-option:disabled {
+  cursor: default;
+}
+.quiz-option.is-right {
+  border-color: var(--ok);
+  background: var(--ok-soft);
+}
+.quiz-option.is-wrong {
+  border-color: var(--err);
+  background: var(--err-soft);
+}
+.quiz-key {
+  position: absolute;
+  top: 0.3rem;
+  left: 0.5rem;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+.quiz-option-glyph {
+  font-size: 2rem;
+  line-height: 1.5;
+}
+.missed-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+}
+.missed-list li {
+  display: grid;
+  justify-items: center;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+}
+.missed-list .naskh {
+  font-size: 1.8rem;
+  line-height: 1.5;
+}
+
+/* ── Games ─────────────────────────────────────────────────────────────── */
+.tile-slots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+  margin-top: 1rem;
+}
+.tile-slot {
+  min-width: 2.6rem;
+  height: 3rem;
+  padding: 0 0.3rem;
+  display: grid;
+  place-items: center;
+  border-bottom: 2px solid var(--rule);
+  font-size: 1.3rem;
+}
+.tile-slots-fa .tile-slot {
+  font-size: 1.6rem;
+}
+.tile-slot.is-right {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+.tile-slot.is-wrong {
+  border-color: var(--err);
+  color: var(--err);
+}
+.tile-preview {
+  margin-top: 0.4rem;
+  text-align: center;
+  font-size: 2.4rem;
+  line-height: 1.6;
+  color: var(--accent);
+}
+.tiles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.45rem;
+  margin-top: 1rem;
+}
+.tile {
+  min-width: 2.8rem;
+  height: 3rem;
+  padding: 0 0.6rem;
+  border: 1.5px solid var(--accent);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--accent);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.tiles-fa .tile {
+  font-size: 1.6rem;
+  font-weight: 400;
+}
+.tile:disabled {
+  opacity: 0.3;
+}
+.flash-stage {
+  min-height: 11rem;
+  display: grid;
+  place-items: center;
+}
+.flash-hidden {
+  color: var(--muted);
+}
+.flash-bar {
+  width: 60%;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--rule);
+  overflow: hidden;
+}
+.flash-bar span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  animation: drain linear forwards;
+}
+@keyframes drain {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0;
+  }
+}
+
+/* ── Letter chart statuses ─────────────────────────────────────────────── */
+a.letter-card {
+  text-decoration: none;
+  height: 100%;
+  position: relative;
+}
+a.letter-card:hover {
+  --jadval-outer: var(--accent);
+}
+.letter-card.status-learned,
+.letter-card.status-solid {
+  --jadval-outer: color-mix(in srgb, var(--ok) 65%, transparent);
+}
+.letter-marks {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.55rem;
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+}
+.status-dot {
+  display: inline-block;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  vertical-align: middle;
+}
+.status-dot-open {
+  border: 1.5px solid var(--ok);
+}
+.status-dot-learned {
+  background: color-mix(in srgb, var(--ok) 70%, transparent);
+}
+.status-dot-solid {
+  background: var(--gold);
+}
+.trace-mark {
+  font-size: 0.8rem;
+  line-height: 1;
+}
+.trace-guided {
+  color: color-mix(in srgb, var(--ok) 60%, var(--muted));
+}
+.trace-outline {
+  color: var(--ok);
+}
+.trace-freehand {
+  color: var(--gold);
+}
+.chart-legend .status-dot,
+.chart-legend .trace-mark {
+  margin-inline-start: 0.6rem;
+}
+
+/* ── Marks table ───────────────────────────────────────────────────────── */
+.mark-sign {
+  font-size: 1.9rem;
+  line-height: 1.6;
+  text-align: center;
+  white-space: nowrap;
+}
+.zwnj-sign {
+  font-size: 1.2rem;
+  border-inline-start: 1px dashed var(--accent);
+  padding-inline-start: 0.1rem;
+}
+
+/* ── Letter page ───────────────────────────────────────────────────────── */
+.letter-head {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+.letter-hero {
+  font-size: 6.5rem;
+  line-height: 1.3;
+  color: var(--accent);
+  min-width: 6rem;
+  text-align: center;
+}
+.same-sound {
+  margin-top: 1rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: 12px;
+  background: var(--accent-soft);
+  font-size: 0.95rem;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+.form-card {
+  display: grid;
+  justify-items: center;
+  gap: 0.1rem;
+  padding: 0.6rem 0.4rem 0.7rem;
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  background: var(--surface);
+  text-align: center;
+}
+.form-glyph {
+  font-size: 3rem;
+  line-height: 1.5;
+  color: var(--accent);
+}
+.form-label {
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+.form-note {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.form-trace {
+  margin-top: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+.key-word {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.8rem;
+  margin-top: 0.75rem;
+}
+.word-forms {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+@media (min-width: 640px) {
+  .word-forms {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.word-forms ul {
+  margin-top: 0.3rem;
+}
+.trace-forms {
+  display: grid;
+  gap: 0.3rem;
+  margin-top: 0.8rem;
+}
+.trace-forms li {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr auto;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+}
+
+/* ── Letter cards inside lessons ───────────────────────────────────────── */
+.lesson-letters {
+  display: grid;
+  gap: 0.75rem;
+}
+@media (min-width: 640px) {
+  .lesson-letters {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.lesson-letter {
+  padding: 0.9rem 1rem;
+  border-radius: 16px;
+  background: var(--surface);
+}
+.lesson-letter-top {
+  display: flex;
+  gap: 0.9rem;
+  align-items: center;
+}
+.lesson-letter-big {
+  font-size: 3.6rem;
+  line-height: 1.3;
+  color: var(--accent);
+  min-width: 3.4rem;
+  text-align: center;
+}
+.lesson-letter-forms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.9rem;
+  margin-top: 0.5rem;
+}
+.lesson-letter-forms li {
+  display: grid;
+  justify-items: center;
+}
+.lesson-letter-forms .naskh {
+  font-size: 1.8rem;
+  line-height: 1.5;
+}
+.lesson-letter-forms .ui {
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+.lesson-letter-key {
+  margin-top: 0.4rem;
+}
+.lesson-letter-links {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.4rem;
+}
+.lesson-letter-links a {
+  color: var(--accent);
+}
+
+/* ── Dictionary ────────────────────────────────────────────────────────── */
+.dict-search {
+  width: 100%;
+  margin-top: 1rem;
+}
+.dict-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+.dict-filters select {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: var(--surface);
+  font-size: 0.9rem;
+}
+.dict-index {
+  margin-top: 0.75rem;
+}
+.dict-index .letter-strip-btn {
+  width: 2.1rem;
+  height: 2.3rem;
+  font-size: 1.15rem;
+}
+.dict-list {
+  margin-top: 0.75rem;
+  border-top: 1px solid var(--rule);
+}
+.dict-entry {
+  display: grid;
+  gap: 0.3rem 1rem;
+  padding: 0.8rem 0.2rem;
+  border-bottom: 1px solid var(--rule);
+}
+@media (min-width: 640px) {
+  .dict-entry {
+    grid-template-columns: 12rem 1fr;
+  }
+}
+.dict-word {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.dict-translit {
+  font-family: var(--font-literata), Georgia, serif;
+  font-style: italic;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+.dict-meaning > p:first-child {
+  font-family: var(--font-literata), Georgia, serif;
+}
+.dict-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.3rem;
+}
+.dict-meta a.meta-tag {
+  text-decoration: none;
+}
+.dict-letters {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  gap: 0.2rem;
+  margin-inline-start: auto;
+}
+.dict-letter {
+  display: grid;
+  place-items: center;
+  min-width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 6px;
+  border: 1px solid var(--rule);
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+.dict-letter:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── Progress statistics ───────────────────────────────────────────────── */
+@media (min-width: 640px) {
+  .stat-grid-6 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.activity-cal {
+  display: flex;
+  gap: 4px;
+  margin-top: 0.75rem;
+  overflow-x: auto;
+}
+.activity-days,
+.activity-week {
+  display: grid;
+  grid-template-rows: repeat(7, 1rem);
+  gap: 4px;
+}
+.activity-days span {
+  font-size: 0.65rem;
+  line-height: 1rem;
+  color: var(--muted);
+  padding-inline-end: 0.3rem;
+}
+.activity-day {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 3px;
+  background: var(--rule);
+}
+.activity-day.is-on {
+  background: var(--accent);
+}
+.activity-day.is-future {
+  background: transparent;
+  border: 1px dashed var(--rule);
+}
+.mastery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(2.9rem, 1fr));
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+}
+.mastery-tile {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 3.2rem;
+  border-radius: 10px;
+  border: 1px solid var(--rule);
+  text-decoration: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  padding-bottom: 0.25rem;
+}
+.mastery-tile.status-open {
+  border-color: var(--ok);
+}
+.mastery-tile.status-learned {
+  background: var(--ok-soft);
+  border-color: var(--ok);
+}
+.mastery-tile.status-solid {
+  background: color-mix(in srgb, var(--gold) 22%, var(--surface));
+  border-color: var(--gold);
+}
+.mastery-tile .trace-mark {
+  position: absolute;
+  top: 0.15rem;
+  right: 0.25rem;
+  font-size: 0.65rem;
+}
+.mastery-count {
+  position: absolute;
+  bottom: 0.1rem;
+  left: 0.3rem;
+  font-family: var(--font-vazirmatn), system-ui, sans-serif;
+  font-size: 0.6rem;
+  color: var(--muted);
+}
+.form-bars {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+.form-bars li {
+  display: grid;
+  grid-template-columns: 5rem 1fr 2.5rem;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+}
+.form-bar {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--rule);
+  overflow: hidden;
+}
+.form-bar span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}

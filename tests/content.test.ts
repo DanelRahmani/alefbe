@@ -1,0 +1,305 @@
+import { describe, expect, it } from "vitest";
+import { ALL_LESSONS, UNITS } from "@/content/units";
+import { DRILL_WORDS } from "@/content/drill-words";
+import { LETTERS, letterByChar } from "@/lib/persian/letters";
+import { MARKS, SIGNS } from "@/content/reference";
+import { STATIC_PAGES, isPage } from "@/content/routes";
+import { readdirSync } from "node:fs";
+import { join } from "node:path";
+
+/** Lessons the marks table points at that are planned but not written yet. */
+const FUTURE_LESSONS = new Set(["sounds/short-vowels", "sounds/tashdid-sukun-tanvin", "sounds/vowel-carriers", "sounds/hamze-and-eyn", "ezafe/after-vowels"]);
+import type { Block, Example, Lesson } from "@/content/types";
+import { parseMarkup, splitScript, type Token } from "@/lib/markup";
+import { checkReadable } from "@/lib/persian/syllables";
+import { NON_JOINING, ZWNJ } from "@/lib/persian/chars";
+import { tokenizeFa, transliterateWithErrors, wordKind } from "@/lib/translit";
+import { normalizeFa } from "@/lib/persian/normalize";
+
+// ── Collect every string in the course, tagged Persian (fa) or English (rich).
+interface Str {
+  where: string;
+  kind: "fa" | "rich";
+  s: string;
+}
+
+function exampleStrs(e: Example, where: string): Str[] {
+  const out: Str[] = [
+    { where, kind: "fa", s: e.fa },
+    { where, kind: "rich", s: e.en },
+  ];
+  if (e.written) out.push({ where: where + " (written)", kind: "fa", s: e.written });
+  if (e.note) out.push({ where: where + " note", kind: "rich", s: e.note });
+  return out;
+}
+
+function blockStrs(b: Block, where: string): Str[] {
+  switch (b.type) {
+    case "idea":
+    case "heading":
+    case "text":
+      return [{ where, kind: "rich", s: b.text }];
+    case "examples":
+      return b.items.flatMap((e, i) => exampleStrs(e, `${where} #${i + 1}`));
+    case "pair":
+      return [
+        ...(b.title ? [{ where, kind: "rich" as const, s: b.title }] : []),
+        ...exampleStrs(b.a, where + " a"),
+        ...exampleStrs(b.b, where + " b"),
+        { where: where + " diff", kind: "rich", s: b.diff },
+      ];
+    case "table":
+      return [
+        ...(b.caption ? [{ where, kind: "rich" as const, s: b.caption }] : []),
+        ...b.headers.map((h) => ({ where: where + " header", kind: "rich" as const, s: h })),
+        ...b.rows.flat().map((c) => ({ where: where + " cell", kind: "rich" as const, s: c })),
+      ];
+    case "callout":
+      return [
+        { where, kind: "rich", s: b.text },
+        ...(b.title ? [{ where, kind: "rich" as const, s: b.title }] : []),
+        ...(b.wrong ? exampleStrs(b.wrong, where + " wrong") : []),
+        ...(b.right ? exampleStrs(b.right, where + " right") : []),
+      ];
+    case "dialogue":
+      return [
+        ...(b.title ? [{ where, kind: "rich" as const, s: b.title }] : []),
+        ...(b.note ? [{ where, kind: "rich" as const, s: b.note }] : []),
+        ...b.lines.flatMap((l, i) => exampleStrs({ fa: l.fa, written: l.written, en: l.en }, `${where} line ${i + 1}`)),
+      ];
+    case "link":
+      return b.text ? [{ where, kind: "rich", s: b.text }] : [];
+    case "letters":
+      return [];
+    case "quiz":
+      return b.questions.flatMap((q, i) => [
+        { where: `${where} q${i + 1}`, kind: "rich" as const, s: q.prompt },
+        { where: `${where} q${i + 1} explain`, kind: "rich" as const, s: q.explain },
+      ]);
+  }
+}
+
+function lessonStrs(l: Lesson, where: string): Str[] {
+  return [
+    { where: where + " title", kind: "rich", s: l.title },
+    { where: where + " summary", kind: "rich", s: l.summary },
+    ...(l.vocab ?? []).flatMap((v, i) => [
+      { where: `${where} vocab ${i + 1}`, kind: "fa" as const, s: v.fa },
+      ...(v.written ? [{ where: `${where} vocab ${i + 1} (written)`, kind: "fa" as const, s: v.written }] : []),
+    ]),
+    ...l.blocks.flatMap((b, i) => blockStrs(b, `${where} block ${i + 1} (${b.type})`)),
+  ];
+}
+
+const ALL: Str[] = [
+  ...DRILL_WORDS.flatMap((w, i) => [{ where: `drill word ${i + 1} (${w.en})`, kind: "fa" as const, s: w.fa }]),
+  ...LETTERS.flatMap((l) => [
+    { where: `letter ${l.ch} hint`, kind: "rich" as const, s: l.hint },
+    { where: `letter ${l.ch} key word`, kind: "fa" as const, s: l.key.fa },
+  ]),
+  ...MARKS.flatMap((m) => [
+    { where: `mark ${m.name}`, kind: "fa" as const, s: m.fa },
+    { where: `mark ${m.name} example`, kind: "fa" as const, s: m.example },
+    { where: `mark ${m.name} does`, kind: "rich" as const, s: m.does },
+  ]),
+  ...SIGNS.map((x) => ({ where: `sign ${x.name}`, kind: "rich" as const, s: x.does })),
+  ...UNITS.flatMap((u) => [
+    { where: `unit ${u.slug} titleFa`, kind: "fa" as const, s: u.titleFa },
+    { where: `unit ${u.slug} description`, kind: "rich" as const, s: u.description },
+  ]),
+  ...ALL_LESSONS.flatMap((r) => lessonStrs(r.lesson, r.number)),
+];
+
+/** The Persian token runs of a string (whole string for fa, detected runs for rich). */
+function persianRuns(str: Str): Token[][] {
+  const tokens = parseMarkup(str.s);
+  if (str.kind === "fa") return [tokens];
+  const runs: Token[][] = [];
+  for (const t of tokens) {
+    if (t.kind === "override") runs.push([t]);
+    else for (const part of splitScript(t.text)) if (part.fa) runs.push([{ ...t, text: part.s }]);
+  }
+  return runs;
+}
+
+describe("content: the walker", () => {
+  it("sees every Persian word of the course", () => {
+    let words = 0;
+    for (const str of ALL)
+      for (const run of persianRuns(str))
+        for (const t of run) if (t.kind === "text") words += tokenizeFa(t.text).filter((x) => x.word).length;
+    expect(ALL.length).toBeGreaterThan(80);
+    expect(words).toBeGreaterThan(150);
+  });
+});
+
+describe("content: markup", () => {
+  it("every string parses", () => {
+    const bad = ALL.filter((x) => {
+      try {
+        parseMarkup(x.s);
+        return false;
+      } catch {
+        return true;
+      }
+    });
+    expect(bad.map((x) => `${x.where}: ${x.s}`)).toEqual([]);
+  });
+  it("highlights never start on a lone vowel mark", () => {
+    const bad = ALL.filter((x) => /\{[ً-ٰٔ]/.test(x.s));
+    expect(bad.map((x) => x.where)).toEqual([]);
+  });
+});
+
+describe("content: Persian spelling", () => {
+  it("uses Persian letters and digits, not Arabic look-alikes", () => {
+    const bad = ALL.filter((x) => /[يكةۀ٠-٩ى]/.test(x.s));
+    expect(bad.map((x) => `${x.where}: ${x.s}`)).toEqual([]);
+  });
+  it("uses half-spaces cleanly (none by a space, none doubled, none after a non-joining letter)", () => {
+    const bad = ALL.filter((x) => {
+      const s = x.s;
+      if (/ ‌|‌ | ?‌‌/.test(s)) return true;
+      return [...s].some((ch, i, arr) => {
+        if (ch !== ZWNJ) return false;
+        let j = i - 1;
+        while (j >= 0 && /[ً-ٰٔ]/.test(arr[j])) j--;
+        return j < 0 || NON_JOINING.has(arr[j]);
+      });
+    });
+    expect(bad.map((x) => `${x.where}: ${x.s}`)).toEqual([]);
+  });
+  it("never detaches the verb prefix می / نمی with a space", () => {
+    const bad = ALL.filter((x) => /(^|[\s«])ن?می[ً-ْ]* +[؀-ۿ]/.test(x.s));
+    expect(bad.map((x) => `${x.where}: ${x.s}`)).toEqual([]);
+  });
+});
+
+describe("content: readable in 'all marks' mode", () => {
+  it("every Persian word is fully vowel-marked and splits into syllables", () => {
+    const problems: string[] = [];
+    for (const str of ALL) {
+      for (const run of persianRuns(str)) {
+        for (const t of run) {
+          if (t.kind === "override") continue;
+          for (const tok of tokenizeFa(t.text)) {
+            if (!tok.word || wordKind(tok.s) !== "word") continue;
+            for (const e of checkReadable(tok.s)) problems.push(`${str.where}: ${e}`);
+          }
+        }
+      }
+    }
+    expect(problems).toEqual([]);
+  });
+});
+
+describe("content: transliteration", () => {
+  it("transliterates without errors and leaves no Persian script behind", () => {
+    const problems: string[] = [];
+    for (const str of ALL) {
+      for (const run of persianRuns(str)) {
+        let text = "";
+        for (const t of run) {
+          if (t.kind === "override") {
+            text += t.translit;
+            continue;
+          }
+          const r = transliterateWithErrors(t.text);
+          problems.push(...r.errors.map((e) => `${str.where}: ${e}`));
+          text += r.text;
+        }
+        if (/[؀-ۿ]/.test(text)) problems.push(`${str.where}: leftover Persian in "${text}"`);
+      }
+    }
+    expect(problems).toEqual([]);
+  });
+});
+
+describe("content: structure", () => {
+  it("unit and lesson slugs are unique", () => {
+    const units = UNITS.map((u) => u.slug);
+    expect(new Set(units).size).toBe(units.length);
+    for (const u of UNITS) {
+      const ls = u.lessons.map((l) => l.slug);
+      expect(new Set(ls).size, u.slug).toBe(ls.length);
+    }
+  });
+
+  it.each(ALL_LESSONS.map((r) => [r.number, r] as const))("%s follows the lesson template", (_n, r) => {
+    const l = r.lesson;
+    expect(l.title).not.toMatch(/[{}*[\]|]/);
+    expect(l.summary.length).toBeGreaterThan(10);
+    expect(l.source.length).toBeGreaterThan(10);
+    expect(l.kinds.length).toBeGreaterThan(0);
+    const types = l.blocks.map((b) => b.type);
+    expect(types[0]).toBe("idea");
+    expect(types).toContain("examples");
+    expect(types).toContain("pair");
+    expect(l.blocks.some((b) => b.type === "callout" && b.kind === "mistake")).toBe(true);
+    expect(types.includes("dialogue") || l.blocks.some((b) => b.type === "callout" && b.kind === "culture")).toBe(true);
+    const quiz = l.blocks.find((b) => b.type === "quiz");
+    expect(quiz && quiz.type === "quiz" && quiz.questions.length).toBeGreaterThanOrEqual(3);
+  });
+
+  it("quiz answers are plain and normalisable", () => {
+    const bad: string[] = [];
+    for (const r of ALL_LESSONS) {
+      for (const b of r.lesson.blocks) {
+        if (b.type !== "quiz") continue;
+        for (const q of b.questions) {
+          if (!q.answers.length) bad.push(`${r.number}: empty answers`);
+          for (const a of q.answers) {
+            if (q.lang === "fa" && !/^[؀-ۿ‌ .،؟!]+$/.test(normalizeFa(a))) bad.push(`${r.number}: ${a}`);
+            if (q.lang !== "fa" && /[؀-ۿ]/.test(a)) bad.push(`${r.number}: ${a}`);
+          }
+        }
+      }
+    }
+    expect(bad).toEqual([]);
+  });
+
+  it("tables have rows as wide as their headers", () => {
+    const bad: string[] = [];
+    for (const r of ALL_LESSONS)
+      for (const b of r.lesson.blocks)
+        if (b.type === "table") b.rows.forEach((row, i) => row.length !== b.headers.length && bad.push(`${r.number} row ${i + 1}`));
+    expect(bad).toEqual([]);
+  });
+
+  it("internal links point at real pages", () => {
+    const bad: string[] = [];
+    for (const r of ALL_LESSONS)
+      for (const b of r.lesson.blocks) if (b.type === "link" && b.href.startsWith("/") && !isPage(b.href)) bad.push(`${r.number}: ${b.href}`);
+    for (const m of MARKS) if (m.lesson && !isPage(`/learn/${m.lesson}`) && !FUTURE_LESSONS.has(m.lesson)) bad.push(`mark ${m.name}: ${m.lesson}`);
+    expect(bad).toEqual([]);
+  });
+
+  it("the page list matches the app folder", () => {
+    const found: string[] = [];
+    const walk = (dir: string, route: string) => {
+      for (const e of readdirSync(dir, { withFileTypes: true })) {
+        if (e.isDirectory() && !e.name.startsWith("[")) walk(join(dir, e.name), `${route}/${e.name}`);
+        if (e.isFile() && e.name === "page.tsx") found.push(route || "/");
+      }
+    };
+    walk("app", "");
+    expect(found.sort()).toEqual([...STATIC_PAGES].sort());
+  });
+
+  it("letters in lesson letter cards are letters of the alphabet", () => {
+    const bad: string[] = [];
+    for (const r of ALL_LESSONS)
+      for (const b of r.lesson.blocks) if (b.type === "letters") for (const ch of b.chars) if (!letterByChar.has(ch)) bad.push(`${r.number}: ${ch}`);
+    expect(bad).toEqual([]);
+  });
+});
+
+describe("content: owner review", () => {
+  it("lists Dari notes still waiting for the owner's check", () => {
+    const pending = ALL_LESSONS.flatMap((r) =>
+      r.lesson.blocks.filter((b) => b.type === "callout" && b.kind === "dari" && !b.checked).map(() => r.number),
+    );
+    if (pending.length) console.warn(`Dari notes awaiting the owner's check: ${pending.join(", ")}`);
+    expect(Array.isArray(pending)).toBe(true);
+  });
+});
