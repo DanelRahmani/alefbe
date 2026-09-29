@@ -646,6 +646,12 @@
   font-size: 0.93rem;
   line-height: 1.5;
 }
+.lesson-row-quiz {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.75rem;
+  color: var(--turquoise);
+}
 .todo-ring {
   width: 1.9rem;
   height: 1.9rem;
@@ -864,6 +870,49 @@
   font-size: 0.93rem;
   color: var(--muted);
 }
+/* Star, peek and copy: quiet, at the foot of each example. */
+.example-tools {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.15rem;
+  margin: 0.35rem -0.45rem -0.4rem 0;
+}
+.examples-words .example-tools {
+  justify-content: center;
+  margin-right: 0;
+}
+.dialogue-body .example-tools {
+  justify-content: flex-start;
+  margin: 0.2rem 0 0 -0.45rem;
+}
+.tool-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 2rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.tool-btn:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.tool-btn[aria-pressed="true"] {
+  color: var(--accent);
+}
+/* With transliteration on everywhere, a per-example peek has nothing to add. */
+:root[data-translit="on"] .peek-btn {
+  display: none;
+}
+.peek .tr {
+  display: inline;
+}
+.peek .tr-block {
+  display: block;
+}
 .lesson-body > .pair {
   margin-top: 1.75rem;
 }
@@ -1027,6 +1076,13 @@
 .quiz-no > p:first-child {
   color: var(--err);
 }
+.quiz-summary {
+  margin-top: 1.5rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  background: var(--surface);
+}
 .finish {
   margin-top: 3rem;
   padding: 1.25rem 0;
@@ -1053,4 +1109,197 @@
 /* The header is sticky: anchored sections stop below it. */
 [id] {
   scroll-margin-top: 4.5rem;
+}
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem 1.2rem;
+}
+.footer-links a {
+  color: var(--accent);
+  text-decoration: none;
+}
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+/* ── Header buttons and the search palette ─────────────────────────────── */
+.header-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--glass-line);
+  border-radius: 999px;
+  background: var(--glass-strong);
+  font-size: 0.875rem;
+  color: var(--ink);
+  transition: border-color 150ms;
+}
+.header-btn:hover {
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+}
+.header-kbd {
+  font-family: var(--font-vazirmatn), system-ui, sans-serif;
+  font-size: 0.7rem;
+  padding: 0 0.35rem;
+  border: 1px solid var(--rule);
+  border-radius: 5px;
+  color: var(--muted);
+}
+@media (max-width: 479px) {
+  .header-btn-label,
+  .header-kbd {
+    display: none;
+  }
+}
+.search-dialog {
+  width: min(38rem, calc(100vw - 2rem));
+  max-height: min(34rem, calc(100vh - 6rem));
+  margin: 5rem auto auto;
+  padding: 0;
+  border: 1px solid var(--glass-line);
+  border-radius: 20px;
+  color: var(--ink);
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+  backdrop-filter: blur(24px) saturate(1.5);
+  box-shadow: inset 0 1px 0 var(--glass-shine), 0 30px 60px -20px rgb(0 0 0 / 0.45);
+  overflow: hidden;
+}
+.search-dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+.search-dialog::backdrop {
+  background: rgb(10 12 34 / 0.35);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid var(--rule);
+}
+.search-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.45rem 0.25rem;
+  background: transparent;
+  font-size: 1.05rem;
+  color: var(--ink);
+  outline: none;
+}
+.search-input::placeholder {
+  color: var(--muted);
+}
+.search-close {
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  color: var(--muted);
+}
+.search-results {
+  overflow-y: auto;
+  padding: 0.4rem 0.4rem 0.6rem;
+}
+.search-empty {
+  padding: 1rem 0.75rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.search-group {
+  padding: 0.6rem 0.6rem 0.25rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.search-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: 12px;
+  cursor: pointer;
+}
+.search-option[aria-selected="true"] {
+  background: var(--accent-soft);
+}
+.search-fa {
+  min-width: 2.2rem;
+  font-size: 1.3rem;
+  text-align: center;
+  color: var(--accent);
+}
+.search-text {
+  display: grid;
+  min-width: 0;
+}
+.search-title {
+  font-weight: 500;
+}
+.search-sub {
+  font-size: 0.8rem;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.search-input::-webkit-search-cancel-button {
+  display: none;
+}
+
+/* ── Keyboard shortcuts sheet ──────────────────────────────────────────── */
+.help-dialog {
+  max-width: 30rem;
+}
+.help-title {
+  flex: 1;
+  font-weight: 600;
+}
+.help-list {
+  padding: 0.5rem 0.9rem 0.9rem;
+}
+.help-row {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr;
+  gap: 0.75rem;
+  align-items: baseline;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.help-row:last-child {
+  border-bottom: 0;
+}
+.help-row dd {
+  color: var(--muted);
+}
+.help-kbd {
+  display: inline-block;
+  min-width: 1.6rem;
+  padding: 0.05rem 0.4rem;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  font-family: var(--font-vazirmatn), system-ui, sans-serif;
+  font-size: 0.8rem;
+  text-align: center;
+  background: var(--surface);
+}
+.shortcuts-link {
+  color: var(--accent);
+}
+.shortcuts-link:hover {
+  text-decoration: underline;
+}
+/* No keyboard to speak of on a touch screen. */
+@media (pointer: coarse) {
+  .shortcuts-link {
+    display: none;
+  }
 }

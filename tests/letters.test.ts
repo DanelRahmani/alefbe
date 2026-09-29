@@ -53,8 +53,27 @@ describe("letter forms in text", () => {
     expect(wordKind("بـ")).toBe("letter");
     expect(wordKind("ـبـ")).toBe("letter");
     expect(wordKind("ب")).toBe("letter");
-    expect(wordKind("ـب")).toBe("affix");
+    expect(wordKind("ـب")).toBe("letter");
+    expect(wordKind("ـَم")).toBe("affix");
     expect(wordKind("ـها")).toBe("affix");
     expect(transliterate("بـ و ـبـ")).toBe("  ");
+  });
+  it("names a soundless mark shown on a stroke without reading it", () => {
+    expect(wordKind("ـّ")).toBe("letter");
+    expect(wordKind("ـْ")).toBe("letter");
+    expect(wordKind("ـِ")).toBe("affix");
+    expect(wordKind("ـاً")).toBe("affix");
+    expect(transliterate("(ـّ) (ـْ)")).toBe("() ()");
+  });
+});
+
+describe("syllable grid", () => {
+  it("writes each syllable fully marked and says how it sounds", async () => {
+    const { syllable, syllableSound } = await import("@/lib/persian/letters");
+    expect(["a", "e", "o", "â", "i", "u"].map((v) => syllable("ب", v as never)).join(" ")).toBe("بَ بِ بُ با بی بو");
+    expect(["a", "e", "o", "â", "i", "u"].map((v) => syllable("ا", v as never)).join(" ")).toBe("اَ اِ اُ آ ای او");
+    expect(syllableSound("خ", "â")).toBe("khâ");
+    expect(syllableSound("ا", "e")).toBe("e");
+    expect(syllableSound("ی", "a")).toBe("ya");
   });
 });

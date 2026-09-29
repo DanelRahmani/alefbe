@@ -4,12 +4,23 @@ import Link from "next/link";
 import type { Block, Example, Register } from "@/content/types";
 import { FaText } from "../FaText";
 import { Rich, hasFa } from "../Rich";
+import { ALL_LESSONS } from "@/content/units";
+import { DisplayControls } from "../DisplayControls";
+import { BuildBlock } from "./BuildBlock";
+import { ExampleShell } from "./ExampleShell";
 import { LetterCards } from "./LetterCards";
+import { PracticeLinks } from "./PracticeLinks";
 import { Quiz } from "./Quiz";
+import { SkipAhead } from "./SkipAhead";
+import { SyllableGrid } from "./SyllableGrid";
 
 interface Ctx {
   register: Register;
   alwaysTranslit?: boolean;
+  /** "unit/lesson": quiz scores and missed questions are saved under it. */
+  lessonKey?: string;
+  /** Where starred examples come from ("Lesson 2.3"). */
+  source?: { label: string; href: string };
 }
 
 function P({ text, className = "" }: { text: string; className?: string }) {
@@ -23,7 +34,7 @@ function P({ text, className = "" }: { text: string; className?: string }) {
 function ExampleCard({ e, ctx, label }: { e: Example; ctx: Ctx; label?: string }) {
   const both = ctx.register === "both" && e.written;
   return (
-    <div className="example">
+    <ExampleShell fa={e.fa} written={both ? e.written : undefined} en={e.en} source={ctx.source} peek={!ctx.alwaysTranslit}>
       {label && <span className="ui example-label">{label}</span>}
       <div className="example-fa">
         {both && <span className="ui register-tag">Spoken</span>}
@@ -37,7 +48,7 @@ function ExampleCard({ e, ctx, label }: { e: Example; ctx: Ctx; label?: string }
       )}
       <P text={e.en} className="example-en" />
       {e.note && <P text={e.note} className="example-note" />}
-    </div>
+    </ExampleShell>
   );
 }
 
@@ -80,14 +91,17 @@ function BlockView({ b, ctx }: { b: Block; ctx: Ctx }) {
       );
     case "text":
       return <P text={b.text} className="lesson-text" />;
-    case "examples":
+    case "examples": {
+      // Single words (the script units) sit in a compact grid; sentences stay full width.
+      const words = b.items.every((e) => !e.written && !/\s/.test(e.fa.trim()));
       return (
-        <div className="examples">
+        <div className={words ? "examples examples-words" : "examples"}>
           {b.items.map((e, i) => (
             <ExampleCard key={i} e={e} ctx={ctx} />
           ))}
         </div>
       );
+    }
     case "pair":
       return (
         <div className="pair">
@@ -171,7 +185,14 @@ function BlockView({ b, ctx }: { b: Block; ctx: Ctx }) {
             {b.lines.map((l, i) => (
               <li key={i} className="dialogue-line">
                 <span className="ui speaker">{l.who}</span>
-                <div>
+                <ExampleShell
+                  className="dialogue-body"
+                  fa={l.fa}
+                  written={ctx.register === "both" ? l.written : undefined}
+                  en={l.en}
+                  source={ctx.source}
+                  peek={!ctx.alwaysTranslit}
+                >
                   <div className="example-fa">
                     <FaText text={l.fa} alwaysTranslit={ctx.alwaysTranslit} />
                   </div>
@@ -182,7 +203,7 @@ function BlockView({ b, ctx }: { b: Block; ctx: Ctx }) {
                     </div>
                   )}
                   <P text={l.en} className="example-en" />
-                </div>
+                </ExampleShell>
               </li>
             ))}
           </ol>
@@ -204,9 +225,30 @@ function BlockView({ b, ctx }: { b: Block; ctx: Ctx }) {
         </p>
       );
     case "quiz":
-      return <Quiz questions={b.questions} />;
+      return <Quiz questions={b.questions} lessonKey={ctx.lessonKey} />;
     case "letters":
       return <LetterCards chars={b.chars} />;
+    case "build":
+      return <BuildBlock items={b.items} />;
+    case "syllables":
+      return <SyllableGrid consonants={b.consonants} vowels={b.vowels} caption={b.caption} />;
+    case "practice":
+      return <PracticeLinks group={b.group} text={b.text} />;
+    case "display":
+      return (
+        <div className="ui display-inline glass">
+          <DisplayControls theme={false} />
+        </div>
+      );
+    case "skip":
+      return (
+        <SkipAhead
+          keys={ALL_LESSONS.filter((r) => b.units.includes(r.unit.slug)).map((r) => r.key)}
+          groups={b.groups}
+          label={b.label}
+          text={b.text}
+        />
+      );
   }
 }
 

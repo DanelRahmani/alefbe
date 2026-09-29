@@ -3,6 +3,7 @@
 
 import { Fragment } from "react";
 import { parseMarkup, splitScript, tokenText, type Token } from "@/lib/markup";
+import type { VowelMode } from "@/lib/persian/marks";
 import { FaText } from "./FaText";
 
 /** Cut a token list to the character range [start, end) of its plain text. */
@@ -35,7 +36,7 @@ function Latin({ tokens }: { tokens: Token[] }) {
   );
 }
 
-export function Rich({ text, translit = true }: { text: string; translit?: boolean }) {
+export function Rich({ text, translit = true, force }: { text: string; translit?: boolean; force?: VowelMode }) {
   const tokens = parseMarkup(text);
   const segments: { fa: boolean; tokens: Token[] }[] = [];
   let pos = 0;
@@ -51,6 +52,7 @@ export function Rich({ text, translit = true }: { text: string; translit?: boole
             key={i}
             tokens={seg.tokens}
             translit={translit ? "inline" : "none"}
+            force={force}
             className={seg.tokens.map(tokenText).join("").length <= 24 ? "whitespace-nowrap" : undefined}
           />
         ) : (

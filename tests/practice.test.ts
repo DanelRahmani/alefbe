@@ -55,6 +55,13 @@ describe("quick quiz", () => {
     expect(v.ok).toBe(false);
     expect(v.hint).toContain("Same sound");
     expect(checkQuizTyped("sound-letter", sad, "ص").ok).toBe(true);
+    const dal = letterByChar.get("د")!;
+    const plainA = checkQuizTyped("letter-name", dal, "dal");
+    expect(plainA.ok).toBe(true);
+    expect(plainA.note).toContain("dâl");
+    expect(checkQuizTyped("letter-name", letterByChar.get("ه")!, "he").ok).toBe(true);
+    expect(checkQuizTyped("letter-name", h, "he").ok).toBe(true);
+    expect(checkQuizTyped("letter-name", dal, "zal").ok).toBe(false);
   });
   it("scopes by group and by unlocked letters", () => {
     expect(scopeLetters("g1", []).map((l) => l.ch).join("")).toBe("جچحخ");

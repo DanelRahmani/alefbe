@@ -180,6 +180,13 @@ a {
 :root:not([data-vowels]) .vm-all {
   display: inline;
 }
+/* Lessons about the marks show every mark, whatever the setting. */
+:root .marks-all .vm:not(.vm-all) {
+  display: none;
+}
+:root .marks-all .vm.vm-all {
+  display: inline;
+}
 
 /* Transliteration: off by default; script lessons always show it. */
 .tr {

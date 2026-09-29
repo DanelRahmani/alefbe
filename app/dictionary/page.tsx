@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { DictionaryBrowser } from "@/components/DictionaryBrowser";
+import { DictionaryFromQuery } from "@/components/DictionaryFromQuery";
 import { DICTIONARY } from "@/content/dictionary";
 import { UNITS } from "@/content/units";
 
@@ -23,7 +25,9 @@ export default function DictionaryPage() {
           transliteration (<em>ab</em> finds <em>âb</em>) or in English.
         </p>
       </section>
-      <DictionaryBrowser entries={DICTIONARY} units={units} />
+      <Suspense fallback={<DictionaryBrowser entries={DICTIONARY} units={units} />}>
+        <DictionaryFromQuery entries={DICTIONARY} units={units} />
+      </Suspense>
     </>
   );
 }

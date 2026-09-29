@@ -5,7 +5,7 @@ import { OROSI_PATTERN } from "@/components/Orosi";
 import { UNITS, faNumber } from "@/content/units";
 import { splitScript } from "@/lib/markup";
 
-/** A lesson's mark: the first Persian run in its title, else the unit's Persian title. */
+/** A lesson's mark: the first Persian run in its title, else its number in Persian digits. */
 const markOf = (title: string, fallback: string) => splitScript(title).find((r) => r.fa)?.s ?? fallback;
 
 // Only what the path needs goes to the browser, not whole lessons.
@@ -24,7 +24,7 @@ const units: PathUnit[] = UNITS.map((u, i) => ({
     title: l.title,
     summary: l.summary,
     kinds: l.kinds,
-    mark: markOf(l.title, u.titleFa),
+    mark: markOf(l.title, faNumber(`${i}.${j + 1}`)),
     unitTitle: u.title,
   })),
 }));

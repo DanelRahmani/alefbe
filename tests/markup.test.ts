@@ -85,4 +85,8 @@ describe("variantsOf: vowel-mark modes", () => {
   it("key strips an ezafe-looking kasra only when it is not word-final", () => {
     expect(strip("key", "بِگو")).toBe("بگو");
   });
+  it("always shows a mark named on a bare stroke", () => {
+    expect(strip("none", "زَبَر (ـَ) و تَشْدید (ـّ)")).toBe("زبر (ـَ) و تشدید (ـّ)");
+    expect(strip("key", "سُکون (ـْ)")).toBe("سکون (ـْ)");
+  });
 });

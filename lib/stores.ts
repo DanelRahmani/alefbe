@@ -9,6 +9,8 @@ import type { DrillMode } from "./drill";
 import { emptyActivity, record, type ActivityData, type ActivityEvent } from "./activity";
 import { migrateTraceV1 } from "./trace";
 import { DEFAULT_QUIZ, type QuizSetup } from "./quiz";
+import { noteAnswer, type MistakeItem, type Notebook } from "./mistakes";
+import type { Starred } from "./starred";
 
 export type Theme = "system" | "light" | "dark";
 
@@ -106,6 +108,35 @@ export const practiceUiStore = createPersistentStore<PracticeUi>("alefbe2:practi
 /** Best score per game, keyed by game id. */
 export const gamesStore = createPersistentStore<Record<string, { best: number; played: number }>>("alefbe2:games", {});
 
+export interface QuizScore {
+  /** Right at the first try, on the latest full attempt. */
+  right: number;
+  total: number;
+  best: number;
+}
+
+export interface LessonsData {
+  /** The lesson opened most recently, "unit/lesson". */
+  last?: string;
+  /** Lesson quizzes, keyed "unit/lesson". */
+  quiz: Record<string, QuizScore>;
+}
+
+export const lessonsStore = createPersistentStore<LessonsData>("alefbe2:lessons", { quiz: {} });
+
+/** The mistake notebook (lib/mistakes.ts). */
+export const mistakesStore = createPersistentStore<Notebook>("alefbe2:mistakes", {});
+
+/** Record an answer for the notebook: a miss goes in, right answers clear it. */
+export function noteResult(item: MistakeItem, ok: boolean) {
+  const prev = mistakesStore.get();
+  const next = noteAnswer(prev, item, ok, Date.now());
+  if (next !== prev) mistakesStore.set(next);
+}
+
+/** Starred words and examples (lib/starred.ts). */
+export const starredStore = createPersistentStore<Starred>("alefbe2:starred", {});
+
 /** Every store, for refreshing after an import or reset. */
 export const ALL_STORES = [
   settingsStore,
@@ -117,4 +148,7 @@ export const ALL_STORES = [
   activityStore,
   practiceUiStore,
   gamesStore,
+  lessonsStore,
+  mistakesStore,
+  starredStore,
 ];

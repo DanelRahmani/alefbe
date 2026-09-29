@@ -5,7 +5,9 @@ import { Analytics } from "@vercel/analytics/next";
 import { DisplaySettings } from "@/components/DisplaySettings";
 import { LegacyMigration } from "@/components/LegacyMigration";
 import { Orosi } from "@/components/Orosi";
+import { SearchPalette } from "@/components/SearchPalette";
 import { ServiceWorker } from "@/components/ServiceWorker";
+import { Shortcuts, ShortcutsLink } from "@/components/Shortcuts";
 import { SiteNav, TabBar } from "@/components/SiteNav";
 import { PREPAINT_SCRIPT } from "@/lib/prepaint";
 import "./globals.css";
@@ -61,6 +63,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </Link>
             <SiteNav />
             <span className="header-spacer" />
+            <SearchPalette />
             <DisplaySettings />
           </div>
         </header>
@@ -72,8 +75,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <span className="khatam" />
           </div>
           <p>Iranian Persian, explained in English. Progress is saved in this browser only.</p>
+          <p className="footer-links">
+            <Link href="/grammar">Grammar at a glance</Link>
+            <Link href="/dictionary">Dictionary</Link>
+            <Link href="/progress">Back up your progress</Link>
+            <ShortcutsLink />
+          </p>
         </footer>
         <TabBar />
+        <Shortcuts />
         <LegacyMigration />
         <ServiceWorker />
         <Analytics />

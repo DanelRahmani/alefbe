@@ -20,7 +20,7 @@ import { LETTERS, highlightLetter, type Letter } from "@/lib/persian/letters";
 import { shuffle } from "@/lib/quiz";
 import { unlockedIds } from "@/lib/srs";
 import { useStore } from "@/lib/storage";
-import { deckOf, gamesStore, logActivity, practiceUiStore, srsStore } from "@/lib/stores";
+import { deckOf, gamesStore, logActivity, noteResult, practiceUiStore, srsStore } from "@/lib/stores";
 import { FaText } from "../FaText";
 
 const FLASH_SPEEDS: [number, string][] = [
@@ -178,11 +178,14 @@ function TileRound({
   const fa = kind === "letters";
   const full = placed.length === answer.length;
 
-  const check = () => {
-    if (!full || checked !== null) return;
-    const ok = placed.map((t) => t.s).join("|") === answer.join("|");
+  const settle = (ok: boolean) => {
     setChecked(ok);
     logActivity({ kind: "game" });
+    noteResult({ kind: "word", dir: fa ? "spell" : "read", fa: word.fa, translit: word.translit, en: word.en }, ok);
+  };
+  const check = () => {
+    if (!full || checked !== null) return;
+    settle(placed.map((t) => t.s).join("|") === answer.join("|"));
   };
 
   return (
@@ -246,10 +249,7 @@ function TileRound({
             <button
               type="button"
               className="drill-btn drill-btn-quiet"
-              onClick={() => {
-                setChecked(false);
-                logActivity({ kind: "game" });
-              }}
+              onClick={() => settle(false)}
             >
               Show me
             </button>
@@ -329,6 +329,7 @@ function LetterByLetter({ words, onEnd }: PlayProps) {
     setPicked(l.ch);
     if (l.ch === step.letter.ch) setRight((r) => r + 1);
     logActivity({ kind: "game" });
+    noteResult({ kind: "letter", type: "form-letter", ch: step.letter.ch }, l.ch === step.letter.ch);
   };
   const next = () => {
     if (k + 1 < steps.length) {
@@ -417,6 +418,7 @@ function Flash({ letters, onEnd, speed }: PlayProps & { speed: number }) {
     const ok = l.ch === letter.ch;
     if (ok) setRight((r) => r + 1);
     logActivity({ kind: "game" });
+    noteResult({ kind: "letter", type: "letter-name", ch: letter.ch }, ok);
   };
   const next = () => {
     if (at + 1 >= letters.length) return onEnd(right, letters.length);

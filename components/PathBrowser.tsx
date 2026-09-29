@@ -5,7 +5,7 @@ import { KIND_LABELS, type LessonKind } from "@/content/types";
 import { DRILL_GROUPS } from "@/lib/drill";
 import { deckStats, unlockedIds } from "@/lib/srs";
 import { useStore } from "@/lib/storage";
-import { deckOf, pathFilterStore, progressStore, srsStore } from "@/lib/stores";
+import { deckOf, lessonsStore, pathFilterStore, progressStore, srsStore } from "@/lib/stores";
 import { useMinuteClock } from "./drill/useDrillClock";
 import { FaText } from "./FaText";
 import { Rich } from "./Rich";
@@ -34,11 +34,13 @@ export interface PathUnit {
   lessons: PathLesson[];
 }
 
-function NextCard({ units, progress }: { units: PathUnit[]; progress: Record<string, true> }) {
+function NextCard({ units, progress, last }: { units: PathUnit[]; progress: Record<string, true>; last?: string }) {
   const all = units.flatMap((u) => u.lessons);
   if (!all.length) return null;
   const started = all.some((l) => progress[l.key]);
-  const next = all.find((l) => !progress[l.key]);
+  // The lesson opened last, if it isn't finished; otherwise the first unfinished one.
+  const resume = all.find((l) => l.key === last && !progress[l.key]);
+  const next = resume ?? all.find((l) => !progress[l.key]);
   if (!next) {
     return (
       <Link href="/practice" className="next-card glass">
@@ -57,7 +59,7 @@ function NextCard({ units, progress }: { units: PathUnit[]; progress: Record<str
     );
   }
   const target = next;
-  const label = started ? "Next lesson" : "First lesson";
+  const label = resume ? "Continue" : started ? "Next lesson" : "First lesson";
   return (
     <Link href={target.href} className="next-card glass">
       <span className="next-mark naskh" aria-hidden="true">
@@ -84,6 +86,7 @@ function NextCard({ units, progress }: { units: PathUnit[]; progress: Record<str
 export function PathBrowser({ units }: { units: PathUnit[] }) {
   const filter = useStore(pathFilterStore);
   const progress = useStore(progressStore);
+  const lessons = useStore(lessonsStore);
   const srs = useStore(srsStore);
   const now = useMinuteClock();
 
@@ -109,7 +112,7 @@ export function PathBrowser({ units }: { units: PathUnit[] }) {
 
   return (
     <div>
-      <NextCard units={units} progress={progress} />
+      <NextCard units={units} progress={progress} last={lessons.last} />
 
       <div className="ui quick-links">
         <Link href="/practice/drill/sound" className="pill-link">
@@ -123,6 +126,12 @@ export function PathBrowser({ units }: { units: PathUnit[] }) {
             ب
           </span>
           Trace the letters <span aria-hidden="true">→</span>
+        </Link>
+        <Link href="/grammar" className="pill-link">
+          <span className="pill-count pill-count-quiet naskh" aria-hidden="true">
+            د
+          </span>
+          Grammar at a glance <span aria-hidden="true">→</span>
         </Link>
       </div>
 
@@ -212,6 +221,11 @@ export function PathBrowser({ units }: { units: PathUnit[] }) {
                             <span className="lesson-row-summary">
                               <Rich text={l.summary} translit={false} />
                             </span>
+                            {lessons.quiz[l.key] && (
+                              <span className="ui lesson-row-quiz">
+                                Quiz: {lessons.quiz[l.key].right} of {lessons.quiz[l.key].total} right first time
+                              </span>
+                            )}
                           </span>
                           {progress[l.key] ? (
                             <Seal size={44} label="Finished" />
