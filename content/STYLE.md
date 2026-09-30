@@ -135,7 +135,7 @@ Answers typed in the drills are lenient:
   - the Academy's دستورِ خَطِّ فارسی;
   - Dehkhoda and Sokhan for vowel marks.
 - **Review:** after each unit, a fresh reviewer agent checks grammar, Tehrani naturalness, vowel marks, spoken/written pairs, translation nuance, over-general rules and quiz answers. Anything it can't verify is flagged, not guessed.
-- **Dari notes** (`callout` kind `dari`) ship only when the owner has confirmed them (`checked: true`) or a named Dari source backs every claim in them (cite it in the lesson's `source`). Unverifiable Dari notes are left out, not shipped as drafts.
+- **Dari notes** (`callout` kind `dari`) ship with `checked: false`, which shows a draft tag, until the owner has confirmed them (`checked: true`). Every unconfirmed note is listed for the owner in the phase report. Keep them short, and limit them to claims the owner can check at a glance (owner decision, 2026-09-30).
 
 ## Corrected, not copied: the old Alefbe app
 

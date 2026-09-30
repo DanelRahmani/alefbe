@@ -94,7 +94,26 @@ Phase 5 is Units 5–6 and the conjugation trainer (see `docs/PLAN.md`).
     - the spoken 1p/2p after â became می‌خواییم / میایین (*mikhâyim*, *miyâyin*), with the one-ی spellings accepted as variants; lesson 4.1's می‌خوایْن was changed to match;
     - دانستن and شناختن are told apart in English;
     - the stems رَو / شَو read *row*/*show* and آ reads empty on their own, so lessons cite them with overrides.
-- Owner to confirm: *mikhâyim* / *miyâyin* vs *mikhâym* / *miyâyn*, and the spoken past stem *âvord-* vs *âvard-*.
+- **5b** (2026-09-30): Unit 5, "Everyday verbs: the present", lessons 5.1–5.6, in `content/lessons/present.ts`.
+  - The lessons are: two stems; می + stem + ending; the ten verbs; نمی; داشتن; compound verbs.
+  - Conjugation tables come from `lib/conjugate.ts` through `table()`.
+  - The grammar overview's present-tense topic now links to 5.2.
+  - The reviewer raised 13 findings, all applied, plus 4 optional polish items. Among them:
+    - the shared endings are three, not four;
+    - the ـیدَن rule names دیدَن and شِنیدَن as exceptions;
+    - *ân*→*un* is hedged;
+    - *to be* is also exempt from می;
+    - the نگه داشتن rule was restated;
+    - the bakery became a corner shop, where the shopkeeper says شَرْمَنْده;
+    - a duplicate quiz question was replaced.
+  - STYLE.md's Dari rule now matches the owner's instruction: notes ship with `checked: false` and are listed in the phase report. The 5.2 note (the prefix is *mē-* in Dari) is waiting for the owner.
+  - Checked at 375 px in light and dark: no horizontal scroll, focus ring shown, no app console errors. Lighthouse accessibility is 100 on 5.3 and 5.5 (served by `alefbe-static`).
+- Owner to confirm:
+  - *mikhâyim* / *miyâyin* vs *mikhâym* / *miyâyn*;
+  - the spoken past stem *âvord-* vs *âvard-*;
+  - *khaste-am* / *khune-am* vs the contracted *khastam* / *khunam*;
+  - *miyây* vs *miyâi*;
+  - نِگَهْ said *negah* or *nege*.
 
 ## Waiting on the owner
 
