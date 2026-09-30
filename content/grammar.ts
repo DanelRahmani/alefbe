@@ -228,6 +228,7 @@ export const GRAMMAR: GrammarTopic[] = [
     slug: "past-tense",
     title: "The simple past",
     unit: "past",
+    lesson: "past/simple-past",
     blocks: [
       {
         type: "idea",

@@ -2,6 +2,7 @@ import type { Lesson, Unit } from "./types";
 import { alphabet } from "./lessons/alphabet";
 import { coreSentence } from "./lessons/core-sentence";
 import { nouns } from "./lessons/nouns";
+import { past } from "./lessons/past";
 import { present } from "./lessons/present";
 import { sounds } from "./lessons/sounds";
 import { spelling } from "./lessons/spelling";
@@ -66,7 +67,7 @@ export const UNITS: Unit[] = [
     title: "Talking about the past",
     titleFa: "زَمانِ گُذَشْته",
     description: "The simple past, not in the past, the present perfect, the past continuous, and “in the middle of”.",
-    lessons: [],
+    lessons: past,
   },
   {
     slug: "want-can-must",

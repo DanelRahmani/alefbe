@@ -170,7 +170,25 @@ Phase 6 is Units 7–9 and the vocabulary deck (see `docs/PLAN.md`). The owner's
   - The reviewer found no marking or half-space error, and raised 1 error, 3 should-fix, 6 polish and 3 it could not verify. All were applied; the unverified ones are under "Waiting on the owner".
   - Checked at 375 px in light and dark: no horizontal scroll, no console errors; a wrong answer was scheduled and noted, and the notebook names the tense. Lighthouse accessibility is 100 on `/verbs`.
 
-Next: **6b**, Unit 7, "Talking about the past" (lessons 7.1–7.5). Its lesson slugs must match `TENSES`: `past/simple-past`, `past/present-perfect`, `past/past-continuous`, `past/in-progress`.
+- **6b** (2026-09-30): Unit 7, "Talking about the past", lessons 7.1–7.5, in `content/lessons/past.ts`.
+  - The lessons are: the simple past; نـ on the past; the present perfect; the past continuous; the progressive with داشتن.
+  - Their slugs are the ones `TENSES` opens with (`simple-past`, `present-perfect`, `past-continuous`, `in-progress`; 7.2 is `past-negative`). A content test checks that every tense's lesson exists.
+  - Tables come from `lib/conjugate.ts` through `table()`. The grammar overview's simple-past topic links to 7.1.
+  - What the lessons take care over:
+    - the spoken perfect is told apart by stress in positive forms only; the lessons claim nothing about the negative;
+    - for most states the past with می is the everyday past (می‌دونِسْتَم, *I knew*), and داشتن and بودن take no می;
+    - the progressive has no negative, is not used with states, means *about to* with a verb of a single moment, and belongs first to speech;
+    - the Persian term for the progressive is left out until the owner confirms its vowel.
+  - One override: [میومَدَم|miyumadam] in 7.4. No contracted possessive or object ending is used.
+  - The reviewer found no errors and raised 7 should-fix, 12 polish and 2 it could not verify. All were applied (one needed no change). Among them:
+    - the ی of نَیامَد comes before آ, not before every vowel;
+    - "as a child" became وَقْتی بَچّه بودَم / بَچّه که بودین;
+    - صُبْحونه in the spoken line; دُرُسْت کَرْدَن for making a meal;
+    - the likelier mistake دارَم نِمی‌رَم replaced نَدارَم می‌رَم;
+    - a tip on two differences from English (the present for "have lived here for two years"; نِشَسْته, *is sitting*).
+  - Checked at 375 px in light and dark: no horizontal scroll; no app console errors. Lighthouse accessibility is 100 on 7.3 and 7.5.
+
+Next: **6c**, the rest of the engine: the subjunctive, the imperative and the future (written only), with golden tables and a reviewer pass, as in 6a. Unit 8's slug is `want-can-must`.
 
 ## Waiting on the owner
 
@@ -191,6 +209,13 @@ Next: **6b**, Unit 7, "Talking about the past" (lessons 7.1–7.5). Its lesson s
   - the spoken present perfect spelled like the simple past (رَفْتَم … رَفْته), told apart by stress; whether the negative (نَرَفْتَم) differs in stress at all; and whether the spelling رفته‌م should be taught;
   - شناختن treated as a state, with no progressive;
   - the term مُسْتَمِر: *mostamer* (the dictionary form, as written) or *mostamar*.
+- Confirm these forms from Unit 7 (6b):
+  - نَیومَد said *nayumad* (as taught) or *niyumad*;
+  - صُبْحونه in speech for صُبْحانه;
+  - وَقْتی بَچّه بودَم / بَچّه که بودین for "as a child" (bare بَچِّگی was dropped as unnatural);
+  - چی دُرُسْت کَرْدی؟ for "what have you made?";
+  - بابابُزُرْگ beside مادَرْبُزُرْگ in speech; هیچ‌کَس (not هیشْکی) in a spoken line;
+  - آخَرِ هَفْته read *âkhar-e hafte*; مُوبایْل *mobâyl*; تِلِفُن *telefon*.
 - Check the month names in `content/calendar.ts`.
 - 21st.dev components need the owner's registry API key, set as an environment variable. Until then, components are hand-built.
 - Review new.alefbe.study and merge `nextgen` into `main` when happy.
