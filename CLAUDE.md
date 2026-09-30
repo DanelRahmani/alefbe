@@ -203,7 +203,33 @@ Phase 6 is Units 7–9 and the vocabulary deck (see `docs/PLAN.md`). The owner's
   - The reviewer found no wrong form or mark, and raised 5 should-fix, 7 polish and 5 it could not verify. All were applied; the unverified ones are under "Waiting on the owner".
   - Checked at 375 px: no horizontal scroll, no app console errors. Lighthouse accessibility is 100 on `/verbs`.
 
-Next: **6d**, Unit 8, "Want, can, must" (lessons 8.1–8.6), slug `want-can-must`. Lesson slugs the trainer needs: `subjunctive`, `commands`, `future`.
+- **6d** (2026-09-30): Unit 8, "Want, can, must", lessons 8.1–8.6, in `content/lessons/want-can-must.ts`.
+  - The lessons are: the subjunctive; want to; can; باید; commands; the future. Slugs: `subjunctive`, `want-to`, `can`, `must`, `commands`, `future`.
+  - Tables come from the engine. Three helpers build the combined ones: a helper verb plus a subjunctive (می‌خوام بِرَم), باید plus a subjunctive, and the command table (to تو; to شما spoken and written).
+  - The prefix is named بـ in prose, unmarked, with its sound given as *be-*: a marked stroke (بِـ) fails the readability check.
+  - What the lessons take care over:
+    - compounds with کردن and شدن usually drop بـ (کار کُنَم, بیدار شَم);
+    - the second verb's own words go between the two verbs, but a destination can follow in speech (می‌خوام بِرَم کوه);
+    - می‌شه asks permission with an *I* verb and makes a request with a *you* verb; its written line is می‌شَوَد, and مُمْکِن اَسْت is given as the more formal way;
+    - نَباید is *mustn't*, لازِم نیست is *don't have to*; باید with the past continuous is *should have* or *had to*;
+    - the command's model verb is بِبین (its شما form really is the تو form plus an ending); the one-letter stems are explained after it;
+    - the future is the present in speech; خواهَم رَفْت belongs to writing.
+  - One override: [بیاین|biyâyin] in 8.5. No contracted possessive or object ending on a vowel-final word, and no ـست after a vowel, is used.
+  - The reviewer found no marking, half-space or contraction problem, and raised 1 error, 13 should-fix and 22 polish. All were applied (two needed no change: lines without a written twin carry no "Spoken" tag, and the بایَدَم callout stands).
+  - Checked at 375 px in light and dark: no horizontal scroll, no console errors; the trainer's gate links to each tense's lesson. Lighthouse accessibility is 100 on 8.1 and 8.5.
+
+Next: **6e**, Unit 9, "Where, when, how much" (lessons 9.1–9.6), slug `where-when`. Link the grammar overview's prepositions, comparison and numbers topics to their lessons as each ships. Then **6f**, the vocabulary deck at `/vocab`.
+
+## Feature ideas (owner asked, 2026-09-30)
+
+Not part of Phase 6. Ranked by how easy each is; the first four need no new Persian content, so they can be built as soon as Phase 6 is pushed.
+
+1. **One review queue** (easiest; ready now). A "Review everything due" session that pulls due cards from every deck: letters, words, verbs, vocabulary, and the mistake notebook. Every deck, checker and prompt component already exists; this is a pure function that merges the queues, and one page. Best built after 6f, so the vocabulary deck is in it.
+2. **Cloze practice from lesson examples** (easy; ready now). Every example marks its key part with a `{highlight}`. Blank it, show the English, and have the learner type the missing words. Needs a pure extractor, a Leitner deck and store, and a trainer page. No new content. To decide: examples with several highlights, and whether the spoken or the written line is asked.
+3. **Spoken ↔ written conversion drill** (easy; ready now). Examples and dialogue lines that carry both forms become cards: show one, type the other. The data is already reviewed. The work is lenient whole-sentence checking (punctuation, half-spaces) and naming the word that differs.
+4. **Reading without vowel marks** (medium; ready now). Show a dictionary word unmarked and ask for its reading, later short sentences. The data and `checkTranslit` exist. To handle: words that read two ways unmarked (کشتی), which need their English shown or must be left out.
+5. **Placement check** (medium; ready now if built from existing quizzes). Ten to fifteen questions that suggest where a heritage or Dari speaker should start, in place of skipping units on trust in lesson 0.3. Sampling the lesson quizzes avoids new content; purpose-written questions would need a reviewer pass.
+6. **Audio** (hard; blocked). The largest gap: stress (*ráftam* / *raftám*), *be-* / *bo-*, and every form under "Waiting on the owner" are things text cannot carry. It needs recordings by a Tehrani speaker, starting with dialogue lines and verb tables; browser speech synthesis is not good enough. It would unlock listening and dictation drills. Blocked until there is a speaker.
 
 ## Waiting on the owner
 
@@ -224,6 +250,12 @@ Next: **6d**, Unit 8, "Want, can, must" (lessons 8.1–8.6), slug `want-can-must
   - the spoken present perfect spelled like the simple past (رَفْتَم … رَفْته), told apart by stress; whether the negative (نَرَفْتَم) differs in stress at all; and whether the spelling رفته‌م should be taught;
   - شناختن treated as a state, with no progressive;
   - the term مُسْتَمِر: *mostamer* (the dictionary form, as written) or *mostamar*.
+- Confirm these forms from Unit 8 (6d):
+  - بیدار شَم (no بـ with a شدن compound), as taught;
+  - بِشین / بِشینین read *beshin* (as taught) or *bishin*;
+  - written می‌شَوَد …؟ for spoken می‌شه …؟ when asking permission;
+  - سُوغاتی read *soghâti* (dictionaries also give *sowghât*);
+  - تِهْرون in every spoken line.
 - Confirm these forms from Phase 6c (the reviewer could not verify them):
   - the spoken prefix shown as *be-* (بِکُن, بِخُور, بِکُنَم), with *bo-* only in a note; or show بُکُن, بُخُور in the spoken column; and *begu* or *bogu*;
   - written بِشَو read *beshow* and بِدِهْ read *bedeh* (as given), or *besho*, *bede*;

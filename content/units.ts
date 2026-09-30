@@ -7,6 +7,7 @@ import { present } from "./lessons/present";
 import { sounds } from "./lessons/sounds";
 import { spelling } from "./lessons/spelling";
 import { startHere } from "./lessons/start-here";
+import { wantCanMust } from "./lessons/want-can-must";
 
 // The course order. A unit's number is its position here (Start here is 0),
 // so every unit is listed even before its lessons are written.
@@ -74,7 +75,7 @@ export const UNITS: Unit[] = [
     title: "Want, can, must",
     titleFa: "خواسْتَن، تَوانِسْتَن، بایَد",
     description: "The subjunctive after want, can and must; commands; and the future.",
-    lessons: [],
+    lessons: wantCanMust,
   },
   {
     slug: "where-when",
