@@ -188,7 +188,22 @@ Phase 6 is Units 7–9 and the vocabulary deck (see `docs/PLAN.md`). The owner's
     - a tip on two differences from English (the present for "have lived here for two years"; نِشَسْته, *is sitting*).
   - Checked at 375 px in light and dark: no horizontal scroll; no app console errors. Lighthouse accessibility is 100 on 7.3 and 7.5.
 
-Next: **6c**, the rest of the engine: the subjunctive, the imperative and the future (written only), with golden tables and a reviewer pass, as in 6a. Unit 8's slug is `want-can-must`.
+- **6c** (2026-09-30): the rest of the engine: the present subjunctive, the imperative and the future.
+  - `Tense` gained `subjunctive`, `imperative` and `future`. A tense can limit its persons (`persons`: a command is only for تو and شما) and its styles (`styles`: the future is written only). Use `personsOf(tense)` and `stylesOf(tense)`; `hasForm(verb, spec, all)` combines them with `lacks`. `table()` returns one form per person the tense has.
+  - Forms:
+    - subjunctive: بِـ + present stem + ending (بِرَوَم, spoken بِرَم); before آ it is بیا (بیایَم, بیام); the negative puts نَـ in its place (نَرَم, نَیام); بودن is باشَم, and داشتن is داشْته باشَم;
+    - imperative: to تو the stem with بِـ and no ending (بِکُن), to شما the subjunctive form (بِرین, written بِرَوید); `command` in the verb data holds the ones that are not بِـ + stem (بُرُو in both styles; spoken بِشُو, بِگو, بِده);
+    - future: خواهَم رَفْت, negative نَخواهَم رَفْت; a compound's noun goes first (کار خواهَم کَرْد).
+  - Verb flags: `bare` (a compound with کردن drops بِـ: کار کُنَم, with کار بِکُنَم accepted); `noCommand` (the reason, for توانستن and خواستن); `noNegCommand` (دانستن, شناختن, فهمیدن: nobody orders "don't know", and نَفَهْم is an insult); `enCommand` ("get to know").
+  - The prefix is بِـ in every form, spoken and written. Tehrani *bo-* before an *o* (*bokon*, *bokhor*) is explained in a note on the two tenses, not shown in the forms.
+  - Not covered yet, as no verb in the list needs it (comments in `conjugate.ts`): a stem starting with اَ / اُ / ای (بیفتم, بایستم); prefixed verbs on داشتن (نِگَهْ دارَم); دَویدَن's *bodo*.
+  - Golden tables for every verb are in `tests/conjugate-unit8.test.ts`, typed by hand; every command row, do and don't, is by hand.
+  - The trainer asks a command of تو or شما only and the future in writing only. A leading که is accepted before a subjunctive. The `/verbs` tables show only the columns and rows a tense has.
+  - The three tenses open with lessons 8.1, 8.5 and 8.6 (`want-can-must/subjunctive`, `…/commands`, `…/future`). Until Unit 8 is written the trainer says the lesson is on the way; the content test checks a tense's lesson only once its unit has lessons.
+  - The reviewer found no wrong form or mark, and raised 5 should-fix, 7 polish and 5 it could not verify. All were applied; the unverified ones are under "Waiting on the owner".
+  - Checked at 375 px: no horizontal scroll, no app console errors. Lighthouse accessibility is 100 on `/verbs`.
+
+Next: **6d**, Unit 8, "Want, can, must" (lessons 8.1–8.6), slug `want-can-must`. Lesson slugs the trainer needs: `subjunctive`, `commands`, `future`.
 
 ## Waiting on the owner
 
@@ -209,6 +224,12 @@ Next: **6c**, the rest of the engine: the subjunctive, the imperative and the fu
   - the spoken present perfect spelled like the simple past (رَفْتَم … رَفْته), told apart by stress; whether the negative (نَرَفْتَم) differs in stress at all; and whether the spelling رفته‌م should be taught;
   - شناختن treated as a state, with no progressive;
   - the term مُسْتَمِر: *mostamer* (the dictionary form, as written) or *mostamar*.
+- Confirm these forms from Phase 6c (the reviewer could not verify them):
+  - the spoken prefix shown as *be-* (بِکُن, بِخُور, بِکُنَم), with *bo-* only in a note; or show بُکُن, بُخُور in the spoken column; and *begu* or *bogu*;
+  - written بِشَو read *beshow* and بِدِهْ read *bedeh* (as given), or *besho*, *bede*;
+  - بِرین (as shown) or بِرید as the spoken plural command;
+  - بِشِناسَم, بِنِویسَم shown in full (*beshenâsam*, *benevisam*), not the elided *beshnâsam*, *benvisam*;
+  - whether بِشِناس and بِفَهْم should be drilled at all.
 - Confirm these forms from Unit 7 (6b):
   - نَیومَد said *nayumad* (as taught) or *niyumad*;
   - صُبْحونه in speech for صُبْحانه;

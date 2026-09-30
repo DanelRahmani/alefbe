@@ -63,12 +63,16 @@ export function VerbSolution({ q }: { q: VerbQuestion }) {
   const note = tenseInfo(q.spec.tense).note;
   return (
     <span className="verb-solution has-fa">
-      <span>
-        Spoken: <FaText text={both.spoken} translit="inline" alwaysTranslit force="all" className="text-xl" />
-      </span>
-      <span>
-        Written: <FaText text={both.written} translit="inline" alwaysTranslit force="all" className="text-xl" />
-      </span>
+      {both.spoken && (
+        <span>
+          Spoken: <FaText text={both.spoken} translit="inline" alwaysTranslit force="all" className="text-xl" />
+        </span>
+      )}
+      {both.written && (
+        <span>
+          Written: <FaText text={both.written} translit="inline" alwaysTranslit force="all" className="text-xl" />
+        </span>
+      )}
       {note && (
         <span className="verb-note">
           <Rich text={note} translit={false} />

@@ -1,8 +1,8 @@
 // The conjugation engine: every verb form is generated from the verb's stems.
-// Pure. It covers the present and the past tenses of Unit 7 (simple past,
-// present perfect, past continuous, and the progressive with داشتن),
-// affirmative and negative, spoken (Tehrani) and written. The tenses of Unit 8
-// (subjunctive, imperative, future) join as more cases of `Tense`.
+// Pure. It covers the present, the past tenses of Unit 7 (simple past,
+// present perfect, past continuous, and the progressive with داشتن) and the
+// forms of Unit 8 (subjunctive, imperative, and the written future),
+// affirmative and negative, spoken (Tehrani) and written.
 //
 // Output is fully vowel-marked (content/STYLE.md), so it transliterates and
 // passes the readability check like any other Persian string in the course.
@@ -18,7 +18,16 @@ export type Style = "spoken" | "written";
 export const STYLES: Style[] = ["spoken", "written"];
 
 /** Tenses the engine knows, in the order the course teaches them. */
-export type Tense = "present" | "past" | "perfect" | "imperfect" | "progressive" | "past-progressive";
+export type Tense =
+  | "present"
+  | "past"
+  | "perfect"
+  | "imperfect"
+  | "progressive"
+  | "past-progressive"
+  | "subjunctive"
+  | "imperative"
+  | "future";
 
 export interface TenseInfo {
   id: Tense;
@@ -31,6 +40,10 @@ export interface TenseInfo {
   says: string;
   /** A note shown with the tense's tables and answers ("Rich": English with marked Persian). */
   note?: string;
+  /** The persons it has, when not all six: a command is only for تو and شما. */
+  persons?: Person[];
+  /** The styles it has, when not both: the future with خواستن belongs to writing. */
+  styles?: Style[];
 }
 
 export const TENSES: TenseInfo[] = [
@@ -47,9 +60,42 @@ export const TENSES: TenseInfo[] = [
   { id: "imperfect", title: "Past continuous", titleFa: "ماضیِ اِسْتِمْراری", lesson: "past/past-continuous", says: "I was going, I used to go" },
   { id: "progressive", title: "Present progressive", titleFa: "مُضارِعِ مُسْتَمِر", lesson: "past/in-progress", says: "I'm in the middle of going" },
   { id: "past-progressive", title: "Past progressive", titleFa: "ماضیِ مُسْتَمِر", lesson: "past/in-progress", says: "I was in the middle of going" },
+  {
+    id: "subjunctive",
+    title: "Present subjunctive",
+    titleFa: "مُضارِعِ اِلْتِزامی",
+    lesson: "want-can-must/subjunctive",
+    says: "that I go (after want, can, must, maybe); let's go",
+    note: "Before a stem with *o*, Tehran speech usually says *bo-*: *bokonam*, *bokhoram*. The spelling does not change.",
+  },
+  {
+    id: "imperative",
+    title: "Imperative",
+    titleFa: "اَمْر",
+    lesson: "want-can-must/commands",
+    says: "go!",
+    persons: ["2s", "2p"],
+    // 2, 3: how the commands are read.
+    note: "بُرُو is always *boro*. Before a stem with *o*, Tehran speech usually says *bo-*: *bokon*, *bokhor*; the spelling does not change. Written بِشَو and بِدِهْ are *beshow* and *bedeh* in careful reading; speech says *besho* and *bede*.",
+  },
+  {
+    id: "future",
+    title: "Future",
+    titleFa: "آیَنْده",
+    lesson: "want-can-must/future",
+    says: "I will go",
+    styles: ["written"],
+    note: "This future belongs to writing and formal speech. Everyday speech uses the present: فَرْدا می‌رَم, *I'll go tomorrow*. *I'm going to go* is می‌خوام بِرَم.",
+  },
 ];
 
 export const tenseInfo = (id: Tense): TenseInfo => TENSES.find((t) => t.id === id)!;
+
+/** The persons a tense has: all six, but only تو and شما for a command. */
+export const personsOf = (tense: Tense): Person[] => tenseInfo(tense).persons ?? PERSONS;
+
+/** The styles a tense has: both, but only written for the future. */
+export const stylesOf = (tense: Tense): Style[] => tenseInfo(tense).styles ?? STYLES;
 
 export interface Verb {
   /** Stable id (SRS keys use it): the infinitive in transliteration, "raftan", "kâr-kardan". */
@@ -76,6 +122,19 @@ export interface Verb {
   presentJoin?: string;
   /** Tehrani stems where speech differs from writing: ر (می‌رَم), خوا (می‌خوام). */
   spoken?: { present?: string; past?: string; pastPrefixed?: string };
+  /**
+   * The command to one person, where it is not simply بِـ + the stem: [do, don't].
+   * بُرُو / نَرُو for رفتن; in speech بِگو for the one-letter stem گ.
+   */
+  command?: Partial<Record<Style, [string, string]>>;
+  /** No command is drilled, and why ("Rich"): can has none; want has one that is rare. */
+  noCommand?: string;
+  /** No negative command: nobody orders "don't know", and نَفَهْم is an insult, not a verb form to teach. */
+  noNegCommand?: boolean;
+  /** What the command means, where the base form misleads: "get to know" for شناختن. */
+  enCommand?: string;
+  /** A compound with کردن usually drops بِـ in the subjunctive and the command: کار کُنَم, کار کُن. */
+  bare?: boolean;
   /**
    * داشتن: no می in the present (دارَم, نَدارَم) or in the past (داشْتَم). A compound takes it
    * from its light verb, which is right for دوسْت داشْتَن; a prefixed verb such as بَرْداشْتَن
@@ -210,6 +269,53 @@ function imperfect(v: Verb, person: Person, style: Style, negative: boolean): st
 }
 
 /**
+ * بِـ on a present stem: بِرَوَم. Before آ it is بی and the madde goes: بیایَم.
+ * Not covered, as no verb in the list needs it yet: a stem that starts with
+ * اَ / اُ / ای also takes a ی (اُفْتادَن: بیفتم, نیفتم; ایسْتادَن: بایستم), and
+ * دَویدَن will want its own `command` (bodo), as رفتن has.
+ */
+const withBe = (form: string) => (form.startsWith("آ") ? "بیا" + form.slice(1) : "بِ" + form);
+
+/** To be, from the verb list: داشتن borrows its باش in the subjunctive. */
+function copulaOf(all: readonly Verb[]): Verb {
+  const be = all.find((x) => x.copula);
+  if (!be) throw new Error("The subjunctive of داشتن needs بودن in the verb list");
+  return be;
+}
+
+/**
+ * The subjunctive: بِـ + present stem + ending (بِرَوَم, spoken بِرَم); the negative
+ * puts نَـ in its place (نَرَوَم). بودن is باشَم with no prefix, and داشتن is
+ * داشْته باشَم. `bare` drops the بِـ of a compound with کردن.
+ */
+function subjunctive(v: Verb, person: Person, style: Style, negative: boolean, all: readonly Verb[], bare = false): string {
+  // Right for داشتن and دوسْت داشْتَن; نِگَهْ داشْتَن and بَرْداشْتَن (نِگَهْ دارَم, بَرْدارَم) would need entries without noMi.
+  if (v.noMi) return (negative ? "نَ" : "") + v.past + "ه " + subjunctive(copulaOf(all), person, style, false, all);
+  const stem = presentStem(v, style);
+  const set = ENDINGS[style];
+  const form = attach(stem, (endsInVowel(stem) ? set.vowel : set.cons)[idx(person)]);
+  if (negative) return negate(form);
+  return v.copula || bare ? form : withBe(form);
+}
+
+/** The command to تو: the stem with بِـ and no ending (بِکُن), or the verb's own form (بُرُو). To شما: the subjunctive. */
+function imperative(v: Verb, person: Person, style: Style, negative: boolean, all: readonly Verb[], bare = false): string {
+  if (person !== "2s") return subjunctive(v, person, style, negative, all, bare);
+  if (v.noMi) return (negative ? "نَ" : "") + v.past + "ه " + imperative(copulaOf(all), person, style, false, all);
+  const own = v.command?.[style];
+  if (own) return own[negative ? 1 : 0];
+  // Writing cites the stem whole (دِهْ, شَو); speech uses its own stem where it has one (خون, ذار).
+  const stem = (style === "spoken" && v.spoken?.present) || v.present;
+  if (negative) return negate(stem);
+  return v.copula || bare ? stem : withBe(stem);
+}
+
+/** The written future: خواستن's present without می, then the past stem: خواهَم رَفْت. */
+function future(v: Verb, person: Person, negative: boolean): string {
+  return (negative ? "نَ" : "") + "خواه" + ENDINGS.written.cons[idx(person)] + " " + v.past;
+}
+
+/**
  * Why a verb has no such form, or null when it has one. The text is "Rich":
  * English with marked Persian.
  */
@@ -226,14 +332,23 @@ export function lacks(v: Verb, tense: Tense, negative: boolean, all: readonly Ve
       if (v.copula || v.stative) return "This verb names a state, not an action, so it is not normally used in the progressive: the plain tense is used.";
       if (negative) return "The progressive has no negative: the plain present or past continuous is used instead.";
       return null;
+    case "imperative":
+      if (v.noCommand) return v.noCommand;
+      if (negative && v.noNegCommand) return "This verb is not said as a negative command.";
+      return null;
     default:
       return null;
   }
 }
 
+/** Does the verb have this form? The tense may lack the person or the style; the verb may lack the tense. */
+export function hasForm(v: Verb, spec: FormSpec, all: readonly Verb[]): boolean {
+  return personsOf(spec.tense).includes(spec.person) && stylesOf(spec.tense).includes(spec.style) && !lacks(v, spec.tense, spec.negative, all);
+}
+
 /** One form, fully vowel-marked: conjugate(رفتن, present 1p spoken) → می‌ریم. Throws for a form the verb lacks. */
 export function conjugate(v: Verb, spec: FormSpec, all: readonly Verb[]): string {
-  if (lacks(v, spec.tense, spec.negative, all)) throw new Error(`${v.id} has no ${spec.tense}${spec.negative ? " negative" : ""}`);
+  if (!hasForm(v, spec, all)) throw new Error(`${v.id} has no ${spec.tense} ${spec.style} ${spec.person}${spec.negative ? " negative" : ""}`);
   const base = stemVerb(v, all);
   const { person, style, negative } = spec;
   const withPart = (form: string) => (v.part ? `${v.part} ${form}` : form);
@@ -256,12 +371,18 @@ export function conjugate(v: Verb, spec: FormSpec, all: readonly Verb[]): string
       const main = was ? imperfect(base, person, style, false) : present(base, person, style, false);
       return `${aux} ${withPart(main)}`;
     }
+    case "subjunctive":
+      return withPart(subjunctive(base, person, style, negative, all, v.bare));
+    case "imperative":
+      return withPart(imperative(base, person, style, negative, all, v.bare));
+    case "future":
+      return withPart(future(base, person, negative));
   }
 }
 
-/** All six persons of one tense. */
+/** The persons of one tense, in order: all six, or تو and شما for a command. */
 export function table(v: Verb, tense: Tense, style: Style, negative: boolean, all: readonly Verb[]): string[] {
-  return PERSONS.map((person) => conjugate(v, { tense, person, style, negative }, all));
+  return personsOf(tense).map((person) => conjugate(v, { tense, person, style, negative }, all));
 }
 
 /** The subject pronouns, fully marked. */
@@ -293,6 +414,9 @@ export function englishOf(v: Verb, spec: FormSpec): string {
   const was = person === "1s" || he ? "was" : "were";
   const have = he ? "has" : "have";
   const not = (aux: string) => (!negative ? aux : aux === "am" ? "am not" : `${aux}n't`);
+  // The infinitive after another word: "be able to" for can.
+  const inf = v.modal ? "be able to" : base;
+  const hint = v.enHint ? ` (${v.enHint})` : "";
   let text: string;
   switch (spec.tense) {
     case "present":
@@ -324,8 +448,22 @@ export function englishOf(v: Verb, spec: FormSpec): string {
     case "past-progressive":
       text = `${not(was)} ${ing} (right then)`;
       break;
+    // "that I go", as after want, can and must.
+    case "subjunctive": {
+      const who = PERSON_EN[person];
+      if (!negative) return `that ${who} ${inf}${hint}${person === "1p" ? ` / let's ${inf}` : ""}`;
+      if (v.copula) return `that ${who} ${not(am)}${hint}`;
+      if (v.modal) return `that ${who} ${not(am)} able to${hint}`;
+      return `that ${who} ${he ? "doesn't" : "don't"} ${base}${hint}`;
+    }
+    // A command has no subject; the prompt's pronoun says who it is to.
+    case "imperative":
+      return `${negative ? "don't " : ""}${v.enCommand ?? inf}${hint}!`;
+    case "future":
+      text = `${negative ? "won't" : "will"} ${inf}`;
+      break;
   }
-  return `${PERSON_EN[person]} ${text}${v.enHint ? ` (${v.enHint})` : ""}`;
+  return `${PERSON_EN[person]} ${text}${hint}`;
 }
 
 /** Marks off: the form as it is normally typed. */
@@ -338,8 +476,9 @@ export interface Accepted {
   variants: string[];
 }
 
-const usesMi = (t: Tense) => t !== "past" && t !== "perfect";
-const usesPresentStem = (t: Tense) => t === "present" || t === "progressive";
+const usesMi = (t: Tense) => t === "present" || t === "imperfect" || t === "progressive" || t === "past-progressive";
+const usesPastStem = (t: Tense) => t === "past" || t === "perfect" || t === "imperfect" || t === "past-progressive";
+const usesPresentStem = (t: Tense) => t === "present" || t === "progressive" || t === "subjunctive" || t === "imperative";
 
 export function acceptedAnswers(v: Verb, spec: FormSpec, all: readonly Verb[]): Accepted {
   const form = unmarked(conjugate(v, spec, all));
@@ -382,7 +521,7 @@ export function acceptedAnswers(v: Verb, spec: FormSpec, all: readonly Verb[]): 
       variants.push(spell(PERFECT_ENDINGS.careful));
     }
     // گذاشتن: the full stem after a prefix (نگذاشتم), and the short one without (ذاشتم), are both heard.
-    if (!v.light && v.spoken?.pastPrefixed && spec.tense !== "present" && spec.tense !== "progressive") {
+    if (!v.light && v.spoken?.pastPrefixed && usesPastStem(spec.tense)) {
       const usedShort = spec.negative || spec.tense === "imperfect" || spec.tense === "past-progressive";
       const other: Verb = { ...v, spoken: { ...v.spoken, past: usedShort ? v.past : v.spoken.pastPrefixed, pastPrefixed: undefined } };
       const others = all.map((x) => (x.id === v.id ? other : x));
@@ -391,6 +530,11 @@ export function acceptedAnswers(v: Verb, spec: FormSpec, all: readonly Verb[]): 
   } else if (spec.tense === "perfect" && spec.person === "3s") {
     // Writing often drops اَسْت: رفته.
     variants.push(form.replace(/ است$/, ""));
+  }
+  // کار کُنَم and کار بِکُنَم are both said: the form with بِـ is accepted for a compound that drops it.
+  if (v.bare && !spec.negative && (spec.tense === "subjunctive" || spec.tense === "imperative")) {
+    const withPrefix = acceptedAnswers({ ...v, bare: false }, spec, all);
+    variants.push(withPrefix.answers[0], ...withPrefix.variants);
   }
   return { answers, variants: [...new Set(variants)].filter((x) => x !== form) };
 }
@@ -401,6 +545,7 @@ export function allForms(all: readonly Verb[]): string[] {
   for (const v of all)
     for (const tense of TENSES)
       for (const style of STYLES)
-        for (const negative of [false, true]) if (!lacks(v, tense.id, negative, all)) out.push(...table(v, tense.id, style, negative, all));
+        for (const negative of [false, true])
+          if (stylesOf(tense.id).includes(style) && !lacks(v, tense.id, negative, all)) out.push(...table(v, tense.id, style, negative, all));
   return out;
 }

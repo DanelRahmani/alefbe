@@ -28,7 +28,7 @@ export default function PracticePage() {
       <DrillOverview />
 
       <h2 className="lesson-h2 mt-10">Verb trainer</h2>
-      <p className="ui mt-1 text-sm text-muted">The present and the past tenses of {VERBS.length} core verbs, spoken and written. Verbs open five at a time, and each tense opens with its lesson.</p>
+      <p className="ui mt-1 text-sm text-muted">{VERBS.length} core verbs in every tense of the core course, spoken and written. Verbs open five at a time, and each tense opens with its lesson.</p>
       <VerbOverview />
 
       <h2 className="lesson-h2 mt-10">Quick practice</h2>

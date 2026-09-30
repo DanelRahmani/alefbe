@@ -8,7 +8,7 @@ import { TENSES, type Tense } from "@/lib/conjugate";
 
 export const metadata: Metadata = {
   title: "Verb trainer",
-  description: `Conjugate ${VERBS.length} core Persian verbs in the present and the past tenses, spoken and written, with spaced repetition and typed answers.`,
+  description: `Conjugate ${VERBS.length} core Persian verbs in every tense of the core course, spoken and written, with spaced repetition and typed answers.`,
 };
 
 /** The lesson behind each tense, where it is written already: only what the trainer's link needs. */

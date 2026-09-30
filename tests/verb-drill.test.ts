@@ -138,6 +138,16 @@ describe("verb trainer: asking", () => {
     expect([0, 0.2, 0.4, 0.5, 0.7, 0.9].map((p) => person(p, 0.7))).toEqual(["1s", "2s", "3s", "1p", "2p", "3p"]);
     expect(askFor("raftan:past", "spoken", seq(0.1, 0.2, 0.9))!.spec.person).toBe("1s");
   });
+  it("asks a command of تو or شما only, and the future in writing only", () => {
+    const persons = [0, 0.3, 0.49, 0.5, 0.8, 0.99].map((p) => askFor("raftan:imperative", "both", seq(p, 0.2, 0.9))!.spec.person);
+    expect(persons).toEqual(["2s", "2s", "2s", "2p", "2p", "2p"]);
+    expect(askFor("raftan:future", "both", seq(0.1, 0.2, 0.9))!.spec.style).toBe("written");
+    expect(askFor("raftan:future", "spoken", seq(0.1, 0.2, 0.9))!.spec.style).toBe("written");
+    expect(askFor("raftan:subjunctive", "spoken", seq(0.1, 0.9, 0.9))!.spec.style).toBe("spoken");
+    expect(parseItem("khâstan:imperative")).toBeNull();
+    expect(verbsOf("imperative")).toHaveLength(24);
+    expect(verbsOf("future")).toHaveLength(VERBS.length);
+  });
   it("returns null for an unknown item", () => {
     expect(askFor("nope:present", "both", Math.random)).toBeNull();
   });
@@ -202,6 +212,25 @@ describe("verb trainer: checking", () => {
     const same = checkVerb(q("raftan", "1s", "written", false, "perfect"), "رفتم");
     expect(same.hint).toBe(`That is ${describeSpec({ person: "1s", style: "spoken", negative: false })}; this one asks for ${describeSpec({ person: "1s", style: "written", negative: false })}.`);
     expect(checkVerb(q("raftan", "1s", "spoken", false, "past"), z("می_رم")).hint).toContain("the present (");
+  });
+
+  it("checks Unit 8's forms", () => {
+    expect(checkVerb(q("raftan", "2s", "spoken", false, "imperative"), "برو")).toEqual({ ok: true });
+    expect(checkVerb(q("raftan", "2s", "spoken", true, "imperative"), "نرو").ok).toBe(true);
+    expect(checkVerb(q("âmadan", "1s", "spoken", false, "subjunctive"), "بیام").ok).toBe(true);
+    expect(checkVerb(q("kâr-kardan", "1s", "written", false, "subjunctive"), "کار بکنم").note).toContain("کار کنم");
+    expect(checkVerb(q("raftan", "1s", "written", false, "future"), "خواهم رفت").ok).toBe(true);
+    expect(checkVerb(q("dâshtan", "3s", "written", false, "subjunctive"), "داشته باشد").ok).toBe(true);
+    // The present where the subjunctive was asked: the slip is named.
+    expect(checkVerb(q("raftan", "1s", "spoken", false, "subjunctive"), z("می_رم")).hint).toBe(
+      "That is the present (the spoken form for “I”); this one asks for the present subjunctive (the spoken form for “I”).",
+    );
+    // A leading که is fine; a ز for the ذ of گذاشتن is named.
+    expect(checkVerb(q("raftan", "1s", "spoken", false, "subjunctive"), "که برم").ok).toBe(true);
+    expect(checkVerb(q("gozâshtan", "1s", "spoken", false, "subjunctive"), "بزارم").hint).toBe("Same sound, other letter: ذ not ز.");
+    // No "don't know!" is ever asked.
+    for (const r of [0.1, 0.9]) expect(askFor("dânestan:imperative", "both", seq(0.2, 0.2, r))!.spec.negative).toBe(false);
+    expect(bothStyles(q("raftan", "1s", "written", false, "future"))).toEqual({ written: "خواهَم رَفْت" });
   });
 
   it("gives no hint for an unrelated answer", () => {

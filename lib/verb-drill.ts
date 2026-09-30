@@ -10,13 +10,13 @@
 import { VERBS, verbById } from "@/content/verbs";
 import { checkFa, type Verdict } from "./answers";
 import {
-  PERSONS,
   PERSON_EN,
-  STYLES,
   TENSES,
   acceptedAnswers,
   conjugate,
   lacks,
+  personsOf,
+  stylesOf,
   tenseInfo,
   unmarked,
   type FormSpec,
@@ -126,15 +126,19 @@ export function askFor(id: string, ask: StyleChoice, rand: () => number): VerbQu
   if (!item) return null;
   const p = rand();
   const r = rand();
-  const style: Style = ask === "both" ? (r < 0.5 ? "spoken" : "written") : ask;
+  // A tense with one style (the written future) is asked in it, whatever the learner chose.
+  const styles = stylesOf(item.tense);
+  const style: Style = styles.length === 1 ? styles[0] : ask === "both" ? (r < 0.5 ? "spoken" : "written") : ask;
+  // A tense may have fewer persons: a command is to تو or شما.
+  const persons = personsOf(item.tense);
   // The spoken perfect is spelled like the simple past except for he/she, so half its questions ask he/she.
-  const others = PERSONS.filter((x) => x !== "3s");
+  const others = persons.filter((x) => x !== "3s");
   const person =
     item.tense === "perfect" && style === "spoken"
       ? p < SPOKEN_PERFECT_HE_SHARE
         ? "3s"
         : others[Math.min(others.length - 1, Math.floor(((p - SPOKEN_PERFECT_HE_SHARE) / (1 - SPOKEN_PERFECT_HE_SHARE)) * others.length))]
-      : PERSONS[Math.min(PERSONS.length - 1, Math.floor(p * PERSONS.length))];
+      : persons[Math.min(persons.length - 1, Math.floor(p * persons.length))];
   // The progressive has no negative: it is always asked in the affirmative.
   const negative = rand() < NEGATIVE_SHARE && !lacks(item.verb, item.tense, true, VERBS);
   return { verb: item.verb, spec: { tense: item.tense, person, style, negative } };
@@ -149,10 +153,10 @@ export function describeSpec(s: Omit<FormSpec, "tense">, tense?: Tense): string 
 /** Every form of a verb in a tense, unmarked, with its spec. */
 function formsOf(verb: Verb, tense: Tense): { spec: FormSpec; plain: string }[] {
   const out: { spec: FormSpec; plain: string }[] = [];
-  for (const style of STYLES)
+  for (const style of stylesOf(tense))
     for (const negative of [false, true]) {
       if (lacks(verb, tense, negative, VERBS)) continue;
-      for (const person of PERSONS) {
+      for (const person of personsOf(tense)) {
         const spec = { tense, person, style, negative };
         out.push({ spec, plain: normalizeFa(unmarked(conjugate(verb, spec, VERBS))) });
       }
@@ -173,6 +177,11 @@ export function checkVerb(q: VerbQuestion, input: string): Verdict {
   const words = normalizeFa(input).split(" ");
   if (words.length > 1 && PRONOUN_WORDS.has(words[0])) words.shift();
   const typed = words.join(" ");
+  // "that I go" invites a leading که: accepted, as the form after it is what is asked.
+  if (words.length > 1 && words[0] === "که" && q.spec.tense === "subjunctive") {
+    const rest = checkVerb(q, words.slice(1).join(" "));
+    if (rest.ok) return rest;
+  }
   const same = formsOf(q.verb, q.spec.tense).find((f) => f.plain === typed);
   if (same) return { ok: false, hint: `That is ${describeSpec(same.spec)}; this one asks for ${describeSpec(q.spec)}.` };
   for (const t of TENSES) {
@@ -183,10 +192,11 @@ export function checkVerb(q: VerbQuestion, input: string): Verdict {
   return { ok: false };
 }
 
-/** The two forms to show after an answer: spoken and written, same person and polarity. */
-export function bothStyles(q: VerbQuestion): Record<Style, string> {
-  const s = (style: Style) => conjugate(q.verb, { ...q.spec, style }, VERBS);
-  return { spoken: s("spoken"), written: s("written") };
+/** The forms to show after an answer: spoken and written (where the tense has both), same person and polarity. */
+export function bothStyles(q: VerbQuestion): Partial<Record<Style, string>> {
+  const out: Partial<Record<Style, string>> = {};
+  for (const style of stylesOf(q.spec.tense)) out[style] = conjugate(q.verb, { ...q.spec, style }, VERBS);
+  return out;
 }
 
 /** Is `id` a known item? (Imports and old data may hold ids that no longer exist.) */

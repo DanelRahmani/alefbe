@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { VERBS } from "@/content/verbs";
-import { PERSONS, PERSON_EN, PRONOUNS, TENSES, lacks, table, tenseInfo, type Tense, type Verb } from "@/lib/conjugate";
+import { PERSON_EN, PRONOUNS, TENSES, lacks, personsOf, stylesOf, table, tenseInfo, type Tense, type Verb } from "@/lib/conjugate";
 import { FaText } from "../FaText";
 import { Rich } from "../Rich";
 
@@ -16,8 +16,8 @@ function VerbTable({ verb, tense, negative }: { verb: Verb; tense: Tense; negati
       </p>
     );
   }
-  const spoken = table(verb, tense, "spoken", negative, VERBS);
-  const written = table(verb, tense, "written", negative, VERBS);
+  // A tense may have one style only (the written future) and fewer persons (a command).
+  const columns = stylesOf(tense).map((style) => ({ style, forms: table(verb, tense, style, negative, VERBS) }));
   return (
     <div className="table-wrap">
       <table className="lesson-table">
@@ -25,22 +25,24 @@ function VerbTable({ verb, tense, negative }: { verb: Verb; tense: Tense; negati
         <thead>
           <tr>
             <th scope="col">Who</th>
-            <th scope="col">Spoken</th>
-            <th scope="col">Written</th>
+            {columns.map((c) => (
+              <th key={c.style} scope="col">
+                {c.style === "spoken" ? "Spoken" : "Written"}
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
-          {PERSONS.map((p, i) => (
+          {personsOf(tense).map((p, i) => (
             <tr key={p}>
               <th scope="row" className="has-fa">
                 {PERSON_EN[p]} <FaText text={PRONOUNS[p].written} translit="none" />
               </th>
-              <td className="has-fa">
-                <FaText text={spoken[i]} />
-              </td>
-              <td className="has-fa">
-                <FaText text={written[i]} />
-              </td>
+              {columns.map((c) => (
+                <td key={c.style} className="has-fa">
+                  <FaText text={c.forms[i]} />
+                </td>
+              ))}
             </tr>
           ))}
         </tbody>

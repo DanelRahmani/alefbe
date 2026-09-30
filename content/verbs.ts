@@ -16,6 +16,12 @@ import type { Verb } from "@/lib/conjugate";
 // past is an event (دونِسْتَم, I found out): `enEvent` glosses the event.
 // After a prefix, spoken گذاشتن drops its گُـ in the past as in the present
 // (نَذاشْتَم, می‌ذاشْتَم): `spoken.pastPrefixed`.
+//
+// The subjunctive and the command take بِـ (Thackston). Tehrani speech often
+// says bo- before an o (bokon, bokhor); the forms here keep be-, and بُرُو
+// (boro) is the one command given with it. `command` holds a command to one
+// person that is not بِـ + stem; `bare` marks the compounds with کردن, which
+// usually drop بِـ (کار کُنَم).
 
 export const VERBS: Verb[] = [
   // To be. Its present is the short endings and هست (lesson 4.2), so the
@@ -23,7 +29,17 @@ export const VERBS: Verb[] = [
   { id: "budan", inf: "بودَن", en: "to be", enForms: ["be", "is", "was", "been", "being"], past: "بود", present: "باش", copula: true },
 
   // The ten most common verbs (lesson 5.3).
-  { id: "raftan", inf: "رَفْتَن", en: "to go", enForms: ["go", "goes", "went", "gone", "going"], past: "رَفْت", present: "رَو", spoken: { present: "ر" } },
+  {
+    id: "raftan",
+    inf: "رَفْتَن",
+    en: "to go",
+    enForms: ["go", "goes", "went", "gone", "going"],
+    past: "رَفْت",
+    present: "رَو",
+    spoken: { present: "ر" },
+    // Said boro in speech and in reading aloud alike.
+    command: { spoken: ["بُرُو", "نَرُو"], written: ["بُرُو", "نَرُو"] },
+  },
   {
     id: "âmadan",
     inf: "آمَدَن",
@@ -34,8 +50,8 @@ export const VERBS: Verb[] = [
     spoken: { present: "آ", past: "اومَد" },
   },
   { id: "kardan", inf: "کَرْدَن", en: "to do, to make", enForms: ["do", "does", "did", "done", "doing"], past: "کَرْد", present: "کُن" },
-  { id: "shodan", inf: "شُدَن", en: "to become", enForms: ["become", "becomes", "became", "become", "becoming"], past: "شُد", present: "شَو", spoken: { present: "ش" } },
-  { id: "goftan", inf: "گُفْتَن", en: "to say", enForms: ["say", "says", "said", "said", "saying"], past: "گُفْت", present: "گو", spoken: { present: "گ" } },
+  { id: "shodan", inf: "شُدَن", en: "to become", enForms: ["become", "becomes", "became", "become", "becoming"], past: "شُد", present: "شَو", spoken: { present: "ش" }, command: { spoken: ["بِشُو", "نَشُو"] } },
+  { id: "goftan", inf: "گُفْتَن", en: "to say", enForms: ["say", "says", "said", "said", "saying"], past: "گُفْت", present: "گو", spoken: { present: "گ" }, command: { spoken: ["بِگو", "نَگو"] } },
   {
     id: "dâdan",
     inf: "دادَن",
@@ -45,12 +61,14 @@ export const VERBS: Verb[] = [
     present: "دِهْ",
     presentJoin: "دَه",
     spoken: { present: "د" },
+    command: { spoken: ["بِده", "نَده"] },
   },
   { id: "didan", inf: "دیدَن", en: "to see", enForms: ["see", "sees", "saw", "seen", "seeing"], enNow: "watching", past: "دید", present: "بین" },
-  { id: "khâstan", inf: "خواسْتَن", en: "to want", enForms: ["want", "wants", "wanted", "wanted", "wanting"], past: "خواسْت", present: "خواه", spoken: { present: "خوا" }, stative: true, enEvent: ["wanted (at that moment)", "want (at that moment)"] },
+  { id: "khâstan", inf: "خواسْتَن", en: "to want", enForms: ["want", "wants", "wanted", "wanted", "wanting"], past: "خواسْت", present: "خواه", spoken: { present: "خوا" }, stative: true, enEvent: ["wanted (at that moment)", "want (at that moment)"], noCommand: "Rarely used as a command, so it is not drilled here." },
   {
     id: "dânestan",
     stative: true,
+    noNegCommand: true,
     enEvent: ["found out", "find out"],
     inf: "دانِسْتَن",
     en: "to know (a fact)",
@@ -63,6 +81,7 @@ export const VERBS: Verb[] = [
   {
     id: "tavânestan",
     stative: true,
+    noCommand: "This verb is not used as a command.",
     enEvent: ["managed to", "manage to"],
     inf: "تَوانِسْتَن",
     en: "to be able, can",
@@ -108,11 +127,11 @@ export const VERBS: Verb[] = [
     spoken: { present: "ذار", pastPrefixed: "ذاشْت" },
   },
   { id: "porsidan", inf: "پُرْسیدَن", en: "to ask", enForms: ["ask", "asks", "asked", "asked", "asking"], past: "پُرْسید", present: "پُرْس" },
-  { id: "fahmidan", inf: "فَهْمیدَن", en: "to understand", enForms: ["understand", "understands", "understood", "understood", "understanding"], enNow: "starting to understand", past: "فَهْمید", present: "فَهْم" },
-  { id: "shenâkhtan", inf: "شِناخْتَن", en: "to know (a person)", enForms: ["know", "knows", "knew", "known", "knowing"], enHint: "a person", past: "شِناخْت", present: "شِناس", stative: true, enEvent: ["recognised", "recognise"] },
+  { id: "fahmidan", inf: "فَهْمیدَن", en: "to understand", enForms: ["understand", "understands", "understood", "understood", "understanding"], enNow: "starting to understand", noNegCommand: true, past: "فَهْمید", present: "فَهْم" },
+  { id: "shenâkhtan", inf: "شِناخْتَن", en: "to know (a person)", enForms: ["know", "knows", "knew", "known", "knowing"], enHint: "a person", past: "شِناخْت", present: "شِناس", stative: true, enEvent: ["recognised", "recognise"], noNegCommand: true, enCommand: "get to know" },
 
   // Compound verbs (lesson 5.6): a noun plus a light verb, which carries the endings.
-  { id: "kâr-kardan", inf: "کار کَرْدَن", en: "to work", enForms: ["work", "works", "worked", "worked", "working"], past: "کَرْد", present: "کُن", part: "کار", light: "kardan" },
+  { id: "kâr-kardan", inf: "کار کَرْدَن", en: "to work", enForms: ["work", "works", "worked", "worked", "working"], past: "کَرْد", present: "کُن", part: "کار", light: "kardan", bare: true },
   { id: "harf-zadan", inf: "حَرْف زَدَن", en: "to talk, to speak", enForms: ["talk", "talks", "talked", "talked", "talking"], past: "زَد", present: "زَن", part: "حَرْف", light: "zadan" },
   {
     id: "zendegi-kardan",
@@ -123,6 +142,7 @@ export const VERBS: Verb[] = [
     present: "کُن",
     part: "زِنْدِگی",
     light: "kardan",
+    bare: true,
   },
 ];
 

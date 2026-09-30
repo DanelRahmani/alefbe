@@ -3,7 +3,7 @@
 // print only those: `npx tsx scripts/verbs.ts past perfect < /dev/null`.
 
 import { VERBS } from "../content/verbs";
-import { STYLES, TENSES, lacks, table } from "../lib/conjugate";
+import { TENSES, lacks, personsOf, stylesOf, table } from "../lib/conjugate";
 import { checkReadable } from "../lib/persian/syllables";
 import { transliterateWithErrors } from "../lib/translit";
 
@@ -23,14 +23,14 @@ for (const v of VERBS) {
       (v.spoken?.past ? `, spoken past ${show(v.spoken.past)}` : ""),
   );
   for (const t of tenses) {
-    console.log(`  ${t.title} (${t.id})`);
+    console.log(`  ${t.title} (${t.id}), persons ${personsOf(t.id).join(" ")}`);
     for (const neg of [false, true]) {
       const why = lacks(v, t.id, neg, VERBS);
       if (why) {
         console.log(`    ${neg ? "neg" : "aff"}: none. ${why}`);
         continue;
       }
-      for (const style of STYLES) console.log(`    ${style.padEnd(7)} ${neg ? "neg" : "aff"}: ${table(v, t.id, style, neg, VERBS).map(show).join(" · ")}`);
+      for (const style of stylesOf(t.id)) console.log(`    ${style.padEnd(7)} ${neg ? "neg" : "aff"}: ${table(v, t.id, style, neg, VERBS).map(show).join(" · ")}`);
     }
   }
 }

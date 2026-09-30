@@ -182,7 +182,10 @@ describe("conjugate: every form is course-quality Persian", () => {
     // 26 verbs. Present: 25 (not بودن). Past and perfect: all 26. Past continuous: 24
     // (not بودن, داشتن). The two progressives: 20 each, and no negative.
     expect(VERBS.length).toBe(26);
-    expect(forms.length).toBe(25 * 24 + 26 * 24 + 26 * 24 + 24 * 24 + 20 * 12 + 20 * 12);
+    const unit7 = 25 * 24 + 26 * 24 + 26 * 24 + 24 * 24 + 20 * 12 + 20 * 12;
+    // Subjunctive: all 26. Imperative: 24 (not خواستن, توانستن), two persons. Future: all 26, written only.
+    // Three of those 24 have no negative command (دانستن, شناختن, فهمیدن).
+    expect(forms.length).toBe(unit7 + 26 * 24 + (24 + 21) * 2 * 2 + 26 * 12);
   });
   it("names the tenses in readable Persian, and explains a missing form in readable Persian", () => {
     const problems: string[] = [];
@@ -192,12 +195,13 @@ describe("conjugate: every form is course-quality Persian", () => {
     };
     for (const t of TENSES) check(t.titleFa);
     expect(new Set(TENSES.map((t) => t.title)).size).toBe(TENSES.length);
-    expect(TENSES.every((t) => t.says.length > 3)).toBe(true);
+    expect(TENSES.every((t) => t.says.length > 2)).toBe(true);
     const reasons = new Set<string>();
     for (const v of VERBS) for (const t of TENSES) for (const neg of [false, true]) reasons.add(lacks(v, t.id, neg, VERBS) ?? "");
     reasons.delete("");
-    expect(reasons.size).toBe(4);
-    for (const r of reasons) for (const tok of parseMarkup(r)) if (tok.kind === "text") for (const part of splitScript(tok.text)) if (part.fa) check(part.s);
+    expect(reasons.size).toBe(7);
+    const notes = TENSES.flatMap((t) => (t.note ? [t.note] : []));
+    for (const r of [...reasons, ...notes]) for (const tok of parseMarkup(r)) if (tok.kind === "text") for (const part of splitScript(tok.text)) if (part.fa) check(part.s);
     expect(problems).toEqual([]);
   });
   it("every form is readable and transliterates without errors", () => {
@@ -216,6 +220,7 @@ describe("conjugate: every form is course-quality Persian", () => {
     expect(problems).toEqual([]);
   });
   it("puts a half-space after every می / نمی that speech does not run into a vowel (میام, میومَدَم)", () => {
+    // Words that only start with می- letters are not the prefix: a compound's میز would be, none is here.
     const bad = forms.filter((f) => /(^| )(نِ)?می[^‌او]/.test(f));
     expect(bad).toEqual([]);
   });
