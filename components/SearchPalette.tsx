@@ -79,7 +79,7 @@ export function SearchPalette() {
   const offsets = groups.map((_, gi) => groups.slice(0, gi).reduce((sum, g) => sum + g.items.length, 0));
   return (
     <>
-      <button type="button" className="ui header-btn" onClick={open} aria-keyshortcuts="/ Control+K">
+      <button type="button" className="ui header-btn" onClick={open} aria-label="Search" aria-keyshortcuts="/ Control+K">
         <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true" focusable="false">
           <circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" strokeWidth="1.8" />
           <path d="M12.6 12.6 17 17" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />

@@ -984,7 +984,9 @@ a.letter-card:hover {
 .sheet-row-word .sheet-cell {
   font-size: calc(var(--sheet-glyph) * 0.75);
 }
-.sheet-trace {
+/* Grey copies to trace over: a decorative guide, drawn from data-glyph. */
+.sheet-trace::before {
+  content: attr(data-glyph);
   color: color-mix(in srgb, var(--ink) 22%, transparent);
 }
 .sheet-row-label {
@@ -1072,7 +1074,7 @@ a.letter-card:hover {
     padding: 0;
     border: 0;
   }
-  .sheet-trace {
+  .sheet-trace::before {
     color: #c4c4c4;
   }
 }

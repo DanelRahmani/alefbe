@@ -62,12 +62,24 @@ Done:
     - Tracing sheets at `/practice/sheets` (`lib/sheets.ts`, `components/trace/SheetBuilder.tsx`): choose letter groups, all forms or only the isolated one, and a key word row.
     - The print stylesheet in `app/practice.css`: ink on white in any theme; the chrome, quizzes, tools and anything marked `data-no-print` are hidden.
 
-Next, **4f**:
+- **4f** (pushed 2026-09-30): the static export (`alefbe-static` in `.claude/launch.json`, port 3001) was checked on all 87 routes at 375 px, in light and dark, with reduced motion on.
+  - Results: no horizontal scroll, no running animations, and a focus ring on every Tab stop (the first 60 per page). There were no console errors other than local-only 404s: the Vercel Analytics script, and Next's prefetch files, which `serve` can't map but Vercel serves.
+  - Fixes:
+    - The search button had no accessible name at phone width.
+    - The faint tracing guides failed the contrast check; they are now CSS-drawn decoration.
+    - Fonts: only Literata (latin), Vazirmatn and Markazi (latin) are preloaded. Amiri loads when used. Every page used to preload 10 font files, about 540 KB.
+  - Lighthouse (mobile, local static server), before → after:
 
-1. Check every route at 375 px in light and dark: keyboard focus, reduced motion, the console, Lighthouse.
-2. Push `nextgen` and report to the owner for review.
+    | Page | Performance | Accessibility |
+    |---|---|---|
+    | `/` | 28 → 67 | 95 → 100 |
+    | Lesson 4.5 | 28 → 78 | 95 → 100 |
+    | `/practice/sheets` | 52 → 76 | 90 → 100 |
 
-Phase 5 follows: Units 5–6 and the conjugation trainer (see `docs/PLAN.md`).
+    SEO is 100. Best practices is 96 locally, only because of those 404s. Production (4e part 1) scored 75 / 95 / 100 / 100.
+  - Still open: LCP is about 5 s on throttled mobile. The next step is to look at the hero window and the `backdrop-filter` glass (style and layout dominate the main thread).
+
+Next: **Phase 5**, Units 5–6 and the conjugation trainer (see `docs/PLAN.md`). It starts once the owner has reviewed 4e and 4f on new.alefbe.study.
 
 ## Waiting on the owner
 
@@ -78,7 +90,8 @@ Phase 5 follows: Units 5–6 and the conjugation trainer (see `docs/PLAN.md`).
 ## Working habits that matter here
 
 - **Checks:** `npx vitest run`, `npm run typecheck`, `npm run lint`, `npm run build`.
-- **Dev server:** `alefbe-dev` in `.claude/launch.json`, on port 3000.
+- **Dev server:** `alefbe-dev` in `.claude/launch.json`, on port 3000. `alefbe-static` serves the built `out/` on port 3001; use it for audits and Lighthouse.
+- **Fonts:** preload only what the first paint needs (`subsets` in `app/layout.tsx` means "preloaded"). Decorative faces take `preload: false`.
 - **Editing Persian text:** use the Edit tool, or a small Node script in the scratchpad.
   - Shell heredocs break on quotes.
   - `\uXXXX` escapes typed in tool input turn into real characters, so use constants such as `TATWEEL` and `ZWNJ`, or `String.fromCharCode`.

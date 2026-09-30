@@ -86,9 +86,8 @@ export function SheetBuilder() {
                     {r.glyph}
                   </span>
                   {Array.from({ length: r.kind === "word" ? 1 : TRACES }, (_, i) => (
-                    <span key={i} className="sheet-cell sheet-trace naskh" lang="fa" aria-hidden="true">
-                      {r.glyph}
-                    </span>
+                    // A decorative guide: drawn by CSS from data-glyph, so it is not text.
+                    <span key={i} className="sheet-cell sheet-trace naskh" data-glyph={r.glyph} aria-hidden="true" />
                   ))}
                   {Array.from({ length: r.kind === "word" ? 1 : BLANKS }, (_, i) => (
                     <span key={`b${i}`} className="sheet-cell" aria-hidden="true" />
