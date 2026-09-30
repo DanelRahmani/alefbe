@@ -10,7 +10,7 @@ import { readdirSync } from "node:fs";
 import { join } from "node:path";
 
 /** Lessons the marks table points at that are planned but not written yet. */
-const FUTURE_LESSONS = new Set(["sounds/short-vowels", "sounds/tashdid-sukun-tanvin", "sounds/vowel-carriers", "sounds/hamze-and-eyn", "ezafe/after-vowels"]);
+const FUTURE_LESSONS = new Set(["sounds/short-vowels", "sounds/tashdid-sukun-tanvin", "sounds/vowel-carriers", "sounds/hamze-and-eyn"]);
 import type { Block, Example, Lesson } from "@/content/types";
 import { parseMarkup, plainOf, splitScript, translitWithErrors, type Token } from "@/lib/markup";
 import { VERBS } from "@/content/verbs";

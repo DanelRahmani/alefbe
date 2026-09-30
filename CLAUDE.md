@@ -108,6 +108,20 @@ Phase 5 is Units 5–6 and the conjugation trainer (see `docs/PLAN.md`).
     - a duplicate quiz question was replaced.
   - STYLE.md's Dari rule now matches the owner's instruction: notes ship with `checked: false` and are listed in the phase report. The 5.2 note (the prefix is *mē-* in Dari) is waiting for the owner.
   - Checked at 375 px in light and dark: no horizontal scroll, focus ring shown, no app console errors. Lighthouse accessibility is 100 on 5.3 and 5.5 (served by `alefbe-static`).
+- **5c** (2026-09-30): Unit 6, "Nouns and links", lessons 6.1–6.7, in `content/lessons/nouns.ts`.
+  - The order is: the ezafe; ezafe for *of*; the ezafe after vowels; plurals; یه and ـی; را; را in speech.
+  - The را lesson moved from 6.1 to 6.6 and kept its slug. Progress, quiz scores, the notebook and grammar links are keyed by `unit/slug`, and numbers are positional, so nothing saved breaks.
+  - Links added:
+    - the grammar topics (ezafe, plurals, a/one) now link to their lessons;
+    - the reference table's ezafe-hamze row points at 6.3 (no longer in `FUTURE_LESSONS`).
+  - The reviewer raised 16 findings, all applied, plus 2 optional polish items. Among them:
+    - the دستِ مریمه gloss;
+    - the مرا exception to "را is a separate word";
+    - `[ـهٔ|-ye]` and `[ـو|-o]` overrides;
+    - broader ـان and ـیان rules (بانوان), and یه + plural + ـی in speech;
+    - ordinals as an exception before the noun, and بیشترِ;
+    - رو *ru* ("on") told apart from رُو *ro*.
+  - Checked at 375 px in dark mode: no horizontal scroll. The only console errors are the known local-only 404s and aborted prefetches. Lighthouse accessibility is 100 on 6.3 and 6.7.
 - Owner to confirm:
   - *mikhâyim* / *miyâyin* vs *mikhâym* / *miyâyn*;
   - the spoken past stem *âvord-* vs *âvard-*;
