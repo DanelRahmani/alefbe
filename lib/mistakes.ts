@@ -3,6 +3,7 @@
 
 import type { DrillMode } from "./drill";
 import type { QuizType } from "./quiz";
+import type { Person, Style, Tense } from "./conjugate";
 
 export type MistakeItem =
   /** A lesson-quiz question, by lesson key ("unit/lesson") and its index in the quiz. */
@@ -12,7 +13,9 @@ export type MistakeItem =
   /** A trainer card. */
   | { kind: "drill"; mode: DrillMode; id: string }
   /** A word from a game: read it (script → sound) or spell it (sound → script). */
-  | { kind: "word"; dir: "read" | "spell"; fa: string; translit: string; en: string };
+  | { kind: "word"; dir: "read" | "spell"; fa: string; translit: string; en: string }
+  /** A conjugation-trainer question: one form of a verb. */
+  | { kind: "verb"; verb: string; tense: Tense; person: Person; style: Style; negative: boolean };
 
 export interface Mistake {
   item: MistakeItem;
@@ -40,6 +43,8 @@ export function mistakeId(item: MistakeItem): string {
       return `drill:${item.mode}:${item.id}`;
     case "word":
       return `word:${item.dir}:${item.fa}`;
+    case "verb":
+      return `verb:${item.verb}:${item.tense}:${item.person}:${item.style}:${item.negative ? "neg" : "aff"}`;
   }
 }
 

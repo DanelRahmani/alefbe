@@ -129,6 +129,7 @@ export const GRAMMAR: GrammarTopic[] = [
     slug: "present-tense",
     title: "The present tense",
     unit: "present",
+    lesson: "present/present-tense",
     blocks: [
       {
         type: "idea",
@@ -141,7 +142,7 @@ export const GRAMMAR: GrammarTopic[] = [
         rows: [
           ["I go", "می‌رَم", "می‌رَوَم"],
           ["you go", "می‌ری", "می‌رَوی"],
-          ["he, she goes", "می‌رِه", "می‌رَوَد"],
+          ["he, she goes", "می‌ره", "می‌رَوَد"],
           ["we go", "می‌ریم", "می‌رَویم"],
           ["you go (شُما)", "می‌رین", "می‌رَوید"],
           ["they go", "می‌رَن", "می‌رَوَنْد"],
@@ -153,6 +154,7 @@ export const GRAMMAR: GrammarTopic[] = [
     slug: "ezafe",
     title: "The ezafe",
     unit: "nouns",
+    lesson: "nouns/ezafe",
     blocks: [
       {
         type: "idea",
@@ -172,6 +174,7 @@ export const GRAMMAR: GrammarTopic[] = [
     slug: "plurals",
     title: "Plurals",
     unit: "nouns",
+    lesson: "nouns/plurals",
     blocks: [
       {
         type: "idea",
@@ -190,6 +193,7 @@ export const GRAMMAR: GrammarTopic[] = [
     slug: "indefinite",
     title: "A, an, one",
     unit: "nouns",
+    lesson: "nouns/indefinite",
     blocks: [
       {
         type: "idea",

@@ -70,6 +70,9 @@ export function Shortcuts() {
           </div>
         ))}
       </dl>
+      <p className="help-tip text-sm text-muted">
+        Tip: tap or click any Persian word in a lesson or the dictionary to see its reading, meaning and letters.
+      </p>
     </dialog>
   );
 }

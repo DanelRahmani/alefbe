@@ -2,6 +2,7 @@ import type { Lesson, Unit } from "./types";
 import { alphabet } from "./lessons/alphabet";
 import { coreSentence } from "./lessons/core-sentence";
 import { nouns } from "./lessons/nouns";
+import { present } from "./lessons/present";
 import { sounds } from "./lessons/sounds";
 import { spelling } from "./lessons/spelling";
 import { startHere } from "./lessons/start-here";
@@ -51,7 +52,7 @@ export const UNITS: Unit[] = [
     title: "Everyday verbs: the present",
     titleFa: "زَمانِ حال",
     description: "Two stems per verb, the present tense, the ten verbs you use most, not doing, to have, and compound verbs.",
-    lessons: [],
+    lessons: present,
   },
   {
     slug: "nouns",

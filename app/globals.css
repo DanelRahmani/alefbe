@@ -124,6 +124,20 @@
 html {
   -webkit-text-size-adjust: 100%;
 }
+/* Text size (Display settings): everything is set in rem, so it all scales. */
+:root[data-size="s"] {
+  font-size: 93.75%;
+}
+:root[data-size="l"] {
+  font-size: 112.5%;
+}
+/* Persian typeface (Display settings): Vazirmatn, or Amiri for a Naskh book hand. */
+:root {
+  --fa-font: var(--font-vazirmatn), system-ui, sans-serif;
+}
+:root[data-fafont="naskh"] {
+  --fa-font: var(--font-amiri), serif;
+}
 body {
   background: var(--bg);
   color: var(--ink);
@@ -146,7 +160,7 @@ a {
 
 /* ── Persian runs ──────────────────────────────────────────────────────── */
 .fa {
-  font-family: var(--font-vazirmatn), system-ui, sans-serif;
+  font-family: var(--fa-font);
   unicode-bidi: isolate;
   font-feature-settings: "kern";
   /* Vazirmatn runs small next to Literata; examples set their own size. */
@@ -157,6 +171,13 @@ a {
   font-family: var(--font-amiri), serif;
 }
 .naskh .fa {
+  font-size: 1em;
+}
+/* Amiri draws smaller on the same body than Vazirmatn: size it up to match. */
+:where(:root[data-fafont="naskh"]) .fa {
+  font-size: 1.25em;
+}
+:where(:root[data-fafont="naskh"]) .naskh .fa {
   font-size: 1em;
 }
 /* Paragraphs holding Persian get room for stacked vowel marks. */

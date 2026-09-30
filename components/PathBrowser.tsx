@@ -10,6 +10,7 @@ import { useMinuteClock } from "./drill/useDrillClock";
 import { FaText } from "./FaText";
 import { Rich } from "./Rich";
 import { Seal } from "./Seal";
+import { TodayCard, type DayWord } from "./TodayCard";
 
 export interface PathLesson {
   key: string;
@@ -83,7 +84,8 @@ function NextCard({ units, progress, last }: { units: PathUnit[]; progress: Reco
   );
 }
 
-export function PathBrowser({ units }: { units: PathUnit[] }) {
+/** The path, with the next-lesson card and the Today card on top. */
+export function PathBrowser({ units, words }: { units: PathUnit[]; words: DayWord[] }) {
   const filter = useStore(pathFilterStore);
   const progress = useStore(progressStore);
   const lessons = useStore(lessonsStore);
@@ -113,6 +115,7 @@ export function PathBrowser({ units }: { units: PathUnit[] }) {
   return (
     <div>
       <NextCard units={units} progress={progress} last={lessons.last} />
+      <TodayCard words={words} />
 
       <div className="ui quick-links">
         <Link href="/practice/drill/sound" className="pill-link">

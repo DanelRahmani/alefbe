@@ -4,14 +4,17 @@ import { DRILL_WORDS } from "@/content/drill-words";
 import { DRILL_GROUPS, LETTERS, letterByChar } from "@/lib/persian/letters";
 import { MARKS, SIGNS } from "@/content/reference";
 import { GRAMMAR } from "@/content/grammar";
+import { PERSIAN_MONTHS } from "@/content/calendar";
 import { STATIC_PAGES, isPage } from "@/content/routes";
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
 
 /** Lessons the marks table points at that are planned but not written yet. */
-const FUTURE_LESSONS = new Set(["sounds/short-vowels", "sounds/tashdid-sukun-tanvin", "sounds/vowel-carriers", "sounds/hamze-and-eyn", "ezafe/after-vowels"]);
+const FUTURE_LESSONS = new Set(["sounds/short-vowels", "sounds/tashdid-sukun-tanvin", "sounds/vowel-carriers", "sounds/hamze-and-eyn"]);
 import type { Block, Example, Lesson } from "@/content/types";
-import { parseMarkup, splitScript, translitWithErrors, type Token } from "@/lib/markup";
+import { parseMarkup, plainOf, splitScript, translitWithErrors, type Token } from "@/lib/markup";
+import { VERBS } from "@/content/verbs";
+import { allForms } from "@/lib/conjugate";
 import { checkReadable } from "@/lib/persian/syllables";
 import { NON_JOINING, ZWNJ } from "@/lib/persian/chars";
 import { tokenizeFa, wordKind } from "@/lib/translit";
@@ -118,6 +121,7 @@ const ALL: Str[] = [
     { where: `mark ${m.name} does`, kind: "rich" as const, s: m.does },
   ]),
   ...SIGNS.map((x) => ({ where: `sign ${x.name}`, kind: "rich" as const, s: x.does })),
+  ...PERSIAN_MONTHS.map((m, i) => ({ where: `month ${i + 1}`, kind: "fa" as const, s: m })),
   ...GRAMMAR.flatMap((t) => t.blocks.flatMap((b, i) => blockStrs(b, `grammar ${t.slug} block ${i + 1} (${b.type})`))),
   ...UNITS.flatMap((u) => [
     { where: `unit ${u.slug} titleFa`, kind: "fa" as const, s: u.titleFa },
@@ -184,6 +188,38 @@ describe("content: Persian spelling", () => {
       });
     });
     expect(bad.map((x) => `${x.where}: ${x.s}`)).toEqual([]);
+  });
+  it("never splits or closes up a known half-space form (every verb form, every vocab word)", () => {
+    // Known forms: everything conjugate.ts makes, and every vocabulary word
+    // with a half-space. A string containing one with its ZWNJ turned into a
+    // space or dropped fails. Deliberate "wrong" examples are exempt.
+    const known = new Set<string>();
+    for (const f of allForms(VERBS)) known.add(normalizeFa(f));
+    for (const r of ALL_LESSONS) for (const v of r.lesson.vocab ?? []) for (const s of [v.fa, v.written]) if (s) known.add(normalizeFa(plainOf(parseMarkup(s))));
+    // Each broken spelling as a word sequence: "می رم" and "میرم" for می‌رم.
+    const broken = new Map<string, string>();
+    for (const k of known) {
+      if (!k.includes(ZWNJ)) continue;
+      broken.set(k.split(ZWNJ).join(" "), k);
+      broken.set(k.split(ZWNJ).join(""), k);
+    }
+    const bad: string[] = [];
+    for (const str of ALL) {
+      if (str.where.includes(" wrong")) continue;
+      for (const run of persianRuns(str)) {
+        // Overrides are the escape hatch for deliberate misspellings ([میروم|miravam]): a break here.
+        const words = normalizeFa(run.map((t) => (t.kind === "override" ? " | " : t.text)).join(""))
+          .split(" ")
+          .filter(Boolean);
+        for (let i = 0; i < words.length; i++)
+          for (let n = 1; n <= 3 && i + n <= words.length; n++) {
+            const k = broken.get(words.slice(i, i + n).join(" "));
+            if (k) bad.push(`${str.where}: «${words.slice(i, i + n).join(" ")}» should be «${k}»`);
+          }
+      }
+    }
+    expect(known.size).toBeGreaterThan(VERBS.length * 20);
+    expect(bad).toEqual([]);
   });
   it("never detaches the verb prefix می / نمی with a space", () => {
     const bad = ALL.filter((x) => /(^|[\s«])ن?می[ً-ْ]* +[؀-ۿ]/.test(x.s));

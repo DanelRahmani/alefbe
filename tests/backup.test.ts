@@ -26,6 +26,14 @@ describe("makeBackup", () => {
     expect(Object.keys(b.stores).sort()).toEqual(["alefbe2:progress", "alefbe2:trace"]);
     expect(BACKUP_KEYS).toContain("alefbe2:srs");
   });
+  it("includes the conjugation trainer, and restores it", () => {
+    expect(BACKUP_KEYS).toContain("alefbe2:verbs");
+    const deck = JSON.stringify({ v: 1, data: { decks: { present: { cards: { "raftan:present": { box: 2, due: 0, reps: 1, lapses: 0 } }, unlocked: 1 } }, ask: "both" } });
+    const from = fakeStorage({ "alefbe2:verbs": deck });
+    const to = fakeStorage();
+    applyBackup(parseBackup(JSON.stringify(makeBackup(from.read, NOW))), to.read, to.write);
+    expect(to.map.get("alefbe2:verbs")).toBe(deck);
+  });
   it("names the file by date", () => {
     expect(backupFileName(NOW)).toBe("alefbe-progress-2026-09-29.json");
   });

@@ -223,6 +223,25 @@
   font-size: 1.35rem;
   line-height: 2.1;
 }
+.mode-cards-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+/* Keep each preview on one line, in any typeface and text size. */
+.mode-preview {
+  white-space: nowrap;
+}
+.mode-cards:not(.mode-cards-2) .mode-preview {
+  font-size: 1.15rem;
+}
+/* Each typeface card previews its own face, whatever is chosen. */
+.font-preview-vazirmatn .fa {
+  font-family: var(--font-vazirmatn), system-ui, sans-serif;
+  font-size: 1.12em;
+}
+.font-preview-naskh .fa {
+  font-family: var(--font-amiri), serif;
+  font-size: 1.25em;
+}
 .mode-label {
   font-size: 0.78rem;
   font-weight: 500;
@@ -408,6 +427,167 @@
 }
 .next-card:hover .next-arrow {
   transform: translateX(3px);
+}
+
+/* The Today card: the day's goal, what waits for review, a word of the day. */
+.today {
+  margin-top: 0.9rem;
+  padding: 1rem 1.25rem 1.1rem;
+  border-radius: 20px;
+}
+@media (max-width: 479px) {
+  .today {
+    padding: 0.9rem 1rem 1rem;
+  }
+}
+.today-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.1rem 1rem;
+  min-height: 2rem;
+}
+.today-date-en {
+  text-transform: none;
+  letter-spacing: 0;
+}
+.today-date {
+  color: var(--muted);
+  font-size: 1rem;
+}
+.today-body {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 0.6rem;
+}
+@media (min-width: 560px) {
+  .today-body {
+    grid-template-columns: auto 1fr;
+    gap: 1.5rem;
+    align-items: center;
+  }
+}
+.today-goal {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.goal-ring {
+  width: 4rem;
+  height: 4rem;
+  flex: none;
+}
+.goal-ring circle {
+  fill: none;
+  stroke-width: 6;
+}
+.goal-ring-track {
+  stroke: var(--rule);
+}
+.goal-ring-fill {
+  stroke: var(--accent);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 400ms ease-out;
+}
+.goal-ring-num {
+  fill: var(--ink);
+  font-size: 1.15rem;
+  font-weight: 600;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+.today-goal-line {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.goal-chips {
+  display: flex;
+  gap: 0.3rem;
+  margin-top: 0.3rem;
+}
+.goal-chips::before {
+  content: "Goal";
+  align-self: center;
+  margin-inline-end: 0.2rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.goal-chip {
+  min-width: 2.75rem;
+  min-height: 2rem;
+  padding: 0 0.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 0.85rem;
+}
+.goal-chip:hover {
+  border-color: var(--accent);
+}
+.goal-chip[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+}
+.today-list {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.93rem;
+}
+.today-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+}
+.today-list a {
+  text-decoration: none;
+  color: var(--accent);
+}
+.today-list a:hover {
+  text-decoration: underline;
+}
+.today-stat {
+  min-width: 1.6rem;
+  font-weight: 600;
+  text-align: end;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.today-word {
+  margin-top: 0.9rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--rule);
+}
+.today-word-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.2rem 1rem;
+  min-height: 3.2rem;
+}
+.today-word-fa {
+  font-size: 1.35rem;
+  line-height: 1.9;
+}
+.today-word-fa .tr-block {
+  font-size: 0.95rem;
+}
+.today-word-en {
+  flex: 1 1 8rem;
+}
+.today-word-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+}
+.today-word-link {
+  color: var(--accent);
+  text-decoration: none;
+}
+.today-word-link:hover {
+  text-decoration: underline;
 }
 .quick-links {
   display: flex;
@@ -1265,6 +1445,9 @@
 .help-list {
   padding: 0.5rem 0.9rem 0.9rem;
 }
+.help-tip {
+  padding: 0 0.9rem 1rem;
+}
 .help-row {
   display: grid;
   grid-template-columns: 7.5rem 1fr;
@@ -1302,4 +1485,89 @@
   .shortcuts-link {
     display: none;
   }
+}
+
+/* ── Word inspector: tap a Persian word in a lesson or the dictionary ──── */
+[data-inspect] bdi.fa:not([data-unmarked]) {
+  cursor: pointer;
+}
+[data-inspect] :is(a, button, label, [data-no-inspect]) bdi.fa {
+  cursor: inherit;
+}
+.inspector {
+  position: fixed;
+  width: min(20rem, calc(100vw - 2rem));
+  padding: 0.8rem 0.9rem 0.9rem;
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+}
+/* Focus moves to the popover itself on open; its buttons and links show the ring. */
+.inspector:focus {
+  outline: none;
+}
+.inspector-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.inspector-word {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.7rem;
+}
+.inspector-word .fa {
+  font-size: 1.7rem;
+  line-height: 1.9;
+}
+.inspector-tr {
+  font-family: var(--font-literata), Georgia, serif;
+  font-style: italic;
+  color: var(--muted);
+}
+.inspector-meaning {
+  font-size: 0.93rem;
+  line-height: 1.6;
+}
+.inspector-link {
+  color: var(--accent);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.inspector-link:hover {
+  text-decoration: underline;
+}
+.inspector-letters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.7rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--rule);
+}
+.inspector-letter {
+  display: grid;
+  justify-items: center;
+  min-width: 3rem;
+  padding: 0.15rem 0.4rem 0.3rem;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  text-decoration: none;
+}
+a.inspector-letter:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.inspector-glyph {
+  font-size: 1.6rem;
+  line-height: 1.7;
+}
+.inspector-name {
+  font-size: 0.72rem;
+  color: var(--muted);
+  white-space: nowrap;
 }

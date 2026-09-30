@@ -15,11 +15,14 @@ import "./components.css";
 import "./drill.css";
 import "./practice.css";
 
-const literata = Literata({ subsets: ["latin", "latin-ext"], variable: "--font-literata", display: "swap" });
+// `subsets` are the ones preloaded; the others still load on demand (unicode-range).
+// Only what the first paint needs is preloaded: Latin body and titles, and Vazirmatn.
+const literata = Literata({ subsets: ["latin"], variable: "--font-literata", display: "swap" });
 const vazirmatn = Vazirmatn({ subsets: ["arabic", "latin"], variable: "--font-vazirmatn", display: "swap" });
-const amiri = Amiri({ weight: ["400", "700"], subsets: ["arabic", "latin"], variable: "--font-amiri", display: "swap" });
+// Amiri is for letter cards, tracing and the optional Naskh typeface: loaded when used.
+const amiri = Amiri({ weight: ["400", "700"], subsets: ["arabic", "latin"], variable: "--font-amiri", display: "swap", preload: false });
 // Display face: designed for Persian (Borna Izadpanah), with a matching Latin.
-const markazi = Markazi_Text({ subsets: ["arabic", "latin"], variable: "--font-markazi", display: "swap" });
+const markazi = Markazi_Text({ subsets: ["latin"], variable: "--font-markazi", display: "swap" });
 
 export const metadata: Metadata = {
   title: { default: "Alefbe · Learn Persian", template: "%s · Alefbe" },
@@ -42,6 +45,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       data-vowels="all"
       data-translit="off"
       data-theme="system"
+      data-size="m"
+      data-fafont="vazirmatn"
       suppressHydrationWarning
       className={`${literata.variable} ${vazirmatn.variable} ${amiri.variable} ${markazi.variable}`}
     >

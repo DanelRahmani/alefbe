@@ -28,7 +28,7 @@ export const MARKS: MarkRow[] = [
   { name: "tanvin", fa: "تَنْوین", sign: "اً", does: "*-an* at the end of some Arabic loanwords, written on an alef", example: "لُطْفاً", en: "please", lesson: "sounds/tashdid-sukun-tanvin" },
   { name: "madde", fa: "مَدّه", sign: "آ", does: "long *â* at the start of a word or syllable", example: "آب", en: "water", lesson: "sounds/vowel-carriers" },
   { name: "hamze", fa: "هَمْزه", sign: "ء أ ؤ ئ", does: "a catch in the throat, like the break in *uh-oh*", example: "رَئیس", en: "boss, head", lesson: "sounds/hamze-and-eyn" },
-  { name: "ezafe hamze", fa: "هَمْزهٔ اِضافه", sign: "هٔ", does: "the ezafe *-ye* after a silent ه", example: "خانهٔ مَن", en: "my house", lesson: "ezafe/after-vowels" },
+  { name: "ezafe hamze", fa: "هَمْزهٔ اِضافه", sign: "هٔ", does: "the ezafe *-ye* after a silent ه", example: "خانهٔ مَن", en: "my house", lesson: "nouns/ezafe-after-vowels" },
 ];
 
 export interface SignRow {

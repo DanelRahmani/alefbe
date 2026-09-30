@@ -15,10 +15,12 @@ export const STATIC_PAGES = [
   "/practice/mistakes",
   "/practice/trace",
   "/practice/trace/session",
+  "/practice/sheets",
   "/dictionary",
   "/grammar",
   "/progress",
   "/offline",
+  "/verbs",
 ];
 
 export const ALL_PAGES = new Set([

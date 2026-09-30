@@ -2,6 +2,8 @@ import { LegacyHash } from "@/components/LegacyHash";
 import { PathBrowser, type PathUnit } from "@/components/PathBrowser";
 import { FaText } from "@/components/FaText";
 import { OROSI_PATTERN } from "@/components/Orosi";
+import type { DayWord } from "@/components/TodayCard";
+import { DICTIONARY } from "@/content/dictionary";
 import { UNITS, faNumber } from "@/content/units";
 import { splitScript } from "@/lib/markup";
 
@@ -29,6 +31,9 @@ const units: PathUnit[] = UNITS.map((u, i) => ({
   })),
 }));
 
+// The word of the day is picked in the browser, by its date, from these.
+const words: DayWord[] = DICTIONARY.map((e) => ({ fa: e.fa, en: e.en, id: e.id }));
+
 export default function Home() {
   return (
     <>
@@ -54,7 +59,7 @@ export default function Home() {
           </p>
         </div>
       </section>
-      <PathBrowser units={units} />
+      <PathBrowser units={units} words={words} />
       <LegacyHash />
     </>
   );

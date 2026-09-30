@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Game } from "@/components/games/Game";
+import { TYPE_ITEMS } from "@/content/type-it";
 import { GAMES, type GameId } from "@/lib/games";
 
 export const dynamicParams = false;
@@ -35,7 +36,7 @@ export default async function GamePage({ params }: PageProps<"/practice/games/[g
           </Link>
         ))}
       </nav>
-      <Game key={g.id} id={g.id as GameId} />
+      <Game key={g.id} id={g.id as GameId} items={g.id === "type" ? TYPE_ITEMS : undefined} />
     </>
   );
 }

@@ -324,3 +324,53 @@
   color: var(--muted);
   text-align: center;
 }
+
+/* ── Verb trainer (/verbs) ─────────────────────────────────────────────── */
+.verb-cue {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+.verb-tag {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  padding: 0.15rem 0.7rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 0.9rem;
+}
+.verb-tag-neg {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--rule));
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+}
+.verb-solution {
+  display: grid;
+  gap: 0.25rem;
+}
+.verb-list {
+  display: grid;
+  gap: 0.5rem;
+}
+.verb-details {
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  background: var(--surface);
+  padding: 0.2rem 1rem;
+}
+.verb-details > summary {
+  cursor: pointer;
+  padding: 0.6rem 0;
+  font-size: 1.05rem;
+}
+.verb-details[open] > summary {
+  border-bottom: 1px solid var(--rule);
+}
+.verb-details .table-wrap {
+  margin: 0.75rem 0;
+}

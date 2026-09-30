@@ -56,6 +56,22 @@ export function parseMarkup(src: string): Token[] {
 export const tokenText = (t: Token) => (t.kind === "text" ? t.text : t.base);
 export const plainOf = (tokens: Token[]) => tokens.map(tokenText).join("");
 
+/** Cut a token list to the character range [start, end) of its plain text. */
+export function sliceTokens(tokens: Token[], start: number, end: number): Token[] {
+  const out: Token[] = [];
+  let pos = 0;
+  for (const t of tokens) {
+    const s = tokenText(t);
+    const a = pos;
+    const b = pos + s.length;
+    pos = b;
+    if (b <= start || a >= end) continue;
+    if (t.kind === "override") out.push(t);
+    else out.push({ ...t, text: s.slice(Math.max(0, start - a), Math.min(s.length, end - a)) });
+  }
+  return out;
+}
+
 /** Transliteration of a Persian token list, using overrides where given. */
 export function translitWithErrors(tokens: Token[]): { text: string; errors: string[] } {
   let text = "";

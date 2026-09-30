@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { DictionaryBrowser } from "@/components/DictionaryBrowser";
 import { DictionaryFromQuery } from "@/components/DictionaryFromQuery";
+import { WordInspector } from "@/components/WordInspector";
 import { DICTIONARY } from "@/content/dictionary";
 import { UNITS } from "@/content/units";
 
@@ -25,9 +26,12 @@ export default function DictionaryPage() {
           transliteration (<em>ab</em> finds <em>âb</em>) or in English.
         </p>
       </section>
-      <Suspense fallback={<DictionaryBrowser entries={DICTIONARY} units={units} />}>
-        <DictionaryFromQuery entries={DICTIONARY} units={units} />
-      </Suspense>
+      <div data-inspect>
+        <Suspense fallback={<DictionaryBrowser entries={DICTIONARY} units={units} />}>
+          <DictionaryFromQuery entries={DICTIONARY} units={units} />
+        </Suspense>
+      </div>
+      <WordInspector />
     </>
   );
 }
