@@ -11,6 +11,9 @@ import { checkQuizTyped, quizTypeInfo } from "@/lib/quiz";
 import { useStore } from "@/lib/storage";
 import { drillUiStore, mistakesStore, noteResult } from "@/lib/stores";
 import { DrillPrompt, DrillSolution } from "./drill/Drill";
+import { VerbPrompt, VerbSolution } from "./verbs/VerbTrainer";
+import { verbById } from "@/content/verbs";
+import { checkVerb, describeSpec, type VerbQuestion } from "@/lib/verb-drill";
 import { PersianKeyboard } from "./drill/PersianKeyboard";
 import { FaText } from "./FaText";
 import { Rich } from "./Rich";
@@ -69,7 +72,27 @@ function describe(item: MistakeItem, lessons: Record<string, LessonQuiz>): { wha
         what: <FaText text={item.fa} translit="none" force="all" />,
         from: item.dir === "read" ? "Games: reading" : "Games: spelling",
       };
+    case "verb": {
+      const v = verbById.get(item.verb);
+      return {
+        what: v ? (
+          <>
+            <FaText text={v.inf} translit="none" force="all" /> · {describeSpec(item).replace(/^the /, "")}
+          </>
+        ) : (
+          "A verb form"
+        ),
+        from: "Verb trainer",
+      };
+    }
   }
+}
+
+/** A notebook verb item as a trainer question; null if the verb is gone. */
+function verbQuestion(item: Extract<MistakeItem, { kind: "verb" }>): VerbQuestion | null {
+  const verb = verbById.get(item.verb);
+  if (!verb) return null;
+  return { verb, spec: { tense: item.tense, person: item.person, style: item.style, negative: item.negative } };
 }
 
 /** Turn a notebook item into a question; null if its source no longer exists. Uses randomness: call from events only. */
@@ -184,6 +207,19 @@ function cardOf(m: Mistake, lessons: Record<string, LessonQuiz>): Card | null {
           </>
         ),
         from: { label: "Games", href: "/practice#games" },
+      };
+    }
+    case "verb": {
+      const vq = verbQuestion(item);
+      if (!vq) return null;
+      return {
+        id,
+        item,
+        prompt: <VerbPrompt q={vq} />,
+        lang: "fa",
+        check: (s) => checkVerb(vq, s),
+        solution: <VerbSolution q={vq} />,
+        from: { label: "Verb trainer", href: "/verbs" },
       };
     }
   }
@@ -348,7 +384,7 @@ export function MistakeNotebook({ lessons }: { lessons: Record<string, LessonQui
       <div className="ui empty-state">
         <p className="font-medium">Nothing to review.</p>
         <p className="mt-1 text-sm text-muted">
-          Wrong answers from lesson quizzes, the trainer, the letter quiz and the games land here, and leave after two right
+          Wrong answers from lesson quizzes, the trainers, the letter quiz and the games land here, and leave after two right
           answers in a row.
         </p>
         <Link href="/practice" className="chip mt-3 inline-block">

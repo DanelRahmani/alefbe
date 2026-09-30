@@ -21,6 +21,7 @@ export const BACKUP_KEYS = [
   "alefbe2:mistakes",
   "alefbe2:starred",
   "alefbe2:today",
+  "alefbe2:verbs",
 ] as const;
 
 /** Keys the "Reset statistics" button clears; lessons, trainer and tracing stay. */

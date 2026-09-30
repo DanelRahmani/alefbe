@@ -20,6 +20,7 @@ export const STATIC_PAGES = [
   "/grammar",
   "/progress",
   "/offline",
+  "/verbs",
 ];
 
 export const ALL_PAGES = new Set([

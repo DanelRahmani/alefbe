@@ -122,16 +122,37 @@ Phase 5 is Units 5–6 and the conjugation trainer (see `docs/PLAN.md`).
     - ordinals as an exception before the noun, and بیشترِ;
     - رو *ru* ("on") told apart from رُو *ro*.
   - Checked at 375 px in dark mode: no horizontal scroll. The only console errors are the known local-only 404s and aborted prefetches. Lighthouse accessibility is 100 on 6.3 and 6.7.
-- Owner to confirm:
-  - *mikhâyim* / *miyâyin* vs *mikhâym* / *miyâyn*;
-  - the spoken past stem *âvord-* vs *âvard-*;
-  - *khaste-am* / *khune-am* vs the contracted *khastam* / *khunam*;
-  - *miyây* vs *miyâi*;
-  - نِگَهْ said *negah* or *nege*.
+- **5d** (2026-09-30): the conjugation trainer at `/verbs`.
+  - `lib/verb-drill.ts` (pure, with tests):
+    - an item is `verb:tense`; the items come in five groups of five verbs, and a group opens once every item before it reaches box 3;
+    - each review asks one random form: person, spoken or written (the learner can pick one), and negative about 30% of the time;
+    - answers are checked with `checkFa`. Chat spellings are accepted with a note (می‌آم for میام, one-ی می‌خوایم, spoken *-id*). Typing another form of the same verb names it: "That is the written form for they, negative…".
+  - Store `alefbe2:verbs` (`verbsStore`) holds `{ decks: per tense, ask }`. It is in `ALL_STORES` and `BACKUP_KEYS`, with a backup round-trip test.
+  - Wiring:
+    - `reviewsDue` counts the verb deck, and the Today card links to `/verbs` when verbs lead (`reviewHref`);
+    - misses go to the notebook as `{ kind: "verb", … }`, which the notebook replays with `VerbPrompt` / `VerbSolution`.
+  - The page:
+    - it has the trainer, plus a collapsible spoken/written table for all 25 verbs;
+    - it is in `routes.ts`, the search index and the practice hub (`VerbOverview`);
+    - the nav highlights Practice on it.
+  - Checked at 375 px in light and dark: no horizontal scroll, 16 Tab stops all with a ring. A wrong answer was hinted, logged in SRS and noted; the notebook replay was right. Lighthouse accessibility is 100 on `/verbs` and `/practice`.
+
+Next: **Phase 6**, Units 7–9 and the vocabulary deck (see `docs/PLAN.md`), once the owner has reviewed Phase 5. The past tenses join `Tense` in `lib/conjugate.ts`; the spoken past stems are already in `content/verbs.ts` for five verbs.
 
 ## Waiting on the owner
 
-- Confirm the Dari callout in lesson 0.3 (majhul vowels ē/ō; شیر *shir*/*shēr*). Until then it ships with `checked: false`, which shows a draft tag.
+- Confirm the Dari callouts. Until then they ship with `checked: false`, which shows a draft tag:
+  - lesson 0.3: majhul vowels ē/ō; شیر *shir*/*shēr*;
+  - lesson 5.2: the prefix می is said *mē-* in Dari.
+- Confirm these Tehrani forms:
+  - spoken 1p/2p after â: *mikhâyim* / *miyâyin* (as taught), or *mikhâym* / *miyâyn*;
+  - the spoken past stem of آوردن: *âvord-* or *âvard-* (it is in the verb data for later);
+  - گذاشتن spoken *mizâram*, typed می‌ذارم;
+  - *khaste-am* / *khune-am* (as taught) vs the contracted *khastam* / *khunam*;
+  - *miyây* vs *miyâi*;
+  - نِگَهْ said *negah* or *nege*;
+  - ایرانی‌اَن (as taught) vs chat ایرانین.
+- Check the month names in `content/calendar.ts`.
 - 21st.dev components need the owner's registry API key, set as an environment variable. Until then, components are hand-built.
 - Review new.alefbe.study and merge `nextgen` into `main` when happy.
 
@@ -139,6 +160,8 @@ Phase 5 is Units 5–6 and the conjugation trainer (see `docs/PLAN.md`).
 
 - **Checks:** `npx vitest run`, `npm run typecheck`, `npm run lint`, `npm run build`.
 - **Dev server:** `alefbe-dev` in `.claude/launch.json`, on port 3000. `alefbe-static` serves the built `out/` on port 3001; use it for audits and Lighthouse.
+- **Build EPERM:** if `npm run build` fails with EPERM on `.next`, stop the dev server and delete `.next`; it is only a cache (OneDrive locks).
+- **Verb tables:** `npx tsx scripts/verbs.ts < /dev/null` prints every conjugation for proofreading.
 - **Fonts:** preload only what the first paint needs (`subsets` in `app/layout.tsx` means "preloaded"). Decorative faces take `preload: false`.
 - **Editing Persian text:** use the Edit tool, or a small Node script in the scratchpad.
   - Shell heredocs break on quotes.

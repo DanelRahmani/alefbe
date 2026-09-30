@@ -3,10 +3,11 @@ import Link from "next/link";
 import { DrillOverview } from "@/components/drill/DrillOverview";
 import { GameCards } from "@/components/games/GameCards";
 import { MistakesCard } from "@/components/MistakesCard";
+import { VerbOverview } from "@/components/verbs/VerbOverview";
 
 export const metadata: Metadata = {
   title: "Practice",
-  description: "The spaced-repetition letter trainer, a quick letter quiz, tracing and games for the Persian script.",
+  description: "Spaced-repetition trainers for the letters and the verbs, a quick letter quiz, tracing and games.",
 };
 
 export default function PracticePage() {
@@ -14,9 +15,9 @@ export default function PracticePage() {
     <>
       <section className="page-head">
         <p className="ui eyebrow">Practice</p>
-        <h1 className="page-title">Practise the script</h1>
+        <h1 className="page-title">Practise letters and verbs</h1>
         <p className="page-lede">
-          The trainer schedules reviews so letters stick: a card comes back just before you would forget it. The quiz,
+          The trainers schedule reviews so letters and verb forms stick: a card comes back just before you would forget it. The quiz,
           tracing and games are for extra practice whenever you like; they never change the schedule.
         </p>
       </section>
@@ -24,6 +25,10 @@ export default function PracticePage() {
       <h2 className="lesson-h2 mt-8">Letter trainer</h2>
       <p className="ui mt-1 text-sm text-muted">Spaced repetition, typed answers. New letters open group by group.</p>
       <DrillOverview />
+
+      <h2 className="lesson-h2 mt-10">Verb trainer</h2>
+      <p className="ui mt-1 text-sm text-muted">The present tense of 25 core verbs, spoken and written. Verbs open five at a time.</p>
+      <VerbOverview />
 
       <h2 className="lesson-h2 mt-10">Quick practice</h2>
       <ul className="drill-modes">

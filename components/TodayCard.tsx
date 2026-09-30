@@ -5,8 +5,8 @@ import { useId } from "react";
 import { modeInfo } from "@/lib/drill";
 import { streak } from "@/lib/activity";
 import { useStore } from "@/lib/storage";
-import { activityStore, mistakesStore, srsStore, todayStore } from "@/lib/stores";
-import { GOALS, goalProgress, iranianDate, pickForDay, reviewsDue } from "@/lib/today";
+import { activityStore, mistakesStore, srsStore, todayStore, verbsStore } from "@/lib/stores";
+import { GOALS, goalProgress, iranianDate, pickForDay, reviewHref, reviewsDue } from "@/lib/today";
 import { useMinuteClock } from "./drill/useDrillClock";
 import { FaText } from "./FaText";
 import { StarButton } from "./StarButton";
@@ -50,6 +50,7 @@ function GoalRing({ done, goal, fraction }: { done: number; goal: number; fracti
 export function TodayCard({ words }: { words: DayWord[] }) {
   const now = useMinuteClock();
   const srs = useStore(srsStore);
+  const verbs = useStore(verbsStore);
   const activity = useStore(activityStore);
   const mistakes = Object.keys(useStore(mistakesStore)).length;
   const { goal } = useStore(todayStore);
@@ -58,7 +59,7 @@ export function TodayCard({ words }: { words: DayWord[] }) {
   const ready = now > 0;
   const date = ready ? new Date(now) : null;
   const iran = date ? iranianDate(date) : null;
-  const due = ready ? reviewsDue(srs.decks, now) : null;
+  const due = ready ? reviewsDue(srs.decks, now, verbs) : null;
   const progress = date ? goalProgress(activity, date, goal) : { done: 0, goal, met: false, fraction: 0 };
   const days = date ? streak(activity, date) : 0;
   const word = date ? pickForDay(words, date) : undefined;
@@ -113,12 +114,12 @@ export function TodayCard({ words }: { words: DayWord[] }) {
           <li>
             <span className="today-stat">{due?.total ?? 0}</span>
             {due?.top ? (
-              <Link href={`/practice/drill/${due.top}`}>
-                {due.total === 1 ? "review" : "reviews"} due in the trainer
-                <span className="sr-only">, starting with {modeInfo(due.top).title}</span> →
+              <Link href={reviewHref(due.top)}>
+                {due.total === 1 ? "review" : "reviews"} due in the trainers
+                <span className="sr-only">, starting with {due.top === "verbs" ? "Verbs" : modeInfo(due.top).title}</span> →
               </Link>
             ) : (
-              <span className="text-muted">reviews due in the trainer</span>
+              <span className="text-muted">reviews due in the trainers</span>
             )}
           </li>
           <li>
