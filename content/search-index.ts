@@ -12,7 +12,7 @@ const PAGES: { title: string; href: string; sub: string; also?: string[] }[] = [
   { title: "The script", href: "/script", sub: "Letters, vowel marks and digits", also: ["alphabet", "letters", "chart"] },
   { title: "Practice", href: "/practice", sub: "Trainers, quiz, tracing and games" },
   { title: "Letter trainer", href: "/practice/drill/sound", sub: "Spaced repetition for the letters", also: ["drill", "srs", "review"] },
-  { title: "Verb trainer", href: "/verbs", sub: "Conjugate the core verbs, spoken and written", also: ["verbs", "conjugation", "conjugate", "present tense", "srs"] },
+  { title: "Verb trainer", href: "/verbs", sub: "Conjugate the core verbs, spoken and written", also: ["verbs", "conjugation", "conjugate", "present tense", "past tense", "present perfect", "past continuous", "progressive", "tenses", "srs"] },
   { title: "Letter quiz", href: "/practice/quiz", sub: "Quick rounds on names, sounds and forms" },
   { title: "Tracing", href: "/practice/trace", sub: "Write the letters", also: ["handwriting", "write"] },
   { title: "Tracing session", href: "/practice/trace/session", sub: "A set of letters, one after another" },

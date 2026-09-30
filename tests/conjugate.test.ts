@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { VERBS, verbById } from "@/content/verbs";
-import { PERSONS, STYLES, acceptedAnswers, allForms, conjugate, endsInVowel, englishOf, table, unmarked, type Style } from "@/lib/conjugate";
+import { PERSONS, STYLES, TENSES, acceptedAnswers, allForms, conjugate, endsInVowel, englishOf, lacks, table, unmarked, type Style } from "@/lib/conjugate";
+import { parseMarkup, splitScript } from "@/lib/markup";
 import { checkReadable } from "@/lib/persian/syllables";
 import { transliterateWithErrors } from "@/lib/translit";
 import { ZWNJ } from "@/lib/persian/chars";
@@ -10,6 +11,10 @@ const row = (s: string) => s.split(" ").map((f) => f.replace(/_/g, ZWNJ).replace
 
 // Written by hand from the references, not from the engine: the present,
 // affirmative, spoken (Tehrani) then written, persons 1s 2s 3s 1p 2p 3p.
+// The past tenses are in tests/conjugate-past.test.ts.
+
+/** The verbs with a present in the engine: all but بودن (lesson 4.2 teaches its present). */
+const PRESENT_VERBS = VERBS.filter((v) => !lacks(v, "present", false, VERBS));
 const GOLDEN: Record<string, Record<Style, string>> = {
   raftan: {
     spoken: "می_رَم می_ری می_ره می_ریم می_رین می_رَن",
@@ -148,10 +153,10 @@ const GOLDEN_TRANSLIT: Record<string, Record<Style, string>> = {
 
 describe("conjugate: golden tables", () => {
   it("has a golden table for every verb", () => {
-    expect(Object.keys(GOLDEN).sort()).toEqual(VERBS.map((v) => v.id).sort());
+    expect(Object.keys(GOLDEN).sort()).toEqual(PRESENT_VERBS.map((v) => v.id).sort());
   });
 
-  describe.each(VERBS.map((v) => [v.id, v] as const))("%s", (id, v) => {
+  describe.each(PRESENT_VERBS.map((v) => [v.id, v] as const))("%s", (id, v) => {
     it.each(STYLES)("present, %s", (style) => {
       expect(table(v, "present", style, false, VERBS)).toEqual(row(GOLDEN[id][style]));
     });
@@ -173,8 +178,27 @@ describe("conjugate: golden tables", () => {
 
 describe("conjugate: every form is course-quality Persian", () => {
   const forms = allForms(VERBS);
-  it("makes every form (verbs × 2 styles × 2 polarities × 6 persons)", () => {
-    expect(forms.length).toBe(VERBS.length * 24);
+  it("makes every form a verb has (tense × 2 styles × 2 polarities × 6 persons)", () => {
+    // 26 verbs. Present: 25 (not بودن). Past and perfect: all 26. Past continuous: 24
+    // (not بودن, داشتن). The two progressives: 20 each, and no negative.
+    expect(VERBS.length).toBe(26);
+    expect(forms.length).toBe(25 * 24 + 26 * 24 + 26 * 24 + 24 * 24 + 20 * 12 + 20 * 12);
+  });
+  it("names the tenses in readable Persian, and explains a missing form in readable Persian", () => {
+    const problems: string[] = [];
+    const check = (fa: string) => {
+      problems.push(...transliterateWithErrors(fa).errors);
+      for (const w of fa.split(/[ ،.:()]+/).filter(Boolean)) problems.push(...checkReadable(w));
+    };
+    for (const t of TENSES) check(t.titleFa);
+    expect(new Set(TENSES.map((t) => t.title)).size).toBe(TENSES.length);
+    expect(TENSES.every((t) => t.says.length > 3)).toBe(true);
+    const reasons = new Set<string>();
+    for (const v of VERBS) for (const t of TENSES) for (const neg of [false, true]) reasons.add(lacks(v, t.id, neg, VERBS) ?? "");
+    reasons.delete("");
+    expect(reasons.size).toBe(4);
+    for (const r of reasons) for (const tok of parseMarkup(r)) if (tok.kind === "text") for (const part of splitScript(tok.text)) if (part.fa) check(part.s);
+    expect(problems).toEqual([]);
   });
   it("every form is readable and transliterates without errors", () => {
     const problems: string[] = [];
@@ -191,8 +215,8 @@ describe("conjugate: every form is course-quality Persian", () => {
         for (const w of s.split(" ")) problems.push(...checkReadable(w), ...transliterateWithErrors(w).errors);
     expect(problems).toEqual([]);
   });
-  it("puts a half-space after every separate می / نمی", () => {
-    const bad = forms.filter((f) => /(^| )(نِ)?می[^‌ا]/.test(f));
+  it("puts a half-space after every می / نمی that speech does not run into a vowel (میام, میومَدَم)", () => {
+    const bad = forms.filter((f) => /(^| )(نِ)?می[^‌او]/.test(f));
     expect(bad).toEqual([]);
   });
   it("ids are unique, and compounds name a real light verb and share its stems", () => {
@@ -259,7 +283,7 @@ describe("conjugate: helpers", () => {
     const spec = { tense: "present" as const, style: "spoken" as const, person: "1s" as const, negative: false };
     expect(englishOf(verbById.get("dânestan")!, spec)).toBe("I know (a fact)");
     expect(englishOf(verbById.get("shenâkhtan")!, spec)).toBe("I know (a person)");
-    const prompts = VERBS.map((v) => englishOf(v, spec));
+    const prompts = PRESENT_VERBS.map((v) => englishOf(v, spec));
     expect(new Set(prompts).size).toBe(prompts.length);
   });
 

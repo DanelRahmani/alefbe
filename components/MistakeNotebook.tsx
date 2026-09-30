@@ -12,7 +12,8 @@ import { useStore } from "@/lib/storage";
 import { drillUiStore, mistakesStore, noteResult } from "@/lib/stores";
 import { DrillPrompt, DrillSolution } from "./drill/Drill";
 import { VerbPrompt, VerbSolution } from "./verbs/VerbTrainer";
-import { verbById } from "@/content/verbs";
+import { VERBS, verbById } from "@/content/verbs";
+import { TENSES, lacks, tenseInfo } from "@/lib/conjugate";
 import { checkVerb, describeSpec, type VerbQuestion } from "@/lib/verb-drill";
 import { PersianKeyboard } from "./drill/PersianKeyboard";
 import { FaText } from "./FaText";
@@ -77,7 +78,7 @@ function describe(item: MistakeItem, lessons: Record<string, LessonQuiz>): { wha
       return {
         what: v ? (
           <>
-            <FaText text={v.inf} translit="none" force="all" /> · {describeSpec(item).replace(/^the /, "")}
+            <FaText text={v.inf} translit="none" force="all" /> · {TENSE_IDS.has(item.tense) ? `${tenseInfo(item.tense).title.toLowerCase()}, ` : ""}{describeSpec(item).replace(/^the /, "")}
           </>
         ) : (
           "A verb form"
@@ -88,10 +89,12 @@ function describe(item: MistakeItem, lessons: Record<string, LessonQuiz>): { wha
   }
 }
 
-/** A notebook verb item as a trainer question; null if the verb is gone. */
+const TENSE_IDS = new Set<string>(TENSES.map((t) => t.id));
+
+/** A notebook verb item as a trainer question; null if the verb or the form is gone. */
 function verbQuestion(item: Extract<MistakeItem, { kind: "verb" }>): VerbQuestion | null {
   const verb = verbById.get(item.verb);
-  if (!verb) return null;
+  if (!verb || !TENSE_IDS.has(item.tense) || lacks(verb, item.tense, item.negative, VERBS)) return null;
   return { verb, spec: { tense: item.tense, person: item.person, style: item.style, negative: item.negative } };
 }
 

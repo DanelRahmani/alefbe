@@ -137,7 +137,40 @@ Phase 5 is Units 5–6 and the conjugation trainer (see `docs/PLAN.md`).
     - the nav highlights Practice on it.
   - Checked at 375 px in light and dark: no horizontal scroll, 16 Tab stops all with a ring. A wrong answer was hinted, logged in SRS and noted; the notebook replay was right. Lighthouse accessibility is 100 on `/verbs` and `/practice`.
 
-Next: **Phase 6**, Units 7–9 and the vocabulary deck (see `docs/PLAN.md`), once the owner has reviewed Phase 5. The past tenses join `Tense` in `lib/conjugate.ts`; the spoken past stems are already in `content/verbs.ts` for five verbs.
+The owner merged Phase 5 into `main` through PR #7 (2026-09-30).
+
+## Phase 6 status
+
+Phase 6 is Units 7–9 and the vocabulary deck (see `docs/PLAN.md`). The owner's brief sets the order: 6a engine (past tenses), 6b Unit 7, 6c engine (subjunctive, imperative, future), 6d Unit 8, 6e Unit 9, 6f the vocabulary deck at `/vocab`.
+
+- **Before 6a:** `nextgen` was fast-forwarded to `main` and pushed. The owner's answers to the Phase 5 questions came back blank, so nothing changed and every question stays under "Waiting on the owner".
+- **6a** (2026-09-30): the past tenses in the engine, and a tense picker in the trainer.
+  - `Tense` is now `present | past | perfect | imperfect | progressive | past-progressive`. `TENSES` carries each one's title, Persian term, the lesson that opens it, what it says in English (`says`), and an optional `note`.
+  - Forms:
+    - simple past: past stem + ending, none for he/she; the negative is نَـ, with a ی before a vowel (نَیامَدَم, spoken نَیومَدَم);
+    - present perfect: written رَفْته‌اَم … رَفْته اَسْت; spoken رَفْتَم … رَفْته, spelled like the simple past except for he/she (the stress differs: *ráftam*, *raftám*);
+    - past continuous: می + simple past; speech runs می into a vowel (میومَدَم, میاوُرْدَم);
+    - progressive: داشتن in front, conjugated too, in the present or the past (دارَم می‌رَم, داشْتَم می‌رَفْتَم); a compound's noun stays by its verb (دارَم کار می‌کُنَم).
+  - Verbs without a form: `lacks(verb, tense, negative, all)` returns the reason (shown in the tables) or null. `conjugate` throws for a missing form, and `allForms`, the trainer and the tables skip it.
+    - بودن has no present here (lesson 4.2 teaches it);
+    - بودن and داشتن have no past continuous (no می);
+    - the `stative` verbs (بودن, داشتن, خواستن, دانستن, توانستن, شناختن) have no progressive;
+    - the progressive has no negative.
+  - `content/verbs.ts` has 26 verbs: بودن was added first (flag `copula`; present stem باش for Unit 8). Each verb has five English forms. `enEvent` glosses the simple past of a state as an event (دونِسْتَم, *I found out*; می‌دونِسْتَم is the plain *I knew*). `enNow` gives a natural progressive gloss (*watching*). `spoken.pastPrefixed` is گذاشتن's short stem after a prefix (نَذاشْتَم, می‌ذاشْتَم).
+  - The text engine gained one reading (rule 4f′ in `analyze.ts`, in STYLE.md): a bare و after a long *i* and before a consonant is *u*, so میومَدَم reads *miyumadam*.
+  - Golden tables for every verb in every new tense, spoken and written, are in `tests/conjugate-past.test.ts`, typed by hand, with the negatives by hand where a ی bridges or the stem shortens. Every new form is in the content tests' half-space list through `allForms`.
+  - The trainer (`lib/verb-drill.ts`, `components/verbs/`):
+    - a tense picker; `VerbsData` gained `tense` (last practised) and `opened` (tenses opened before their lesson);
+    - `tenseOpen`: the present is always open; another tense opens when its lesson is marked done, or through "Open anyway". The page passes each tense's lesson to the trainer, so the client bundle does not carry the lessons;
+    - groups are built from the verbs that have the tense, so the present deck's groups did not move;
+    - the progressive is never asked in the negative; the spoken perfect asks he/she half the time;
+    - a wrong answer that is a form of another tense is named ("That is the simple past …");
+    - accepted with a note: رفته‌ام and رفته‌م for the spoken perfect, رفته for written رفته است, می‌اومدم for میومدم, both stems of گذاشتن.
+  - `/verbs` shows one tense's tables at a time (`VerbTables`, a client component), so the page did not grow. The practice hub counts across the open tenses (`verbTotals`).
+  - The reviewer found no marking or half-space error, and raised 1 error, 3 should-fix, 6 polish and 3 it could not verify. All were applied; the unverified ones are under "Waiting on the owner".
+  - Checked at 375 px in light and dark: no horizontal scroll, no console errors; a wrong answer was scheduled and noted, and the notebook names the tense. Lighthouse accessibility is 100 on `/verbs`.
+
+Next: **6b**, Unit 7, "Talking about the past" (lessons 7.1–7.5). Its lesson slugs must match `TENSES`: `past/simple-past`, `past/present-perfect`, `past/past-continuous`, `past/in-progress`.
 
 ## Waiting on the owner
 
@@ -152,6 +185,12 @@ Next: **Phase 6**, Units 7–9 and the vocabulary deck (see `docs/PLAN.md`), onc
   - *miyây* vs *miyâi*;
   - نِگَهْ said *negah* or *nege*;
   - ایرانی‌اَن (as taught) vs chat ایرانین.
+- Confirm these forms from Phase 6a (the reviewer could not verify them):
+  - spoken گذاشتن after a prefix: نَذاشْتَم, می‌ذاشْتَم (as the engine gives them), or نَگُذاشْتَم, می‌گُذاشْتَم;
+  - the spoken past continuous of آمدن: میومَدَم *miyumadam* (as given), or می‌اومَدَم;
+  - the spoken present perfect spelled like the simple past (رَفْتَم … رَفْته), told apart by stress; whether the negative (نَرَفْتَم) differs in stress at all; and whether the spelling رفته‌م should be taught;
+  - شناختن treated as a state, with no progressive;
+  - the term مُسْتَمِر: *mostamer* (the dictionary form, as written) or *mostamar*.
 - Check the month names in `content/calendar.ts`.
 - 21st.dev components need the owner's registry API key, set as an environment variable. Until then, components are hand-built.
 - Review new.alefbe.study and merge `nextgen` into `main` when happy.
@@ -161,7 +200,8 @@ Next: **Phase 6**, Units 7–9 and the vocabulary deck (see `docs/PLAN.md`), onc
 - **Checks:** `npx vitest run`, `npm run typecheck`, `npm run lint`, `npm run build`.
 - **Dev server:** `alefbe-dev` in `.claude/launch.json`, on port 3000. `alefbe-static` serves the built `out/` on port 3001; use it for audits and Lighthouse.
 - **Build EPERM:** if `npm run build` fails with EPERM on `.next`, stop the dev server and delete `.next`; it is only a cache (OneDrive locks).
-- **Verb tables:** `npx tsx scripts/verbs.ts < /dev/null` prints every conjugation for proofreading.
+- **Verb tables:** `npx tsx scripts/verbs.ts < /dev/null` prints every conjugation for proofreading; name tenses to print only those (`… verbs.ts past perfect`).
+- **Scratch scripts with Persian or quotes:** write them with the Write tool and run them with `node`; a shell heredoc breaks on the quotes.
 - **Fonts:** preload only what the first paint needs (`subsets` in `app/layout.tsx` means "preloaded"). Decorative faces take `preload: false`.
 - **Editing Persian text:** use the Edit tool, or a small Node script in the scratchpad.
   - Shell heredocs break on quotes.

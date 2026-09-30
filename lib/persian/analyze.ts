@@ -257,6 +257,23 @@ export function analyzeWord(word: string): Analysis {
       if (!isVav && pv === KASRA && bare() && next && !"اوی".includes(next.ch)) {
         errors.push(`«${word}»: no zir before a long i (Arabic-style marking)`);
       }
+      // Rule 4f′: after a long i and before a consonant, a bare و is the vowel u (میومَدَم
+      // miyumadam). As a consonant it would need a vowel mark or a sukun there.
+      const lp = lastPhon();
+      if (
+        isVav &&
+        bare() &&
+        lp?.t === "V" &&
+        lp.s === "i" &&
+        lp.li === i - 1 &&
+        next &&
+        !"اآوی".includes(next.ch) &&
+        !(next.ch === "ه" && letters[i + 1].me)
+      ) {
+        push("V", "u", i);
+        roles[i] = "vowel";
+        continue;
+      }
       // Rule 4e/4f: after sukun or after any vowel it is a consonant.
       if (m.has(SUKUN) || (prev && letters[i - 1].marks.has(SUKUN)) || lastPhon()?.t === "V") {
         consonant(i, cons, "glide");

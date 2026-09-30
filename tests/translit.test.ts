@@ -50,6 +50,10 @@ const GOLDEN: [string, string][] = [
   ["خویش", "khish"],
   // long i before a vowel gets a y
   ["بیا", "biyâ"],
+  // A bare و after a long i: u before a consonant, v before a vowel letter or a final silent ه.
+  ["میومَدَم", "miyumadam"],
+  ["دیوار", "divâr"],
+  ["میوه", "mive"],
   ["هِدیه", "hediye"],
   ["هِدْیه", "hedye"],
   // final he: silent vowel vs consonant h

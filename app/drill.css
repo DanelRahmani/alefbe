@@ -374,3 +374,36 @@
 .verb-details .table-wrap {
   margin: 0.75rem 0;
 }
+/* A form the verb does not have: the reason, in place of a table. */
+.verb-none {
+  margin: 0.75rem 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+.verb-none .font-medium {
+  color: var(--ink);
+}
+.verb-none-tag {
+  margin-inline-start: 0.5rem;
+  padding: 0.05rem 0.55rem;
+  border: 1px dashed var(--rule);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+/* What the chosen tense says, under the tense picker; and a tense's note. */
+.verb-says {
+  margin-top: 0.6rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+.verb-note {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+/* A tense whose lesson is not done yet: still selectable, to open it anyway. */
+.chip.chip-locked:not([aria-pressed="true"]) {
+  border-style: dashed;
+  color: var(--muted);
+}

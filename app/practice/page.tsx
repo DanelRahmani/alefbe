@@ -4,6 +4,7 @@ import { DrillOverview } from "@/components/drill/DrillOverview";
 import { GameCards } from "@/components/games/GameCards";
 import { MistakesCard } from "@/components/MistakesCard";
 import { VerbOverview } from "@/components/verbs/VerbOverview";
+import { VERBS } from "@/content/verbs";
 
 export const metadata: Metadata = {
   title: "Practice",
@@ -27,7 +28,7 @@ export default function PracticePage() {
       <DrillOverview />
 
       <h2 className="lesson-h2 mt-10">Verb trainer</h2>
-      <p className="ui mt-1 text-sm text-muted">The present tense of 25 core verbs, spoken and written. Verbs open five at a time.</p>
+      <p className="ui mt-1 text-sm text-muted">The present and the past tenses of {VERBS.length} core verbs, spoken and written. Verbs open five at a time, and each tense opens with its lesson.</p>
       <VerbOverview />
 
       <h2 className="lesson-h2 mt-10">Quick practice</h2>
