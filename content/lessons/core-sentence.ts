@@ -81,10 +81,10 @@ export const coreSentence: Lesson[] = [
         title: "At the bakery",
         lines: [
           { who: "Customer", fa: "سَلام، نون {دارین}؟", written: "سَلام، نان {دارید}؟", en: "Hello, do you have bread?" },
-          { who: "Baker", fa: "بَله. چَنْد تا {می‌خوایْن}؟", written: "بَله. چَنْد عَدَد {می‌خواهید}؟", en: "Yes. How many would you like?" },
+          { who: "Baker", fa: "بَله. چَنْد تا {می‌خوایین}؟", written: "بَله. چَنْد عَدَد {می‌خواهید}؟", en: "Yes. How many would you like?" },
           { who: "Customer", fa: "دُو تا، مِرْسی.", written: "دُو عَدَد، مُتَشَکِّرَم.", en: "Two, thanks." },
         ],
-        note: "Not one subject pronoun: the endings do the work. دارین is *you have* and می‌خوایْن *you want*, both in the polite plural *you*.",
+        note: "Not one subject pronoun: the endings do the work. دارین is *you have* and می‌خوایین *you want*, both in the polite plural *you*.",
       },
       {
         type: "quiz",

@@ -79,7 +79,22 @@ Done:
     SEO is 100. Best practices is 96 locally, only because of those 404s. Production (4e part 1) scored 75 / 95 / 100 / 100.
   - Still open: LCP is about 5 s on throttled mobile. The next step is to look at the hero window and the `backdrop-filter` glass (style and layout dominate the main thread).
 
-Next: **Phase 5**, Units 5–6 and the conjugation trainer (see `docs/PLAN.md`). It starts once the owner has reviewed 4e and 4f on new.alefbe.study.
+## Phase 5 status
+
+Phase 5 is Units 5–6 and the conjugation trainer (see `docs/PLAN.md`).
+
+- **5a** (2026-09-30): the conjugation engine.
+  - `lib/conjugate.ts` builds every form from a verb's stems: the present, affirmative and negative, spoken and written. `Tense` is a union with one case so far; the other tenses join as more cases in `conjugate()`.
+  - `content/verbs.ts` holds 25 verbs: 22 simple and 3 compound. Compounds reuse their light verb's stems through `light`. داشتن has `noMi`.
+  - Spoken stems are the Tehrani ones: ر ش گ د خوا دون تون خون آر ذار. Speech runs می into آ: میام, میارَم.
+  - `tests/conjugate.test.ts` has golden tables written by hand for every verb, spoken and written, plus a golden transliteration for 9 verbs.
+  - The content tests now fail any string that splits or closes up a known half-space form: every conjugated form, and every vocab word. Overrides and `wrong` examples are exempt.
+  - `npx tsx scripts/verbs.ts < /dev/null` prints every table with its transliteration, for proofreading.
+  - The reviewer raised 5 findings, all applied:
+    - the spoken 1p/2p after â became می‌خواییم / میایین (*mikhâyim*, *miyâyin*), with the one-ی spellings accepted as variants; lesson 4.1's می‌خوایْن was changed to match;
+    - دانستن and شناختن are told apart in English;
+    - the stems رَو / شَو read *row*/*show* and آ reads empty on their own, so lessons cite them with overrides.
+- Owner to confirm: *mikhâyim* / *miyâyin* vs *mikhâym* / *miyâyn*, and the spoken past stem *âvord-* vs *âvard-*.
 
 ## Waiting on the owner
 
