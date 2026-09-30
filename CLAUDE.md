@@ -222,7 +222,7 @@ Next: **6e**, Unit 9, "Where, when, how much" (lessons 9.1–9.6), slug `where-w
 
 ## Feature ideas (owner asked, 2026-09-30)
 
-Not part of Phase 6. Ranked by how easy each is; the first four need no new Persian content, so they can be built as soon as Phase 6 is pushed.
+Not part of Phase 6. Ranked by how easy each is; the first four need no new Persian content, so they can be built as soon as Phase 6 is pushed. A ready prompt for the first three is in `docs/PROMPT-practice-extras.md`.
 
 1. **One review queue** (easiest; ready now). A "Review everything due" session that pulls due cards from every deck: letters, words, verbs, vocabulary, and the mistake notebook. Every deck, checker and prompt component already exists; this is a pure function that merges the queues, and one page. Best built after 6f, so the vocabulary deck is in it.
 2. **Cloze practice from lesson examples** (easy; ready now). Every example marks its key part with a `{highlight}`. Blank it, show the English, and have the learner type the missing words. Needs a pure extractor, a Leitner deck and store, and a trainer page. No new content. To decide: examples with several highlights, and whether the spoken or the written line is asked.
