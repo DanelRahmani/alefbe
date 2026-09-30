@@ -139,7 +139,7 @@ export function Quiz({ questions, lessonKey }: { questions: QuizQuestion[]; less
   };
 
   return (
-    <section aria-labelledby="quiz-title" className="mt-12">
+    <section aria-labelledby="quiz-title" className="mt-12" data-no-inspect data-no-print>
       <h2 id="quiz-title" className="lesson-h2">
         Check yourself
       </h2>

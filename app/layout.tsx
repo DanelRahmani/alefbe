@@ -42,6 +42,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       data-vowels="all"
       data-translit="off"
       data-theme="system"
+      data-size="m"
+      data-fafont="vazirmatn"
       suppressHydrationWarning
       className={`${literata.variable} ${vazirmatn.variable} ${amiri.variable} ${markazi.variable}`}
     >

@@ -2,7 +2,7 @@
 
 import type { LessonKind } from "@/content/types";
 import type { VowelMode } from "./persian/marks";
-import { SETTINGS_KEY } from "./prepaint";
+import { SETTINGS_KEY, type FaFont, type TextSize } from "./prepaint";
 import { createPersistentStore } from "./storage";
 import { emptyDeck, type DeckState } from "./srs";
 import type { DrillMode } from "./drill";
@@ -11,6 +11,7 @@ import { migrateTraceV1 } from "./trace";
 import { DEFAULT_QUIZ, type QuizSetup } from "./quiz";
 import { noteAnswer, type MistakeItem, type Notebook } from "./mistakes";
 import type { Starred } from "./starred";
+import { DEFAULT_GOAL, type DailyGoal } from "./today";
 
 export type Theme = "system" | "light" | "dark";
 
@@ -18,9 +19,11 @@ export interface Settings {
   vowels: VowelMode;
   translit: boolean;
   theme: Theme;
+  size: TextSize;
+  faFont: FaFont;
 }
 
-export const DEFAULT_SETTINGS: Settings = { vowels: "all", translit: false, theme: "system" };
+export const DEFAULT_SETTINGS: Settings = { vowels: "all", translit: false, theme: "system", size: "m", faFont: "vazirmatn" };
 
 export const settingsStore = createPersistentStore<Settings>(SETTINGS_KEY, DEFAULT_SETTINGS);
 
@@ -30,6 +33,8 @@ export function applySettings(s: Settings) {
   d.dataset.vowels = s.vowels;
   d.dataset.translit = s.translit ? "on" : "off";
   d.dataset.theme = s.theme;
+  d.dataset.size = s.size;
+  d.dataset.fafont = s.faFont;
 }
 
 export function updateSettings(patch: Partial<Settings>) {
@@ -137,6 +142,9 @@ export function noteResult(item: MistakeItem, ok: boolean) {
 /** Starred words and examples (lib/starred.ts). */
 export const starredStore = createPersistentStore<Starred>("alefbe2:starred", {});
 
+/** The Today card on the home page: the daily goal (lib/today.ts). */
+export const todayStore = createPersistentStore<{ goal: DailyGoal }>("alefbe2:today", { goal: DEFAULT_GOAL });
+
 /** Every store, for refreshing after an import or reset. */
 export const ALL_STORES = [
   settingsStore,
@@ -151,4 +159,5 @@ export const ALL_STORES = [
   lessonsStore,
   mistakesStore,
   starredStore,
+  todayStore,
 ];

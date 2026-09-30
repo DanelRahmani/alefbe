@@ -6,6 +6,7 @@ import { Fragment } from "react";
 import { parseMarkup, tokenText, translitOf, type Token } from "@/lib/markup";
 import { VOWEL_MODES, variantsOf, type VowelMode } from "@/lib/persian/marks";
 import { NON_JOINING, ZWJ, isLetter, isMark } from "@/lib/persian/chars";
+import { wordsOfTokens } from "@/lib/inspect";
 
 /** Where a split falls inside a word, add ZWJ on both sides so each span keeps its joining form. */
 function keepJoins(tokens: Token[]): Token[] {
@@ -67,13 +68,23 @@ export function FaText({ text, tokens, translit = "block", alwaysTranslit, force
   }
 
   const tr = translit === "none" ? "" : translitOf(toks);
+  // For the word inspector: per-word readings where an override changes them,
+  // and a flag where the only variant shown is not the marked one.
+  const overrides = toks.some((t) => t.kind === "override") ? JSON.stringify(wordsOfTokens(toks).map((w) => w.translit)) : undefined;
+  const unmarked = force && force !== "all" ? "" : undefined;
   const trClass = ["tr", translit === "block" ? "tr-block" : "tr-inline", alwaysTranslit && "tr-always"]
     .filter(Boolean)
     .join(" ");
 
   return (
     <>
-      <bdi lang="fa" dir="rtl" className={["fa", className].filter(Boolean).join(" ")}>
+      <bdi
+        lang="fa"
+        dir="rtl"
+        className={["fa", className].filter(Boolean).join(" ")}
+        data-words={overrides}
+        data-unmarked={unmarked}
+      >
         {groups.length === 1 ? (
           <Spans tokens={groups[0].tokens} />
         ) : (

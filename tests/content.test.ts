@@ -4,6 +4,7 @@ import { DRILL_WORDS } from "@/content/drill-words";
 import { DRILL_GROUPS, LETTERS, letterByChar } from "@/lib/persian/letters";
 import { MARKS, SIGNS } from "@/content/reference";
 import { GRAMMAR } from "@/content/grammar";
+import { PERSIAN_MONTHS } from "@/content/calendar";
 import { STATIC_PAGES, isPage } from "@/content/routes";
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -118,6 +119,7 @@ const ALL: Str[] = [
     { where: `mark ${m.name} does`, kind: "rich" as const, s: m.does },
   ]),
   ...SIGNS.map((x) => ({ where: `sign ${x.name}`, kind: "rich" as const, s: x.does })),
+  ...PERSIAN_MONTHS.map((m, i) => ({ where: `month ${i + 1}`, kind: "fa" as const, s: m })),
   ...GRAMMAR.flatMap((t) => t.blocks.flatMap((b, i) => blockStrs(b, `grammar ${t.slug} block ${i + 1} (${b.type})`))),
   ...UNITS.flatMap((u) => [
     { where: `unit ${u.slug} titleFa`, kind: "fa" as const, s: u.titleFa },

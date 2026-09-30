@@ -4,6 +4,7 @@ import { useId } from "react";
 import { useStore } from "@/lib/storage";
 import { settingsStore, updateSettings, type Theme } from "@/lib/stores";
 import type { VowelMode } from "@/lib/persian/marks";
+import type { FaFont, TextSize } from "@/lib/prepaint";
 import { FaText } from "./FaText";
 
 const VOWEL_OPTIONS: { value: VowelMode; label: string; hint: string }[] = [
@@ -18,7 +19,18 @@ const THEME_OPTIONS: { value: Theme; label: string }[] = [
   { value: "dark", label: "Dark" },
 ];
 
-/** Vowel marks, transliteration and (optionally) theme: in the Display popover and inline in lesson 0.1. */
+const FONT_OPTIONS: { value: FaFont; label: string }[] = [
+  { value: "vazirmatn", label: "Vazirmatn" },
+  { value: "naskh", label: "Naskh" },
+];
+
+const SIZE_OPTIONS: { value: TextSize; label: string }[] = [
+  { value: "s", label: "Small" },
+  { value: "m", label: "Medium" },
+  { value: "l", label: "Large" },
+];
+
+/** Vowel marks, transliteration, typeface, text size and (optionally) theme: in the Display popover and inline in lesson 0.1. */
 export function DisplayControls({ theme = true }: { theme?: boolean }) {
   const s = useStore(settingsStore);
   const id = useId();
@@ -64,6 +76,47 @@ export function DisplayControls({ theme = true }: { theme?: boolean }) {
           <span className="switch-knob" />
         </button>
       </div>
+
+      <fieldset>
+        <legend className="font-medium">Persian typeface</legend>
+        <div className="mode-cards mode-cards-2">
+          {FONT_OPTIONS.map((o) => (
+            <label key={o.value} className="mode-card">
+              <input
+                type="radio"
+                name={`${id}-font`}
+                value={o.value}
+                checked={s.faFont === o.value}
+                onChange={() => updateSettings({ faFont: o.value })}
+                className="sr-only"
+              />
+              <span className={`mode-preview has-fa font-preview-${o.value}`}>
+                <FaText text="کِتابِ مَن" translit="none" force="all" />
+              </span>
+              <span className="mode-label">{o.label}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend className="font-medium">Text size</legend>
+        <div className="flex gap-2">
+          {SIZE_OPTIONS.map((o) => (
+            <label key={o.value} className="settings-chip">
+              <input
+                type="radio"
+                name={`${id}-size`}
+                value={o.value}
+                checked={s.size === o.value}
+                onChange={() => updateSettings({ size: o.value })}
+                className="sr-only"
+              />
+              <span>{o.label}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
 
       {theme && (
         <fieldset>

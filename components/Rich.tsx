@@ -2,25 +2,9 @@
 // rendered with FaText (vowel modes, inline transliteration). No hooks.
 
 import { Fragment } from "react";
-import { parseMarkup, splitScript, tokenText, type Token } from "@/lib/markup";
+import { parseMarkup, sliceTokens, splitScript, tokenText, type Token } from "@/lib/markup";
 import type { VowelMode } from "@/lib/persian/marks";
 import { FaText } from "./FaText";
-
-/** Cut a token list to the character range [start, end) of its plain text. */
-function sliceTokens(tokens: Token[], start: number, end: number): Token[] {
-  const out: Token[] = [];
-  let pos = 0;
-  for (const t of tokens) {
-    const s = tokenText(t);
-    const a = pos;
-    const b = pos + s.length;
-    pos = b;
-    if (b <= start || a >= end) continue;
-    if (t.kind === "override") out.push(t);
-    else out.push({ ...t, text: s.slice(Math.max(0, start - a), Math.min(s.length, end - a)) });
-  }
-  return out;
-}
 
 function Latin({ tokens }: { tokens: Token[] }) {
   return (

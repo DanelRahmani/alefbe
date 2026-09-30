@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { DRILL_GROUPS, MODES, wordsFor } from "@/lib/drill";
-import { deckStats, unlockedIds } from "@/lib/srs";
+import { DRILL_GROUPS, MODES, drillCandidates } from "@/lib/drill";
+import { deckStats } from "@/lib/srs";
 import { useStore } from "@/lib/storage";
 import { deckOf, srsStore } from "@/lib/stores";
 import { useMinuteClock } from "./useDrillClock";
@@ -10,13 +10,12 @@ import { useMinuteClock } from "./useDrillClock";
 export function DrillOverview() {
   const data = useStore(srsStore);
   const now = useMinuteClock();
-  const letters = new Set(unlockedIds(DRILL_GROUPS, deckOf(data, "sound")));
 
   return (
     <ul className="drill-modes">
       {MODES.map((m) => {
         const deck = deckOf(data, m.id);
-        const cands = m.kind === "letters" ? unlockedIds(DRILL_GROUPS, deck) : wordsFor(letters).map((w) => w.id);
+        const cands = drillCandidates(m.id, data.decks);
         const s = deckStats(cands, deck, now);
         return (
           <li key={m.id}>

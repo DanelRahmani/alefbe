@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useLayoutEffect, useRef, useState } from "react";
-import { DRILL_GROUPS, checkDrill, modeInfo, wordById, wordsFor, type DrillMode } from "@/lib/drill";
+import { DRILL_GROUPS, checkDrill, drillCandidates, modeInfo, wordById, type DrillMode } from "@/lib/drill";
 import { DIGITS, FORMS, formOf, letterByChar, type Form } from "@/lib/persian/letters";
-import { answer, deckStats, nextCard, practiceCard, unlockNext, unlockedIds } from "@/lib/srs";
+import { answer, deckStats, nextCard, practiceCard, unlockNext } from "@/lib/srs";
 import { useStore } from "@/lib/storage";
 import { deckOf, drillUiStore, logActivity, noteResult, progressStore, srsStore, type SrsData } from "@/lib/stores";
 import type { Verdict } from "@/lib/answers";
@@ -18,11 +18,7 @@ export const WORD_GATE_LESSON = "sounds/long-vowels";
 
 const digitByChar = new Map(DIGITS.map((d) => [d.ch, d]));
 
-function candidatesFor(mode: DrillMode, data: SrsData): string[] {
-  if (mode === "sound" || mode === "letter") return unlockedIds(DRILL_GROUPS, deckOf(data, mode));
-  const letters = new Set(unlockedIds(DRILL_GROUPS, deckOf(data, "sound")));
-  return wordsFor(letters).map((w) => w.id);
-}
+const candidatesFor = (mode: DrillMode, data: SrsData) => drillCandidates(mode, data.decks);
 
 const randomForm = (): Form => FORMS[Math.floor(Math.random() * FORMS.length)];
 

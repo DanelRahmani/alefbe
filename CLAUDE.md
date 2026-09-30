@@ -41,25 +41,28 @@ Done:
   - Unit 2 lessons set `showMarks`, so every vowel mark shows whatever the setting.
   - A mark named on a bare stroke (ـّ ـْ) shows in every vowel mode.
 
-Next, 4e part 2, in this order:
+- **4e, part 2** (pushed 2026-09-30):
+  - The Today card on the home page (`components/TodayCard.tsx`, `lib/today.ts`, store `alefbe2:today`):
+    - reviews due across all four trainer decks (via `drillCandidates` in `lib/drill.ts`), and mistakes waiting;
+    - a daily goal ring of 5, 10 or 20 activities, counted from `alefbe2:activity`;
+    - the streak;
+    - a word of the day, which strides through the dictionary by date, so nothing repeats until every word has had its day;
+    - today in the Iranian calendar. The Persian date comes from `Intl` and is shown unmarked. The month's reading comes from the marked names in `content/calendar.ts`, which a test checks against `Intl`.
+  - The word inspector (`components/WordInspector.tsx`, `lib/inspect.ts`):
+    - Tapping a Persian word inside `[data-inspect]` (lesson articles and the dictionary) opens a popover. It shows the reading, the meaning if the word is in the dictionary, and the letters with their forms, linked to the letter pages.
+    - Lookup is by exact marked spelling, written or spoken, and also without an ezafe. It never ignores marks, so مَرد is never taken for مُرد.
+    - Quizzes are excluded (`data-no-inspect`).
+    - `FaText` emits `data-words` for runs with transliteration overrides, and `data-unmarked` for forced unmarked runs.
+  - Display settings gained text size S/M/L and a Persian typeface, Vazirmatn or Naskh (Amiri). They are stored in `alefbe2:settings` as `size` and `faFont` and put on `<html data-size data-fafont>` by `lib/prepaint.ts`, which has its own test. The CSS uses the `--fa-font` variable.
+  - The "Type it" game (`/practice/games/type`):
+    - Copy-typing uses short examples from the lessons of Unit 3 on (`content/type-it.ts`); half of each game has a half-space.
+    - `checkCopy` in `lib/games.ts` ignores marks and punctuation. It names each spacing mistake, such as "Half-space between می and خرم (you typed a space)".
+    - The feedback shows spaces and half-spaces as visible markers.
+  - Printing:
+    - Tracing sheets at `/practice/sheets` (`lib/sheets.ts`, `components/trace/SheetBuilder.tsx`): choose letter groups, all forms or only the isolated one, and a key word row.
+    - The print stylesheet in `app/practice.css`: ink on white in any theme; the chrome, quizzes, tools and anything marked `data-no-print` are hidden.
 
-1. **Today card** on the home page:
-   - reviews due across every trainer deck, and mistakes waiting;
-   - a daily goal ring (5, 10 or 20 activities, saved);
-   - the streak;
-   - a word of the day, picked by date;
-   - today's date in the Persian calendar (`Intl` with `fa-IR-u-ca-persian`).
-2. **Word inspector.** Tapping a Persian word in a lesson or the dictionary opens a popover with:
-   - its transliteration;
-   - its meaning, if it is in the dictionary;
-   - a letter-by-letter breakdown (`formsInWord`), linking to the letter pages.
-
-   Find the tapped word with `caretPositionFromPoint`, and take the marked form from the `vm-all` variant.
-3. **Display settings:** text size S/M/L and Persian typeface (Vazirmatn or Naskh), applied before first paint via `lib/prepaint.ts`.
-4. **"Type it" game:** copy-typing, including the half-space.
-5. **Printing:** printable tracing sheets at `/practice/sheets`, and print CSS for lessons and `/grammar`.
-
-Then **4f**:
+Next, **4f**:
 
 1. Check every route at 375 px in light and dark: keyboard focus, reduced motion, the console, Lighthouse.
 2. Push `nextgen` and report to the owner for review.

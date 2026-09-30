@@ -48,6 +48,12 @@ export default function PracticePage() {
             <span className="drill-mode-blurb">A set of letters and forms one after another, with a summary at the end.</span>
           </Link>
         </li>
+        <li>
+          <Link href="/practice/sheets" className="drill-mode">
+            <span className="drill-mode-title">Tracing sheets</span>
+            <span className="drill-mode-blurb">Print the letters in every form to trace on paper, with a key word each.</span>
+          </Link>
+        </li>
       </ul>
 
       <h2 id="games" className="lesson-h2 mt-10">

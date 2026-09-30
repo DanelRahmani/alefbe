@@ -4,6 +4,7 @@ import { DRILL_WORDS } from "@/content/drill-words";
 import { checkFa, checkTranslit, type Verdict } from "./answers";
 import { DIGITS, DRILL_GROUPS, LETTERS, SAME_SOUND, letterByChar } from "./persian/letters";
 import { normalizeFa } from "./persian/normalize";
+import { emptyDeck, unlockedIds, type DeckState } from "./srs";
 import { transliterate } from "./translit";
 
 export type DrillMode = "sound" | "letter" | "read" | "spell";
@@ -58,6 +59,13 @@ export const wordById = new Map(WORD_CARDS.map((w) => [w.id, w]));
 /** Words whose letters are all unlocked, in list order. */
 export function wordsFor(unlocked: Set<string>): WordCard[] {
   return WORD_CARDS.filter((w) => w.letters.every((ch) => unlocked.has(ch)));
+}
+
+/** The cards a mode can show: its deck's open letter groups, or the words made of letters open in letter → sound. */
+export function drillCandidates(mode: DrillMode, decks: Partial<Record<DrillMode, DeckState>>): string[] {
+  if (modeInfo(mode).kind === "letters") return unlockedIds(DRILL_GROUPS, decks[mode] ?? emptyDeck());
+  const letters = new Set(unlockedIds(DRILL_GROUPS, decks.sound ?? emptyDeck()));
+  return wordsFor(letters).map((w) => w.id);
 }
 
 // Same-sound families, for naming the slip in "sound → letter".

@@ -887,3 +887,192 @@ a.letter-card:hover {
   background: var(--err-soft);
   color: var(--err);
 }
+
+/* ── Type it: spaces and half-spaces made visible in the feedback ──────── */
+.gap-mark,
+.gap-key {
+  display: inline-block;
+  height: 0.95em;
+  vertical-align: -0.15em;
+  border-bottom: 2px solid;
+  border-radius: 2px;
+}
+.gap-half {
+  width: 0.35em;
+  border-color: var(--turquoise);
+  background: color-mix(in srgb, var(--turquoise) 20%, transparent);
+}
+.gap-space {
+  width: 0.8em;
+  border-color: var(--gold);
+  background: color-mix(in srgb, var(--gold) 16%, transparent);
+}
+.gap-key {
+  height: 0.9em;
+}
+
+/* ── Tracing sheets (/practice/sheets) ─────────────────────────────────── */
+.sheet-controls {
+  display: grid;
+  gap: 1rem;
+  margin: 1.25rem 0 1.5rem;
+}
+.sheet {
+  --sheet-glyph: min(9vw, 2.6rem);
+  padding: 1rem;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  background: var(--surface);
+}
+.sheet-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--rule);
+}
+.sheet-title {
+  font-family: var(--font-markazi), var(--font-literata), serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.sheet-name,
+.sheet-how {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.sheet-how {
+  margin: 0.4rem 0 0.6rem;
+}
+.sheet-letter {
+  margin-top: 0.8rem;
+  break-inside: avoid;
+}
+.sheet-label {
+  font-size: 0.85rem;
+}
+.sheet-label-fa {
+  font-size: 1.3rem;
+}
+.sheet-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  border: 1px solid var(--rule);
+  border-top: 0;
+}
+.sheet-label + .sheet-row {
+  border-top: 1px solid var(--rule);
+}
+.sheet-row-word {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.sheet-cell {
+  display: grid;
+  place-items: center;
+  min-height: calc(var(--sheet-glyph) * 2.1);
+  font-size: var(--sheet-glyph);
+  line-height: 1;
+  border-inline-start: 1px dashed var(--rule);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.sheet-cell:first-child {
+  border-inline-start: 0;
+}
+.sheet-row-word .sheet-cell {
+  font-size: calc(var(--sheet-glyph) * 0.75);
+}
+.sheet-trace {
+  color: color-mix(in srgb, var(--ink) 22%, transparent);
+}
+.sheet-row-label {
+  position: absolute;
+  top: 0.1rem;
+  left: 0.3rem;
+  font-size: 0.62rem;
+  color: var(--muted);
+}
+
+/* ── Print: tracing sheets, lessons and the grammar page ───────────────── */
+@media print {
+  @page {
+    margin: 14mm 12mm;
+  }
+  /* Ink on white, whatever the theme. */
+  :root[data-theme] {
+    --bg: #fff !important;
+    --surface: #fff !important;
+    --surface-2: #fff !important;
+    --ink: #000 !important;
+    --muted: #444 !important;
+    --rule: #b5b5b5 !important;
+    --accent: #1f4aa8 !important;
+    --accent-soft: #eef1f8 !important;
+    --gold: #6b5210 !important;
+    --turquoise: #0b6e72 !important;
+    --glass: #fff !important;
+    --glass-line: #b5b5b5 !important;
+    --shadow: none !important;
+    color-scheme: light;
+  }
+  body {
+    background: #fff;
+    font-size: 11pt;
+    padding: 0 !important;
+  }
+  .orosi,
+  .skip-link,
+  .site-footer,
+  [popover],
+  dialog,
+  [data-no-print],
+  .example-tools,
+  .finish,
+  .lesson-nav,
+  .grammar-toc,
+  .grammar-more,
+  .breadcrumb {
+    display: none !important;
+  }
+  .site-main {
+    max-width: none;
+    padding: 0;
+  }
+  .glass {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+  a {
+    text-decoration: none;
+  }
+  h1,
+  h2,
+  h3,
+  .lesson-h2 {
+    break-after: avoid;
+  }
+  .example,
+  .pair,
+  .callout,
+  .dialogue-line,
+  .table-wrap,
+  .idea,
+  tr {
+    break-inside: avoid;
+  }
+  .table-wrap {
+    overflow: visible;
+  }
+  /* The sheet fills the page; glyphs sized for a pen. */
+  .sheet {
+    --sheet-glyph: 30pt;
+    padding: 0;
+    border: 0;
+  }
+  .sheet-trace {
+    color: #c4c4c4;
+  }
+}

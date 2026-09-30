@@ -20,6 +20,8 @@ export interface SearchItem {
   title: string;
   /** A Persian mark shown beside it. */
   fa?: string;
+  /** A word's Tehrani spoken form, when it differs (for the word inspector). */
+  spoken?: string;
   /** One line under the title. */
   sub?: string;
   href: string;

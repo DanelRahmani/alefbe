@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { LessonKeys } from "@/components/lesson/LessonKeys";
 import { LessonRenderer } from "@/components/lesson/LessonRenderer";
 import { MarkDone } from "@/components/MarkDone";
+import { WordInspector } from "@/components/WordInspector";
 import { Rich, hasFa } from "@/components/Rich";
 import { ALL_LESSONS, faNumber, findLesson } from "@/content/units";
 import { KIND_LABELS, REGISTER_LABELS } from "@/content/types";
@@ -32,7 +33,7 @@ export default async function LessonPage({ params }: PageProps<"/learn/[unit]/[l
   const next = ALL_LESSONS[i + 1];
 
   return (
-    <article className={l.showMarks ? "lesson marks-all" : "lesson"}>
+    <article className={l.showMarks ? "lesson marks-all" : "lesson"} data-inspect>
       <nav aria-label="Breadcrumb" className="ui breadcrumb">
         <Link href="/">Path</Link>
         <span aria-hidden="true"> / </span>
@@ -72,6 +73,7 @@ export default async function LessonPage({ params }: PageProps<"/learn/[unit]/[l
           source: { label: `Lesson ${ref.number}`, href: ref.href },
         }} />
       <LessonKeys lessonKey={ref.key} prev={prev?.href} next={next?.href} />
+      <WordInspector />
 
       <section className="finish" aria-label="Finish the lesson">
         <MarkDone lessonKey={ref.key} />

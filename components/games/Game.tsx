@@ -1,26 +1,32 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { DRILL_GROUPS, WORD_CARDS, type WordCard } from "@/lib/drill";
 import {
   FORM_WORD,
+  checkCopy,
   gameInfo,
   letterOptions,
   letterSteps,
   letterTiles,
   percent,
   soundTiles,
+  typeRound,
   wordPool,
   type GameId,
   type LetterStep,
   type Tile,
+  type TypeItem,
 } from "@/lib/games";
+import type { Verdict } from "@/lib/answers";
 import { LETTERS, highlightLetter, type Letter } from "@/lib/persian/letters";
+import { normalizeFa } from "@/lib/persian/normalize";
 import { shuffle } from "@/lib/quiz";
 import { unlockedIds } from "@/lib/srs";
 import { useStore } from "@/lib/storage";
-import { deckOf, gamesStore, logActivity, noteResult, practiceUiStore, srsStore } from "@/lib/stores";
+import { deckOf, drillUiStore, gamesStore, logActivity, noteResult, practiceUiStore, srsStore } from "@/lib/stores";
+import { PersianKeyboard } from "../drill/PersianKeyboard";
 import { FaText } from "../FaText";
 
 const FLASH_SPEEDS: [number, string][] = [
@@ -29,14 +35,14 @@ const FLASH_SPEEDS: [number, string][] = [
   [600, "Fast"],
 ];
 
-/** Shared frame: start screen, score line and the end screen. */
-export function Game({ id }: { id: GameId }) {
+/** Shared frame: start screen, score line and the end screen. `items` feeds Type it. */
+export function Game({ id, items = [] }: { id: GameId; items?: TypeItem[] }) {
   const info = gameInfo(id);
   const games = useStore(gamesStore);
   const srs = useStore(srsStore);
   const ui = useStore(practiceUiStore);
   const [onlyOpen, setOnlyOpen] = useState(true);
-  const [run, setRun] = useState<{ key: number; words: WordCard[]; letters: Letter[] } | null>(null);
+  const [run, setRun] = useState<{ key: number; words: WordCard[]; letters: Letter[]; typed: TypeItem[] } | null>(null);
   const [final, setFinal] = useState<{ right: number; total: number } | null>(null);
 
   const open = new Set(unlockedIds(DRILL_GROUPS, deckOf(srs, "sound")));
@@ -47,7 +53,8 @@ export function Game({ id }: { id: GameId }) {
     const pool = onlyOpen && openLetters.length >= 4 ? openLetters : LETTERS;
     const letters = Array.from({ length: info.rounds }, (_, i) => shuffle(pool, Math.random)[i % pool.length]);
     setFinal(null);
-    setRun((r) => ({ key: (r?.key ?? 0) + 1, words, letters }));
+    const typed = id === "type" ? typeRound(items, info.rounds, Math.random) : [];
+    setRun((r) => ({ key: (r?.key ?? 0) + 1, words, letters, typed }));
   };
 
   const end = (right: number, total: number) => {
@@ -84,7 +91,12 @@ export function Game({ id }: { id: GameId }) {
     return (
       <div className="ui session-setup">
         <p>{info.blurb}</p>
-        {id !== "flash" ? (
+        {id === "type" ? (
+          <p className="text-sm text-muted">
+            Vowel marks and punctuation are optional; letters, spaces and half-spaces count. On the standard Persian
+            keyboard the half-space is Shift + Space, and the on-screen keyboard has one too.
+          </p>
+        ) : id !== "flash" ? (
           <label className="hide-done">
             <input type="checkbox" checked={onlyOpen} onChange={(e) => setOnlyOpen(e.target.checked)} />
             Only words made of letters I&apos;ve opened in the trainer
@@ -135,6 +147,8 @@ export function Game({ id }: { id: GameId }) {
       return <LetterByLetter {...props} />;
     case "flash":
       return <Flash {...props} speed={ui.flashSpeed} />;
+    case "type":
+      return <TypeIt key={run.key} items={run.typed} onEnd={end} />;
   }
 }
 
@@ -479,3 +493,183 @@ function Flash({ letters, onEnd, speed }: PlayProps & { speed: number }) {
   );
 }
 
+
+// ── Type it ───────────────────────────────────────────────────────────────
+
+const HALF_SPACE = "‌";
+
+/** Typed text with its half-spaces and spaces made visible. */
+function Spacing({ text }: { text: string }) {
+  return (
+    <bdi lang="fa" dir="rtl" className="fa">
+      {[...text].map((ch, i) =>
+        ch === HALF_SPACE ? (
+          <span key={i} className="gap-mark gap-half" title="half-space">
+            {HALF_SPACE}
+          </span>
+        ) : ch === " " ? (
+          <span key={i} className="gap-mark gap-space" title="space">
+            {" "}
+          </span>
+        ) : (
+          ch
+        ),
+      )}
+    </bdi>
+  );
+}
+
+function TypeIt({ items, onEnd }: { items: TypeItem[]; onEnd: PlayProps["onEnd"] }) {
+  const ui = useStore(drillUiStore);
+  const [at, setAt] = useState(0);
+  const [right, setRight] = useState(0);
+  const [input, setInput] = useState("");
+  const [verdict, setVerdict] = useState<Verdict | null>(null);
+  const [error, setError] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const caret = useRef<number | null>(null);
+  const item = items[at];
+
+  useLayoutEffect(() => {
+    if (caret.current !== null && inputRef.current) {
+      inputRef.current.setSelectionRange(caret.current, caret.current);
+      caret.current = null;
+    }
+  }, [input]);
+
+  if (!item) return null;
+
+  const submit = () => {
+    if (!input.trim()) {
+      setError("Type the text first.");
+      return;
+    }
+    const v = checkCopy(input, item.fa);
+    setVerdict(v);
+    if (v.ok) setRight((r) => r + 1);
+    logActivity({ kind: "game" });
+    noteResult({ kind: "word", dir: "spell", fa: item.fa, translit: item.translit, en: item.en }, v.ok);
+  };
+  const next = () => {
+    if (at + 1 >= items.length) return onEnd(right, items.length);
+    setAt(at + 1);
+    setInput("");
+    setVerdict(null);
+    setError("");
+    requestAnimationFrame(() => inputRef.current?.focus());
+  };
+  const insert = (text: string) => {
+    if (verdict) return;
+    const el = inputRef.current;
+    const a = el?.selectionStart ?? input.length;
+    const b = el?.selectionEnd ?? input.length;
+    caret.current = a + text.length;
+    setInput(input.slice(0, a) + text + input.slice(b));
+    setError("");
+  };
+  const backspace = () => {
+    if (verdict) return;
+    const el = inputRef.current;
+    const a = el?.selectionStart ?? input.length;
+    const b = el?.selectionEnd ?? input.length;
+    const from = a === b ? Math.max(0, a - 1) : a;
+    caret.current = from;
+    setInput(input.slice(0, from) + input.slice(b));
+  };
+
+  return (
+    <div className="drill">
+      <Head at={at} total={items.length} right={right} />
+      <div className="drill-card">
+        <div className="drill-prompt">
+          <p className="drill-word type-target">
+            <FaText text={item.fa} translit="none" />
+          </p>
+          <p className="ui drill-sub">
+            “{item.en}”{item.fa.includes(HALF_SPACE) && " · mind the half-space"}
+          </p>
+        </div>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (verdict) next();
+            else submit();
+          }}
+          noValidate
+          className="mt-4"
+        >
+          <label htmlFor="type-input" className="sr-only">
+            Type the text above
+          </label>
+          <div className="flex gap-2">
+            <input
+              id="type-input"
+              ref={inputRef}
+              value={input}
+              onChange={(e) => {
+                setInput(e.target.value);
+                setError("");
+              }}
+              readOnly={!!verdict}
+              dir="rtl"
+              lang="fa"
+              inputMode={ui.keyboard ? "none" : "text"}
+              className="quiz-input fa"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck={false}
+              autoFocus
+              aria-invalid={verdict ? !verdict.ok : undefined}
+              aria-describedby="type-feedback"
+            />
+            {!verdict ? (
+              <button type="submit" className="ui quiz-check">
+                Check
+              </button>
+            ) : (
+              <button type="button" className="ui quiz-check" onClick={next} autoFocus>
+                {at + 1 < items.length ? "Next" : "Finish"}
+              </button>
+            )}
+          </div>
+        </form>
+
+        <div className="mt-3">
+          <button
+            type="button"
+            className="ui text-sm text-muted underline underline-offset-4"
+            onClick={() => drillUiStore.set((u) => ({ ...u, keyboard: !u.keyboard }))}
+            aria-expanded={ui.keyboard}
+          >
+            {ui.keyboard ? "Hide the Persian keyboard" : "Show the Persian keyboard"}
+          </button>
+          {ui.keyboard && <PersianKeyboard onInsert={insert} onBackspace={backspace} />}
+        </div>
+
+        <div id="type-feedback" role="status" className="ui mt-3">
+          {error && <p className="text-sm text-[var(--err)]">{error}</p>}
+          {verdict && (
+            <div className={`quiz-fb ${verdict.ok ? "quiz-ok" : "quiz-no"}`}>
+              <p className="font-medium">{verdict.ok ? "Correct." : "Not quite."}</p>
+              {verdict.hint && <p className="has-fa">{verdict.hint}</p>}
+              <p className="has-fa">
+                <span className="text-muted">Shown: </span>
+                <Spacing text={normalizeFa(item.fa)} /> <em>{item.translit}</em>
+              </p>
+              {!verdict.ok && (
+                <p className="has-fa">
+                  <span className="text-muted">You typed: </span>
+                  <Spacing text={normalizeFa(input)} />
+                </p>
+              )}
+              <p className="text-sm text-muted" aria-hidden="true">
+                <span className="gap-key gap-half" /> half-space · <span className="gap-key gap-space" /> space
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
