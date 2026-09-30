@@ -8,6 +8,7 @@ import { sounds } from "./lessons/sounds";
 import { spelling } from "./lessons/spelling";
 import { startHere } from "./lessons/start-here";
 import { wantCanMust } from "./lessons/want-can-must";
+import { whereWhen } from "./lessons/where-when";
 
 // The course order. A unit's number is its position here (Start here is 0),
 // so every unit is listed even before its lessons are written.
@@ -82,7 +83,7 @@ export const UNITS: Unit[] = [
     title: "Where, when, how much",
     titleFa: "کُجا، کَی، چَنْد",
     description: "Prepositions, place words, this and that, numbers, time and prices, and comparing.",
-    lessons: [],
+    lessons: whereWhen,
   },
   {
     slug: "longer-sentences",

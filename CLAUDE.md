@@ -218,7 +218,21 @@ Phase 6 is Units 7–9 and the vocabulary deck (see `docs/PLAN.md`). The owner's
   - The reviewer found no marking, half-space or contraction problem, and raised 1 error, 13 should-fix and 22 polish. All were applied (two needed no change: lines without a written twin carry no "Spoken" tag, and the بایَدَم callout stands).
   - Checked at 375 px in light and dark: no horizontal scroll, no console errors; the trainer's gate links to each tense's lesson. Lighthouse accessibility is 100 on 8.1 and 8.5.
 
-Next: **6e**, Unit 9, "Where, when, how much" (lessons 9.1–9.6), slug `where-when`. Link the grammar overview's prepositions, comparison and numbers topics to their lessons as each ships. Then **6f**, the vocabulary deck at `/vocab`.
+- **6e** (2026-10-01): Unit 9, "Where, when, how much", lessons 9.1–9.6, in `content/lessons/where-when.ts`.
+  - The lessons are: the core prepositions; place words with the ezafe; this and that; numbers and counting words; time, days and prices; comparing. Slugs: `prepositions`, `place-words`, `this-and-that`, `numbers`, `time-and-prices`, `comparing`.
+  - The grammar overview's prepositions, comparison and numbers topics link to 9.1, 9.6 and 9.4. The overview's prepositions table gained تا and "by (a vehicle)".
+  - What the lessons take care over:
+    - تو (*tu*, in) against تُو (*to*, you), and رو (*ru*, on) against رُو (*ro*, را): they look alike in every display mode, so the lessons say which is meant;
+    - تو is the short form of تویِ; for *in*, writing has both تویِ and دَر;
+    - صِفَتِ اِشاره before a noun, ضَمیرِ اِشاره alone; هَمین جا written apart (the Academy joins only اینجا and آنجا);
+    - the three irregular hundreds (دِویسْت, سیصَد, پانْصَد); تا not after یه, not before a measure, and not with نَفَر;
+    - no preposition before a day or a time; the week begins on Saturday, and the weekend is *traditionally* Thursday and Friday; prices are in tomans, "in everyday use" ten rials;
+    - the comparative and superlative (صِفَتِ بَرْتَر, صِفَتِ بَرْتَرین); بِهْتَر and بیشْتَر are the irregular ones, کَمْتَر is only spelled as one word; both orders with اَز are correct.
+  - Unit 5 fix: مَیل (*meyl*) was unmarked in lesson 5.3's dialogue and read *mil*.
+  - The reviewer raised 3 errors (two unmarked words, مَیدان and مَیل; one false rule about کَمْتَر), 11 should-fix, 20 polish and 7 it could not verify. All were applied (one polish item, کوبیده for کَباب, needed no change); the unverified ones are under "Waiting on the owner".
+  - Checked on the static build at 375 px in light and dark: no horizontal scroll, every table fits. Lighthouse accessibility is 100 on 9.1 and 9.4.
+
+Next: **6f**, the vocabulary deck at `/vocab`. Its pure logic is `lib/vocab.ts` with `tests/vocab.test.ts`.
 
 ## Feature ideas (owner asked, 2026-09-30)
 
@@ -250,6 +264,13 @@ Not part of Phase 6. Ranked by how easy each is; the first four need no new Pers
   - the spoken present perfect spelled like the simple past (رَفْتَم … رَفْته), told apart by stress; whether the negative (نَرَفْتَم) differs in stress at all; and whether the spelling رفته‌م should be taught;
   - شناختن treated as a state, with no progressive;
   - the term مُسْتَمِر: *mostamer* (the dictionary form, as written) or *mostamar*.
+- Confirm these from Unit 9 (6e):
+  - سالَمه (*sâlame*) for "I'm … years old" in speech; شیش for شِش, "usually";
+  - تِهْرون as the spoken form (many Tehranis now say *tehrân*);
+  - رو میز, تو کیف without the ezafe, "usually"; ساعَتِ هَشْت with the ezafe audible in speech;
+  - کیلو read *kilu*; مَیدون *meydun*; پیرْهَن *pirhan*; هِدیه *hediye*;
+  - مُهِم written without its tashdid (Arabic مهمّ), as the course writes other final geminates;
+  - whether Saturday is now a second day off by law, and whether the rial has been redenominated (the lessons hedge both).
 - Confirm these forms from Unit 8 (6d):
   - بیدار شَم (no بـ with a شدن compound), as taught;
   - بِشین / بِشینین read *beshin* (as taught) or *bishin*;
