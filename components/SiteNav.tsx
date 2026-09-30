@@ -16,7 +16,7 @@ const ITEMS = [
 const isCurrent = (path: string, href: string) =>
   href === "/"
     ? path === "/" || path.startsWith("/learn")
-    : path === href || path.startsWith(href + "/") || (href === "/practice" && path.startsWith("/verbs"));
+    : path === href || path.startsWith(href + "/") || (href === "/practice" && (path.startsWith("/verbs") || path.startsWith("/vocab")));
 
 /** The header links, shown on wide screens. */
 export function SiteNav() {

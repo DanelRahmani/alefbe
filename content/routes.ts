@@ -21,6 +21,7 @@ export const STATIC_PAGES = [
   "/progress",
   "/offline",
   "/verbs",
+  "/vocab",
 ];
 
 export const ALL_PAGES = new Set([

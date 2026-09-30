@@ -15,6 +15,8 @@ import { VerbPrompt, VerbSolution } from "./verbs/VerbTrainer";
 import { VERBS, verbById } from "@/content/verbs";
 import { TENSES, hasForm, tenseInfo } from "@/lib/conjugate";
 import { checkVerb, describeSpec, type VerbQuestion } from "@/lib/verb-drill";
+import { checkVocab } from "@/lib/vocab";
+import { VocabPrompt, VocabSolution } from "./vocab/VocabTrainer";
 import { PersianKeyboard } from "./drill/PersianKeyboard";
 import { FaText } from "./FaText";
 import { Rich } from "./Rich";
@@ -86,6 +88,15 @@ function describe(item: MistakeItem, lessons: Record<string, LessonQuiz>): { wha
         from: "Verb trainer",
       };
     }
+    case "vocab":
+      return {
+        what: (
+          <>
+            <FaText text={item.fa} translit="none" force="all" /> · “{item.en}”
+          </>
+        ),
+        from: "Vocabulary deck",
+      };
   }
 }
 
@@ -226,6 +237,17 @@ function cardOf(m: Mistake, lessons: Record<string, LessonQuiz>): Card | null {
         from: { label: "Verb trainer", href: "/verbs" },
       };
     }
+    case "vocab":
+      return {
+        id,
+        item,
+        prompt: <VocabPrompt card={item} />,
+        lang: "fa",
+        // Only this card: typing another word with the same English simply counts as wrong here.
+        check: (s) => checkVocab(item, [], s),
+        solution: <VocabSolution card={item} />,
+        from: { label: "Vocabulary deck", href: "/vocab" },
+      };
   }
 }
 

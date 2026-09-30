@@ -13,6 +13,7 @@ import { noteAnswer, type MistakeItem, type Notebook } from "./mistakes";
 import type { Starred } from "./starred";
 import { DEFAULT_GOAL, type DailyGoal } from "./today";
 import { emptyVerbsData, type VerbsData } from "./verb-drill";
+import { emptyVocabData, type VocabData } from "./vocab";
 
 export type Theme = "system" | "light" | "dark";
 
@@ -149,6 +150,9 @@ export const todayStore = createPersistentStore<{ goal: DailyGoal }>("alefbe2:to
 /** The conjugation trainer at /verbs: one Leitner deck per tense, and which forms to ask (lib/verb-drill.ts). */
 export const verbsStore = createPersistentStore<VerbsData>("alefbe2:verbs", emptyVerbsData());
 
+/** The vocabulary deck at /vocab: one Leitner deck, and whether to show the sound (lib/vocab.ts). */
+export const vocabStore = createPersistentStore<VocabData>("alefbe2:vocab", emptyVocabData());
+
 /** Every store, for refreshing after an import or reset. */
 export const ALL_STORES = [
   settingsStore,
@@ -165,4 +169,5 @@ export const ALL_STORES = [
   starredStore,
   todayStore,
   verbsStore,
+  vocabStore,
 ];

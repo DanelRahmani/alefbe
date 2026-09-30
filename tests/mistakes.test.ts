@@ -10,6 +10,7 @@ describe("mistake notebook", () => {
     expect(mistakeId(q)).toBe("lesson:sounds/stress:1");
     expect(mistakeId({ kind: "drill", mode: "read", id: "ketab" })).toBe("drill:read:ketab");
     expect(mistakeId({ kind: "verb", verb: "raftan", tense: "present", person: "1p", style: "spoken", negative: true })).toBe("verb:raftan:present:1p:spoken:neg");
+    expect(mistakeId({ kind: "vocab", id: "کِتاب", fa: "کِتاب", en: "book" })).toBe("vocab:کِتاب");
   });
 
   it("a miss enters the notebook; a right answer on an unknown item changes nothing", () => {

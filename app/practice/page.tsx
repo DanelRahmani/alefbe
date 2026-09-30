@@ -5,10 +5,12 @@ import { GameCards } from "@/components/games/GameCards";
 import { MistakesCard } from "@/components/MistakesCard";
 import { VerbOverview } from "@/components/verbs/VerbOverview";
 import { VERBS } from "@/content/verbs";
+import { VocabOverview } from "@/components/vocab/VocabOverview";
+import { VOCAB_CARDS } from "@/content/vocab";
 
 export const metadata: Metadata = {
   title: "Practice",
-  description: "Spaced-repetition trainers for the letters and the verbs, a quick letter quiz, tracing and games.",
+  description: "Spaced-repetition trainers for the letters, the verbs and the vocabulary, a quick letter quiz, tracing and games.",
 };
 
 export default function PracticePage() {
@@ -16,9 +18,9 @@ export default function PracticePage() {
     <>
       <section className="page-head">
         <p className="ui eyebrow">Practice</p>
-        <h1 className="page-title">Practise letters and verbs</h1>
+        <h1 className="page-title">Practise letters, verbs and words</h1>
         <p className="page-lede">
-          The trainers schedule reviews so letters and verb forms stick: a card comes back just before you would forget it. The quiz,
+          The trainers schedule reviews so letters, verb forms and words stick: a card comes back just before you would forget it. The quiz,
           tracing and games are for extra practice whenever you like; they never change the schedule.
         </p>
       </section>
@@ -30,6 +32,10 @@ export default function PracticePage() {
       <h2 className="lesson-h2 mt-10">Verb trainer</h2>
       <p className="ui mt-1 text-sm text-muted">{VERBS.length} core verbs in every tense of the core course, spoken and written. Verbs open five at a time, and each tense opens with its lesson.</p>
       <VerbOverview />
+
+      <h2 className="lesson-h2 mt-10">Vocabulary deck</h2>
+      <p className="ui mt-1 text-sm text-muted">The words of the lessons you have done, {VOCAB_CARDS.length} in all. See the English, type the Persian.</p>
+      <VocabOverview cards={VOCAB_CARDS.map((c) => ({ id: c.id, lessons: c.lessons }))} />
 
       <h2 className="lesson-h2 mt-10">Quick practice</h2>
       <ul className="drill-modes">

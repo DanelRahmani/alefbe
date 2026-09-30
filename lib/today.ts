@@ -8,29 +8,43 @@ import { deckStats, type DeckState } from "./srs";
 import { transliterate } from "./translit";
 import { TENSES } from "./conjugate";
 import { emptyVerbsData, verbCandidates, type VerbsData } from "./verb-drill";
+import { vocabDue, type VocabData } from "./vocab";
 
 /** Activities a day (trainer answers, traces, quiz answers, game rounds, lessons). */
 export const GOALS = [5, 10, 20] as const;
 export type DailyGoal = (typeof GOALS)[number];
 export const DEFAULT_GOAL: DailyGoal = 10;
 
-/** A deck with reviews: a letter-trainer mode, or the conjugation trainer. */
-export type ReviewDeck = DrillMode | "verbs";
+/** A deck with reviews: a letter-trainer mode, the conjugation trainer, or the vocabulary deck. */
+export type ReviewDeck = DrillMode | "verbs" | "vocab";
 
 export interface ReviewsDue {
   total: number;
   byMode: Record<DrillMode, number>;
   /** Conjugation-trainer items due, across tenses. */
   verbs: number;
+  /** Vocabulary cards due. */
+  vocab: number;
   /** The deck with the most cards due, or null when nothing is. */
   top: ReviewDeck | null;
 }
 
 /** Where a deck's reviews happen. */
-export const reviewHref = (d: ReviewDeck) => (d === "verbs" ? "/verbs" : `/practice/drill/${d}`);
+export const reviewHref = (d: ReviewDeck) => (d === "verbs" ? "/verbs" : d === "vocab" ? "/vocab" : `/practice/drill/${d}`);
 
 /** Cards due now across every trainer deck (new cards don't count). */
-export function reviewsDue(decks: Partial<Record<DrillMode, DeckState>>, now: number, verbs: VerbsData = emptyVerbsData()): ReviewsDue {
+/** The vocabulary deck and the ids of the words still in the course (lib/vocab.ts vocabDue). */
+export interface VocabDeck {
+  data: VocabData;
+  known: ReadonlySet<string> | null;
+}
+
+export function reviewsDue(
+  decks: Partial<Record<DrillMode, DeckState>>,
+  now: number,
+  verbs: VerbsData = emptyVerbsData(),
+  vocab?: VocabDeck,
+): ReviewsDue {
   const byMode = {} as Record<DrillMode, number>;
   let total = 0;
   let top: ReviewDeck | null = null;
@@ -48,8 +62,11 @@ export function reviewsDue(decks: Partial<Record<DrillMode, DeckState>>, now: nu
     if (deck) verbsDue += deckStats(verbCandidates(verbs, t.id), deck, now).due;
   }
   total += verbsDue;
-  if (verbsDue > topDue) top = "verbs";
-  return { total, byMode, verbs: verbsDue, top };
+  if (verbsDue > topDue) [top, topDue] = ["verbs", verbsDue];
+  const vocabDueNow = vocab ? vocabDue(vocab.data, vocab.known, now) : 0;
+  total += vocabDueNow;
+  if (vocabDueNow > topDue) top = "vocab";
+  return { total, byMode, verbs: verbsDue, vocab: vocabDueNow, top };
 }
 
 export interface GoalProgress {

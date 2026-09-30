@@ -232,7 +232,24 @@ Phase 6 is Units 7–9 and the vocabulary deck (see `docs/PLAN.md`). The owner's
   - The reviewer raised 3 errors (two unmarked words, مَیدان and مَیل; one false rule about کَمْتَر), 11 should-fix, 20 polish and 7 it could not verify. All were applied (one polish item, کوبیده for کَباب, needed no change); the unverified ones are under "Waiting on the owner".
   - Checked on the static build at 375 px in light and dark: no horizontal scroll, every table fits. Lighthouse accessibility is 100 on 9.1 and 9.4.
 
-Next: **6f**, the vocabulary deck at `/vocab`. Its pure logic is `lib/vocab.ts` with `tests/vocab.test.ts`.
+- **6f** (2026-10-01): the vocabulary deck at `/vocab`.
+  - `lib/vocab.ts` (pure, with tests). `content/vocab.ts` builds `VOCAB_CARDS` at build time: every dictionary entry a lesson teaches (425 now), in lesson order. Trainer-only words, with no lesson, are left out.
+  - A card joins when one of its lessons is marked done. The prompt is the English; the learner types the Persian. "Show the sound" (stored) adds the transliteration. Leitner scheduling from `lib/srs.ts`, one deck, no groups. Answers are checked with `checkFa`.
+  - Decisions (for the owner's review):
+    - a card accepts the written form and the spoken form alike, says which was typed, and shows both;
+    - words with exactly the same English get a hint on the prompt, the shortest start that tells them apart ("starts with ق");
+    - typing the other word for the same English, or a word whose English differs only by a note in brackets ("to know (a fact)" / "(a person)"), is not a miss: the learner is told and tries again, and nothing is scheduled;
+    - two entries spelled alike once the marks are off (پَنْجَره, پَنْجِره) count as one answer;
+    - with no lesson done, "Practise anyway" drills every word and schedules nothing.
+  - Store `alefbe2:vocab` (`vocabStore`: `{ deck, sound }`), in `ALL_STORES` and `BACKUP_KEYS`, with a backup round-trip test.
+  - Wiring:
+    - misses go to the notebook as `{ kind: "vocab", id, fa, spoken, en, hint }`, carried whole so the notebook can ask them without the card list;
+    - `reviewsDue` counts due vocabulary cards from the deck alone (`vocabDue`), skipping words no longer in the dictionary, and the Today card links to `/vocab` when they lead;
+    - the page is in `content/routes.ts`, the search index and the practice hub (`VocabOverview`), and the nav highlights Practice on it.
+  - The client bundle does not carry the lessons: the page passes the cards as props, and the notebook stores what it needs.
+  - Checked on the static build (port 3000 was taken by another project's server): no horizontal scroll at 375 px in light and dark; keyboard focus ring shown; a wrong answer was scheduled and noted, the notebook replayed it, and the Today card linked to `/vocab`. The only console errors are the known local-only 404s. Lighthouse accessibility is 100 on `/vocab` and `/practice`.
+
+Phase 6 is complete. Next: the owner reviews new.alefbe.study, answers "Waiting on the owner", and merges. The easy feature ideas below have a ready prompt; Phase 7 in `docs/PLAN.md` is Units 10–11.
 
 ## Feature ideas (owner asked, 2026-09-30)
 
