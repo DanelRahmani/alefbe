@@ -249,7 +249,7 @@ Phase 6 is Units 7–9 and the vocabulary deck (see `docs/PLAN.md`). The owner's
   - The client bundle does not carry the lessons: the page passes the cards as props, and the notebook stores what it needs.
   - Checked on the static build (port 3000 was taken by another project's server): no horizontal scroll at 375 px in light and dark; keyboard focus ring shown; a wrong answer was scheduled and noted, the notebook replayed it, and the Today card linked to `/vocab`. The only console errors are the known local-only 404s. Lighthouse accessibility is 100 on `/vocab` and `/practice`.
 
-Phase 6 is complete. Next: the owner reviews new.alefbe.study, answers "Waiting on the owner", and merges. The easy feature ideas below have a ready prompt; Phase 7 in `docs/PLAN.md` is Units 10–11.
+Phase 6 and the practice extras are complete; the owner merged them into `main` through PR #8 (2026-10-01). Next: Phase 7 (the placement check, the engine forms for Unit 11, Units 10–11), with a ready prompt in `docs/PROMPT-phase-7.md`.
 
 ## Practice extras status
 
