@@ -2,7 +2,7 @@
 
 # Alefbe: where the work stands
 
-Updated 2026-09-30. Read this first when picking the work back up.
+Updated 2026-10-01. Read this first when picking the work back up.
 
 ## The project
 
@@ -137,7 +137,175 @@ Phase 5 is Units 5–6 and the conjugation trainer (see `docs/PLAN.md`).
     - the nav highlights Practice on it.
   - Checked at 375 px in light and dark: no horizontal scroll, 16 Tab stops all with a ring. A wrong answer was hinted, logged in SRS and noted; the notebook replay was right. Lighthouse accessibility is 100 on `/verbs` and `/practice`.
 
-Next: **Phase 6**, Units 7–9 and the vocabulary deck (see `docs/PLAN.md`), once the owner has reviewed Phase 5. The past tenses join `Tense` in `lib/conjugate.ts`; the spoken past stems are already in `content/verbs.ts` for five verbs.
+The owner merged Phase 5 into `main` through PR #7 (2026-09-30).
+
+## Phase 6 status
+
+Phase 6 is Units 7–9 and the vocabulary deck (see `docs/PLAN.md`). The owner's brief sets the order: 6a engine (past tenses), 6b Unit 7, 6c engine (subjunctive, imperative, future), 6d Unit 8, 6e Unit 9, 6f the vocabulary deck at `/vocab`.
+
+- **Before 6a:** `nextgen` was fast-forwarded to `main` and pushed. The owner's answers to the Phase 5 questions came back blank, so nothing changed and every question stays under "Waiting on the owner".
+- **6a** (2026-09-30): the past tenses in the engine, and a tense picker in the trainer.
+  - `Tense` is now `present | past | perfect | imperfect | progressive | past-progressive`. `TENSES` carries each one's title, Persian term, the lesson that opens it, what it says in English (`says`), and an optional `note`.
+  - Forms:
+    - simple past: past stem + ending, none for he/she; the negative is نَـ, with a ی before a vowel (نَیامَدَم, spoken نَیومَدَم);
+    - present perfect: written رَفْته‌اَم … رَفْته اَسْت; spoken رَفْتَم … رَفْته, spelled like the simple past except for he/she (the stress differs: *ráftam*, *raftám*);
+    - past continuous: می + simple past; speech runs می into a vowel (میومَدَم, میاوُرْدَم);
+    - progressive: داشتن in front, conjugated too, in the present or the past (دارَم می‌رَم, داشْتَم می‌رَفْتَم); a compound's noun stays by its verb (دارَم کار می‌کُنَم).
+  - Verbs without a form: `lacks(verb, tense, negative, all)` returns the reason (shown in the tables) or null. `conjugate` throws for a missing form, and `allForms`, the trainer and the tables skip it.
+    - بودن has no present here (lesson 4.2 teaches it);
+    - بودن and داشتن have no past continuous (no می);
+    - the `stative` verbs (بودن, داشتن, خواستن, دانستن, توانستن, شناختن) have no progressive;
+    - the progressive has no negative.
+  - `content/verbs.ts` has 26 verbs: بودن was added first (flag `copula`; present stem باش for Unit 8). Each verb has five English forms. `enEvent` glosses the simple past of a state as an event (دونِسْتَم, *I found out*; می‌دونِسْتَم is the plain *I knew*). `enNow` gives a natural progressive gloss (*watching*). `spoken.pastPrefixed` is گذاشتن's short stem after a prefix (نَذاشْتَم, می‌ذاشْتَم).
+  - The text engine gained one reading (rule 4f′ in `analyze.ts`, in STYLE.md): a bare و after a long *i* and before a consonant is *u*, so میومَدَم reads *miyumadam*.
+  - Golden tables for every verb in every new tense, spoken and written, are in `tests/conjugate-past.test.ts`, typed by hand, with the negatives by hand where a ی bridges or the stem shortens. Every new form is in the content tests' half-space list through `allForms`.
+  - The trainer (`lib/verb-drill.ts`, `components/verbs/`):
+    - a tense picker; `VerbsData` gained `tense` (last practised) and `opened` (tenses opened before their lesson);
+    - `tenseOpen`: the present is always open; another tense opens when its lesson is marked done, or through "Open anyway". The page passes each tense's lesson to the trainer, so the client bundle does not carry the lessons;
+    - groups are built from the verbs that have the tense, so the present deck's groups did not move;
+    - the progressive is never asked in the negative; the spoken perfect asks he/she half the time;
+    - a wrong answer that is a form of another tense is named ("That is the simple past …");
+    - accepted with a note: رفته‌ام and رفته‌م for the spoken perfect, رفته for written رفته است, می‌اومدم for میومدم, both stems of گذاشتن.
+  - `/verbs` shows one tense's tables at a time (`VerbTables`, a client component), so the page did not grow. The practice hub counts across the open tenses (`verbTotals`).
+  - The reviewer found no marking or half-space error, and raised 1 error, 3 should-fix, 6 polish and 3 it could not verify. All were applied; the unverified ones are under "Waiting on the owner".
+  - Checked at 375 px in light and dark: no horizontal scroll, no console errors; a wrong answer was scheduled and noted, and the notebook names the tense. Lighthouse accessibility is 100 on `/verbs`.
+
+- **6b** (2026-09-30): Unit 7, "Talking about the past", lessons 7.1–7.5, in `content/lessons/past.ts`.
+  - The lessons are: the simple past; نـ on the past; the present perfect; the past continuous; the progressive with داشتن.
+  - Their slugs are the ones `TENSES` opens with (`simple-past`, `present-perfect`, `past-continuous`, `in-progress`; 7.2 is `past-negative`). A content test checks that every tense's lesson exists.
+  - Tables come from `lib/conjugate.ts` through `table()`. The grammar overview's simple-past topic links to 7.1.
+  - What the lessons take care over:
+    - the spoken perfect is told apart by stress in positive forms only; the lessons claim nothing about the negative;
+    - for most states the past with می is the everyday past (می‌دونِسْتَم, *I knew*), and داشتن and بودن take no می;
+    - the progressive has no negative, is not used with states, means *about to* with a verb of a single moment, and belongs first to speech;
+    - the Persian term for the progressive is left out until the owner confirms its vowel.
+  - One override: [میومَدَم|miyumadam] in 7.4. No contracted possessive or object ending is used.
+  - The reviewer found no errors and raised 7 should-fix, 12 polish and 2 it could not verify. All were applied (one needed no change). Among them:
+    - the ی of نَیامَد comes before آ, not before every vowel;
+    - "as a child" became وَقْتی بَچّه بودَم / بَچّه که بودین;
+    - صُبْحونه in the spoken line; دُرُسْت کَرْدَن for making a meal;
+    - the likelier mistake دارَم نِمی‌رَم replaced نَدارَم می‌رَم;
+    - a tip on two differences from English (the present for "have lived here for two years"; نِشَسْته, *is sitting*).
+  - Checked at 375 px in light and dark: no horizontal scroll; no app console errors. Lighthouse accessibility is 100 on 7.3 and 7.5.
+
+- **6c** (2026-09-30): the rest of the engine: the present subjunctive, the imperative and the future.
+  - `Tense` gained `subjunctive`, `imperative` and `future`. A tense can limit its persons (`persons`: a command is only for تو and شما) and its styles (`styles`: the future is written only). Use `personsOf(tense)` and `stylesOf(tense)`; `hasForm(verb, spec, all)` combines them with `lacks`. `table()` returns one form per person the tense has.
+  - Forms:
+    - subjunctive: بِـ + present stem + ending (بِرَوَم, spoken بِرَم); before آ it is بیا (بیایَم, بیام); the negative puts نَـ in its place (نَرَم, نَیام); بودن is باشَم, and داشتن is داشْته باشَم;
+    - imperative: to تو the stem with بِـ and no ending (بِکُن), to شما the subjunctive form (بِرین, written بِرَوید); `command` in the verb data holds the ones that are not بِـ + stem (بُرُو in both styles; spoken بِشُو, بِگو, بِده);
+    - future: خواهَم رَفْت, negative نَخواهَم رَفْت; a compound's noun goes first (کار خواهَم کَرْد).
+  - Verb flags: `bare` (a compound with کردن drops بِـ: کار کُنَم, with کار بِکُنَم accepted); `noCommand` (the reason, for توانستن and خواستن); `noNegCommand` (دانستن, شناختن, فهمیدن: nobody orders "don't know", and نَفَهْم is an insult); `enCommand` ("get to know").
+  - The prefix is بِـ in every form, spoken and written. Tehrani *bo-* before an *o* (*bokon*, *bokhor*) is explained in a note on the two tenses, not shown in the forms.
+  - Not covered yet, as no verb in the list needs it (comments in `conjugate.ts`): a stem starting with اَ / اُ / ای (بیفتم, بایستم); prefixed verbs on داشتن (نِگَهْ دارَم); دَویدَن's *bodo*.
+  - Golden tables for every verb are in `tests/conjugate-unit8.test.ts`, typed by hand; every command row, do and don't, is by hand.
+  - The trainer asks a command of تو or شما only and the future in writing only. A leading که is accepted before a subjunctive. The `/verbs` tables show only the columns and rows a tense has.
+  - The three tenses open with lessons 8.1, 8.5 and 8.6 (`want-can-must/subjunctive`, `…/commands`, `…/future`). Until Unit 8 is written the trainer says the lesson is on the way; the content test checks a tense's lesson only once its unit has lessons.
+  - The reviewer found no wrong form or mark, and raised 5 should-fix, 7 polish and 5 it could not verify. All were applied; the unverified ones are under "Waiting on the owner".
+  - Checked at 375 px: no horizontal scroll, no app console errors. Lighthouse accessibility is 100 on `/verbs`.
+
+- **6d** (2026-09-30): Unit 8, "Want, can, must", lessons 8.1–8.6, in `content/lessons/want-can-must.ts`.
+  - The lessons are: the subjunctive; want to; can; باید; commands; the future. Slugs: `subjunctive`, `want-to`, `can`, `must`, `commands`, `future`.
+  - Tables come from the engine. Three helpers build the combined ones: a helper verb plus a subjunctive (می‌خوام بِرَم), باید plus a subjunctive, and the command table (to تو; to شما spoken and written).
+  - The prefix is named بـ in prose, unmarked, with its sound given as *be-*: a marked stroke (بِـ) fails the readability check.
+  - What the lessons take care over:
+    - compounds with کردن and شدن usually drop بـ (کار کُنَم, بیدار شَم);
+    - the second verb's own words go between the two verbs, but a destination can follow in speech (می‌خوام بِرَم کوه);
+    - می‌شه asks permission with an *I* verb and makes a request with a *you* verb; its written line is می‌شَوَد, and مُمْکِن اَسْت is given as the more formal way;
+    - نَباید is *mustn't*, لازِم نیست is *don't have to*; باید with the past continuous is *should have* or *had to*;
+    - the command's model verb is بِبین (its شما form really is the تو form plus an ending); the one-letter stems are explained after it;
+    - the future is the present in speech; خواهَم رَفْت belongs to writing.
+  - One override: [بیاین|biyâyin] in 8.5. No contracted possessive or object ending on a vowel-final word, and no ـست after a vowel, is used.
+  - The reviewer found no marking, half-space or contraction problem, and raised 1 error, 13 should-fix and 22 polish. All were applied (two needed no change: lines without a written twin carry no "Spoken" tag, and the بایَدَم callout stands).
+  - Checked at 375 px in light and dark: no horizontal scroll, no console errors; the trainer's gate links to each tense's lesson. Lighthouse accessibility is 100 on 8.1 and 8.5.
+
+- **6e** (2026-10-01): Unit 9, "Where, when, how much", lessons 9.1–9.6, in `content/lessons/where-when.ts`.
+  - The lessons are: the core prepositions; place words with the ezafe; this and that; numbers and counting words; time, days and prices; comparing. Slugs: `prepositions`, `place-words`, `this-and-that`, `numbers`, `time-and-prices`, `comparing`.
+  - The grammar overview's prepositions, comparison and numbers topics link to 9.1, 9.6 and 9.4. The overview's prepositions table gained تا and "by (a vehicle)".
+  - What the lessons take care over:
+    - تو (*tu*, in) against تُو (*to*, you), and رو (*ru*, on) against رُو (*ro*, را): they look alike in every display mode, so the lessons say which is meant;
+    - تو is the short form of تویِ; for *in*, writing has both تویِ and دَر;
+    - صِفَتِ اِشاره before a noun, ضَمیرِ اِشاره alone; هَمین جا written apart (the Academy joins only اینجا and آنجا);
+    - the three irregular hundreds (دِویسْت, سیصَد, پانْصَد); تا not after یه, not before a measure, and not with نَفَر;
+    - no preposition before a day or a time; the week begins on Saturday, and the weekend is *traditionally* Thursday and Friday; prices are in tomans, "in everyday use" ten rials;
+    - the comparative and superlative (صِفَتِ بَرْتَر, صِفَتِ بَرْتَرین); بِهْتَر and بیشْتَر are the irregular ones, کَمْتَر is only spelled as one word; both orders with اَز are correct.
+  - Unit 5 fix: مَیل (*meyl*) was unmarked in lesson 5.3's dialogue and read *mil*.
+  - The reviewer raised 3 errors (two unmarked words, مَیدان and مَیل; one false rule about کَمْتَر), 11 should-fix, 20 polish and 7 it could not verify. All were applied (one polish item, کوبیده for کَباب, needed no change); the unverified ones are under "Waiting on the owner".
+  - Checked on the static build at 375 px in light and dark: no horizontal scroll, every table fits. Lighthouse accessibility is 100 on 9.1 and 9.4.
+
+- **6f** (2026-10-01): the vocabulary deck at `/vocab`.
+  - `lib/vocab.ts` (pure, with tests). `content/vocab.ts` builds `VOCAB_CARDS` at build time: every dictionary entry a lesson teaches (425 now), in lesson order. Trainer-only words, with no lesson, are left out.
+  - A card joins when one of its lessons is marked done. The prompt is the English; the learner types the Persian. "Show the sound" (stored) adds the transliteration. Leitner scheduling from `lib/srs.ts`, one deck, no groups. Answers are checked with `checkFa`.
+  - Decisions (for the owner's review):
+    - a card accepts the written form and the spoken form alike, says which was typed, and shows both;
+    - words with exactly the same English get a hint on the prompt, the shortest start that tells them apart ("starts with ق");
+    - typing the other word for the same English, or a word whose English differs only by a note in brackets ("to know (a fact)" / "(a person)"), is not a miss: the learner is told and tries again, and nothing is scheduled;
+    - two entries spelled alike once the marks are off (پَنْجَره, پَنْجِره) count as one answer;
+    - with no lesson done, "Practise anyway" drills every word and schedules nothing.
+  - Store `alefbe2:vocab` (`vocabStore`: `{ deck, sound }`), in `ALL_STORES` and `BACKUP_KEYS`, with a backup round-trip test.
+  - Wiring:
+    - misses go to the notebook as `{ kind: "vocab", id, fa, spoken, en, hint }`, carried whole so the notebook can ask them without the card list;
+    - `reviewsDue` counts due vocabulary cards from the deck alone (`vocabDue`), skipping words no longer in the dictionary, and the Today card links to `/vocab` when they lead;
+    - the page is in `content/routes.ts`, the search index and the practice hub (`VocabOverview`), and the nav highlights Practice on it.
+  - The client bundle does not carry the lessons: the page passes the cards as props, and the notebook stores what it needs.
+  - Checked on the static build (port 3000 was taken by another project's server): no horizontal scroll at 375 px in light and dark; keyboard focus ring shown; a wrong answer was scheduled and noted, the notebook replayed it, and the Today card linked to `/vocab`. The only console errors are the known local-only 404s. Lighthouse accessibility is 100 on `/vocab` and `/practice`.
+
+Phase 6 is complete. Next: the owner reviews new.alefbe.study, answers "Waiting on the owner", and merges. The easy feature ideas below have a ready prompt; Phase 7 in `docs/PLAN.md` is Units 10–11.
+
+## Practice extras status
+
+The owner's brief is `docs/PROMPT-practice-extras.md`: X1 cloze, X2 spoken ↔ written, X3 one review queue. The hard rule: no new Persian. Every Persian string a learner sees comes unchanged from reviewed lesson data; a card that would need another string is left out.
+
+- **X1** (2026-10-01): cloze practice at `/practice/cloze`.
+  - `lib/cloze.ts` (pure, with tests) turns every highlighted line of an examples block, a pair or a dialogue into a card: the line with its highlight blanked, the English beneath. Callouts are skipped, so no `wrong` example is used. `content/cloze.ts` builds `CLOZE_CARDS` (322) with `VERBS` and `CLOZE_LEAVE_OUT`.
+  - A card's id is `unit/lesson#hash`: the first lesson's key and an FNV-1a hash of the line's markup. A line taught twice is one card that joins with either lesson. The trainer prunes deck entries whose id has left the course (`pruneDeck`).
+  - Decisions (for the owner's review):
+    - the spoken line is asked; each gap also takes the words the written line has in that place, with a note. Gaps are matched to the written highlights by edit distance, so a reordered written line still lines up. A written option is dropped where it would repeat a shown word (مَغازه‌ای) or where the written line has اَسْت, هَسْت- or a pronoun outside its highlight;
+    - several highlights: one answer box, the words in order; each gap is judged on its own, spoken or written;
+    - a gap with a verb shows its tense ("the verb: past continuous"), as the English often fits several tenses. A form two tenses share (spoken رَفْتَم) is named only in the lesson that teaches one of them. The progressive is named once, also across two gaps (دارَم … می‌رَم);
+    - a dialogue card shows the line before;
+    - also right, all from reviewed data:
+      - the engine's other spellings of a verb form (`lib/forms.ts`: میام / می‌آم, one-ی, بـ on a bare compound);
+      - the other "you", all gaps at once, where nothing on the card, in its dialogue or in the English fixes تُو or شُما (commands included);
+      - را / رُو / ـو (and مَرا); تو / تویِ / دَر for "in"; اون for او;
+      - the answer of a card that looks the same (کُجا … زِنْدِگی می‌کُنین / می‌کُنی);
+    - notes for a missing ـهٔ and digits typed for a number.
+  - Left out (62): 36 whole-sentence blanks, 6 part-word highlights (می‌, ـها), 3 whose English gives the answer (Persian or *ketâb-e man*), 1 name the English gives, and 16 by hand in `CLOZE_LEAVE_OUT`. The by-hand ones are cards whose English allows a synonym or another construction the lessons don't give (ممنون for مرسی, نشستن not in the engine…); a test checks each id still names a card.
+  - `lib/forms.ts` (pure, with tests): a form index over every conjugation, phrase segmentation, the engine's variants (`acceptedAnswers`) per form, the other "you", tense labels (`gapTenses`). X2 reuses it.
+  - Store `alefbe2:cloze` (`clozeStore`, `{ deck }`), in `ALL_STORES` and `BACKUP_KEYS`, with a backup round-trip test. Misses go to the notebook as `{ kind: "cloze", ...card }` (no lesson list) and replay there with `ClozePrompt` / `ClozeSolution`. `reviewsDue` counts due cloze cards from the deck alone (`clozeDue`); the Today card links to `/practice/cloze` when they lead.
+  - The page is in `content/routes.ts`, the search index and the practice hub (`ClozeOverview`). `components/practice/FaAnswerField.tsx` is the shared typed-answer field (Check/Next, Persian keyboard at the caret).
+  - `npx tsx scripts/cloze.ts < /dev/null` prints every card: gaps, accepted answers with their notes, hints, and the lines left out.
+  - The reviewer raised 16 findings on the first pass (2 errors, 9 should-fix, 5 polish) and 10 on the re-check (1 error, 4 should-fix, 5 polish); all were applied by rule changes or leave-outs. Two content points went to "Waiting on the owner".
+  - Checked on the static build at 375 px in light and dark: no horizontal scroll, focus ring shown, a miss was scheduled and noted, the notebook replayed it, the Today card linked here. Lighthouse accessibility is 100 on `/practice/cloze` and `/practice`.
+- **X2** (2026-10-01): the spoken ↔ written drill at `/practice/convert`.
+  - `lib/convert.ts` (pure, with tests) makes a card from every example, pair or dialogue line in a "both" lesson whose written line differs from the spoken one once marks and punctuation are off (322 cards; no callouts, so no `wrong` line). Lines that differ only in marks or punctuation are one card. The id is `unit/lesson#hash` of both lines.
+  - Two directions, spoken → written by default, each with its own Leitner deck (`decks["to-written"]`, `decks["to-spoken"]`); the chips switch, and the choice is stored (`dir`).
+  - Checking a whole sentence: marks and punctuation ignored; a missing or extra half-space is a near miss with the checker's hint, naming the word; a half-space after a non-joining letter (روز‌ها) is dropped first, as it shows nothing. A wrong answer names the first word that differs: "You typed می‌رم; the written form has می‌رَوَم", a word missing, a word extra, a word that comes later, or the right words in the wrong order. Typing the shown line back gets its own hint.
+  - Accepted with a note (decisions, for the owner's review), all from reviewed data:
+    - the checker's Academy variants and ـه‌ی for ـهٔ;
+    - every verb form as the conjugation trainer accepts it (one-ی, می‌آم, ـید for ـین, رفته‌ام in chat, بـ on a bare compound), but only forms of the target's register and of a verb the other line has too (so written گذاشتی never takes spoken ذاشتی, and بِشین is not read as شدن); never a spoken stem with a written اَسْت;
+    - toward writing: دَر ⇄ تویِ for "in"; the written present for a written future (with a note that the line wants the future);
+    - toward speech: کِتاب رُو joined as کتابو; بَله for آره; the spoken words in the written line's order, with or without به (every word matched to a word of the other line);
+    - the target of another card that shows the same line.
+    - An alternative never equals the line shown (written رفته for رفته است would let the spoken line pass).
+  - Left out (45 directions): 9 cards both ways (the written line rewords beyond register, or a fragment), 17 toward writing only (the written line picks one of several right forms; or a written هستم after a consonant, by a rule, as lesson 4.2 teaches the ending there), 10 toward speech only (the written phrasing is everyday speech too; or speech keeps or drops "in" before home; or, by a rule, the written line is good speech as it stands). By hand in `CONVERT_LEAVE_OUT` (`{ dir?, why }`); a card asked one way only has `only`. 305 cards are asked toward writing, 312 toward speech.
+  - Store `alefbe2:convert` (`convertStore`), in `ALL_STORES` and `BACKUP_KEYS`, with a backup round-trip test. Misses go to the notebook as `{ kind: "convert", dir, ...card }` and replay there (`ConvertPrompt` / `ConvertSolution`). `reviewsDue` counts both directions (`convertDue`); the Today card links to `/practice/convert` when they lead. In `content/routes.ts`, the search index and the practice hub (`ConvertOverview`).
+  - `npx tsx scripts/convert.ts < /dev/null` prints every card with its accepted answers and the directions left out.
+  - The reviewer raised 15 findings (3 errors, 7 should-fix, 5 polish); all were applied by rule changes or leave-outs (one, merging the two حالِت چِطُوره cards, needed no change: their written lines differ, and the twin rule covers them). Three content points went to "Waiting on the owner".
+  - Checked on the static build at 375 px in light and dark: no horizontal scroll, focus ring shown; a miss was scheduled and noted, and the notebook replayed it. Lighthouse accessibility is 100 on `/practice/convert` and `/practice`.
+- **X3** (2026-10-01): one review queue at `/practice/review`.
+  - `lib/review.ts` (pure, with tests) merges what is due now: the four letter and word decks (their open cards, `drillCandidates`), every verb tense (`verbCandidates`), the vocabulary, cloze and both spoken ↔ written decks (only cards still in the course, and a one-way card only in its direction), earliest due first; then the mistake notebook, most recent miss first. A notebook item whose deck card is already in the queue is left out, as that answer counts for it too (`mistakeDeckKey`). At most 50 items; when more cards are due than fit, 10 places stay for the notebook.
+  - Each item is asked with its own deck's prompt and checker (`DrillPrompt`/`checkDrill`, `VerbPrompt`/`askFor`/`checkVerb`, `VocabPrompt`/`checkVocab` with its try-again for a same-English word, `ClozePrompt`/`checkCloze`, `ConvertPrompt`/`checkConvert`, and the notebook's `cardOf`). A deck answer is logged as activity, noted in the notebook and scheduled in its deck by the trainer's own recorder (`recordDrillAnswer`, `recordVerbAnswer`, `recordVocabAnswer`, `recordClozeAnswer`, `recordConvertAnswer`, now exported), so letter groups and verb groups still open with their banner. A notebook answer counts toward clearing it, as in the notebook. No store of its own.
+  - The page gets the cards without their lesson lists (about 74 KB gzipped of HTML: it must carry every deck's cards, as what is due is known only in the browser). The lesson quizzes moved to `content/lesson-quizzes.ts`, shared with `/practice/mistakes`.
+  - The Today card's review count links here, with "most in …" linking to the fullest deck (`reviewHref`). The practice hub opens with a "Review everything due" card (`ReviewCard`) counting due cards and notebook items. In `content/routes.ts` and the search index.
+  - Checked on the static build at 375 px in light and dark: no horizontal scroll, the field is focused on each item, focus ring shown; answers in every kind of deck were scheduled there and misses noted; a notebook lesson question was asked and counted. Lighthouse accessibility is 100 on `/practice/review` and `/practice`.
+
+## Feature ideas (owner asked, 2026-09-30)
+
+Not part of Phase 6. Ranked by how easy each is. Everything in `docs/PROMPT-practice-extras.md` (cloze, spoken ↔ written, one review queue) is built (see "Practice extras status").
+
+1. **Reading without vowel marks** (medium, not quite ready). Show a dictionary word unmarked and ask for its reading, later short sentences. The data and `checkTranslit` exist. Harder than it looks: an unmarked word often reads several ways (کشتی, کرم, مرد/مُرد), and every reading must come from reviewed data, so the deck needs a pass that finds each unmarked spelling's readings across the dictionary and the conjugation tables and either accepts all of them or leaves the word out; sentences add ezafe and contraction ambiguity, as the cloze and convert work showed. Expect a reviewer round like X1's.
+2. **Placement check** (medium; ready now if built from existing quizzes). Ten to fifteen questions that suggest where a heritage or Dari speaker should start, in place of skipping units on trust in lesson 0.3. Sampling the lesson quizzes avoids new content; purpose-written questions would need a reviewer pass.
+3. **Audio** (hard; blocked). The largest gap: stress (*ráftam* / *raftám*), *be-* / *bo-*, and every form under "Waiting on the owner" are things text cannot carry. It needs recordings by a Tehrani speaker, starting with dialogue lines and verb tables; browser speech synthesis is not good enough. It would unlock listening and dictation drills. Blocked until there is a speaker.
 
 ## Waiting on the owner
 
@@ -152,6 +320,45 @@ Next: **Phase 6**, Units 7–9 and the vocabulary deck (see `docs/PLAN.md`), onc
   - *miyây* vs *miyâi*;
   - نِگَهْ said *negah* or *nege*;
   - ایرانی‌اَن (as taught) vs chat ایرانین.
+- Confirm these forms from Phase 6a (the reviewer could not verify them):
+  - spoken گذاشتن after a prefix: نَذاشْتَم, می‌ذاشْتَم (as the engine gives them), or نَگُذاشْتَم, می‌گُذاشْتَم;
+  - the spoken past continuous of آمدن: میومَدَم *miyumadam* (as given), or می‌اومَدَم;
+  - the spoken present perfect spelled like the simple past (رَفْتَم … رَفْته), told apart by stress; whether the negative (نَرَفْتَم) differs in stress at all; and whether the spelling رفته‌م should be taught;
+  - شناختن treated as a state, with no progressive;
+  - the term مُسْتَمِر: *mostamer* (the dictionary form, as written) or *mostamar*.
+- Confirm these from Unit 9 (6e):
+  - سالَمه (*sâlame*) for "I'm … years old" in speech; شیش for شِش, "usually";
+  - تِهْرون as the spoken form (many Tehranis now say *tehrân*);
+  - رو میز, تو کیف without the ezafe, "usually"; ساعَتِ هَشْت with the ezafe audible in speech;
+  - کیلو read *kilu*; مَیدون *meydun*; پیرْهَن *pirhan*; هِدیه *hediye*;
+  - مُهِم written without its tashdid (Arabic مهمّ), as the course writes other final geminates;
+  - whether Saturday is now a second day off by law, and whether the rial has been redenominated (the lessons hedge both).
+- Confirm these forms from Unit 8 (6d):
+  - بیدار شَم (no بـ with a شدن compound), as taught;
+  - بِشین / بِشینین read *beshin* (as taught) or *bishin*;
+  - written می‌شَوَد …؟ for spoken می‌شه …؟ when asking permission;
+  - سُوغاتی read *soghâti* (dictionaries also give *sowghât*);
+  - تِهْرون in every spoken line.
+- Confirm these forms from Phase 6c (the reviewer could not verify them):
+  - the spoken prefix shown as *be-* (بِکُن, بِخُور, بِکُنَم), with *bo-* only in a note; or show بُکُن, بُخُور in the spoken column; and *begu* or *bogu*;
+  - written بِشَو read *beshow* and بِدِهْ read *bedeh* (as given), or *besho*, *bede*;
+  - بِرین (as shown) or بِرید as the spoken plural command;
+  - بِشِناسَم, بِنِویسَم shown in full (*beshenâsam*, *benevisam*), not the elided *beshnâsam*, *benvisam*;
+  - whether بِشِناس and بِفَهْم should be drilled at all.
+- Confirm these forms from Unit 7 (6b):
+  - نَیومَد said *nayumad* (as taught) or *niyumad*;
+  - صُبْحونه in speech for صُبْحانه;
+  - وَقْتی بَچّه بودَم / بَچّه که بودین for "as a child" (bare بَچِّگی was dropped as unnatural);
+  - چی دُرُسْت کَرْدی؟ for "what have you made?";
+  - بابابُزُرْگ beside مادَرْبُزُرْگ in speech; هیچ‌کَس (not هیشْکی) in a spoken line;
+  - آخَرِ هَفْته read *âkhar-e hafte*; مُوبایْل *mobâyl*; تِلِفُن *telefon*.
+- Confirm these from the cloze review (X1):
+  - lesson 0.2 `{او} ایرانیه.`: a spoken line with او, where the course says اون elsewhere in speech (6.7, 9.3);
+  - lesson 9.5 `قابِلی نَداره. {پانْصَد هِزار} تُومَن.`: the spoken line keeps پانْصَد; Tehrani speech says پونْصَد (*punsad*), like تِهْرون and تُومَن.
+- Confirm these from the spoken ↔ written review (X2):
+  - lesson 1.3 (`alphabet.ts`, the حالِت چِطُوره؟ line): its written line ends تُو چِطُوری؟, the spoken form; lesson 0.3 writes the same line حالِ تُو چِطُور اَسْت؟;
+  - seven written lines use هَسْتَم … after a consonant (حاضِر هَسْتی, شیراز هَسْتَم, تِهْران هَسْتَم, مُعَلِّم هَسْتَم, راه هَسْتَم, نَفَر هَسْتید, بِسیار خوب هَسْتَنْد), against lesson 4.2's rule (the full verb after a vowel) and its own خوشحالَنْد: soften the rule's wording, or change the lines (the drill leaves these out toward writing until then);
+  - lesson 0.3 writes واسه عَروسی without the ezafe mark, where lesson 9.1 writes واسهٔ.
 - Check the month names in `content/calendar.ts`.
 - 21st.dev components need the owner's registry API key, set as an environment variable. Until then, components are hand-built.
 - Review new.alefbe.study and merge `nextgen` into `main` when happy.
@@ -161,7 +368,8 @@ Next: **Phase 6**, Units 7–9 and the vocabulary deck (see `docs/PLAN.md`), onc
 - **Checks:** `npx vitest run`, `npm run typecheck`, `npm run lint`, `npm run build`.
 - **Dev server:** `alefbe-dev` in `.claude/launch.json`, on port 3000. `alefbe-static` serves the built `out/` on port 3001; use it for audits and Lighthouse.
 - **Build EPERM:** if `npm run build` fails with EPERM on `.next`, stop the dev server and delete `.next`; it is only a cache (OneDrive locks).
-- **Verb tables:** `npx tsx scripts/verbs.ts < /dev/null` prints every conjugation for proofreading.
+- **Verb tables:** `npx tsx scripts/verbs.ts < /dev/null` prints every conjugation for proofreading; name tenses to print only those (`… verbs.ts past perfect`).
+- **Scratch scripts with Persian or quotes:** write them with the Write tool and run them with `node`; a shell heredoc breaks on the quotes.
 - **Fonts:** preload only what the first paint needs (`subsets` in `app/layout.tsx` means "preloaded"). Decorative faces take `preload: false`.
 - **Editing Persian text:** use the Edit tool, or a small Node script in the scratchpad.
   - Shell heredocs break on quotes.

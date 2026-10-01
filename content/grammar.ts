@@ -228,6 +228,7 @@ export const GRAMMAR: GrammarTopic[] = [
     slug: "past-tense",
     title: "The simple past",
     unit: "past",
+    lesson: "past/simple-past",
     blocks: [
       {
         type: "idea",
@@ -252,6 +253,7 @@ export const GRAMMAR: GrammarTopic[] = [
     slug: "prepositions",
     title: "Prepositions",
     unit: "where-when",
+    lesson: "where-when/prepositions",
     blocks: [
       { type: "idea", text: "Prepositions come **before** the noun, as in English; many place words also take the ezafe: رویِ میز, *on the table*." },
       {
@@ -260,9 +262,10 @@ export const GRAMMAR: GrammarTopic[] = [
         rows: [
           ["به", "to", "به مَدْرِسه رَفْتَم (*I went to school*)"],
           ["اَز", "from; than", "اَز ایران اومَدَم (*I came from Iran*)"],
-          ["با", "with", "با دوسْتَم (*with my friend*)"],
+          ["با", "with; by (a vehicle)", "با دوسْتَم (*with my friend*)"],
           ["دَر (spoken تو)", "in", "دَر خانه, spoken تو خونه (*at home*)"],
-          ["بَرایِ (spoken واسه)", "for", "بَرایِ تُو (*for you*)"],
+          ["بَرایِ (spoken واسهٔ)", "for", "بَرایِ تُو (*for you*)"],
+          ["تا", "until; as far as", "تا فَرْدا (*until tomorrow*)"],
           ["رویِ", "on", "رویِ میز (*on the table*)"],
         ],
       },
@@ -272,6 +275,7 @@ export const GRAMMAR: GrammarTopic[] = [
     slug: "comparison",
     title: "Comparing",
     unit: "where-when",
+    lesson: "where-when/comparing",
     blocks: [
       { type: "idea", text: "ـتَر makes *-er* and ـتَرین *-est*; *than* is اَز." },
       {
@@ -287,6 +291,7 @@ export const GRAMMAR: GrammarTopic[] = [
     slug: "numbers",
     title: "Numbers with nouns",
     unit: "where-when",
+    lesson: "where-when/numbers",
     blocks: [
       {
         type: "idea",

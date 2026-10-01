@@ -6,6 +6,7 @@ import { normalizeFa } from "@/lib/persian/normalize";
 import { DAY, emptyDeck, schedule, type DeckState } from "@/lib/srs";
 import { goalProgress, iranianDate, pickForDay, reviewHref, reviewsDue } from "@/lib/today";
 import { emptyVerbsData, verbGroups } from "@/lib/verb-drill";
+import { emptyVocabData } from "@/lib/vocab";
 
 const NOW = new Date(2026, 8, 30, 12).getTime();
 
@@ -48,6 +49,31 @@ describe("reviewsDue", () => {
     expect(r.top).toBe("verbs");
     expect(reviewHref(r.top!)).toBe("/verbs");
     expect(reviewHref("letter")).toBe("/practice/drill/letter");
+  });
+  it("counts vocabulary cards, skips words that left the course, and links there when they lead", () => {
+    const vocab = { data: { ...emptyVocabData(), deck: deckWith(["کِتاب", "خانه", "gone"], NOW - 1) }, known: new Set(["کِتاب", "خانه"]) };
+    const r = reviewsDue({ sound: deckWith(DRILL_GROUPS[0].slice(0, 1), NOW - 1) }, NOW, emptyVerbsData(), vocab);
+    expect(r.vocab).toBe(2);
+    expect(r.total).toBe(3);
+    expect(r.top).toBe("vocab");
+    expect(reviewHref("vocab")).toBe("/vocab");
+    expect(reviewsDue({}, NOW).vocab).toBe(0);
+  });
+  it("counts cloze cards and links there when they lead", () => {
+    const cloze = { deck: deckWith(["past/simple-past#a", "past/simple-past#b", "nouns/ezafe#c"], NOW - 1) };
+    const r = reviewsDue({ sound: deckWith(DRILL_GROUPS[0].slice(0, 1), NOW - 1) }, NOW, emptyVerbsData(), undefined, { cloze });
+    expect(r.cloze).toBe(3);
+    expect(r.total).toBe(4);
+    expect(r.top).toBe("cloze");
+    expect(reviewHref("cloze")).toBe("/practice/cloze");
+    expect(reviewsDue({}, NOW).cloze).toBe(0);
+  });
+  it("counts the spoken and written drill in both directions, and links there when it leads", () => {
+    const convert = { dir: "to-written" as const, decks: { "to-written": deckWith(["a#1", "b#2"], NOW - 1), "to-spoken": deckWith(["a#1"], NOW - 1) } };
+    const r = reviewsDue({}, NOW, emptyVerbsData(), undefined, { convert });
+    expect(r.convert).toBe(3);
+    expect(r.top).toBe("convert");
+    expect(reviewHref("convert")).toBe("/practice/convert");
   });
   it("ignores verb items outside the open groups", () => {
     const verbs = { ...emptyVerbsData(), decks: { present: deckWith(verbGroups("present")[1], NOW - 1) } };

@@ -4,6 +4,8 @@
 import type { DrillMode } from "./drill";
 import type { QuizType } from "./quiz";
 import type { Person, Style, Tense } from "./conjugate";
+import type { ClozeAsk } from "./cloze";
+import type { ConvertAsk, ConvertDir } from "./convert";
 
 export type MistakeItem =
   /** A lesson-quiz question, by lesson key ("unit/lesson") and its index in the quiz. */
@@ -15,7 +17,13 @@ export type MistakeItem =
   /** A word from a game: read it (script → sound) or spell it (sound → script). */
   | { kind: "word"; dir: "read" | "spell"; fa: string; translit: string; en: string }
   /** A conjugation-trainer question: one form of a verb. */
-  | { kind: "verb"; verb: string; tense: Tense; person: Person; style: Style; negative: boolean };
+  | { kind: "verb"; verb: string; tense: Tense; person: Person; style: Style; negative: boolean }
+  /** A vocabulary card, carried whole so the notebook can ask it without the card list. */
+  | { kind: "vocab"; id: string; fa: string; spoken?: string; en: string; hint?: string }
+  /** A cloze card, carried whole for the same reason. */
+  | ({ kind: "cloze" } & ClozeAsk)
+  /** A spoken ↔ written card in one direction, carried whole. */
+  | ({ kind: "convert"; dir: ConvertDir } & ConvertAsk);
 
 export interface Mistake {
   item: MistakeItem;
@@ -45,6 +53,12 @@ export function mistakeId(item: MistakeItem): string {
       return `word:${item.dir}:${item.fa}`;
     case "verb":
       return `verb:${item.verb}:${item.tense}:${item.person}:${item.style}:${item.negative ? "neg" : "aff"}`;
+    case "vocab":
+      return `vocab:${item.id}`;
+    case "cloze":
+      return `cloze:${item.id}`;
+    case "convert":
+      return `convert:${item.dir}:${item.id}`;
   }
 }
 

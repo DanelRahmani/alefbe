@@ -10,6 +10,11 @@ describe("mistake notebook", () => {
     expect(mistakeId(q)).toBe("lesson:sounds/stress:1");
     expect(mistakeId({ kind: "drill", mode: "read", id: "ketab" })).toBe("drill:read:ketab");
     expect(mistakeId({ kind: "verb", verb: "raftan", tense: "present", person: "1p", style: "spoken", negative: true })).toBe("verb:raftan:present:1p:spoken:neg");
+    expect(mistakeId({ kind: "vocab", id: "کِتاب", fa: "کِتاب", en: "book" })).toBe("vocab:کِتاب");
+    const cloze: MistakeItem = { kind: "cloze", id: "past/simple-past#abc", fa: "x", en: "y", parts: [], gaps: [], answer: "z", lesson: { number: "7.1", href: "/learn/past/simple-past" } };
+    expect(mistakeId(cloze)).toBe("cloze:past/simple-past#abc");
+    const convert: MistakeItem = { kind: "convert", dir: "to-spoken", id: "past/simple-past#abc", fa: "x", written: "y", en: "z", lesson: { number: "7.1", href: "/learn/past/simple-past" } };
+    expect(mistakeId(convert)).toBe("convert:to-spoken:past/simple-past#abc");
   });
 
   it("a miss enters the notebook; a right answer on an unknown item changes nothing", () => {

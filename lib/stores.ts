@@ -13,6 +13,9 @@ import { noteAnswer, type MistakeItem, type Notebook } from "./mistakes";
 import type { Starred } from "./starred";
 import { DEFAULT_GOAL, type DailyGoal } from "./today";
 import { emptyVerbsData, type VerbsData } from "./verb-drill";
+import { emptyVocabData, type VocabData } from "./vocab";
+import { emptyClozeData, type ClozeData } from "./cloze";
+import { emptyConvertData, type ConvertData } from "./convert";
 
 export type Theme = "system" | "light" | "dark";
 
@@ -149,6 +152,15 @@ export const todayStore = createPersistentStore<{ goal: DailyGoal }>("alefbe2:to
 /** The conjugation trainer at /verbs: one Leitner deck per tense, and which forms to ask (lib/verb-drill.ts). */
 export const verbsStore = createPersistentStore<VerbsData>("alefbe2:verbs", emptyVerbsData());
 
+/** The vocabulary deck at /vocab: one Leitner deck, and whether to show the sound (lib/vocab.ts). */
+export const vocabStore = createPersistentStore<VocabData>("alefbe2:vocab", emptyVocabData());
+
+/** Cloze practice at /practice/cloze: one Leitner deck (lib/cloze.ts). */
+export const clozeStore = createPersistentStore<ClozeData>("alefbe2:cloze", emptyClozeData());
+
+/** The spoken ↔ written drill at /practice/convert: a Leitner deck per direction (lib/convert.ts). */
+export const convertStore = createPersistentStore<ConvertData>("alefbe2:convert", emptyConvertData());
+
 /** Every store, for refreshing after an import or reset. */
 export const ALL_STORES = [
   settingsStore,
@@ -165,4 +177,7 @@ export const ALL_STORES = [
   starredStore,
   todayStore,
   verbsStore,
+  vocabStore,
+  clozeStore,
+  convertStore,
 ];

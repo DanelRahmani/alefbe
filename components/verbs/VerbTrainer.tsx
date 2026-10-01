@@ -1,17 +1,21 @@
 "use client";
 
+import Link from "next/link";
 import { useLayoutEffect, useRef, useState } from "react";
 import type { Verdict } from "@/lib/answers";
-import { PRONOUNS, PERSON_EN, TENSES, englishOf, type Tense } from "@/lib/conjugate";
+import { PRONOUNS, PERSON_EN, TENSES, englishOf, tenseInfo, type Tense } from "@/lib/conjugate";
 import { answer, deckStats, nextCard, practiceCard, unlockNext } from "@/lib/srs";
 import { useStore } from "@/lib/storage";
-import { drillUiStore, logActivity, noteResult, verbsStore } from "@/lib/stores";
+import { drillUiStore, logActivity, noteResult, progressStore, verbsStore } from "@/lib/stores";
 import {
   askFor,
   bothStyles,
   checkVerb,
+  currentTense,
   deckFor,
+  openTense,
   parseItem,
+  tenseOpen,
   verbCandidates,
   verbGroups,
   type StyleChoice,
@@ -43,7 +47,7 @@ export function VerbPrompt({ q }: { q: VerbQuestion }) {
           <FaText text={PRONOUNS[spec.person][spec.style]} translit="none" force="all" /> {PERSON_EN[spec.person]}
         </span>
         <span className="verb-tag">{spec.style === "spoken" ? "Spoken" : "Written"}</span>
-        <span className="verb-tag">{TENSES.find((t) => t.id === spec.tense)!.title}</span>
+        <span className="verb-tag">{tenseInfo(spec.tense).title}</span>
         {spec.negative && <span className="verb-tag verb-tag-neg">Negative</span>}
       </p>
       <p className="ui drill-sub">
@@ -56,14 +60,24 @@ export function VerbPrompt({ q }: { q: VerbQuestion }) {
 /** The answer in both styles, marked and transliterated. */
 export function VerbSolution({ q }: { q: VerbQuestion }) {
   const both = bothStyles(q);
+  const note = tenseInfo(q.spec.tense).note;
   return (
     <span className="verb-solution has-fa">
-      <span>
-        Spoken: <FaText text={both.spoken} translit="inline" alwaysTranslit force="all" className="text-xl" />
-      </span>
-      <span>
-        Written: <FaText text={both.written} translit="inline" alwaysTranslit force="all" className="text-xl" />
-      </span>
+      {both.spoken && (
+        <span>
+          Spoken: <FaText text={both.spoken} translit="inline" alwaysTranslit force="all" className="text-xl" />
+        </span>
+      )}
+      {both.written && (
+        <span>
+          Written: <FaText text={both.written} translit="inline" alwaysTranslit force="all" className="text-xl" />
+        </span>
+      )}
+      {note && (
+        <span className="verb-note">
+          <Rich text={note} translit={false} />
+        </span>
+      )}
     </span>
   );
 }
@@ -75,11 +89,42 @@ const groupNames = (tense: Tense, groups: number[]) =>
     .map((id) => parseItem(id)!.verb.inf)
     .join("، ");
 
-export function VerbTrainer() {
+/** The next card of a tense's deck, read fresh from the store: due or new, or any open card when practising. */
+function pickCard(tense: Tense, practising: boolean, last?: string): string | null {
+  const s = verbsStore.get();
+  const cands = verbCandidates(s, tense);
+  return practising ? practiceCard(cands, last, Math.random()) : nextCard(cands, deckFor(s, tense), Date.now(), last);
+}
+
+/** Schedule an answered card in its tense's deck; returns the groups it opened. */
+function recordAnswer(tense: Tense, id: string, ok: boolean): number[] {
+  const s = verbsStore.get();
+  const r = answer(verbGroups(tense), deckFor(s, tense), id, ok, Date.now());
+  verbsStore.set({ ...s, decks: { ...s.decks, [tense]: r.state } });
+  return r.newlyUnlocked;
+}
+
+/** Schedule an answer as the trainer does; returns the unlock banner, if verbs opened. */
+export function recordVerbAnswer(tense: Tense, id: string, ok: boolean): string | null {
+  const opened = recordAnswer(tense, id, ok);
+  return opened.length ? `New verbs unlocked: ${groupNames(tense, opened)}` : null;
+}
+
+/** The lesson that teaches a tense, for the link on a tense that is not open yet. */
+export interface TenseLesson {
+  number: string;
+  title: string;
+  href: string;
+}
+
+export function VerbTrainer({ lessons }: { lessons: Partial<Record<Tense, TenseLesson>> }) {
   const data = useStore(verbsStore);
   const ui = useStore(drillUiStore);
+  const progress = useStore(progressStore);
   const now = useMinuteClock();
-  const tense: Tense = "present";
+  const tense = currentTense(data);
+  const info = tenseInfo(tense);
+  const open = tenseOpen(data, progress, tense);
 
   const [started, setStarted] = useState(false);
   const [q, setQ] = useState<{ id: string; question: VerbQuestion } | null>(null);
@@ -113,11 +158,7 @@ export function VerbTrainer() {
     requestAnimationFrame(() => inputRef.current?.focus());
   };
 
-  const pick = (practising: boolean, last?: string) => {
-    const s = verbsStore.get();
-    const cands = verbCandidates(s, tense);
-    return practising ? practiceCard(cands, last, Math.random()) : nextCard(cands, deckFor(s, tense), Date.now(), last);
-  };
+  const pick = (practising: boolean, last?: string) => pickCard(tense, practising, last);
 
   const start = () => {
     setStarted(true);
@@ -137,10 +178,8 @@ export function VerbTrainer() {
     const { verb, spec } = q.question;
     noteResult({ kind: "verb", verb: verb.id, ...spec }, v.ok);
     if (practice) return;
-    const s = verbsStore.get();
-    const r = answer(groups, deckFor(s, tense), q.id, v.ok, Date.now());
-    verbsStore.set({ ...s, decks: { ...s.decks, [tense]: r.state } });
-    if (r.newlyUnlocked.length) setBanner(`New verbs unlocked: ${groupNames(tense, r.newlyUnlocked)}`);
+    const opened = recordAnswer(tense, q.id, v.ok);
+    if (opened.length) setBanner(`New verbs unlocked: ${groupNames(tense, opened)}`);
   };
 
   const onKeyDown = (e: React.KeyboardEvent) => {
@@ -171,6 +210,19 @@ export function VerbTrainer() {
 
   const setAsk = (ask: StyleChoice) => verbsStore.set((s: VerbsData) => ({ ...s, ask }));
 
+  /** Another tense: another deck, so the session starts over. */
+  const setTense = (t: Tense) => {
+    if (t === tense) return;
+    verbsStore.set((s: VerbsData) => ({ ...s, tense: t }));
+    setStarted(false);
+    setQ(null);
+    setPractice(false);
+    setInput("");
+    setVerdict(null);
+    setError("");
+    setBanner("");
+  };
+
   const unlockMore = () => {
     const opened = deck.unlocked;
     verbsStore.set((s) => ({ ...s, decks: { ...s.decks, [tense]: unlockNext(groups, deckFor(s, tense)) } }));
@@ -187,11 +239,29 @@ export function VerbTrainer() {
     show(pick(false));
   };
 
+  const lesson = lessons[tense];
+
   return (
     <div className="drill">
+      <div className="ui chips chips-wrap" role="group" aria-label="Tense">
+        {TENSES.map((t) => {
+          const locked = !tenseOpen(data, progress, t.id);
+          return (
+            <button key={t.id} type="button" className={`chip${locked ? " chip-locked" : ""}`} aria-pressed={tense === t.id} onClick={() => setTense(t.id)}>
+              {t.title}
+              {locked && <span className="sr-only"> (not open yet)</span>}
+            </button>
+          );
+        })}
+      </div>
+
+      <p className="ui verb-says">
+        {info.title}: <em>{info.says}</em>
+      </p>
+
       <div className="ui drill-status">
         <span aria-live="polite">
-          {deck.unlocked} of {groups.length} verb groups open · {stats.due} due · {stats.fresh} new
+          {open ? `${deck.unlocked} of ${groups.length} verb groups open · ${stats.due} due · ${stats.fresh} new` : "Not open yet"}
         </span>
         {practice && <span className="practice-pill">Practice: not scheduled</span>}
       </div>
@@ -208,9 +278,30 @@ export function VerbTrainer() {
         {banner && <Rich text={banner} translit={false} />}
       </p>
 
-      {!started ? (
+      {!open ? (
         <div className="ui drill-panel">
-          <p className="font-medium">See a verb, a person and spoken or written; type the form.</p>
+          <p className="font-medium">The {info.title.toLowerCase()} opens with its lesson.</p>
+          <p className="mt-1 text-muted">
+            {lesson ? (
+              <>
+                It is taught in{" "}
+                <Link href={lesson.href} className="hl underline underline-offset-4">
+                  lesson {lesson.number}, {lesson.title}
+                </Link>
+                , and opens here when you mark that lesson done.
+              </>
+            ) : (
+              "Its lesson is on the way, and the tense opens here when you mark that lesson done."
+            )}{" "}
+            Open it now if you already know the tense.
+          </p>
+          <button type="button" className="drill-btn mt-4" onClick={() => verbsStore.set((s: VerbsData) => openTense(s, tense))}>
+            Open anyway
+          </button>
+        </div>
+      ) : !started ? (
+        <div className="ui drill-panel">
+          <p className="font-medium">See a verb, a person and spoken or written; type the {info.title.toLowerCase()} form.</p>
           <p className="mt-1 text-muted">
             {stats.due
               ? `${stats.due} verb${stats.due === 1 ? "" : "s"} to review.`

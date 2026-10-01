@@ -96,6 +96,17 @@ export function DrillSolution({ mode, id }: { mode: DrillMode; id: string }) {
   );
 }
 
+/** Schedule an answered card in its mode's deck; returns the unlock banner, if a group opened. */
+export function recordDrillAnswer(mode: DrillMode, id: string, ok: boolean): string | null {
+  const s = srsStore.get();
+  const groups = modeInfo(mode).kind === "letters" ? DRILL_GROUPS : [];
+  const r = answer(groups, deckOf(s, mode), id, ok, Date.now());
+  srsStore.set({ ...s, decks: { ...s.decks, [mode]: r.state } });
+  if (!r.newlyUnlocked.length) return null;
+  const chars = r.newlyUnlocked.flatMap((g) => DRILL_GROUPS[g]).join(" ");
+  return `New ${r.newlyUnlocked.includes(8) ? "characters" : "letters"} unlocked: ${chars}`;
+}
+
 export function Drill({ mode }: { mode: DrillMode }) {
   const info = modeInfo(mode);
   const data = useStore(srsStore);
@@ -160,14 +171,8 @@ export function Drill({ mode }: { mode: DrillMode }) {
     logActivity({ kind: "drill" });
     noteResult({ kind: "drill", mode, id: cardId }, v.ok);
     if (practice) return;
-    const s = srsStore.get();
-    const groups = info.kind === "letters" ? DRILL_GROUPS : [];
-    const r = answer(groups, deckOf(s, mode), cardId, v.ok, Date.now());
-    srsStore.set({ ...s, decks: { ...s.decks, [mode]: r.state } });
-    if (r.newlyUnlocked.length) {
-      const chars = r.newlyUnlocked.flatMap((g) => DRILL_GROUPS[g]).join(" ");
-      setBanner(`New ${r.newlyUnlocked.includes(8) ? "characters" : "letters"} unlocked: ${chars}`);
-    }
+    const opened = recordDrillAnswer(mode, cardId, v.ok);
+    if (opened) setBanner(opened);
   };
 
   const onKeyDown = (e: React.KeyboardEvent) => {

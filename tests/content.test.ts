@@ -14,7 +14,7 @@ const FUTURE_LESSONS = new Set(["sounds/short-vowels", "sounds/tashdid-sukun-tan
 import type { Block, Example, Lesson } from "@/content/types";
 import { parseMarkup, plainOf, splitScript, translitWithErrors, type Token } from "@/lib/markup";
 import { VERBS } from "@/content/verbs";
-import { allForms } from "@/lib/conjugate";
+import { TENSES, allForms } from "@/lib/conjugate";
 import { checkReadable } from "@/lib/persian/syllables";
 import { NON_JOINING, ZWNJ } from "@/lib/persian/chars";
 import { tokenizeFa, wordKind } from "@/lib/translit";
@@ -326,6 +326,14 @@ describe("content: structure", () => {
       if (t.lesson && !ALL_LESSONS.some((r) => r.key === t.lesson)) bad.push(`${t.slug}: lesson ${t.lesson}`);
     }
     expect(bad).toEqual([]);
+  });
+
+  it("every trainer tense opens with a real lesson", () => {
+    const keys = new Set(ALL_LESSONS.map((r) => r.key));
+    // A tense may be in the engine before its unit is written; once the unit has lessons, the lesson must exist.
+    const written = new Set(UNITS.filter((u) => u.lessons.length).map((u) => u.slug));
+    const missing = TENSES.filter((t) => t.lesson && written.has(t.lesson.split("/")[0]) && !keys.has(t.lesson));
+    expect(missing.map((t) => `${t.id}: ${t.lesson}`)).toEqual([]);
   });
 
   it("the page list matches the app folder", () => {

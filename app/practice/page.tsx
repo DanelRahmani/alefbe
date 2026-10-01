@@ -3,11 +3,19 @@ import Link from "next/link";
 import { DrillOverview } from "@/components/drill/DrillOverview";
 import { GameCards } from "@/components/games/GameCards";
 import { MistakesCard } from "@/components/MistakesCard";
+import { ReviewCard } from "@/components/review/ReviewCard";
 import { VerbOverview } from "@/components/verbs/VerbOverview";
+import { VERBS } from "@/content/verbs";
+import { VocabOverview } from "@/components/vocab/VocabOverview";
+import { VOCAB_CARDS } from "@/content/vocab";
+import { ClozeOverview } from "@/components/cloze/ClozeOverview";
+import { CLOZE_CARDS } from "@/content/cloze";
+import { ConvertOverview } from "@/components/convert/ConvertOverview";
+import { CONVERT_CARDS } from "@/content/convert";
 
 export const metadata: Metadata = {
   title: "Practice",
-  description: "Spaced-repetition trainers for the letters and the verbs, a quick letter quiz, tracing and games.",
+  description: "Spaced-repetition trainers for the letters, the verbs, the vocabulary and the lessons' example lines, a quick letter quiz, tracing and games.",
 };
 
 export default function PracticePage() {
@@ -15,20 +23,38 @@ export default function PracticePage() {
     <>
       <section className="page-head">
         <p className="ui eyebrow">Practice</p>
-        <h1 className="page-title">Practise letters and verbs</h1>
+        <h1 className="page-title">Practise letters, verbs and words</h1>
         <p className="page-lede">
-          The trainers schedule reviews so letters and verb forms stick: a card comes back just before you would forget it. The quiz,
+          The trainers schedule reviews so letters, verb forms and words stick: a card comes back just before you would forget it. The quiz,
           tracing and games are for extra practice whenever you like; they never change the schedule.
         </p>
       </section>
+
+      <ul className="drill-modes mt-6">
+        <li>
+          <ReviewCard />
+        </li>
+      </ul>
 
       <h2 className="lesson-h2 mt-8">Letter trainer</h2>
       <p className="ui mt-1 text-sm text-muted">Spaced repetition, typed answers. New letters open group by group.</p>
       <DrillOverview />
 
       <h2 className="lesson-h2 mt-10">Verb trainer</h2>
-      <p className="ui mt-1 text-sm text-muted">The present tense of 25 core verbs, spoken and written. Verbs open five at a time.</p>
+      <p className="ui mt-1 text-sm text-muted">{VERBS.length} core verbs in every tense of the core course, spoken and written. Verbs open five at a time, and each tense opens with its lesson.</p>
       <VerbOverview />
+
+      <h2 className="lesson-h2 mt-10">Vocabulary deck</h2>
+      <p className="ui mt-1 text-sm text-muted">The words of the lessons you have done, {VOCAB_CARDS.length} in all. See the English, type the Persian.</p>
+      <VocabOverview cards={VOCAB_CARDS.map((c) => ({ id: c.id, lessons: c.lessons }))} />
+
+      <h2 className="lesson-h2 mt-10">Cloze practice</h2>
+      <p className="ui mt-1 text-sm text-muted">{CLOZE_CARDS.length} example lines from the lessons, each with a gap. Read the English, type the missing words.</p>
+      <ClozeOverview cards={CLOZE_CARDS.map((c) => ({ id: c.id, lessons: c.lessons }))} />
+
+      <h2 className="lesson-h2 mt-10">Spoken and written</h2>
+      <p className="ui mt-1 text-sm text-muted">{CONVERT_CARDS.length} lesson lines that are said one way and written another. Type the other form.</p>
+      <ConvertOverview cards={CONVERT_CARDS.map((c) => ({ id: c.id, lessons: c.lessons, ...(c.only ? { only: c.only } : {}) }))} />
 
       <h2 className="lesson-h2 mt-10">Quick practice</h2>
       <ul className="drill-modes">

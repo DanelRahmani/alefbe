@@ -50,3 +50,6 @@ const PUNCT = /[.,!?;:«»"'()،؛؟۔]/g;
 export function normalizeFa(input: string): string {
   return canonicalFa(canonicalFa(input).replace(MARKS, "").replace(PUNCT, " "));
 }
+
+/** The words of a line with their marks, sentence punctuation removed. */
+export const markedWords = (input: string): string[] => canonicalFa(canonicalFa(input).replace(PUNCT, " ")).split(" ").filter(Boolean);

@@ -12,8 +12,15 @@ import { useStore } from "@/lib/storage";
 import { drillUiStore, mistakesStore, noteResult } from "@/lib/stores";
 import { DrillPrompt, DrillSolution } from "./drill/Drill";
 import { VerbPrompt, VerbSolution } from "./verbs/VerbTrainer";
-import { verbById } from "@/content/verbs";
+import { VERBS, verbById } from "@/content/verbs";
+import { TENSES, hasForm, tenseInfo } from "@/lib/conjugate";
 import { checkVerb, describeSpec, type VerbQuestion } from "@/lib/verb-drill";
+import { checkVocab } from "@/lib/vocab";
+import { VocabPrompt, VocabSolution } from "./vocab/VocabTrainer";
+import { checkCloze } from "@/lib/cloze";
+import { ClozePrompt, ClozeSolution } from "./cloze/ClozeTrainer";
+import { checkConvert } from "@/lib/convert";
+import { ConvertPrompt, ConvertSolution } from "./convert/ConvertTrainer";
 import { PersianKeyboard } from "./drill/PersianKeyboard";
 import { FaText } from "./FaText";
 import { Rich } from "./Rich";
@@ -27,7 +34,7 @@ export interface LessonQuiz {
 }
 
 /** One notebook item, ready to ask. */
-interface Card {
+export interface NotebookCard {
   id: string;
   item: MistakeItem;
   prompt: React.ReactNode;
@@ -77,7 +84,7 @@ function describe(item: MistakeItem, lessons: Record<string, LessonQuiz>): { wha
       return {
         what: v ? (
           <>
-            <FaText text={v.inf} translit="none" force="all" /> · {describeSpec(item).replace(/^the /, "")}
+            <FaText text={v.inf} translit="none" force="all" /> · {TENSE_IDS.has(item.tense) ? `${tenseInfo(item.tense).title.toLowerCase()}, ` : ""}{describeSpec(item).replace(/^the /, "")}
           </>
         ) : (
           "A verb form"
@@ -85,18 +92,40 @@ function describe(item: MistakeItem, lessons: Record<string, LessonQuiz>): { wha
         from: "Verb trainer",
       };
     }
+    case "vocab":
+      return {
+        what: (
+          <>
+            <FaText text={item.fa} translit="none" force="all" /> · “{item.en}”
+          </>
+        ),
+        from: "Vocabulary deck",
+      };
+    case "cloze":
+      return {
+        what: <Rich text={item.en} translit={false} />,
+        from: `Cloze practice, lesson ${item.lesson.number}`,
+      };
+    case "convert":
+      return {
+        what: <Rich text={item.en} translit={false} />,
+        from: `${item.dir === "to-written" ? "Spoken → written" : "Written → spoken"}, lesson ${item.lesson.number}`,
+      };
   }
 }
 
-/** A notebook verb item as a trainer question; null if the verb is gone. */
+const TENSE_IDS = new Set<string>(TENSES.map((t) => t.id));
+
+/** A notebook verb item as a trainer question; null if the verb or the form is gone. */
 function verbQuestion(item: Extract<MistakeItem, { kind: "verb" }>): VerbQuestion | null {
   const verb = verbById.get(item.verb);
-  if (!verb) return null;
-  return { verb, spec: { tense: item.tense, person: item.person, style: item.style, negative: item.negative } };
+  if (!verb || !TENSE_IDS.has(item.tense)) return null;
+  const spec = { tense: item.tense, person: item.person, style: item.style, negative: item.negative };
+  return hasForm(verb, spec, VERBS) ? { verb, spec } : null;
 }
 
 /** Turn a notebook item into a question; null if its source no longer exists. Uses randomness: call from events only. */
-function cardOf(m: Mistake, lessons: Record<string, LessonQuiz>): Card | null {
+export function cardOf(m: Mistake, lessons: Record<string, LessonQuiz>): NotebookCard | null {
   const { item } = m;
   const id = mistakeId(item);
   switch (item.kind) {
@@ -222,10 +251,41 @@ function cardOf(m: Mistake, lessons: Record<string, LessonQuiz>): Card | null {
         from: { label: "Verb trainer", href: "/verbs" },
       };
     }
+    case "vocab":
+      return {
+        id,
+        item,
+        prompt: <VocabPrompt card={item} />,
+        lang: "fa",
+        // Only this card: typing another word with the same English simply counts as wrong here.
+        check: (s) => checkVocab(item, [], s),
+        solution: <VocabSolution card={item} />,
+        from: { label: "Vocabulary deck", href: "/vocab" },
+      };
+    case "cloze":
+      return {
+        id,
+        item,
+        prompt: <ClozePrompt card={item} />,
+        lang: "fa",
+        check: (s) => checkCloze(item, s),
+        solution: <ClozeSolution card={item} />,
+        from: { label: "Cloze practice", href: "/practice/cloze" },
+      };
+    case "convert":
+      return {
+        id,
+        item,
+        prompt: <ConvertPrompt card={item} dir={item.dir} />,
+        lang: "fa",
+        check: (s) => checkConvert(item, item.dir, s),
+        solution: <ConvertSolution card={item} />,
+        from: { label: "Spoken and written", href: "/practice/convert" },
+      };
   }
 }
 
-function Review({ cards, onEnd }: { cards: Card[]; onEnd: () => void }) {
+function Review({ cards, onEnd }: { cards: NotebookCard[]; onEnd: () => void }) {
   const nb = useStore(mistakesStore);
   const ui = useStore(drillUiStore);
   const [at, setAt] = useState(0);
@@ -363,11 +423,11 @@ function Review({ cards, onEnd }: { cards: Card[]; onEnd: () => void }) {
 
 export function MistakeNotebook({ lessons }: { lessons: Record<string, LessonQuiz> }) {
   const nb = useStore(mistakesStore);
-  const [cards, setCards] = useState<Card[] | null>(null);
+  const [cards, setCards] = useState<NotebookCard[] | null>(null);
   const list = notebookList(nb);
 
   const start = () => {
-    const made = list.map((m) => cardOf(m, lessons)).filter((c): c is Card => c !== null);
+    const made = list.map((m) => cardOf(m, lessons)).filter((c): c is NotebookCard => c !== null);
     setCards(made.slice(0, SESSION));
   };
   const remove = (id: string) =>
