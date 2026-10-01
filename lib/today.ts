@@ -9,14 +9,15 @@ import { transliterate } from "./translit";
 import { TENSES } from "./conjugate";
 import { emptyVerbsData, verbCandidates, type VerbsData } from "./verb-drill";
 import { vocabDue, type VocabData } from "./vocab";
+import { clozeDue, type ClozeData } from "./cloze";
 
 /** Activities a day (trainer answers, traces, quiz answers, game rounds, lessons). */
 export const GOALS = [5, 10, 20] as const;
 export type DailyGoal = (typeof GOALS)[number];
 export const DEFAULT_GOAL: DailyGoal = 10;
 
-/** A deck with reviews: a letter-trainer mode, the conjugation trainer, or the vocabulary deck. */
-export type ReviewDeck = DrillMode | "verbs" | "vocab";
+/** A deck with reviews: a letter-trainer mode, the conjugation trainer, the vocabulary deck or cloze practice. */
+export type ReviewDeck = DrillMode | "verbs" | "vocab" | "cloze";
 
 export interface ReviewsDue {
   total: number;
@@ -25,25 +26,34 @@ export interface ReviewsDue {
   verbs: number;
   /** Vocabulary cards due. */
   vocab: number;
+  /** Cloze cards due. */
+  cloze: number;
   /** The deck with the most cards due, or null when nothing is. */
   top: ReviewDeck | null;
 }
 
 /** Where a deck's reviews happen. */
-export const reviewHref = (d: ReviewDeck) => (d === "verbs" ? "/verbs" : d === "vocab" ? "/vocab" : `/practice/drill/${d}`);
+export const reviewHref = (d: ReviewDeck) =>
+  d === "verbs" ? "/verbs" : d === "vocab" ? "/vocab" : d === "cloze" ? "/practice/cloze" : `/practice/drill/${d}`;
 
-/** Cards due now across every trainer deck (new cards don't count). */
 /** The vocabulary deck and the ids of the words still in the course (lib/vocab.ts vocabDue). */
 export interface VocabDeck {
   data: VocabData;
   known: ReadonlySet<string> | null;
 }
 
+/** The decks kept apart from the letter trainer and the verbs. */
+export interface MoreDecks {
+  cloze?: ClozeData;
+}
+
+/** Cards due now across every trainer deck (new cards don't count). */
 export function reviewsDue(
   decks: Partial<Record<DrillMode, DeckState>>,
   now: number,
   verbs: VerbsData = emptyVerbsData(),
   vocab?: VocabDeck,
+  more: MoreDecks = {},
 ): ReviewsDue {
   const byMode = {} as Record<DrillMode, number>;
   let total = 0;
@@ -65,8 +75,11 @@ export function reviewsDue(
   if (verbsDue > topDue) [top, topDue] = ["verbs", verbsDue];
   const vocabDueNow = vocab ? vocabDue(vocab.data, vocab.known, now) : 0;
   total += vocabDueNow;
-  if (vocabDueNow > topDue) top = "vocab";
-  return { total, byMode, verbs: verbsDue, vocab: vocabDueNow, top };
+  if (vocabDueNow > topDue) [top, topDue] = ["vocab", vocabDueNow];
+  const clozeDueNow = more.cloze ? clozeDue(more.cloze, now) : 0;
+  total += clozeDueNow;
+  if (clozeDueNow > topDue) top = "cloze";
+  return { total, byMode, verbs: verbsDue, vocab: vocabDueNow, cloze: clozeDueNow, top };
 }
 
 export interface GoalProgress {

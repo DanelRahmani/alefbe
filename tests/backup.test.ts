@@ -42,6 +42,14 @@ describe("makeBackup", () => {
     applyBackup(parseBackup(JSON.stringify(makeBackup(from.read, NOW))), to.read, to.write);
     expect(to.map.get("alefbe2:vocab")).toBe(deck);
   });
+  it("includes cloze practice, and restores it", () => {
+    expect(BACKUP_KEYS).toContain("alefbe2:cloze");
+    const deck = JSON.stringify({ v: 1, data: { deck: { cards: { "past/simple-past#abc": { box: 2, due: 0, reps: 1, lapses: 0 } }, unlocked: 1 } } });
+    const from = fakeStorage({ "alefbe2:cloze": deck });
+    const to = fakeStorage();
+    applyBackup(parseBackup(JSON.stringify(makeBackup(from.read, NOW))), to.read, to.write);
+    expect(to.map.get("alefbe2:cloze")).toBe(deck);
+  });
   it("names the file by date", () => {
     expect(backupFileName(NOW)).toBe("alefbe-progress-2026-09-29.json");
   });

@@ -7,10 +7,12 @@ import { VerbOverview } from "@/components/verbs/VerbOverview";
 import { VERBS } from "@/content/verbs";
 import { VocabOverview } from "@/components/vocab/VocabOverview";
 import { VOCAB_CARDS } from "@/content/vocab";
+import { ClozeOverview } from "@/components/cloze/ClozeOverview";
+import { CLOZE_CARDS } from "@/content/cloze";
 
 export const metadata: Metadata = {
   title: "Practice",
-  description: "Spaced-repetition trainers for the letters, the verbs and the vocabulary, a quick letter quiz, tracing and games.",
+  description: "Spaced-repetition trainers for the letters, the verbs, the vocabulary and the lessons' example lines, a quick letter quiz, tracing and games.",
 };
 
 export default function PracticePage() {
@@ -36,6 +38,10 @@ export default function PracticePage() {
       <h2 className="lesson-h2 mt-10">Vocabulary deck</h2>
       <p className="ui mt-1 text-sm text-muted">The words of the lessons you have done, {VOCAB_CARDS.length} in all. See the English, type the Persian.</p>
       <VocabOverview cards={VOCAB_CARDS.map((c) => ({ id: c.id, lessons: c.lessons }))} />
+
+      <h2 className="lesson-h2 mt-10">Cloze practice</h2>
+      <p className="ui mt-1 text-sm text-muted">{CLOZE_CARDS.length} example lines from the lessons, each with a gap. Read the English, type the missing words.</p>
+      <ClozeOverview cards={CLOZE_CARDS.map((c) => ({ id: c.id, lessons: c.lessons }))} />
 
       <h2 className="lesson-h2 mt-10">Quick practice</h2>
       <ul className="drill-modes">

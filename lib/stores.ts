@@ -14,6 +14,7 @@ import type { Starred } from "./starred";
 import { DEFAULT_GOAL, type DailyGoal } from "./today";
 import { emptyVerbsData, type VerbsData } from "./verb-drill";
 import { emptyVocabData, type VocabData } from "./vocab";
+import { emptyClozeData, type ClozeData } from "./cloze";
 
 export type Theme = "system" | "light" | "dark";
 
@@ -153,6 +154,9 @@ export const verbsStore = createPersistentStore<VerbsData>("alefbe2:verbs", empt
 /** The vocabulary deck at /vocab: one Leitner deck, and whether to show the sound (lib/vocab.ts). */
 export const vocabStore = createPersistentStore<VocabData>("alefbe2:vocab", emptyVocabData());
 
+/** Cloze practice at /practice/cloze: one Leitner deck (lib/cloze.ts). */
+export const clozeStore = createPersistentStore<ClozeData>("alefbe2:cloze", emptyClozeData());
+
 /** Every store, for refreshing after an import or reset. */
 export const ALL_STORES = [
   settingsStore,
@@ -170,4 +174,5 @@ export const ALL_STORES = [
   todayStore,
   verbsStore,
   vocabStore,
+  clozeStore,
 ];

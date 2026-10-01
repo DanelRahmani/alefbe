@@ -2,7 +2,7 @@
 
 # Alefbe: where the work stands
 
-Updated 2026-09-30. Read this first when picking the work back up.
+Updated 2026-10-01. Read this first when picking the work back up.
 
 ## The project
 
@@ -251,16 +251,41 @@ Phase 6 is Units 7–9 and the vocabulary deck (see `docs/PLAN.md`). The owner's
 
 Phase 6 is complete. Next: the owner reviews new.alefbe.study, answers "Waiting on the owner", and merges. The easy feature ideas below have a ready prompt; Phase 7 in `docs/PLAN.md` is Units 10–11.
 
+## Practice extras status
+
+The owner's brief is `docs/PROMPT-practice-extras.md`: X1 cloze, X2 spoken ↔ written, X3 one review queue. The hard rule: no new Persian. Every Persian string a learner sees comes unchanged from reviewed lesson data; a card that would need another string is left out.
+
+- **X1** (2026-10-01): cloze practice at `/practice/cloze`.
+  - `lib/cloze.ts` (pure, with tests) turns every highlighted line of an examples block, a pair or a dialogue into a card: the line with its highlight blanked, the English beneath. Callouts are skipped, so no `wrong` example is used. `content/cloze.ts` builds `CLOZE_CARDS` (322) with `VERBS` and `CLOZE_LEAVE_OUT`.
+  - A card's id is `unit/lesson#hash`: the first lesson's key and an FNV-1a hash of the line's markup. A line taught twice is one card that joins with either lesson. The trainer prunes deck entries whose id has left the course (`pruneDeck`).
+  - Decisions (for the owner's review):
+    - the spoken line is asked; each gap also takes the words the written line has in that place, with a note. Gaps are matched to the written highlights by edit distance, so a reordered written line still lines up. A written option is dropped where it would repeat a shown word (مَغازه‌ای) or where the written line has اَسْت, هَسْت- or a pronoun outside its highlight;
+    - several highlights: one answer box, the words in order; each gap is judged on its own, spoken or written;
+    - a gap with a verb shows its tense ("the verb: past continuous"), as the English often fits several tenses. A form two tenses share (spoken رَفْتَم) is named only in the lesson that teaches one of them. The progressive is named once, also across two gaps (دارَم … می‌رَم);
+    - a dialogue card shows the line before;
+    - also right, all from reviewed data:
+      - the engine's other spellings of a verb form (`lib/forms.ts`: میام / می‌آم, one-ی, بـ on a bare compound);
+      - the other "you", all gaps at once, where nothing on the card, in its dialogue or in the English fixes تُو or شُما (commands included);
+      - را / رُو / ـو (and مَرا); تو / تویِ / دَر for "in"; اون for او;
+      - the answer of a card that looks the same (کُجا … زِنْدِگی می‌کُنین / می‌کُنی);
+    - notes for a missing ـهٔ and digits typed for a number.
+  - Left out (62): 36 whole-sentence blanks, 6 part-word highlights (می‌, ـها), 3 whose English gives the answer (Persian or *ketâb-e man*), 1 name the English gives, and 16 by hand in `CLOZE_LEAVE_OUT`. The by-hand ones are cards whose English allows a synonym or another construction the lessons don't give (ممنون for مرسی, نشستن not in the engine…); a test checks each id still names a card.
+  - `lib/forms.ts` (pure, with tests): a form index over every conjugation, phrase segmentation, the engine's variants (`acceptedAnswers`) per form, the other "you", tense labels (`gapTenses`). X2 reuses it.
+  - Store `alefbe2:cloze` (`clozeStore`, `{ deck }`), in `ALL_STORES` and `BACKUP_KEYS`, with a backup round-trip test. Misses go to the notebook as `{ kind: "cloze", ...card }` (no lesson list) and replay there with `ClozePrompt` / `ClozeSolution`. `reviewsDue` counts due cloze cards from the deck alone (`clozeDue`); the Today card links to `/practice/cloze` when they lead.
+  - The page is in `content/routes.ts`, the search index and the practice hub (`ClozeOverview`). `components/practice/FaAnswerField.tsx` is the shared typed-answer field (Check/Next, Persian keyboard at the caret).
+  - `npx tsx scripts/cloze.ts < /dev/null` prints every card: gaps, accepted answers with their notes, hints, and the lines left out.
+  - The reviewer raised 16 findings on the first pass (2 errors, 9 should-fix, 5 polish) and 10 on the re-check (1 error, 4 should-fix, 5 polish); all were applied by rule changes or leave-outs. Two content points went to "Waiting on the owner".
+  - Checked on the static build at 375 px in light and dark: no horizontal scroll, focus ring shown, a miss was scheduled and noted, the notebook replayed it, the Today card linked here. Lighthouse accessibility is 100 on `/practice/cloze` and `/practice`.
+
 ## Feature ideas (owner asked, 2026-09-30)
 
-Not part of Phase 6. Ranked by how easy each is; the first four need no new Persian content, so they can be built as soon as Phase 6 is pushed. A ready prompt for the first three is in `docs/PROMPT-practice-extras.md`.
+Not part of Phase 6. Ranked by how easy each is; the first three need no new Persian content. A ready prompt for the first two is in `docs/PROMPT-practice-extras.md`; cloze practice, the third idea in it, is built (see "Practice extras status").
 
 1. **One review queue** (easiest; ready now). A "Review everything due" session that pulls due cards from every deck: letters, words, verbs, vocabulary, and the mistake notebook. Every deck, checker and prompt component already exists; this is a pure function that merges the queues, and one page. Best built after 6f, so the vocabulary deck is in it.
-2. **Cloze practice from lesson examples** (easy; ready now). Every example marks its key part with a `{highlight}`. Blank it, show the English, and have the learner type the missing words. Needs a pure extractor, a Leitner deck and store, and a trainer page. No new content. To decide: examples with several highlights, and whether the spoken or the written line is asked.
-3. **Spoken ↔ written conversion drill** (easy; ready now). Examples and dialogue lines that carry both forms become cards: show one, type the other. The data is already reviewed. The work is lenient whole-sentence checking (punctuation, half-spaces) and naming the word that differs.
-4. **Reading without vowel marks** (medium; ready now). Show a dictionary word unmarked and ask for its reading, later short sentences. The data and `checkTranslit` exist. To handle: words that read two ways unmarked (کشتی), which need their English shown or must be left out.
-5. **Placement check** (medium; ready now if built from existing quizzes). Ten to fifteen questions that suggest where a heritage or Dari speaker should start, in place of skipping units on trust in lesson 0.3. Sampling the lesson quizzes avoids new content; purpose-written questions would need a reviewer pass.
-6. **Audio** (hard; blocked). The largest gap: stress (*ráftam* / *raftám*), *be-* / *bo-*, and every form under "Waiting on the owner" are things text cannot carry. It needs recordings by a Tehrani speaker, starting with dialogue lines and verb tables; browser speech synthesis is not good enough. It would unlock listening and dictation drills. Blocked until there is a speaker.
+2. **Spoken ↔ written conversion drill** (easy; ready now). Examples and dialogue lines that carry both forms become cards: show one, type the other. The data is already reviewed. The work is lenient whole-sentence checking (punctuation, half-spaces) and naming the word that differs.
+3. **Reading without vowel marks** (medium; ready now). Show a dictionary word unmarked and ask for its reading, later short sentences. The data and `checkTranslit` exist. To handle: words that read two ways unmarked (کشتی), which need their English shown or must be left out.
+4. **Placement check** (medium; ready now if built from existing quizzes). Ten to fifteen questions that suggest where a heritage or Dari speaker should start, in place of skipping units on trust in lesson 0.3. Sampling the lesson quizzes avoids new content; purpose-written questions would need a reviewer pass.
+5. **Audio** (hard; blocked). The largest gap: stress (*ráftam* / *raftám*), *be-* / *bo-*, and every form under "Waiting on the owner" are things text cannot carry. It needs recordings by a Tehrani speaker, starting with dialogue lines and verb tables; browser speech synthesis is not good enough. It would unlock listening and dictation drills. Blocked until there is a speaker.
 
 ## Waiting on the owner
 
@@ -307,6 +332,9 @@ Not part of Phase 6. Ranked by how easy each is; the first four need no new Pers
   - چی دُرُسْت کَرْدی؟ for "what have you made?";
   - بابابُزُرْگ beside مادَرْبُزُرْگ in speech; هیچ‌کَس (not هیشْکی) in a spoken line;
   - آخَرِ هَفْته read *âkhar-e hafte*; مُوبایْل *mobâyl*; تِلِفُن *telefon*.
+- Confirm these from the cloze review (X1):
+  - lesson 0.2 `{او} ایرانیه.`: a spoken line with او, where the course says اون elsewhere in speech (6.7, 9.3);
+  - lesson 9.5 `قابِلی نَداره. {پانْصَد هِزار} تُومَن.`: the spoken line keeps پانْصَد; Tehrani speech says پونْصَد (*punsad*), like تِهْرون and تُومَن.
 - Check the month names in `content/calendar.ts`.
 - 21st.dev components need the owner's registry API key, set as an environment variable. Until then, components are hand-built.
 - Review new.alefbe.study and merge `nextgen` into `main` when happy.

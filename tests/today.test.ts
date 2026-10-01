@@ -59,6 +59,15 @@ describe("reviewsDue", () => {
     expect(reviewHref("vocab")).toBe("/vocab");
     expect(reviewsDue({}, NOW).vocab).toBe(0);
   });
+  it("counts cloze cards and links there when they lead", () => {
+    const cloze = { deck: deckWith(["past/simple-past#a", "past/simple-past#b", "nouns/ezafe#c"], NOW - 1) };
+    const r = reviewsDue({ sound: deckWith(DRILL_GROUPS[0].slice(0, 1), NOW - 1) }, NOW, emptyVerbsData(), undefined, { cloze });
+    expect(r.cloze).toBe(3);
+    expect(r.total).toBe(4);
+    expect(r.top).toBe("cloze");
+    expect(reviewHref("cloze")).toBe("/practice/cloze");
+    expect(reviewsDue({}, NOW).cloze).toBe(0);
+  });
   it("ignores verb items outside the open groups", () => {
     const verbs = { ...emptyVerbsData(), decks: { present: deckWith(verbGroups("present")[1], NOW - 1) } };
     expect(reviewsDue({}, NOW, verbs).verbs).toBe(0);

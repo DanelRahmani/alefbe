@@ -17,6 +17,8 @@ import { TENSES, hasForm, tenseInfo } from "@/lib/conjugate";
 import { checkVerb, describeSpec, type VerbQuestion } from "@/lib/verb-drill";
 import { checkVocab } from "@/lib/vocab";
 import { VocabPrompt, VocabSolution } from "./vocab/VocabTrainer";
+import { checkCloze } from "@/lib/cloze";
+import { ClozePrompt, ClozeSolution } from "./cloze/ClozeTrainer";
 import { PersianKeyboard } from "./drill/PersianKeyboard";
 import { FaText } from "./FaText";
 import { Rich } from "./Rich";
@@ -96,6 +98,11 @@ function describe(item: MistakeItem, lessons: Record<string, LessonQuiz>): { wha
           </>
         ),
         from: "Vocabulary deck",
+      };
+    case "cloze":
+      return {
+        what: <Rich text={item.en} translit={false} />,
+        from: `Cloze practice, lesson ${item.lesson.number}`,
       };
   }
 }
@@ -247,6 +254,16 @@ function cardOf(m: Mistake, lessons: Record<string, LessonQuiz>): Card | null {
         check: (s) => checkVocab(item, [], s),
         solution: <VocabSolution card={item} />,
         from: { label: "Vocabulary deck", href: "/vocab" },
+      };
+    case "cloze":
+      return {
+        id,
+        item,
+        prompt: <ClozePrompt card={item} />,
+        lang: "fa",
+        check: (s) => checkCloze(item, s),
+        solution: <ClozeSolution card={item} />,
+        from: { label: "Cloze practice", href: "/practice/cloze" },
       };
   }
 }

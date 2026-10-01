@@ -5,7 +5,7 @@ import { useId, useMemo } from "react";
 import { modeInfo } from "@/lib/drill";
 import { streak } from "@/lib/activity";
 import { useStore } from "@/lib/storage";
-import { activityStore, mistakesStore, srsStore, todayStore, verbsStore, vocabStore } from "@/lib/stores";
+import { activityStore, clozeStore, mistakesStore, srsStore, todayStore, verbsStore, vocabStore } from "@/lib/stores";
 import { GOALS, goalProgress, iranianDate, pickForDay, reviewHref, reviewsDue } from "@/lib/today";
 import { useMinuteClock } from "./drill/useDrillClock";
 import { FaText } from "./FaText";
@@ -52,6 +52,7 @@ export function TodayCard({ words }: { words: DayWord[] }) {
   const srs = useStore(srsStore);
   const verbs = useStore(verbsStore);
   const vocab = useStore(vocabStore);
+  const cloze = useStore(clozeStore);
   // The words still in the course: a vocabulary card whose word was removed is not counted.
   const known = useMemo(() => new Set(words.map((w) => w.id)), [words]);
   const activity = useStore(activityStore);
@@ -62,7 +63,7 @@ export function TodayCard({ words }: { words: DayWord[] }) {
   const ready = now > 0;
   const date = ready ? new Date(now) : null;
   const iran = date ? iranianDate(date) : null;
-  const due = ready ? reviewsDue(srs.decks, now, verbs, { data: vocab, known }) : null;
+  const due = ready ? reviewsDue(srs.decks, now, verbs, { data: vocab, known }, { cloze }) : null;
   const progress = date ? goalProgress(activity, date, goal) : { done: 0, goal, met: false, fraction: 0 };
   const days = date ? streak(activity, date) : 0;
   const word = date ? pickForDay(words, date) : undefined;
@@ -120,7 +121,7 @@ export function TodayCard({ words }: { words: DayWord[] }) {
               <Link href={reviewHref(due.top)}>
                 {due.total === 1 ? "review" : "reviews"} due in the trainers
                 <span className="sr-only">
-                  , starting with {due.top === "verbs" ? "Verbs" : due.top === "vocab" ? "Vocabulary" : modeInfo(due.top).title}
+                  , starting with {due.top === "verbs" ? "Verbs" : due.top === "vocab" ? "Vocabulary" : due.top === "cloze" ? "Cloze practice" : modeInfo(due.top).title}
                 </span>{" "}
                 →
               </Link>
