@@ -192,7 +192,7 @@ const italicsIn = (en: string) => parseMarkup(en).filter((t) => t.it).map((t) =>
 const namesIn = (en: string) => (en.replace(/\*[^*]*\*/g, " ").match(/\b[A-Z][a-zâ]+/g) ?? []).map((w) => fold(w.replace(/'s$/, "")));
 
 /** Levenshtein distance, for lining up the written line's highlights with the spoken one's. */
-function distance(a: string, b: string): number {
+export function distance(a: string, b: string): number {
   const d = Array.from({ length: b.length + 1 }, (_, j) => j);
   for (let i = 1; i <= a.length; i++) {
     let prev = d[0];

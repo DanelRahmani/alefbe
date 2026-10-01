@@ -19,6 +19,8 @@ import { checkVocab } from "@/lib/vocab";
 import { VocabPrompt, VocabSolution } from "./vocab/VocabTrainer";
 import { checkCloze } from "@/lib/cloze";
 import { ClozePrompt, ClozeSolution } from "./cloze/ClozeTrainer";
+import { checkConvert } from "@/lib/convert";
+import { ConvertPrompt, ConvertSolution } from "./convert/ConvertTrainer";
 import { PersianKeyboard } from "./drill/PersianKeyboard";
 import { FaText } from "./FaText";
 import { Rich } from "./Rich";
@@ -103,6 +105,11 @@ function describe(item: MistakeItem, lessons: Record<string, LessonQuiz>): { wha
       return {
         what: <Rich text={item.en} translit={false} />,
         from: `Cloze practice, lesson ${item.lesson.number}`,
+      };
+    case "convert":
+      return {
+        what: <Rich text={item.en} translit={false} />,
+        from: `${item.dir === "to-written" ? "Spoken → written" : "Written → spoken"}, lesson ${item.lesson.number}`,
       };
   }
 }
@@ -264,6 +271,16 @@ function cardOf(m: Mistake, lessons: Record<string, LessonQuiz>): Card | null {
         check: (s) => checkCloze(item, s),
         solution: <ClozeSolution card={item} />,
         from: { label: "Cloze practice", href: "/practice/cloze" },
+      };
+    case "convert":
+      return {
+        id,
+        item,
+        prompt: <ConvertPrompt card={item} dir={item.dir} />,
+        lang: "fa",
+        check: (s) => checkConvert(item, item.dir, s),
+        solution: <ConvertSolution card={item} />,
+        from: { label: "Spoken and written", href: "/practice/convert" },
       };
   }
 }

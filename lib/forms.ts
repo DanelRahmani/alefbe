@@ -117,8 +117,20 @@ export interface PhraseAlt {
  * spellings, and, when `you` is set (the English leaves تو or شما open), the
  * other "you" for every 2nd-person verb at once. At most `max` alternatives.
  */
-export function phraseAlts(phrase: string, index: FormIndex, verbs: readonly Verb[], you: boolean, lessonKey?: string, max = 24): PhraseAlt[] {
-  const segs = segments(phrase, index).map((s) => (s.hits ? { ...s, hits: readAs(s.hits, lessonKey) } : s));
+export function phraseAlts(
+  phrase: string,
+  index: FormIndex,
+  verbs: readonly Verb[],
+  you: boolean,
+  lessonKey?: string,
+  max = 24,
+  /** Which hits count: a written target takes only written forms, and a verb the paired line also has. */
+  keep: (h: FormHit) => boolean = () => true,
+): PhraseAlt[] {
+  const segs = segments(phrase, index).map((s): Segment => {
+    const hits = s.hits?.filter(keep);
+    return hits?.length ? { ...s, hits: readAs(hits, lessonKey) } : { words: s.words };
+  });
   const base = segs.map((s) => s.words);
   const out = new Map<string, PhraseAlt["why"]>();
   const own = base.join(" ");
@@ -144,6 +156,28 @@ export function phraseAlts(phrase: string, index: FormIndex, verbs: readonly Ver
     }
   }
   return [...out].map(([text, why]) => ({ text, why }));
+}
+
+/** The verbs a phrase uses, by id. */
+export const verbIdsIn = (phrase: string, index: FormIndex) => new Set(segments(phrase, index).flatMap((s) => s.hits?.map((h) => h.verb.id) ?? []));
+
+/**
+ * The phrase with each written future turned into the written present of the
+ * same verb, person and polarity (خواهَم رَفْت → می‌رَوَم): the present is right in
+ * writing too, though the line wants the future.
+ */
+export function presentForFuture(phrase: string, index: FormIndex, verbs: readonly Verb[], keep: (h: FormHit) => boolean = () => true): string | null {
+  const segs = segments(phrase, index);
+  let changed = false;
+  const words = segs.map((s) => {
+    const hit = s.hits?.find((h) => keep(h) && h.spec.tense === "future");
+    if (!hit) return s.words;
+    const spec = { ...hit.spec, tense: "present" as const };
+    if (!hasForm(hit.verb, spec, verbs)) return s.words;
+    changed = true;
+    return normalizeFa(cut(conjugate(hit.verb, spec, verbs), hit));
+  });
+  return changed ? words.join(" ") : null;
 }
 
 /** Does the phrase hold a 2nd-person verb? */

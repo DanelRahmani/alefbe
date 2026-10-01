@@ -276,16 +276,31 @@ The owner's brief is `docs/PROMPT-practice-extras.md`: X1 cloze, X2 spoken ↔ w
   - `npx tsx scripts/cloze.ts < /dev/null` prints every card: gaps, accepted answers with their notes, hints, and the lines left out.
   - The reviewer raised 16 findings on the first pass (2 errors, 9 should-fix, 5 polish) and 10 on the re-check (1 error, 4 should-fix, 5 polish); all were applied by rule changes or leave-outs. Two content points went to "Waiting on the owner".
   - Checked on the static build at 375 px in light and dark: no horizontal scroll, focus ring shown, a miss was scheduled and noted, the notebook replayed it, the Today card linked here. Lighthouse accessibility is 100 on `/practice/cloze` and `/practice`.
+- **X2** (2026-10-01): the spoken ↔ written drill at `/practice/convert`.
+  - `lib/convert.ts` (pure, with tests) makes a card from every example, pair or dialogue line in a "both" lesson whose written line differs from the spoken one once marks and punctuation are off (322 cards; no callouts, so no `wrong` line). Lines that differ only in marks or punctuation are one card. The id is `unit/lesson#hash` of both lines.
+  - Two directions, spoken → written by default, each with its own Leitner deck (`decks["to-written"]`, `decks["to-spoken"]`); the chips switch, and the choice is stored (`dir`).
+  - Checking a whole sentence: marks and punctuation ignored; a missing or extra half-space is a near miss with the checker's hint, naming the word; a half-space after a non-joining letter (روز‌ها) is dropped first, as it shows nothing. A wrong answer names the first word that differs: "You typed می‌رم; the written form has می‌رَوَم", a word missing, a word extra, a word that comes later, or the right words in the wrong order. Typing the shown line back gets its own hint.
+  - Accepted with a note (decisions, for the owner's review), all from reviewed data:
+    - the checker's Academy variants and ـه‌ی for ـهٔ;
+    - every verb form as the conjugation trainer accepts it (one-ی, می‌آم, ـید for ـین, رفته‌ام in chat, بـ on a bare compound), but only forms of the target's register and of a verb the other line has too (so written گذاشتی never takes spoken ذاشتی, and بِشین is not read as شدن); never a spoken stem with a written اَسْت;
+    - toward writing: دَر ⇄ تویِ for "in"; the written present for a written future (with a note that the line wants the future);
+    - toward speech: کِتاب رُو joined as کتابو; بَله for آره; the spoken words in the written line's order, with or without به (every word matched to a word of the other line);
+    - the target of another card that shows the same line.
+    - An alternative never equals the line shown (written رفته for رفته است would let the spoken line pass).
+  - Left out (45 directions): 9 cards both ways (the written line rewords beyond register, or a fragment), 17 toward writing only (the written line picks one of several right forms; or a written هستم after a consonant, by a rule, as lesson 4.2 teaches the ending there), 10 toward speech only (the written phrasing is everyday speech too; or speech keeps or drops "in" before home; or, by a rule, the written line is good speech as it stands). By hand in `CONVERT_LEAVE_OUT` (`{ dir?, why }`); a card asked one way only has `only`. 305 cards are asked toward writing, 312 toward speech.
+  - Store `alefbe2:convert` (`convertStore`), in `ALL_STORES` and `BACKUP_KEYS`, with a backup round-trip test. Misses go to the notebook as `{ kind: "convert", dir, ...card }` and replay there (`ConvertPrompt` / `ConvertSolution`). `reviewsDue` counts both directions (`convertDue`); the Today card links to `/practice/convert` when they lead. In `content/routes.ts`, the search index and the practice hub (`ConvertOverview`).
+  - `npx tsx scripts/convert.ts < /dev/null` prints every card with its accepted answers and the directions left out.
+  - The reviewer raised 15 findings (3 errors, 7 should-fix, 5 polish); all were applied by rule changes or leave-outs (one, merging the two حالِت چِطُوره cards, needed no change: their written lines differ, and the twin rule covers them). Three content points went to "Waiting on the owner".
+  - Checked on the static build at 375 px in light and dark: no horizontal scroll, focus ring shown; a miss was scheduled and noted, and the notebook replayed it. Lighthouse accessibility is 100 on `/practice/convert` and `/practice`.
 
 ## Feature ideas (owner asked, 2026-09-30)
 
-Not part of Phase 6. Ranked by how easy each is; the first three need no new Persian content. A ready prompt for the first two is in `docs/PROMPT-practice-extras.md`; cloze practice, the third idea in it, is built (see "Practice extras status").
+Not part of Phase 6. Ranked by how easy each is; the first two need no new Persian content. A ready prompt for the first is in `docs/PROMPT-practice-extras.md`; cloze practice and the spoken ↔ written drill, also in it, are built (see "Practice extras status").
 
 1. **One review queue** (easiest; ready now). A "Review everything due" session that pulls due cards from every deck: letters, words, verbs, vocabulary, and the mistake notebook. Every deck, checker and prompt component already exists; this is a pure function that merges the queues, and one page. Best built after 6f, so the vocabulary deck is in it.
-2. **Spoken ↔ written conversion drill** (easy; ready now). Examples and dialogue lines that carry both forms become cards: show one, type the other. The data is already reviewed. The work is lenient whole-sentence checking (punctuation, half-spaces) and naming the word that differs.
-3. **Reading without vowel marks** (medium; ready now). Show a dictionary word unmarked and ask for its reading, later short sentences. The data and `checkTranslit` exist. To handle: words that read two ways unmarked (کشتی), which need their English shown or must be left out.
-4. **Placement check** (medium; ready now if built from existing quizzes). Ten to fifteen questions that suggest where a heritage or Dari speaker should start, in place of skipping units on trust in lesson 0.3. Sampling the lesson quizzes avoids new content; purpose-written questions would need a reviewer pass.
-5. **Audio** (hard; blocked). The largest gap: stress (*ráftam* / *raftám*), *be-* / *bo-*, and every form under "Waiting on the owner" are things text cannot carry. It needs recordings by a Tehrani speaker, starting with dialogue lines and verb tables; browser speech synthesis is not good enough. It would unlock listening and dictation drills. Blocked until there is a speaker.
+2. **Reading without vowel marks** (medium; ready now). Show a dictionary word unmarked and ask for its reading, later short sentences. The data and `checkTranslit` exist. To handle: words that read two ways unmarked (کشتی), which need their English shown or must be left out.
+3. **Placement check** (medium; ready now if built from existing quizzes). Ten to fifteen questions that suggest where a heritage or Dari speaker should start, in place of skipping units on trust in lesson 0.3. Sampling the lesson quizzes avoids new content; purpose-written questions would need a reviewer pass.
+4. **Audio** (hard; blocked). The largest gap: stress (*ráftam* / *raftám*), *be-* / *bo-*, and every form under "Waiting on the owner" are things text cannot carry. It needs recordings by a Tehrani speaker, starting with dialogue lines and verb tables; browser speech synthesis is not good enough. It would unlock listening and dictation drills. Blocked until there is a speaker.
 
 ## Waiting on the owner
 
@@ -335,6 +350,10 @@ Not part of Phase 6. Ranked by how easy each is; the first three need no new Per
 - Confirm these from the cloze review (X1):
   - lesson 0.2 `{او} ایرانیه.`: a spoken line with او, where the course says اون elsewhere in speech (6.7, 9.3);
   - lesson 9.5 `قابِلی نَداره. {پانْصَد هِزار} تُومَن.`: the spoken line keeps پانْصَد; Tehrani speech says پونْصَد (*punsad*), like تِهْرون and تُومَن.
+- Confirm these from the spoken ↔ written review (X2):
+  - lesson 1.3 (`alphabet.ts`, the حالِت چِطُوره؟ line): its written line ends تُو چِطُوری؟, the spoken form; lesson 0.3 writes the same line حالِ تُو چِطُور اَسْت؟;
+  - seven written lines use هَسْتَم … after a consonant (حاضِر هَسْتی, شیراز هَسْتَم, تِهْران هَسْتَم, مُعَلِّم هَسْتَم, راه هَسْتَم, نَفَر هَسْتید, بِسیار خوب هَسْتَنْد), against lesson 4.2's rule (the full verb after a vowel) and its own خوشحالَنْد: soften the rule's wording, or change the lines (the drill leaves these out toward writing until then);
+  - lesson 0.3 writes واسه عَروسی without the ezafe mark, where lesson 9.1 writes واسهٔ.
 - Check the month names in `content/calendar.ts`.
 - 21st.dev components need the owner's registry API key, set as an environment variable. Until then, components are hand-built.
 - Review new.alefbe.study and merge `nextgen` into `main` when happy.

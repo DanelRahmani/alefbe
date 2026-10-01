@@ -15,6 +15,7 @@ import { DEFAULT_GOAL, type DailyGoal } from "./today";
 import { emptyVerbsData, type VerbsData } from "./verb-drill";
 import { emptyVocabData, type VocabData } from "./vocab";
 import { emptyClozeData, type ClozeData } from "./cloze";
+import { emptyConvertData, type ConvertData } from "./convert";
 
 export type Theme = "system" | "light" | "dark";
 
@@ -157,6 +158,9 @@ export const vocabStore = createPersistentStore<VocabData>("alefbe2:vocab", empt
 /** Cloze practice at /practice/cloze: one Leitner deck (lib/cloze.ts). */
 export const clozeStore = createPersistentStore<ClozeData>("alefbe2:cloze", emptyClozeData());
 
+/** The spoken ↔ written drill at /practice/convert: a Leitner deck per direction (lib/convert.ts). */
+export const convertStore = createPersistentStore<ConvertData>("alefbe2:convert", emptyConvertData());
+
 /** Every store, for refreshing after an import or reset. */
 export const ALL_STORES = [
   settingsStore,
@@ -175,4 +179,5 @@ export const ALL_STORES = [
   verbsStore,
   vocabStore,
   clozeStore,
+  convertStore,
 ];

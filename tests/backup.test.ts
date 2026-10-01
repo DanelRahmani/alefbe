@@ -50,6 +50,14 @@ describe("makeBackup", () => {
     applyBackup(parseBackup(JSON.stringify(makeBackup(from.read, NOW))), to.read, to.write);
     expect(to.map.get("alefbe2:cloze")).toBe(deck);
   });
+  it("includes the spoken and written drill, and restores it", () => {
+    expect(BACKUP_KEYS).toContain("alefbe2:convert");
+    const deck = JSON.stringify({ v: 1, data: { decks: { "to-written": { cards: { "past/simple-past#abc": { box: 2, due: 0, reps: 1, lapses: 0 } }, unlocked: 1 }, "to-spoken": { cards: {}, unlocked: 1 } }, dir: "to-spoken" } });
+    const from = fakeStorage({ "alefbe2:convert": deck });
+    const to = fakeStorage();
+    applyBackup(parseBackup(JSON.stringify(makeBackup(from.read, NOW))), to.read, to.write);
+    expect(to.map.get("alefbe2:convert")).toBe(deck);
+  });
   it("names the file by date", () => {
     expect(backupFileName(NOW)).toBe("alefbe-progress-2026-09-29.json");
   });

@@ -10,14 +10,15 @@ import { TENSES } from "./conjugate";
 import { emptyVerbsData, verbCandidates, type VerbsData } from "./verb-drill";
 import { vocabDue, type VocabData } from "./vocab";
 import { clozeDue, type ClozeData } from "./cloze";
+import { convertDue, type ConvertData } from "./convert";
 
 /** Activities a day (trainer answers, traces, quiz answers, game rounds, lessons). */
 export const GOALS = [5, 10, 20] as const;
 export type DailyGoal = (typeof GOALS)[number];
 export const DEFAULT_GOAL: DailyGoal = 10;
 
-/** A deck with reviews: a letter-trainer mode, the conjugation trainer, the vocabulary deck or cloze practice. */
-export type ReviewDeck = DrillMode | "verbs" | "vocab" | "cloze";
+/** A deck with reviews: a letter-trainer mode, the conjugation trainer, the vocabulary deck, cloze practice or the spoken ↔ written drill. */
+export type ReviewDeck = DrillMode | "verbs" | "vocab" | "cloze" | "convert";
 
 export interface ReviewsDue {
   total: number;
@@ -28,13 +29,15 @@ export interface ReviewsDue {
   vocab: number;
   /** Cloze cards due. */
   cloze: number;
+  /** Spoken ↔ written cards due, both directions. */
+  convert: number;
   /** The deck with the most cards due, or null when nothing is. */
   top: ReviewDeck | null;
 }
 
 /** Where a deck's reviews happen. */
 export const reviewHref = (d: ReviewDeck) =>
-  d === "verbs" ? "/verbs" : d === "vocab" ? "/vocab" : d === "cloze" ? "/practice/cloze" : `/practice/drill/${d}`;
+  d === "verbs" ? "/verbs" : d === "vocab" ? "/vocab" : d === "cloze" ? "/practice/cloze" : d === "convert" ? "/practice/convert" : `/practice/drill/${d}`;
 
 /** The vocabulary deck and the ids of the words still in the course (lib/vocab.ts vocabDue). */
 export interface VocabDeck {
@@ -45,6 +48,7 @@ export interface VocabDeck {
 /** The decks kept apart from the letter trainer and the verbs. */
 export interface MoreDecks {
   cloze?: ClozeData;
+  convert?: ConvertData;
 }
 
 /** Cards due now across every trainer deck (new cards don't count). */
@@ -78,8 +82,11 @@ export function reviewsDue(
   if (vocabDueNow > topDue) [top, topDue] = ["vocab", vocabDueNow];
   const clozeDueNow = more.cloze ? clozeDue(more.cloze, now) : 0;
   total += clozeDueNow;
-  if (clozeDueNow > topDue) top = "cloze";
-  return { total, byMode, verbs: verbsDue, vocab: vocabDueNow, cloze: clozeDueNow, top };
+  if (clozeDueNow > topDue) [top, topDue] = ["cloze", clozeDueNow];
+  const convertDueNow = more.convert ? convertDue(more.convert, now) : 0;
+  total += convertDueNow;
+  if (convertDueNow > topDue) top = "convert";
+  return { total, byMode, verbs: verbsDue, vocab: vocabDueNow, cloze: clozeDueNow, convert: convertDueNow, top };
 }
 
 export interface GoalProgress {

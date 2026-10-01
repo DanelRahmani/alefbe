@@ -5,6 +5,7 @@ import type { DrillMode } from "./drill";
 import type { QuizType } from "./quiz";
 import type { Person, Style, Tense } from "./conjugate";
 import type { ClozeAsk } from "./cloze";
+import type { ConvertAsk, ConvertDir } from "./convert";
 
 export type MistakeItem =
   /** A lesson-quiz question, by lesson key ("unit/lesson") and its index in the quiz. */
@@ -20,7 +21,9 @@ export type MistakeItem =
   /** A vocabulary card, carried whole so the notebook can ask it without the card list. */
   | { kind: "vocab"; id: string; fa: string; spoken?: string; en: string; hint?: string }
   /** A cloze card, carried whole for the same reason. */
-  | ({ kind: "cloze" } & ClozeAsk);
+  | ({ kind: "cloze" } & ClozeAsk)
+  /** A spoken ↔ written card in one direction, carried whole. */
+  | ({ kind: "convert"; dir: ConvertDir } & ConvertAsk);
 
 export interface Mistake {
   item: MistakeItem;
@@ -54,6 +57,8 @@ export function mistakeId(item: MistakeItem): string {
       return `vocab:${item.id}`;
     case "cloze":
       return `cloze:${item.id}`;
+    case "convert":
+      return `convert:${item.dir}:${item.id}`;
   }
 }
 

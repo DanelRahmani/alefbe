@@ -9,6 +9,8 @@ import { VocabOverview } from "@/components/vocab/VocabOverview";
 import { VOCAB_CARDS } from "@/content/vocab";
 import { ClozeOverview } from "@/components/cloze/ClozeOverview";
 import { CLOZE_CARDS } from "@/content/cloze";
+import { ConvertOverview } from "@/components/convert/ConvertOverview";
+import { CONVERT_CARDS } from "@/content/convert";
 
 export const metadata: Metadata = {
   title: "Practice",
@@ -42,6 +44,10 @@ export default function PracticePage() {
       <h2 className="lesson-h2 mt-10">Cloze practice</h2>
       <p className="ui mt-1 text-sm text-muted">{CLOZE_CARDS.length} example lines from the lessons, each with a gap. Read the English, type the missing words.</p>
       <ClozeOverview cards={CLOZE_CARDS.map((c) => ({ id: c.id, lessons: c.lessons }))} />
+
+      <h2 className="lesson-h2 mt-10">Spoken and written</h2>
+      <p className="ui mt-1 text-sm text-muted">{CONVERT_CARDS.length} lesson lines that are said one way and written another. Type the other form.</p>
+      <ConvertOverview cards={CONVERT_CARDS.map((c) => ({ id: c.id, lessons: c.lessons, ...(c.only ? { only: c.only } : {}) }))} />
 
       <h2 className="lesson-h2 mt-10">Quick practice</h2>
       <ul className="drill-modes">

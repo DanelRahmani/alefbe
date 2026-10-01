@@ -68,6 +68,13 @@ describe("reviewsDue", () => {
     expect(reviewHref("cloze")).toBe("/practice/cloze");
     expect(reviewsDue({}, NOW).cloze).toBe(0);
   });
+  it("counts the spoken and written drill in both directions, and links there when it leads", () => {
+    const convert = { dir: "to-written" as const, decks: { "to-written": deckWith(["a#1", "b#2"], NOW - 1), "to-spoken": deckWith(["a#1"], NOW - 1) } };
+    const r = reviewsDue({}, NOW, emptyVerbsData(), undefined, { convert });
+    expect(r.convert).toBe(3);
+    expect(r.top).toBe("convert");
+    expect(reviewHref("convert")).toBe("/practice/convert");
+  });
   it("ignores verb items outside the open groups", () => {
     const verbs = { ...emptyVerbsData(), decks: { present: deckWith(verbGroups("present")[1], NOW - 1) } };
     expect(reviewsDue({}, NOW, verbs).verbs).toBe(0);
