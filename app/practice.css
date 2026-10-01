@@ -1078,3 +1078,17 @@ a.letter-card:hover {
     color: #c4c4c4;
   }
 }
+
+/* The result of the placement check. */
+.placement-start {
+  margin-top: 0.3rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.6;
+}
+.placement-slips {
+  display: grid;
+  gap: 0.25rem;
+  padding-inline-start: 1.1rem;
+  list-style: disc;
+}

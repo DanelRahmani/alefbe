@@ -235,6 +235,12 @@ export const startHere: Lesson[] = [
         label: "I can read Persian: skip Units 1 and 2",
         text: "This marks the alphabet and sound lessons finished and opens every letter group in the trainer. Unit 3, on spelling and the half-space, is worth doing anyway.",
       },
+      {
+        type: "link",
+        href: "/placement",
+        label: "Take the placement check",
+        text: "if you know some grammar too: two questions per unit, taken from the lesson quizzes, suggest which unit to start at, and the check can mark the earlier lessons finished.",
+      },
       { type: "heading", text: "Spoken and written, side by side" },
       {
         type: "examples",

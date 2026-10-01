@@ -624,11 +624,11 @@ function TypeIt({ items, onEnd }: { items: TypeItem[]; onEnd: PlayProps["onEnd"]
               aria-describedby="type-feedback"
             />
             {!verdict ? (
-              <button type="submit" className="ui quiz-check">
+              <button key="check" type="submit" className="ui quiz-check">
                 Check
               </button>
             ) : (
-              <button type="button" className="ui quiz-check" onClick={next} autoFocus>
+              <button key="next" type="button" className="ui quiz-check" onClick={next} autoFocus>
                 {at + 1 < items.length ? "Next" : "Finish"}
               </button>
             )}

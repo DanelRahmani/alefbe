@@ -367,11 +367,11 @@ export function VerbTrainer({ lessons }: { lessons: Partial<Record<Tense, TenseL
                 aria-describedby="verb-feedback"
               />
               {!verdict ? (
-                <button type="submit" className="ui quiz-check">
+                <button key="check" type="submit" className="ui quiz-check">
                   Check
                 </button>
               ) : (
-                <button type="button" className="ui quiz-check" onClick={next} autoFocus>
+                <button key="next" type="button" className="ui quiz-check" onClick={next} autoFocus>
                   Next
                 </button>
               )}

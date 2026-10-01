@@ -16,6 +16,8 @@ import { emptyVerbsData, type VerbsData } from "./verb-drill";
 import { emptyVocabData, type VocabData } from "./vocab";
 import { emptyClozeData, type ClozeData } from "./cloze";
 import { emptyConvertData, type ConvertData } from "./convert";
+import { emptyPlacementData, type PlacementData } from "./placement";
+import { DRILL_GROUPS } from "./persian/letters";
 
 export type Theme = "system" | "light" | "dark";
 
@@ -161,6 +163,20 @@ export const clozeStore = createPersistentStore<ClozeData>("alefbe2:cloze", empt
 /** The spoken ↔ written drill at /practice/convert: a Leitner deck per direction (lib/convert.ts). */
 export const convertStore = createPersistentStore<ConvertData>("alefbe2:convert", emptyConvertData());
 
+/** The placement check at /placement: only the last result (lib/placement.ts). */
+export const placementStore = createPersistentStore<PlacementData>("alefbe2:placement", emptyPlacementData());
+
+/** Open the letter trainer's first groups (sound and letter decks), for learners who already read. */
+export function openLetterGroups(groups: number) {
+  srsStore.set((s) => {
+    const lift = (mode: "sound" | "letter") => {
+      const d = s.decks[mode] ?? emptyDeck();
+      return { ...d, unlocked: Math.min(DRILL_GROUPS.length, Math.max(d.unlocked, groups)) };
+    };
+    return { ...s, decks: { ...s.decks, sound: lift("sound"), letter: lift("letter") } };
+  });
+}
+
 /** Every store, for refreshing after an import or reset. */
 export const ALL_STORES = [
   settingsStore,
@@ -180,4 +196,5 @@ export const ALL_STORES = [
   vocabStore,
   clozeStore,
   convertStore,
+  placementStore,
 ];

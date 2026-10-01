@@ -378,11 +378,11 @@ export function LetterQuiz() {
                 spellCheck={false}
               />
               {!verdict ? (
-                <button type="submit" className="ui quiz-check">
+                <button key="check" type="submit" className="ui quiz-check">
                   Check
                 </button>
               ) : (
-                <button type="button" ref={nextRef} className="ui quiz-check" onClick={next}>
+                <button key="next" type="button" ref={nextRef} className="ui quiz-check" onClick={next}>
                   Next
                 </button>
               )}

@@ -94,11 +94,11 @@ export function FaAnswerField({
             aria-describedby={describedBy}
           />
           {!answered ? (
-            <button type="submit" className="ui quiz-check">
+            <button key="check" type="submit" className="ui quiz-check">
               Check
             </button>
           ) : (
-            <button type="button" className="ui quiz-check" onClick={onNext} autoFocus>
+            <button key="next" type="button" className="ui quiz-check" onClick={onNext} autoFocus>
               Next
             </button>
           )}

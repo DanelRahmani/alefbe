@@ -251,6 +251,21 @@ Phase 6 is Units 7–9 and the vocabulary deck (see `docs/PLAN.md`). The owner's
 
 Phase 6 and the practice extras are complete; the owner merged them into `main` through PR #8 (2026-10-01). Next: Phase 7 (the placement check, the engine forms for Unit 11, Units 10–11), with a ready prompt in `docs/PROMPT-phase-7.md`.
 
+## Phase 7 status
+
+Phase 7 is the placement check, the engine forms for Unit 11, and Units 10–11 (owner's brief: `docs/PROMPT-phase-7.md`). Order: 7a placement check, 7b engine, 7c Unit 10, 7d Unit 11.
+
+- **Before 7a:** the tree was clean; `nextgen` matched `origin/main` (the local `main` ref was stale and was fast-forwarded).
+- **7a** (2026-10-02): the placement check at `/placement` (not `/start`, which reads like the "Start here" unit at `/learn/start-here`).
+  - The hard rule of the practice extras holds: every question is a lesson-quiz question from `LESSON_QUIZZES`, unchanged.
+  - `content/placement.ts` lists them by hand, two per band, in course order: a band per unit, with Units 1–3 sharing the script band. 14 questions now. Adding a unit is one line. Persian-script answers were preferred, since most people taking the check don't know the transliteration scheme (`ketab-e khub` fails against `ketâb-e khub`); the one transliteration question, لیوان, has no vowel to guess.
+  - `lib/placement.ts` (pure, with tests): the first band with two misses is where to start (its first lesson), and the check stops there, as later answers can't change it. A single miss in a band is a slip: the band counts as known, but that lesson stays unfinished. With no band failed, the start is the first lesson after the last band; with nothing after it, the result says "You know what Units 1–9 teach" and links to the review queue. An "I don't know" button counts as a miss.
+  - The result page names the reason ("You missed both questions on the past tenses (from lessons 7.1 and 7.4)"), links to the lesson, lists the slips as "worth a look", and offers to mark the earlier lessons finished, slips excepted, after a confirmation. Marking a lesson finished opens its vocabulary, cloze and spoken ↔ written cards, and its verb tense (`tenseOpen` already reads `progress`), so the tenses open with their lessons and nothing separate was needed. When Units 1 and 2 are all marked, every letter group opens too, as the fast track does (`openLetterGroups` in `lib/stores.ts`, now shared with `SkipAhead`). No activity is logged.
+  - Misses don't go to the notebook and nothing is scheduled. Store `alefbe2:placement` (`placementStore`: `{ last: { at, answers } }`; the suggestion is worked out from the answers), in `ALL_STORES` and `BACKUP_KEYS`, with a backup round-trip test.
+  - Links: lesson 0.3 (an English `link` block after the skip button), the home page (a line under the first-lesson card while nothing is finished and no check has been taken), the search index and `content/routes.ts`.
+  - Fix found while testing, in every typed-answer trainer (`FaAnswerField`, vocab, verbs, drill, games, letter quiz, review queue): clicking **Next** with the mouse showed "Type an answer first". React reused one `<button>` for Check and Next, so it became `type="submit"` before the click's default action and submitted the empty field. The two buttons now have their own `key`. Pressing Enter was never affected.
+  - Checked on the static build at 375 px in light and dark: no horizontal scroll; a fail, a slip and an all-pass run gave the right start; marking opened 28 lessons and all letter groups; the focus ring shows on every control. Lighthouse accessibility is 100 on `/placement`, `/` and lesson 0.3.
+
 ## Practice extras status
 
 The owner's brief is `docs/PROMPT-practice-extras.md`: X1 cloze, X2 spoken ↔ written, X3 one review queue. The hard rule: no new Persian. Every Persian string a learner sees comes unchanged from reviewed lesson data; a card that would need another string is left out.
@@ -301,11 +316,10 @@ The owner's brief is `docs/PROMPT-practice-extras.md`: X1 cloze, X2 spoken ↔ w
 
 ## Feature ideas (owner asked, 2026-09-30)
 
-Not part of Phase 6. Ranked by how easy each is. Everything in `docs/PROMPT-practice-extras.md` (cloze, spoken ↔ written, one review queue) is built (see "Practice extras status").
+Not part of Phase 6. Ranked by how easy each is. Everything in `docs/PROMPT-practice-extras.md` (cloze, spoken ↔ written, one review queue) is built (see "Practice extras status"), and so is the placement check (see "Phase 7 status").
 
 1. **Reading without vowel marks** (medium, not quite ready). Show a dictionary word unmarked and ask for its reading, later short sentences. The data and `checkTranslit` exist. Harder than it looks: an unmarked word often reads several ways (کشتی, کرم, مرد/مُرد), and every reading must come from reviewed data, so the deck needs a pass that finds each unmarked spelling's readings across the dictionary and the conjugation tables and either accepts all of them or leaves the word out; sentences add ezafe and contraction ambiguity, as the cloze and convert work showed. Expect a reviewer round like X1's.
-2. **Placement check** (medium; ready now if built from existing quizzes). Ten to fifteen questions that suggest where a heritage or Dari speaker should start, in place of skipping units on trust in lesson 0.3. Sampling the lesson quizzes avoids new content; purpose-written questions would need a reviewer pass.
-3. **Audio** (hard; blocked). The largest gap: stress (*ráftam* / *raftám*), *be-* / *bo-*, and every form under "Waiting on the owner" are things text cannot carry. It needs recordings by a Tehrani speaker, starting with dialogue lines and verb tables; browser speech synthesis is not good enough. It would unlock listening and dictation drills. Blocked until there is a speaker.
+2. **Audio** (hard; blocked). The largest gap: stress (*ráftam* / *raftám*), *be-* / *bo-*, and every form under "Waiting on the owner" are things text cannot carry. It needs recordings by a Tehrani speaker, starting with dialogue lines and verb tables; browser speech synthesis is not good enough. It would unlock listening and dictation drills. Blocked until there is a speaker.
 
 ## Waiting on the owner
 
@@ -374,6 +388,7 @@ Not part of Phase 6. Ranked by how easy each is. Everything in `docs/PROMPT-prac
 - **Editing Persian text:** use the Edit tool, or a small Node script in the scratchpad.
   - Shell heredocs break on quotes.
   - `\uXXXX` escapes typed in tool input turn into real characters, so use constants such as `TATWEEL` and `ZWNJ`, or `String.fromCharCode`.
+- **Lesson-quiz questions:** `npx tsx scripts/quizzes.ts [unit…] < /dev/null` prints every question with its lesson key and index (for `content/placement.ts`).
 - **Checking the engine's reading of words:** `npx tsx scripts/check-words.ts <words> < /dev/null`.
 - **Content tests:** `tests/content.test.ts` checks every string for readability, transliteration errors, links and valid blocks.
 - **New pages:** add them to `content/routes.ts`.
