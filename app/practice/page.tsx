@@ -3,6 +3,7 @@ import Link from "next/link";
 import { DrillOverview } from "@/components/drill/DrillOverview";
 import { GameCards } from "@/components/games/GameCards";
 import { MistakesCard } from "@/components/MistakesCard";
+import { ReviewCard } from "@/components/review/ReviewCard";
 import { VerbOverview } from "@/components/verbs/VerbOverview";
 import { VERBS } from "@/content/verbs";
 import { VocabOverview } from "@/components/vocab/VocabOverview";
@@ -28,6 +29,12 @@ export default function PracticePage() {
           tracing and games are for extra practice whenever you like; they never change the schedule.
         </p>
       </section>
+
+      <ul className="drill-modes mt-6">
+        <li>
+          <ReviewCard />
+        </li>
+      </ul>
 
       <h2 className="lesson-h2 mt-8">Letter trainer</h2>
       <p className="ui mt-1 text-sm text-muted">Spaced repetition, typed answers. New letters open group by group.</p>

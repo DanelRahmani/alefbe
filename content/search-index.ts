@@ -11,6 +11,7 @@ const PAGES: { title: string; href: string; sub: string; also?: string[] }[] = [
   { title: "The path", href: "/", sub: "All lessons, unit by unit", also: ["home", "lessons", "course"] },
   { title: "The script", href: "/script", sub: "Letters, vowel marks and digits", also: ["alphabet", "letters", "chart"] },
   { title: "Practice", href: "/practice", sub: "Trainers, quiz, tracing and games" },
+  { title: "Review everything due", href: "/practice/review", sub: "Every deck's due cards and the mistake notebook, in one session", also: ["review", "due", "srs", "queue", "all decks", "spaced repetition"] },
   { title: "Letter trainer", href: "/practice/drill/sound", sub: "Spaced repetition for the letters", also: ["drill", "srs", "review"] },
   { title: "Verb trainer", href: "/verbs", sub: "Conjugate the core verbs, spoken and written", also: ["verbs", "conjugation", "conjugate", "present tense", "past tense", "present perfect", "past continuous", "progressive", "subjunctive", "imperative", "commands", "future", "tenses", "srs"] },
   { title: "Vocabulary deck", href: "/vocab", sub: "The words of the lessons you have done", also: ["vocabulary", "vocab", "words", "flashcards", "srs", "review"] },

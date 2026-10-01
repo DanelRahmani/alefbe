@@ -34,7 +34,7 @@ export interface LessonQuiz {
 }
 
 /** One notebook item, ready to ask. */
-interface Card {
+export interface NotebookCard {
   id: string;
   item: MistakeItem;
   prompt: React.ReactNode;
@@ -125,7 +125,7 @@ function verbQuestion(item: Extract<MistakeItem, { kind: "verb" }>): VerbQuestio
 }
 
 /** Turn a notebook item into a question; null if its source no longer exists. Uses randomness: call from events only. */
-function cardOf(m: Mistake, lessons: Record<string, LessonQuiz>): Card | null {
+export function cardOf(m: Mistake, lessons: Record<string, LessonQuiz>): NotebookCard | null {
   const { item } = m;
   const id = mistakeId(item);
   switch (item.kind) {
@@ -285,7 +285,7 @@ function cardOf(m: Mistake, lessons: Record<string, LessonQuiz>): Card | null {
   }
 }
 
-function Review({ cards, onEnd }: { cards: Card[]; onEnd: () => void }) {
+function Review({ cards, onEnd }: { cards: NotebookCard[]; onEnd: () => void }) {
   const nb = useStore(mistakesStore);
   const ui = useStore(drillUiStore);
   const [at, setAt] = useState(0);
@@ -423,11 +423,11 @@ function Review({ cards, onEnd }: { cards: Card[]; onEnd: () => void }) {
 
 export function MistakeNotebook({ lessons }: { lessons: Record<string, LessonQuiz> }) {
   const nb = useStore(mistakesStore);
-  const [cards, setCards] = useState<Card[] | null>(null);
+  const [cards, setCards] = useState<NotebookCard[] | null>(null);
   const list = notebookList(nb);
 
   const start = () => {
-    const made = list.map((m) => cardOf(m, lessons)).filter((c): c is Card => c !== null);
+    const made = list.map((m) => cardOf(m, lessons)).filter((c): c is NotebookCard => c !== null);
     setCards(made.slice(0, SESSION));
   };
   const remove = (id: string) =>

@@ -119,13 +119,16 @@ export function TodayCard({ words }: { words: DayWord[] }) {
           <li>
             <span className="today-stat">{due?.total ?? 0}</span>
             {due?.top ? (
-              <Link href={reviewHref(due.top)}>
-                {due.total === 1 ? "review" : "reviews"} due in the trainers
-                <span className="sr-only">
-                  , starting with {due.top === "verbs" ? "Verbs" : due.top === "vocab" ? "Vocabulary" : due.top === "cloze" ? "Cloze practice" : due.top === "convert" ? "Spoken and written" : modeInfo(due.top).title}
-                </span>{" "}
-                →
-              </Link>
+              <span>
+                <Link href="/practice/review">{due.total === 1 ? "review" : "reviews"} due in the trainers →</Link>{" "}
+                <span className="text-muted">
+                  (most in{" "}
+                  <Link href={reviewHref(due.top)}>
+                    {due.top === "verbs" ? "Verbs" : due.top === "vocab" ? "Vocabulary" : due.top === "cloze" ? "Cloze practice" : due.top === "convert" ? "Spoken and written" : modeInfo(due.top).title}
+                  </Link>
+                  )
+                </span>
+              </span>
             ) : (
               <span className="text-muted">reviews due in the trainers</span>
             )}

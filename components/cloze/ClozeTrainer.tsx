@@ -129,7 +129,7 @@ function pickCard(cards: readonly ClozeCard[], practising: boolean, last?: strin
   return practising ? practiceCard(pool, last, Math.random()) : nextCard(pool, clozeStore.get().deck, Date.now(), last);
 }
 
-function recordAnswer(id: string, ok: boolean) {
+export function recordClozeAnswer(id: string, ok: boolean) {
   const s = clozeStore.get();
   clozeStore.set({ ...s, deck: answer([], s.deck, id, ok, Date.now()).state });
 }
@@ -183,7 +183,7 @@ export function ClozeTrainer({ cards }: { cards: ClozeCard[] }) {
     setVerdict(v);
     logActivity({ kind: "drill" });
     noteResult({ kind: "cloze", ...clozeAsk(card) }, v.ok);
-    if (!practice) recordAnswer(card.id, v.ok);
+    if (!practice) recordClozeAnswer(card.id, v.ok);
   };
 
   return (

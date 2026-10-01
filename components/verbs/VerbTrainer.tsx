@@ -104,6 +104,12 @@ function recordAnswer(tense: Tense, id: string, ok: boolean): number[] {
   return r.newlyUnlocked;
 }
 
+/** Schedule an answer as the trainer does; returns the unlock banner, if verbs opened. */
+export function recordVerbAnswer(tense: Tense, id: string, ok: boolean): string | null {
+  const opened = recordAnswer(tense, id, ok);
+  return opened.length ? `New verbs unlocked: ${groupNames(tense, opened)}` : null;
+}
+
 /** The lesson that teaches a tense, for the link on a tense that is not open yet. */
 export interface TenseLesson {
   number: string;

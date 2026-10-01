@@ -13,6 +13,7 @@ export const STATIC_PAGES = [
   "/practice",
   "/practice/quiz",
   "/practice/mistakes",
+  "/practice/review",
   "/practice/cloze",
   "/practice/convert",
   "/practice/trace",

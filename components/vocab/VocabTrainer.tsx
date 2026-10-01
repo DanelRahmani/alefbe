@@ -63,7 +63,7 @@ function pickCard(cards: readonly VocabCard[], practising: boolean, last?: strin
 }
 
 /** Schedule an answer in the deck. */
-function recordAnswer(id: string, ok: boolean) {
+export function recordVocabAnswer(id: string, ok: boolean) {
   const s = vocabStore.get();
   vocabStore.set({ ...s, deck: answer([], s.deck, id, ok, Date.now()).state });
 }
@@ -127,7 +127,7 @@ export function VocabTrainer({ cards }: { cards: VocabCard[] }) {
     setVerdict(v);
     logActivity({ kind: "drill" });
     noteResult({ kind: "vocab", id: card.id, fa: card.fa, spoken: card.spoken, en: card.en, hint: card.hint }, v.ok);
-    if (!practice) recordAnswer(card.id, v.ok);
+    if (!practice) recordVocabAnswer(card.id, v.ok);
   };
 
   const onKeyDown = (e: React.KeyboardEvent) => {

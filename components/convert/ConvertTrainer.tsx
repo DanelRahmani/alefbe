@@ -71,7 +71,7 @@ function pickCard(cards: readonly ConvertCard[], dir: ConvertDir, practising: bo
   return practising ? practiceCard(pool, last, Math.random()) : nextCard(pool, convertStore.get().decks[dir], Date.now(), last);
 }
 
-function recordAnswer(dir: ConvertDir, id: string, ok: boolean) {
+export function recordConvertAnswer(dir: ConvertDir, id: string, ok: boolean) {
   const s = convertStore.get();
   convertStore.set({ ...s, decks: { ...s.decks, [dir]: answer([], s.decks[dir], id, ok, Date.now()).state } });
 }
@@ -132,7 +132,7 @@ export function ConvertTrainer({ cards }: { cards: ConvertCard[] }) {
     setVerdict(v);
     logActivity({ kind: "drill" });
     noteResult({ kind: "convert", dir, ...convertAsk(card) }, v.ok);
-    if (!practice) recordAnswer(dir, card.id, v.ok);
+    if (!practice) recordConvertAnswer(dir, card.id, v.ok);
   };
 
   return (
