@@ -344,6 +344,17 @@ Phase 8 is Units 12–14 (owner's brief: `docs/PROMPT-phase-8.md`). Order: 8a Un
 
 Phase 8 is complete on `nextgen`; the owner reviews and merges.
 
+## Phase 9 status
+
+Phase 9 is polish (owner's brief: `docs/PROMPT-phase-9.md`). Order: 9a design audit and plan, 9b one design system, 9c moments of craft, 9d performance, 9e accessibility and the 375 px sweep on every route, 9f the production smoke test after the owner merges.
+
+- **Before 9a:** the tree was clean and `nextgen` contained `main` (Phase 8 not merged yet); 1177 tests passed.
+- **9a** (2026-10-02): the audit and plan, in `docs/DESIGN-PASS.md` (findings ranked by how much each improves a learner's day, the 9b–9e plan, and the owner's decisions).
+  - Baseline, Lighthouse mobile on `alefbe-static`: performance 51 on `/`, 56 on lesson 4.2, 56 on `/practice`, 47 on `/practice/review`; LCP 5.4–6.1 s; accessibility 100. The CSS is 79 KB (16.2 KB gzipped).
+  - The main findings: Amiri loads on every page (the brand mark, hero, seal), about 228 KB; blur on seven surfaces; `.has-fa` double-spaces English lines; a bidi bug reverses two Persian phrases in one bracket (10.5); feedback doesn't put the right form first; about 49 font sizes, 10 radii and six button looks.
+  - The owner said to continue without choosing, so the four decisions were taken as recommended: a near-miss look, kickers dropped where they repeat the section, the verb chips grouped and the progress stats as a list, the brand mark in Vazirmatn.
+  - Tools: `scripts/design-shots.cjs` with `scripts/design-shots-config.mjs` (before/after screenshots through the Playwright MCP, seeded progress, 375 and 1280 px, light and dark; the copy it writes must live inside the project, e.g. `.playwright-mcp/run.cjs`), and `scripts/lighthouse.sh <out-dir> <label> [paths…]` (Lighthouse 13 on the static build).
+
 ## Practice extras status
 
 The owner's brief is `docs/PROMPT-practice-extras.md`: X1 cloze, X2 spoken ↔ written, X3 one review queue. The hard rule: no new Persian. Every Persian string a learner sees comes unchanged from reviewed lesson data; a card that would need another string is left out.
