@@ -25,4 +25,8 @@ export const PLACEMENT: PlacementBand[] = [
   { id: "want-can-must", title: "Want, can, must", topic: "want, can and must", units: ["want-can-must"], questions: [q("want-can-must/want-to", 0), q("want-can-must/can", 2)] },
   // A place word with the ezafe; the superlative.
   { id: "where-when", title: "Where, when, how much", topic: "places and comparing", units: ["where-when"], questions: [q("where-when/place-words", 0), q("where-when/comparing", 2)] },
+  // "The book that…" (ـی + که); اَگه with the subjunctive.
+  { id: "longer-sentences", title: "Longer sentences", topic: "clauses with که and اَگه", units: ["longer-sentences"], questions: [q("longer-sentences/the-book-that", 0), q("longer-sentences/if", 1)] },
+  // The past perfect; an unreal condition.
+  { id: "more-verbs", title: "More verb forms", topic: "the past perfect and unreal conditions", units: ["more-verbs"], questions: [q("more-verbs/past-perfect", 0), q("more-verbs/unreal-if", 0)] },
 ];

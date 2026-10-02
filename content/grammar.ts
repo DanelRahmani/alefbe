@@ -368,6 +368,32 @@ export const GRAMMAR: GrammarTopic[] = [
     ],
   },
   {
+    slug: "unreal-if",
+    title: "If I knew…",
+    unit: "more-verbs",
+    lesson: "more-verbs/unreal-if",
+    blocks: [
+      { type: "idea", text: "For what isn't so, or didn't happen, both halves take past forms, usually the past continuous." },
+      {
+        type: "examples",
+        items: [{ fa: "اَگه پول {داشْتَم}، یه ماشین {می‌خَریدَم}.", written: "اَگَر پول {داشْتَم}، یِک ماشین {می‌خَریدَم}.", en: "If I had money, I'd buy a car." }],
+      },
+    ],
+  },
+  {
+    slug: "passive",
+    title: "The passive",
+    unit: "more-verbs",
+    lesson: "more-verbs/passive",
+    blocks: [
+      { type: "idea", text: "The participle with شُدَن: دیده می‌شَوَد, *it is seen*; دیده شُد, *it was seen*." },
+      {
+        type: "examples",
+        items: [{ fa: "این خونه پارْسال {ساخْته شُد}.", written: "این خانه پارْسال {ساخْته شُد}.", en: "This house was built last year." }],
+      },
+    ],
+  },
+  {
     slug: "phrases",
     title: "Everyday phrases",
     unit: "culture",

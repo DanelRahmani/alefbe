@@ -224,12 +224,15 @@ function altsOf(target: string, paired: string, index: FormIndex | null, verbs: 
       if (j >= 0) put([...typed.slice(0, j + 1), "که", ...typed.slice(j + 1)].join(" "), keNote);
     });
     for (const s of objectSpellings(target)) put(s, `The same object marker, spelled another way. The lesson writes it ${target}`);
+    put(swapWord(typed, "منو", "من رو"), `The same object marker, spelled another way. The lesson writes it ${target}`);
     put(swapWord(typed, "آره", "بله"), `That fits too. The lesson's line has ${target}`);
     for (const r of writtenOrder(target, paired, index)) put(r, BE_NOTE(target));
   } else {
     // Writing says "in" with دَر or تویِ.
     put(swapWord(typed, "در", "توی"), `That fits too: writing says “in” both ways. The lesson's line has ${target}`);
     put(swapWord(typed, "توی", "در"), `That fits too: writing says “in” both ways. The lesson's line has ${target}`);
+    // مرا is also written من را (lesson 6.7).
+    put(swapWord(typed, "مرا", "من را"), `That fits too: من را is also written. The lesson's line has ${target}`);
     // Writing says "but" both ways (lesson 10.4).
     put(swapWord(typed, "اما", "ولی"), `That fits too: writing says “but” both ways. The lesson's line has ${target}`);
     put(swapWord(typed, "ولی", "اما"), `That fits too: writing says “but” both ways. The lesson's line has ${target}`);

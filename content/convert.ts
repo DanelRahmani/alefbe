@@ -59,6 +59,14 @@ export const CONVERT_LEAVE_OUT: Record<string, ConvertLeave> = {
   "longer-sentences/object-endings#1avw6t3": S(OBJECT_PRONOUN),
   "longer-sentences/object-endings#1e79z0n": S(OBJECT_PRONOUN),
   "longer-sentences/object-endings#inmj9m": S(OBJECT_PRONOUN),
+  // Unit 11.
+  "more-verbs/past-perfect#1nm49af": { why: "به before *there* is optional in both registers; only one is accepted" },
+  "more-verbs/unreal-if#fcre55": S(OBJECT_PRONOUN),
+  "more-verbs/unreal-if#9jg042": S(OBJECT_PRONOUN),
+  "more-verbs/unreal-if#c5hxob": { why: "toward writing, the if-half may also take the past perfect; toward speech, the pronoun may stay" },
+  "more-verbs/unreal-if#n8pyl0": S("speech also says the past continuous in the if-half (lesson 11.3)"),
+  "more-verbs/unreal-if#u6uyoq": W("a written real condition may also take the subjunctive"),
+  "more-verbs/passive#10121bk": W("in writing a plural thing can take either verb"),
 };
 
 const built = buildConvertCards(ALL_LESSONS, { verbs: VERBS, leaveOut: CONVERT_LEAVE_OUT });

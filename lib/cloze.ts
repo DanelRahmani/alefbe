@@ -392,7 +392,9 @@ function cardOf(l: Line, others: readonly string[], ref: ClozeLesson, index: For
     }
   }
 
-  const tenseLists = index ? gapTenses(answers, index, ref.key) : answers.map(() => null);
+  // A comma or a stop between two gaps ends a clause: the progressive doesn't run across it.
+  const breaks = runs.map((r, i) => i < runs.length - 1 && /[،.؛؟!,]/.test(plain.slice(r.end, runs[i + 1].start)));
+  const tenseLists = index ? gapTenses(answers, index, ref.key, breaks) : answers.map(() => null);
   const gaps: ClozeGap[] = answers.map((a, i) => {
     const own = normalizeFa(a);
     const wa = writtenFor[i];

@@ -314,3 +314,24 @@ describe("cloze: the Unit 10 rules", () => {
     expect(clauseKe(w("کتابی که"), 1)).toBe(false);
   });
 });
+
+describe("cloze: tense hints in Unit 11", () => {
+  const sub = lesson("more-verbs/past-subjunctive", "11.2", [
+    { type: "examples", items: [{ fa: "اُمیدْوارَم خوب {خوابیده باشی}.", en: "I hope you slept well." }] },
+  ]);
+  const other = lesson("x/y", "1.1", [
+    { type: "examples", items: [{ fa: "اُمیدْوارَم خوب {خوابیده باشی}.", en: "I hope you slept well." }] },
+  ]);
+  const unreal = lesson("more-verbs/unreal-if", "11.3", [
+    { type: "examples", items: [{ fa: "اَگه پول {داشْتَم}، یه ماشین {می‌خَریدَم}.", en: "If I had money, I'd buy a car." }] },
+  ]);
+  it("names a participle the engine doesn't know with باشی, in the lesson that teaches it", () => {
+    expect(buildClozeCards([sub], { verbs: VERBS }).cards[0].gaps[0].tense).toBe("past subjunctive");
+    expect(buildClozeCards([other], { verbs: VERBS }).cards[0].gaps[0].tense).not.toBe("past subjunctive");
+  });
+  it("doesn't read داشتن and a verb with می across a comma as the progressive", () => {
+    const gaps = buildClozeCards([unreal], { verbs: VERBS }).cards[0].gaps;
+    expect(gaps[0].tense).not.toBe("past progressive");
+    expect(gaps[1].tense).toBe("past continuous");
+  });
+});

@@ -101,7 +101,7 @@ export const TENSES: TenseInfo[] = [
     titleFa: "ماضیِ بَعید",
     lesson: "more-verbs/past-perfect",
     says: "I had gone",
-    note: "Persian uses it more than English does: کُجا رَفْته بودی؟ is the everyday *where have you been?*, said to someone who has just come back.",
+    note: "Persian uses it more than English does: کُجا رَفْته بودی؟, *where did you go?*, said to someone who has just come back.",
   },
   {
     id: "past-subjunctive",
