@@ -155,7 +155,7 @@ function BlockView({ b, ctx }: { b: Block; ctx: Ctx }) {
       );
     case "callout":
       return (
-        <aside className={`callout callout-${b.kind}`}>
+        <aside className={`panel callout callout-${b.kind}`}>
           <p className="ui eyebrow">
             {CALLOUT_LABEL[b.kind]}
             {b.kind === "dari" && !b.checked && <span className="draft-tag">Draft: awaiting a Dari speaker&apos;s check</span>}
@@ -239,7 +239,7 @@ function BlockView({ b, ctx }: { b: Block; ctx: Ctx }) {
       return <PracticeLinks group={b.group} text={b.text} />;
     case "display":
       return (
-        <div className="ui display-inline glass">
+        <div className="ui panel display-inline">
           <DisplayControls theme={false} />
         </div>
       );

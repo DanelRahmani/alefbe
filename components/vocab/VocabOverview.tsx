@@ -16,7 +16,7 @@ export function VocabOverview({ cards }: { cards: Pick<VocabCard, "id" | "lesson
   return (
     <ul className="drill-modes">
       <li>
-        <Link href="/vocab" className="drill-mode">
+        <Link href="/vocab" className="panel card-link">
           <span className="drill-mode-title">Vocabulary deck</span>
           <span className="drill-mode-blurb">See the English, type the Persian: the words of every lesson you have done.</span>
           <span className="ui drill-mode-stats">

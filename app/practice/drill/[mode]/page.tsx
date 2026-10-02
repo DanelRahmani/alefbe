@@ -28,9 +28,9 @@ export default async function DrillPage({ params }: PageProps<"/practice/drill/[
         <span>Letter trainer</span>
       </nav>
       <h1 className="page-title mt-2">{m.title}</h1>
-      <nav aria-label="Trainer modes" className="ui mode-tabs">
+      <nav aria-label="Trainer modes" className="ui chips mt-4 mb-5">
         {MODES.map((x) => (
-          <Link key={x.id} href={`/practice/drill/${x.id}`} aria-current={x.id === mode ? "page" : undefined}>
+          <Link key={x.id} href={`/practice/drill/${x.id}`} className="chip" aria-current={x.id === mode ? "page" : undefined}>
             {x.title}
           </Link>
         ))}

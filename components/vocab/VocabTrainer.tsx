@@ -9,7 +9,7 @@ import { checkVocab, vocabCandidates, vocabStats, type VocabAsk, type VocabCard,
 import { PersianKeyboard } from "../drill/PersianKeyboard";
 import { formatWait, useMinuteClock } from "../drill/useDrillClock";
 import { FaText } from "../FaText";
-import { Rich } from "../Rich";
+import { Feedback } from "../practice/Feedback";
 
 /** The question: the English, the hint that tells same-gloss words apart, and the sound if asked for. */
 export function VocabPrompt({ card, sound }: { card: VocabAsk & { translit?: string }; sound?: boolean }) {
@@ -172,7 +172,7 @@ export function VocabTrainer({ cards }: { cards: VocabCard[] }) {
       </div>
 
       {!started ? (
-        <div className="ui drill-panel">
+        <div className="ui panel trainer-card">
           {met ? (
             <>
               <p className="font-medium">See the English; type the Persian word.</p>
@@ -186,11 +186,11 @@ export function VocabTrainer({ cards }: { cards: VocabCard[] }) {
                       : "Nothing due right now."}
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
-                <button type="button" className="drill-btn" onClick={() => start(false)}>
+                <button type="button" className="btn" onClick={() => start(false)}>
                   Start
                 </button>
                 {!stats.due && !stats.fresh && (
-                  <button type="button" className="drill-btn drill-btn-quiet" onClick={() => start(true)}>
+                  <button type="button" className="btn btn-quiet" onClick={() => start(true)}>
                     Practise anyway
                   </button>
                 )}
@@ -204,10 +204,10 @@ export function VocabTrainer({ cards }: { cards: VocabCard[] }) {
                 course; nothing is scheduled.
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
-                <Link href="/" className="drill-btn">
+                <Link href="/" className="btn">
                   Go to the lessons
                 </Link>
-                <button type="button" className="drill-btn drill-btn-quiet" onClick={() => start(true)}>
+                <button type="button" className="btn btn-quiet" onClick={() => start(true)}>
                   Practise anyway
                 </button>
               </div>
@@ -215,17 +215,17 @@ export function VocabTrainer({ cards }: { cards: VocabCard[] }) {
           )}
         </div>
       ) : !card ? (
-        <div className="ui drill-panel">
+        <div className="ui panel trainer-card">
           <p className="font-medium">All caught up.</p>
           <p className="mt-1 text-muted">
             {stats.nextDue ? `Next review in ${formatWait(stats.nextDue - now)}.` : "Nothing is scheduled yet."}
           </p>
-          <button type="button" className="drill-btn mt-4" onClick={() => start(true)}>
+          <button type="button" className="btn mt-4" onClick={() => start(true)}>
             Practise anyway
           </button>
         </div>
       ) : (
-        <div className="drill-card">
+        <div className="panel trainer-card">
           <VocabPrompt card={card} sound={data.sound} />
           <form
             onSubmit={(e) => {
@@ -261,11 +261,11 @@ export function VocabTrainer({ cards }: { cards: VocabCard[] }) {
                 aria-describedby="vocab-feedback"
               />
               {!verdict ? (
-                <button key="check" type="submit" className="ui quiz-check">
+                <button key="check" type="submit" className="ui btn">
                   Check
                 </button>
               ) : (
-                <button key="next" type="button" className="ui quiz-check" onClick={next} autoFocus>
+                <button key="next" type="button" className="ui btn" onClick={next} autoFocus>
                   Next
                 </button>
               )}
@@ -287,17 +287,9 @@ export function VocabTrainer({ cards }: { cards: VocabCard[] }) {
           <div id="vocab-feedback" role="status" className="ui mt-3">
             {error && <p className="text-sm text-[var(--err)]">{error}</p>}
             {verdict && (
-              <div className={`quiz-fb ${verdict.ok ? "quiz-ok" : "quiz-no"}`}>
-                <p className="font-medium">{verdict.ok ? "Correct." : "Not quite."}</p>
-                {verdict.note && <Rich text={verdict.note} translit={false} />}
-                {verdict.hint && <Rich text={verdict.hint} translit={false} />}
-                {!verdict.ok && (
-                  <p>
-                    You typed: <span className="fa">{input}</span>
-                  </p>
-                )}
+              <Feedback verdict={verdict} typed={input}>
                 <VocabSolution card={card} lesson={card.lesson} />
-              </div>
+              </Feedback>
             )}
           </div>
 

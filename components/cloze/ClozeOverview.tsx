@@ -15,7 +15,7 @@ export function ClozeOverview({ cards }: { cards: Pick<ClozeCard, "id" | "lesson
   return (
     <ul className="drill-modes">
       <li>
-        <Link href="/practice/cloze" className="drill-mode">
+        <Link href="/practice/cloze" className="panel card-link">
           <span className="drill-mode-title">Cloze practice</span>
           <span className="drill-mode-blurb">Fill the gap in a lesson&apos;s example line, from its English.</span>
           <span className="ui drill-mode-stats">

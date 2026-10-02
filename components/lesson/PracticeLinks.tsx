@@ -19,7 +19,7 @@ export function PracticeLinks({ group, text }: { group: number; text?: string })
   };
 
   return (
-    <section className="practice-links glass" aria-label={digits ? "Practise the digits" : "Practise these letters"}>
+    <section className="panel practice-links" aria-label={digits ? "Practise the digits" : "Practise these letters"}>
       <p className="ui eyebrow">Practise {digits ? "the digits" : "these letters"}</p>
       <p className="practice-chars naskh" lang="fa" dir="rtl">
         {chars.join(" ")}
@@ -30,18 +30,18 @@ export function PracticeLinks({ group, text }: { group: number; text?: string })
         </p>
       )}
       <div className="ui practice-actions">
-        <Link href="/practice/drill/sound" className="drill-btn">
+        <Link href="/practice/drill/sound" className="btn">
           Letter trainer
         </Link>
         {!digits && (
           <>
-            <button type="button" className="drill-btn drill-btn-quiet" onClick={quiz}>
+            <button type="button" className="btn btn-quiet" onClick={quiz}>
               Quiz on these
             </button>
-            <Link href={`/practice/trace?letter=${letters[0].slug}`} className="drill-btn drill-btn-quiet">
+            <Link href={`/practice/trace?letter=${letters[0].slug}`} className="btn btn-quiet">
               Trace them
             </Link>
-            <Link href="/practice#games" className="drill-btn drill-btn-quiet">
+            <Link href="/practice#games" className="btn btn-quiet">
               Games
             </Link>
           </>

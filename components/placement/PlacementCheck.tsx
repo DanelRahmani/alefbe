@@ -19,6 +19,7 @@ import { useStore } from "@/lib/storage";
 import { openLetterGroups, placementStore, progressStore } from "@/lib/stores";
 import { FaText } from "../FaText";
 import { Rich, hasFa } from "../Rich";
+import { Feedback } from "../practice/Feedback";
 import { FaAnswerField } from "../practice/FaAnswerField";
 
 export interface PlacementLessonInfo {
@@ -82,7 +83,7 @@ function Result({
   };
 
   return (
-    <div className="ui drill-panel placement-result">
+    <div className="ui panel trainer-card placement-result">
       <p className="eyebrow">
         Your result · {new Date(at).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
       </p>
@@ -99,15 +100,15 @@ function Result({
       </div>
       <div className="mt-4 flex flex-wrap gap-2">
         {start ? (
-          <Link href={start.href} className="drill-btn">
+          <Link href={start.href} className="btn">
             Go to lesson {start.number} <span aria-hidden="true">→</span>
           </Link>
         ) : (
-          <Link href="/practice/review" className="drill-btn">
+          <Link href="/practice/review" className="btn">
             Review everything due <span aria-hidden="true">→</span>
           </Link>
         )}
-        <button type="button" className="drill-btn drill-btn-quiet" onClick={onAgain}>
+        <button type="button" className="btn btn-quiet" onClick={onAgain}>
           Take the check again
         </button>
       </div>
@@ -133,12 +134,12 @@ function Result({
       {p.earlier.length > 0 && (
         <div className="mt-5">
           {toMark.length === 0 ? (
-            <p role="status" className="backup-msg quiz-ok">
+            <p role="status" className="mt-4 feedback feedback-right">
               Every lesson before {start ? `lesson ${start.number}` : "this point"}
               {p.slips.length ? ", apart from the ones worth a look," : ""} is marked finished.
             </p>
           ) : asking ? (
-            <div className="confirm-box" role="alertdialog" aria-labelledby="placement-mark-q" aria-describedby="placement-mark-what">
+            <div className="panel panel-accent confirm-box" role="alertdialog" aria-labelledby="placement-mark-q" aria-describedby="placement-mark-what">
               <p id="placement-mark-q" className="font-medium">
                 Mark {count(toMark.length, "earlier lesson")} finished?
               </p>
@@ -148,10 +149,10 @@ function Result({
                 You can still open any lesson, and undo each one with “Mark as not finished”.
               </p>
               <div className="mt-3 flex gap-2">
-                <button type="button" className="drill-btn" onClick={mark}>
+                <button type="button" className="btn" onClick={mark}>
                   Mark them finished
                 </button>
-                <button type="button" className="drill-btn drill-btn-quiet" onClick={() => setAsking(false)}>
+                <button type="button" className="btn btn-quiet" onClick={() => setAsking(false)}>
                   Cancel
                 </button>
               </div>
@@ -162,7 +163,7 @@ function Result({
                 {p.slips.length ? "The lessons worth a look stay unfinished. " : ""}Marking the earlier lessons finished opens their
                 cards in the practice decks.
               </p>
-              <button type="button" className="drill-btn drill-btn-quiet mt-2" onClick={() => setAsking(true)}>
+              <button type="button" className="btn btn-quiet mt-2" onClick={() => setAsking(true)}>
                 Mark {count(toMark.length, "earlier lesson")} finished
               </button>
             </>
@@ -224,11 +225,11 @@ function LatinField({
           aria-describedby="placement-feedback"
         />
         {!answered ? (
-          <button key="check" type="submit" className="ui quiz-check">
+          <button key="check" type="submit" className="ui btn">
             Check
           </button>
         ) : (
-          <button key="next" type="button" className="ui quiz-check" onClick={onNext} autoFocus>
+          <button key="next" type="button" className="ui btn" onClick={onNext} autoFocus>
             Next
           </button>
         )}
@@ -323,7 +324,7 @@ export function PlacementCheck({
 
   if (view !== "asking" || !current) {
     return (
-      <div className="ui drill-panel">
+      <div className="ui panel trainer-card">
         <p className="font-medium">Up to {total} questions, taken from the lesson quizzes: two for each unit.</p>
         <p className="mt-1 text-muted">
           Most answers are typed in Persian script (there is an on-screen keyboard). The check stops as soon as it knows where you
@@ -336,7 +337,7 @@ export function PlacementCheck({
           </Link>
           .
         </p>
-        <button type="button" className="drill-btn mt-4" onClick={begin}>
+        <button type="button" className="btn mt-4" onClick={begin}>
           Start the check
         </button>
       </div>
@@ -366,7 +367,7 @@ export function PlacementCheck({
           Question {asked + (verdict ? 0 : 1)} of up to {total} · {current.band.title}
         </span>
       </div>
-      <div className="drill-card">
+      <div className="panel trainer-card">
         <div className={hasFa(q.prompt) ? "drill-prompt has-fa text-lg" : "drill-prompt text-lg"}>
           <Rich text={q.prompt} translit={q.lang !== "translit"} force="all" />
         </div>
@@ -391,24 +392,20 @@ export function PlacementCheck({
         <div id="placement-feedback" role="status" className="ui mt-3">
           {error && <p className="text-sm text-[var(--err)]">{error}</p>}
           {verdict && (
-            <div className={`quiz-fb ${verdict.ok ? "quiz-ok" : "quiz-no"}`}>
-              <p className="font-medium">{verdict.ok ? "Correct." : verdict.skipped ? "Here is the answer." : "Not quite."}</p>
-              {verdict.note && <p>{verdict.note}</p>}
-              {verdict.hint && <p>{verdict.hint}</p>}
-              {!verdict.ok && (
-                <p className="has-fa">
-                  Answer: {q.lang === "fa" ? <FaText text={q.answers[0]} translit="none" /> : <strong>{q.answers[0]}</strong>}
-                </p>
-              )}
-              <p className="has-fa font-serif">
-                <Rich text={q.explain} />
-              </p>
-              {lesson && (
-                <p className="text-sm text-muted">
-                  From lesson {lesson.number}.
-                </p>
-              )}
-            </div>
+            <Feedback
+              verdict={verdict}
+              title={verdict.skipped ? "Here is the answer." : undefined}
+              after={
+                <>
+                  <p className="has-fa font-serif">
+                    <Rich text={q.explain} />
+                  </p>
+                  {lesson && <p className="text-sm text-muted">From lesson {lesson.number}.</p>}
+                </>
+              }
+            >
+              {!verdict.ok && (q.lang === "fa" ? <FaText text={q.answers[0]} translit="none" /> : <strong>{q.answers[0]}</strong>)}
+            </Feedback>
           )}
           {verdict && !nextQuestion(bands, answers) && <p className="mt-2 text-sm">That’s the last one: Next shows where to start.</p>}
         </div>

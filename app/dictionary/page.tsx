@@ -19,7 +19,6 @@ export default function DictionaryPage() {
   return (
     <>
       <section className="page-head">
-        <p className="ui eyebrow">Words</p>
         <h1 className="page-title">Dictionary</h1>
         <p className="page-lede">
           Every word in the course, in Persian alphabet order. Search in Persian (with or without vowel marks), in

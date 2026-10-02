@@ -44,7 +44,7 @@ function NextCard({ units, progress, last }: { units: PathUnit[]; progress: Reco
   const next = resume ?? all.find((l) => !progress[l.key]);
   if (!next) {
     return (
-      <Link href="/practice" className="next-card glass">
+      <Link href="/practice" className="panel card-link next-card">
         <span className="next-mark" aria-hidden="true">
           <Seal size={64} />
         </span>
@@ -62,7 +62,7 @@ function NextCard({ units, progress, last }: { units: PathUnit[]; progress: Reco
   const target = next;
   const label = resume ? "Continue" : started ? "Next lesson" : "First lesson";
   return (
-    <Link href={target.href} className="next-card glass">
+    <Link href={target.href} className="panel card-link next-card">
       <span className="next-mark naskh" aria-hidden="true">
         <FaText text={target.mark} translit="none" force="none" />
       </span>
@@ -176,7 +176,7 @@ export function PathBrowser({ units, words }: { units: PathUnit[]; words: DayWor
       </div>
 
       {shown.length === 0 ? (
-        <div className="ui empty-state">
+        <div className="ui panel panel-dashed empty-state">
           <p className="font-medium">No lessons match these filters.</p>
           <button type="button" className="chip mt-3" onClick={() => pathFilterStore.set({ kind: "all", hideDone: false })}>
             Show all lessons
@@ -188,7 +188,7 @@ export function PathBrowser({ units, words }: { units: PathUnit[]; words: DayWor
             const done = u.lessons.filter((l) => progress[l.key]).length;
             const empty = u.lessons.length === 0;
             return (
-              <li key={u.slug} id={u.slug} className={empty ? "unit-card unit-card-empty" : "unit-card"}>
+              <li key={u.slug} id={u.slug} className={empty ? "panel panel-dashed unit-card unit-card-empty" : "panel unit-card"}>
                 <header className="unit-head">
                   <span className="unit-num khatam" aria-hidden="true">
                     {u.numberFa}

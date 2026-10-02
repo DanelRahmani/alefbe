@@ -6,7 +6,6 @@ export const metadata: Metadata = { title: "Offline", robots: { index: false } }
 export default function OfflinePage() {
   return (
     <section className="page-head">
-      <p className="ui eyebrow">Offline</p>
       <h1 className="page-title">You are offline</h1>
       <p className="page-lede">
         This page hasn&apos;t been saved on this device yet. Pages you have opened before work without a connection, and so

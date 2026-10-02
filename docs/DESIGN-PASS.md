@@ -39,9 +39,9 @@ The causes found so far:
 
 `.has-fa` sets `line-height: 2.1` on a whole paragraph as soon as it holds one Persian word, and `.idea-text.has-fa` sets 2. The lesson summary, the idea box, unit descriptions and lesson-row titles all get it, so mostly-English prose reads as if double-spaced (lesson 1.2's summary and 5.2's idea box are clear examples), and a two-line lesson title in the path takes the height of four. The Persian needs room for stacked marks, but only on the Persian run, not on every line.
 
-### 3. A bidi bug changes the order of Persian phrases (correctness)
+### 3. Bidi in brackets: checked, no bug
 
-In English prose, two Persian phrases in one bracket, separated by an English comma, come out in reverse order. Lesson 10.5 writes «(به او, کَسی که با او حَرْف زَدَم)» and «(دیدَمَش, دوسْتَت دارَم)»; both show the second phrase first. Each phrase is its own `<bdi>`, and the comma and space between two right-to-left isolates resolve right-to-left. A single phrase in brackets, like «(او را دیدَم)», is fine. A learner reading "the first form, the second form" gets them swapped. Fix in `Rich` (a left-to-right mark after an isolate that is followed by punctuation), with a test; no content change.
+The audit first reported that two Persian phrases in one bracket (lesson 10.5, «(به او, کَسی که با او حَرْف زَدَم)») came out in reverse order. Measured in 9b with text ranges, they don't: the first phrase sits left of the comma and the second to its right, as English order wants; the screenshot had been read right to left as a whole. Each Persian run is its own `<bdi>`, which is what keeps this right. 9e checks the remaining bracket cases across every lesson.
 
 ### 4. Feedback doesn't put the right answer first (every trainer, many times a day)
 
@@ -100,7 +100,7 @@ Each sub-phase is committed and pushed on its own, with before/after screenshots
    - Progress ring and bar: one ring (Today's) and one bar (session, form bars); the flash drain bar stays its own.
    - The confirmation box (`confirm-box`) used by progress import, placement marking and reset.
 3. **Clean-up:** replace the Tailwind type and spacing utilities in components with the tokens' classes where they set sizes (`text-sm` → `.text-sm` mapped to the token, so the scale has one source); delete the copies and the dead classes. Target: the CSS bundle smaller than 79 KB (16.2 KB gzipped) despite the new components.
-4. **Bidi fix** (finding 3) in `Rich`, with a test, here rather than in 9e, since it is a correctness bug.
+4. ~~Bidi fix~~: not needed (finding 3).
 5. **Dark mode:** the orosi's mask starts fading sooner behind the page head at night, and the hero pane becomes a solid tinted plate (also helps 9d).
 6. **Kickers:** keep them where they label a thing (Today, Word of the day, Unit n, Spoken/Written, the next-lesson card); drop the ones that repeat the section name on `/practice`, `/dictionary`, `/progress`, `/script` and the not-found page. *Visible change, no behaviour change.*
 7. **Verb trainer:** the tense chips in four labelled groups. *Visible change, same behaviour.*
@@ -132,6 +132,23 @@ Measure again after 9b and 9c (they change the CSS and the glass), for an empty 
 ### 9e. Accessibility and the 375 px sweep
 
 A rerunnable script under `scripts/` that walks every route in `content/routes.ts` (153 pages in the build) in the in-app browser at 375 px, light and dark, reduced motion on: horizontal scroll, a focus ring on each Tab stop, console errors beyond the known local 404s, and running animations. Fix the empty first header cells (a real header, or `<td>`), check the bidi fix in every lesson, Lighthouse accessibility 100 on every page audited.
+
+## Carried out
+
+### 9b (2026-10-03)
+
+- **Tokens** (`globals.css`): a Latin scale (`--fs-2xs` … `--fs-2xl`, `--fs-display`), a Persian scale (`--fa-sm` … `--fa-2xl`), line heights (`--lh-prose` 1.65, `--lh-mixed` 1.8, `--lh-fa` 2), radii (`--r-sm/md/lg/pill`). Tailwind's `text-*` utilities read the same scale. 158 literal font sizes became tokens (11 tuned ones kept, e.g. the brand mark, keyboard keys, the mark signs); 58 radii became four. Each colour is written once as `light-dark(day, night)`, so the dark theme is no longer copied out twice.
+- **Mixed lines:** a paragraph with Persian is 1.8, not 2.1; its Persian runs carry their own line height (1.5, 1.35 in Naskh) so the marks clear and English lines don't double.
+- **Components** (`components.css`, top): `.btn` / `.btn-quiet` / `.btn-danger` (was `drill-btn`, `quiz-check`, `danger-btn`, `file-btn` and MarkDone's one-off), `.chip` and `.chip-row` (was `chip`, `goal-chip`, `settings-chip`, `tracer-tabs`, `mode-tabs`, `chips-wrap`), `.panel` / `.panel-dashed` / `.panel-accent` and `.card-link` (trainer cards, examples, callouts, stats, the confirmation box, practice cards, grammar topics, unit cards, the sheet, the inspector…), one table style with Persian a step larger, one rule for quiet links.
+- **Feedback** (`components/practice/Feedback.tsx`, `lib/feedback.ts`): the verdict, the right form at example size, the hint, then "You typed" small. Used by every typed-answer trainer, the lesson quiz, the notebook and placement; the games, tracer and status messages use its classes. A near miss (`near` on the verdict: a half-space, a madde, a same-sound letter, a Persian digit, copy-typing spacing) shows "Nearly." in saffron; it still counts as a miss.
+- **Glass:** only the header and tab bar (blur 14px); the next-lesson card, Today card, practice links, skip-ahead and display panels are solid; the hero pane is a solid tinted plate.
+- **Dark:** the orosi fades sooner at night (opacity 0.55, gone by 18rem).
+- **Kickers** dropped on `/practice`, `/dictionary`, `/progress`, `/script`, `/grammar`, the not-found and offline pages.
+- **Verbs:** tense chips in four labelled rows (`lib/tense-groups.ts`), in the trainer and the tables.
+- **Progress:** the stats as one panel with a two-column list (three on desktop), also on the letter pages and the tracing session.
+- **Brand mark** in Vazirmatn. **Dictionary:** shorter placeholder, equal-width filters.
+- **Found on the way:** Tailwind size classes on Persian runs (`fa text-xl`) never applied (the unlayered `.fa` rule wins); the tracer read colour tokens as hex, now resolved through the browser (`lib/color.ts`).
+- **CSS:** 79,064 → 79,063 bytes (16,339 → 16,147 gzipped). Lightning CSS transpiles `light-dark()` for older browsers, which costs back most of the colour dedupe.
 
 ## Decisions for the owner
 

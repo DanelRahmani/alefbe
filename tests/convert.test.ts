@@ -89,6 +89,7 @@ describe("spoken ↔ written: checking", () => {
     const v = checkConvert(bazaar(), "to-written", "هر روز به بازار می روم");
     expect(v.ok).toBe(false);
     expect(v.hint).toMatch(/half-space.*می‌رَوَم/);
+    expect(v.near).toBe(true);
   });
   it("names the first word that differs, or one missing or extra", () => {
     expect(checkConvert(bazaar(), "to-written", "هر روز به بازار می‌رم").hint).toBe("You typed می‌رم; the written form has می‌رَوَم.");

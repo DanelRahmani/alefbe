@@ -18,7 +18,7 @@ export function ReviewCard() {
   const due = now ? reviewsDue(srs.decks, now, verbs, { data: vocab, known: null }, { cloze, convert }).total : 0;
   const n = due + mistakes;
   return (
-    <Link href="/practice/review" className="drill-mode">
+    <Link href="/practice/review" className="panel card-link">
       <span className="drill-mode-title">
         Review everything due{" "}
         {n > 0 && (

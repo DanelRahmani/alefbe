@@ -3,6 +3,7 @@
 // Playwright MCP's browser_run_code_unsafe (`filename`). Each page is captured at
 // 375 px and 1280 px, light and dark, with the same seeded progress, so a
 // before and an after compare like with like.
+// eslint-disable-next-line @typescript-eslint/no-unused-expressions -- a bare function, as the MCP expects
 async (page) => {
   const cfg = globalThis.SHOTS ?? {};
   const base = cfg.base ?? "http://localhost:3001";
@@ -27,7 +28,10 @@ async (page) => {
     "alefbe2:lessons": { quiz: { "alphabet/alef-and-be": { right: 4, total: 5 } }, last: "core-sentence/to-be" },
   };
   await page.goto(base + "/offline");
-  await page.evaluate((s) => {
+  await page.evaluate(async (s) => {
+    // The service worker would serve the previous build from its cache.
+    for (const r of await navigator.serviceWorker.getRegistrations()) await r.unregister();
+    for (const k of await caches.keys()) await caches.delete(k);
     localStorage.clear();
     for (const [k, v] of Object.entries(s)) localStorage.setItem(k, JSON.stringify({ v: 1, data: v }));
   }, seed);

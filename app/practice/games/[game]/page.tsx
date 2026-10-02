@@ -29,9 +29,9 @@ export default async function GamePage({ params }: PageProps<"/practice/games/[g
         <span>Games</span>
       </nav>
       <h1 className="page-title mt-2">{g.title}</h1>
-      <nav aria-label="Games" className="ui mode-tabs">
+      <nav aria-label="Games" className="ui chips mt-4 mb-5">
         {GAMES.map((x) => (
-          <Link key={x.id} href={`/practice/games/${x.id}`} aria-current={x.id === game ? "page" : undefined}>
+          <Link key={x.id} href={`/practice/games/${x.id}`} className="chip" aria-current={x.id === game ? "page" : undefined}>
             {x.title}
           </Link>
         ))}

@@ -13,7 +13,6 @@ export default function GrammarPage() {
   return (
     <>
       <section className="page-head">
-        <p className="ui eyebrow">Grammar</p>
         <h1 className="page-title">Grammar at a glance</h1>
         <p className="page-lede">
           The core of Persian grammar on one page, in the order the course teaches it: spoken Tehrani first, written
@@ -21,7 +20,7 @@ export default function GrammarPage() {
         </p>
       </section>
 
-      <nav aria-label="Topics" className="ui chips chips-wrap grammar-toc">
+      <nav aria-label="Topics" className="ui chip-row grammar-toc">
         {GRAMMAR.map((t) => (
           <a key={t.slug} href={`#${t.slug}`} className="chip">
             {t.title}
@@ -35,7 +34,7 @@ export default function GrammarPage() {
           const unitIndex = UNITS.findIndex((u) => u.slug === t.unit);
           const unit = UNITS[unitIndex];
           return (
-            <section key={t.slug} id={t.slug} className="grammar-topic" aria-labelledby={`${t.slug}-title`}>
+            <section key={t.slug} id={t.slug} className="panel grammar-topic" aria-labelledby={`${t.slug}-title`}>
               <h2 id={`${t.slug}-title`} className="lesson-h2">
                 {t.title}
               </h2>

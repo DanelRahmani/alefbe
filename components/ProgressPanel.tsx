@@ -119,7 +119,7 @@ export function ProgressPanel({ totalLessons }: { totalLessons: number }) {
 
   return (
     <div className="ui">
-      <dl className="stat-grid stat-grid-6">
+      <dl className="panel stat-list">
         <div className="stat">
           <dt>Lessons finished</dt>
           <dd>
@@ -237,10 +237,10 @@ export function ProgressPanel({ totalLessons }: { totalLessons: number }) {
           backups work too.
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
-          <button type="button" className="drill-btn" onClick={download}>
+          <button type="button" className="btn" onClick={download}>
             Download a backup
           </button>
-          <label className="drill-btn drill-btn-quiet file-btn">
+          <label className="btn btn-quiet">
             Import a backup
             <input
               ref={fileRef}
@@ -253,7 +253,7 @@ export function ProgressPanel({ totalLessons }: { totalLessons: number }) {
         </div>
 
         {pending && (
-          <div className="confirm-box" role="alertdialog" aria-labelledby="import-q">
+          <div className="panel panel-accent confirm-box" role="alertdialog" aria-labelledby="import-q">
             <p id="import-q" className="font-medium">
               {pending.kind === "legacy"
                 ? `Import your progress from the old Alefbe app (${pending.data.learned.length} learned letters)${
@@ -267,17 +267,17 @@ export function ProgressPanel({ totalLessons }: { totalLessons: number }) {
                 : "Your lessons, trainer, tracing and settings in this browser are overwritten."}
             </p>
             <div className="mt-3 flex gap-2">
-              <button type="button" className="drill-btn" onClick={confirmImport}>
+              <button type="button" className="btn" onClick={confirmImport}>
                 {pending.kind === "legacy" ? "Import" : "Replace progress"}
               </button>
-              <button type="button" className="drill-btn drill-btn-quiet" onClick={() => setPending(null)}>
+              <button type="button" className="btn btn-quiet" onClick={() => setPending(null)}>
                 Cancel
               </button>
             </div>
           </div>
         )}
 
-        <p role="status" className={message ? `backup-msg ${message.ok ? "quiz-ok" : "quiz-no"}` : "sr-only"}>
+        <p role="status" className={message ? `mt-4 feedback feedback-${message.ok ? "right" : "wrong"}` : "sr-only"}>
           {message?.text}
         </p>
       </section>
@@ -285,7 +285,7 @@ export function ProgressPanel({ totalLessons }: { totalLessons: number }) {
       <section className="backup">
         <h2 className="lesson-h2">Start over</h2>
         {confirmReset ? (
-          <div className="confirm-box" role="alertdialog" aria-labelledby="reset-q">
+          <div className="panel panel-accent confirm-box" role="alertdialog" aria-labelledby="reset-q">
             <p id="reset-q" className="font-medium">
               {confirmReset === "all" ? "Clear all progress in this browser?" : "Clear your statistics?"}
             </p>
@@ -295,20 +295,20 @@ export function ProgressPanel({ totalLessons }: { totalLessons: number }) {
                 : "The streak, calendar, quiz accuracy, counts and game scores are removed. Lessons, trainer and tracing stay."}
             </p>
             <div className="mt-3 flex gap-2">
-              <button type="button" className="drill-btn danger-btn" onClick={() => reset(confirmReset)}>
+              <button type="button" className="btn btn-danger" onClick={() => reset(confirmReset)}>
                 {confirmReset === "all" ? "Clear everything" : "Clear statistics"}
               </button>
-              <button type="button" className="drill-btn drill-btn-quiet" onClick={() => setConfirmReset(null)}>
+              <button type="button" className="btn btn-quiet" onClick={() => setConfirmReset(null)}>
                 Keep them
               </button>
             </div>
           </div>
         ) : (
           <div className="mt-3 flex flex-wrap gap-2">
-            <button type="button" className="drill-btn drill-btn-quiet" onClick={() => setConfirmReset("stats")}>
+            <button type="button" className="btn btn-quiet" onClick={() => setConfirmReset("stats")}>
               Reset statistics
             </button>
-            <button type="button" className="drill-btn drill-btn-quiet" onClick={() => setConfirmReset("all")}>
+            <button type="button" className="btn btn-quiet" onClick={() => setConfirmReset("all")}>
               Clear all progress
             </button>
           </div>

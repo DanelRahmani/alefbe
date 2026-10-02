@@ -2,115 +2,119 @@
 
 /* ── Tokens: porcelain glaze, lapis, turquoise, saffron ("Orosi") ─────── */
 /* Light: glazed tile white with lapis ink. Dark: a night interior lit
-   through coloured glass. Every text pairing is checked for WCAG AA. */
+   through coloured glass. Every text pairing is checked for WCAG AA.
+   Each colour is written once, light-dark(day, night): the theme is the root's
+   color-scheme (the system's, or the reader's choice in Display settings). */
 :root {
-  --bg: #f3f4f8; /* porcelain glaze */
-  --surface: #ffffff;
-  --surface-2: #f8f9fc;
-  --ink: #171b38;
-  --muted: #555a76;
-  --rule: #dde0ea;
-  --accent: #1f4aa8; /* lapis */
-  --accent-soft: #e3e9f7;
-  --turquoise: #0b6e72; /* text-safe turquoise */
-  --gold: #74580d; /* saffron, darkened for AA text */
-  --ok: #2d7a4c;
-  --ok-soft: #e4f2e8;
-  --err: #b3261e;
-  --err-soft: #f8e4e1;
-  --focus: #1f4aa8;
+  color-scheme: light dark;
+  --bg: light-dark(#f3f4f8, #0a0c22); /* porcelain glaze / night */
+  --surface: light-dark(#ffffff, #12163a);
+  --surface-2: light-dark(#f8f9fc, #0f1330);
+  --ink: light-dark(#171b38, #ece6d6);
+  --muted: light-dark(#555a76, #a7a2c2);
+  --rule: light-dark(#dde0ea, #262b57);
+  --accent: light-dark(#1f4aa8, #e3b550); /* lapis / saffron */
+  --accent-soft: light-dark(#e3e9f7, #2a2944);
+  --turquoise: light-dark(#0b6e72, #5fd0cc); /* text-safe turquoise */
+  --gold: light-dark(#74580d, #e3b550); /* saffron, darkened for AA text by day */
+  --ok: light-dark(#2d7a4c, #7fd4a0);
+  --ok-soft: light-dark(#e4f2e8, #173327);
+  --err: light-dark(#b3261e, #f28b82);
+  --err-soft: light-dark(#f8e4e1, #3a1c22);
+  --near-soft: light-dark(#f7efd9, #2c2716);
+  --focus: light-dark(#1f4aa8, #e3b550);
   /* Frosted glass */
-  --glass: rgb(255 255 255 / 0.6);
-  --glass-strong: rgb(255 255 255 / 0.82);
-  --glass-line: rgb(23 27 56 / 0.09);
-  --glass-shine: rgb(255 255 255 / 0.85);
-  --shadow: 0 1px 2px rgb(23 27 56 / 0.05), 0 10px 28px -14px rgb(23 27 56 / 0.22);
+  --glass: light-dark(rgb(255 255 255 / 0.6), rgb(16 20 54 / 0.55));
+  --glass-strong: light-dark(rgb(255 255 255 / 0.82), rgb(16 20 54 / 0.8));
+  --glass-line: light-dark(rgb(23 27 56 / 0.09), rgb(255 255 255 / 0.07));
+  --glass-shine: light-dark(rgb(255 255 255 / 0.85), rgb(255 255 255 / 0.06));
   /* Stained-glass panes of the orosi lattice */
-  --pane-lapis: rgb(43 85 200 / 0.62);
-  --pane-turq: rgb(24 158 160 / 0.55);
-  --pane-saffron: rgb(232 176 60 / 0.62);
-  --pane-rose: rgb(206 86 116 / 0.5);
-  --pane-clear: rgb(255 255 255 / 0.5);
-  --lattice: rgb(23 27 56 / 0.35);
-  --orosi-opacity: 0.5;
+  --pane-lapis: light-dark(rgb(43 85 200 / 0.62), rgb(62 104 222 / 0.75));
+  --pane-turq: light-dark(rgb(24 158 160 / 0.55), rgb(40 188 184 / 0.62));
+  --pane-saffron: light-dark(rgb(232 176 60 / 0.62), rgb(236 184 72 / 0.7));
+  --pane-rose: light-dark(rgb(206 86 116 / 0.5), rgb(218 92 124 / 0.6));
+  --pane-clear: light-dark(rgb(255 255 255 / 0.5), rgb(24 28 70 / 0.7));
+  --lattice: light-dark(rgb(23 27 56 / 0.35), rgb(4 5 18 / 0.85));
   /* Jadval: the double ruled frame of manuscripts */
-  --jadval-outer: rgb(31 74 168 / 0.28);
-  --jadval-inner: rgb(116 88 13 / 0.3);
+  --jadval-outer: light-dark(rgb(31 74 168 / 0.28), rgb(227 181 80 / 0.3));
+  --jadval-inner: light-dark(rgb(116 88 13 / 0.3), rgb(95 208 204 / 0.25));
+  --shadow: 0 1px 2px rgb(23 27 56 / 0.05), 0 10px 28px -14px rgb(23 27 56 / 0.22);
+  --orosi-opacity: 0.5;
+  --orosi-mid: 12rem;
+  --orosi-end: 24rem;
+}
+:root[data-theme="light"] {
   color-scheme: light;
 }
-
+/* The tokens that are not colours, at night. At night the panes are brighter
+   than the page: they fade sooner behind titles. */
 :root[data-theme="dark"] {
-  --bg: #0a0c22; /* night */
-  --surface: #12163a;
-  --surface-2: #0f1330;
-  --ink: #ece6d6;
-  --muted: #a7a2c2;
-  --rule: #262b57;
-  --accent: #e3b550; /* saffron */
-  --accent-soft: #2a2944;
-  --turquoise: #5fd0cc;
-  --gold: #e3b550;
-  --ok: #7fd4a0;
-  --ok-soft: #173327;
-  --err: #f28b82;
-  --err-soft: #3a1c22;
-  --focus: #e3b550;
-  --glass: rgb(16 20 54 / 0.55);
-  --glass-strong: rgb(16 20 54 / 0.8);
-  --glass-line: rgb(255 255 255 / 0.07);
-  --glass-shine: rgb(255 255 255 / 0.06);
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 14px 34px -14px rgb(0 0 0 / 0.65);
-  --pane-lapis: rgb(62 104 222 / 0.75);
-  --pane-turq: rgb(40 188 184 / 0.62);
-  --pane-saffron: rgb(236 184 72 / 0.7);
-  --pane-rose: rgb(218 92 124 / 0.6);
-  --pane-clear: rgb(24 28 70 / 0.7);
-  --lattice: rgb(4 5 18 / 0.85);
-  --orosi-opacity: 0.62;
-  --jadval-outer: rgb(227 181 80 / 0.3);
-  --jadval-inner: rgb(95 208 204 / 0.25);
   color-scheme: dark;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 14px 34px -14px rgb(0 0 0 / 0.65);
+  --orosi-opacity: 0.55;
+  --orosi-mid: 8rem;
+  --orosi-end: 18rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 14px 34px -14px rgb(0 0 0 / 0.65);
+    --orosi-opacity: 0.55;
+    --orosi-mid: 8rem;
+    --orosi-end: 18rem;
+  }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]):not([data-theme="dark"]),
-  :root[data-theme="system"] {
-    --bg: #0a0c22;
-    --surface: #12163a;
-    --surface-2: #0f1330;
-    --ink: #ece6d6;
-    --muted: #a7a2c2;
-    --rule: #262b57;
-    --accent: #e3b550;
-    --accent-soft: #2a2944;
-    --turquoise: #5fd0cc;
-    --gold: #e3b550;
-    --ok: #7fd4a0;
-    --ok-soft: #173327;
-    --err: #f28b82;
-    --err-soft: #3a1c22;
-    --focus: #e3b550;
-    --glass: rgb(16 20 54 / 0.55);
-    --glass-strong: rgb(16 20 54 / 0.8);
-    --glass-line: rgb(255 255 255 / 0.07);
-    --glass-shine: rgb(255 255 255 / 0.06);
-    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 14px 34px -14px rgb(0 0 0 / 0.65);
-    --pane-lapis: rgb(62 104 222 / 0.75);
-    --pane-turq: rgb(40 188 184 / 0.62);
-    --pane-saffron: rgb(236 184 72 / 0.7);
-    --pane-rose: rgb(218 92 124 / 0.6);
-    --pane-clear: rgb(24 28 70 / 0.7);
-    --lattice: rgb(4 5 18 / 0.85);
-    --orosi-opacity: 0.62;
-    --jadval-outer: rgb(227 181 80 / 0.3);
-    --jadval-inner: rgb(95 208 204 / 0.25);
-    color-scheme: dark;
-  }
+/* ── Scale: type, Persian type, radii, elevation, glass (same in both themes) ─ */
+/* Latin steps are ~1.2 apart from the 1.0625rem body. Persian standalone steps
+   are their own (Vazirmatn draws small): sm for a line in a list or table, md
+   for an example, lg for a prompt word, xl for a letter, 2xl for a letter hero.
+   Persian inside English takes 1.12em of its line (.fa), whatever the step. */
+:root {
+  --fs-2xs: 0.72rem; /* tab labels, register tags, key caps */
+  --fs-xs: 0.8rem;
+  --fs-sm: 0.9rem;
+  --fs-base: 1.0625rem;
+  --fs-lg: 1.25rem;
+  --fs-xl: 1.5rem;
+  --fs-2xl: 2rem;
+  --fs-display: clamp(2.2rem, 7.5vw, 2.9rem);
+  --fa-sm: 1.3rem;
+  --fa-md: 1.65rem;
+  --fa-lg: 2.2rem;
+  --fa-xl: 3.2rem;
+  --fa-2xl: 6rem;
+  --lh-tight: 1.25;
+  --lh-ui: 1.5;
+  --lh-prose: 1.65;
+  --lh-mixed: 1.8; /* English prose holding Persian runs */
+  --lh-fa: 2; /* a line of Persian on its own, room for stacked marks */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-pill: 999px;
 }
 
 @theme inline {
   --font-serif: var(--font-literata), Georgia, serif;
   --font-sans: var(--font-vazirmatn), system-ui, sans-serif;
+  /* Tailwind's size utilities use the scale above, so it has one source. */
+  --text-xs: var(--fs-xs);
+  --text-xs--line-height: 1.6;
+  --text-sm: var(--fs-sm);
+  --text-sm--line-height: 1.6;
+  --text-base: var(--fs-base);
+  --text-base--line-height: var(--lh-prose);
+  --text-lg: var(--fs-lg);
+  --text-lg--line-height: 1.6;
+  --text-xl: var(--fs-xl);
+  --text-xl--line-height: 1.5;
+  --text-2xl: var(--fs-2xl);
+  --text-2xl--line-height: 1.35;
+  --text-3xl: var(--fa-lg);
+  --text-3xl--line-height: 1.4;
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-ink: var(--ink);
@@ -142,8 +146,8 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-literata), Georgia, serif;
-  font-size: 1.0625rem;
-  line-height: 1.65;
+  font-size: var(--fs-base);
+  line-height: var(--lh-prose);
   overflow-x: hidden;
 }
 a {
@@ -180,9 +184,18 @@ a {
 :where(:root[data-fafont="naskh"]) .naskh .fa {
   font-size: 1em;
 }
-/* Paragraphs holding Persian get room for stacked vowel marks. */
+/* English holding Persian runs: a little more room than plain prose, and the
+   runs themselves take a line height that fits their stacked marks without
+   pushing their line apart from the others (Amiri draws taller). */
 .has-fa {
-  line-height: 2.1;
+  line-height: var(--lh-mixed);
+}
+.has-fa bdi.fa {
+  line-height: 1.5;
+}
+:where(:root[data-fafont="naskh"]) .has-fa bdi.fa,
+.has-fa .naskh bdi.fa {
+  line-height: 1.35;
 }
 .hl {
   color: var(--accent);
@@ -221,7 +234,7 @@ a {
   display: inline;
 }
 .tr-block {
-  font-size: 0.95rem;
+  font-size: var(--fs-sm);
   line-height: 1.4;
 }
 :root[data-translit="on"] .tr-block,
@@ -253,13 +266,15 @@ a {
   font-size: 1em;
 }
 
-/* ── Frosted glass (only where something shows through) ────────────────── */
+/* ── Frosted glass: only the bars, where the page scrolls beneath them ─── */
+/* Popovers and dialogs use the stronger float level (components.css).
+   Everything else on the page is a solid .panel: a blur over the plain
+   background shows nothing and costs a repaint. */
 .glass {
   background: var(--glass);
-  -webkit-backdrop-filter: blur(18px) saturate(1.6);
-  backdrop-filter: blur(18px) saturate(1.6);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  backdrop-filter: blur(14px) saturate(1.4);
   border: 1px solid var(--glass-line);
-  box-shadow: inset 0 1px 0 var(--glass-shine), var(--shadow);
 }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .glass {
@@ -277,8 +292,8 @@ a {
   z-index: -1;
   pointer-events: none;
   opacity: var(--orosi-opacity);
-  -webkit-mask-image: linear-gradient(to bottom, #000 0, rgb(0 0 0 / 0.6) 4.5rem, rgb(0 0 0 / 0.16) 12rem, transparent 24rem);
-  mask-image: linear-gradient(to bottom, #000 0, rgb(0 0 0 / 0.6) 4.5rem, rgb(0 0 0 / 0.16) 12rem, transparent 24rem);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0, rgb(0 0 0 / 0.6) 4.5rem, rgb(0 0 0 / 0.16) var(--orosi-mid), transparent var(--orosi-end));
+  mask-image: linear-gradient(to bottom, #000 0, rgb(0 0 0 / 0.6) 4.5rem, rgb(0 0 0 / 0.16) var(--orosi-mid), transparent var(--orosi-end));
 }
 .orosi-svg {
   display: block;

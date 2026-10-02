@@ -397,8 +397,9 @@ export function checkConvert(card: ConvertAsk, dir: ConvertDir, typedInput: stri
   const best = readings.reduce((a, b) => (agree(b) > agree(a) ? b : a));
   const marked = best === readings[0] ? markedWords(target) : best;
   const diff = firstDifference(typed, best, marked, to);
-  if (v.hint && diff?.startsWith("Nearly")) return { ok: false, hint: diff };
+  if (v.hint && diff?.startsWith("Nearly")) return { ok: false, near: true, hint: diff };
   if (v.hint) return v;
+  if (diff?.startsWith("Nearly")) return { ok: false, near: true, hint: diff };
   return diff ? { ok: false, hint: diff } : { ok: false };
 }
 

@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useLayoutEffect, useRef, useState } from "react";
 import type { Verdict } from "@/lib/answers";
-import { TENSES, englishOf, personEnOf, pronounOf, tenseInfo, type Tense } from "@/lib/conjugate";
+import { englishOf, personEnOf, pronounOf, tenseInfo, type Tense } from "@/lib/conjugate";
+import { TENSE_GROUPS } from "@/lib/tense-groups";
 import { answer, deckStats, nextCard, practiceCard, unlockNext } from "@/lib/srs";
 import { useStore } from "@/lib/storage";
 import { drillUiStore, logActivity, noteResult, progressStore, verbsStore } from "@/lib/stores";
@@ -25,6 +26,7 @@ import {
 import { PersianKeyboard } from "../drill/PersianKeyboard";
 import { formatWait, useMinuteClock } from "../drill/useDrillClock";
 import { FaText } from "../FaText";
+import { Feedback } from "../practice/Feedback";
 import { Rich } from "../Rich";
 
 const STYLE_CHOICES: { id: StyleChoice; label: string }[] = [
@@ -243,16 +245,25 @@ export function VerbTrainer({ lessons }: { lessons: Partial<Record<Tense, TenseL
 
   return (
     <div className="drill">
-      <div className="ui chips chips-wrap" role="group" aria-label="Tense">
-        {TENSES.map((t) => {
-          const locked = !tenseOpen(data, progress, t.id);
-          return (
-            <button key={t.id} type="button" className={`chip${locked ? " chip-locked" : ""}`} aria-pressed={tense === t.id} onClick={() => setTense(t.id)}>
-              {t.title}
-              {locked && <span className="sr-only"> (not open yet)</span>}
-            </button>
-          );
-        })}
+      <div className="ui tense-groups" role="group" aria-label="Tense">
+        {TENSE_GROUPS.map((g) => (
+          <div key={g.title} className="tense-group" role="group" aria-label={g.title}>
+            <p className="tense-group-title" aria-hidden="true">
+              {g.title}
+            </p>
+            <div className="chip-row">
+              {g.tenses.map((t) => {
+                const locked = !tenseOpen(data, progress, t.id);
+                return (
+                  <button key={t.id} type="button" className={`chip${locked ? " chip-locked" : ""}`} aria-pressed={tense === t.id} onClick={() => setTense(t.id)}>
+                    {t.title}
+                    {locked && <span className="sr-only"> (not open yet)</span>}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </div>
 
       <p className="ui verb-says">
@@ -279,7 +290,7 @@ export function VerbTrainer({ lessons }: { lessons: Partial<Record<Tense, TenseL
       </p>
 
       {!open ? (
-        <div className="ui drill-panel">
+        <div className="ui panel trainer-card">
           <p className="font-medium">The {info.title.toLowerCase()} opens with its lesson.</p>
           <p className="mt-1 text-muted">
             {lesson ? (
@@ -295,12 +306,12 @@ export function VerbTrainer({ lessons }: { lessons: Partial<Record<Tense, TenseL
             )}{" "}
             Open it now if you already know the tense.
           </p>
-          <button type="button" className="drill-btn mt-4" onClick={() => verbsStore.set((s: VerbsData) => openTense(s, tense))}>
+          <button type="button" className="btn mt-4" onClick={() => verbsStore.set((s: VerbsData) => openTense(s, tense))}>
             Open anyway
           </button>
         </div>
       ) : !started ? (
-        <div className="ui drill-panel">
+        <div className="ui panel trainer-card">
           <p className="font-medium">See a verb, a person and spoken or written; type the {info.title.toLowerCase()} form.</p>
           <p className="mt-1 text-muted">
             {stats.due
@@ -309,29 +320,29 @@ export function VerbTrainer({ lessons }: { lessons: Partial<Record<Tense, TenseL
                 ? `${stats.fresh} new verb${stats.fresh === 1 ? "" : "s"} waiting.`
                 : "Nothing due right now."}
           </p>
-          <button type="button" className="drill-btn mt-4" onClick={start}>
+          <button type="button" className="btn mt-4" onClick={start}>
             Start
           </button>
         </div>
       ) : q === null ? (
-        <div className="ui drill-panel">
+        <div className="ui panel trainer-card">
           <p className="font-medium">All caught up.</p>
           <p className="mt-1 text-muted">
             {stats.nextDue ? `Next review in ${formatWait(stats.nextDue - now)}.` : "Nothing is scheduled yet."}
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
-            <button type="button" className="drill-btn" onClick={practiseAnyway}>
+            <button type="button" className="btn" onClick={practiseAnyway}>
               Practise anyway
             </button>
             {deck.unlocked < groups.length && (
-              <button type="button" className="drill-btn drill-btn-quiet" onClick={unlockMore}>
+              <button type="button" className="btn btn-quiet" onClick={unlockMore}>
                 I know these: open the next verbs
               </button>
             )}
           </div>
         </div>
       ) : (
-        <div className="drill-card">
+        <div className="panel trainer-card">
           <VerbPrompt q={q.question} />
           <form
             onSubmit={(e) => {
@@ -367,11 +378,11 @@ export function VerbTrainer({ lessons }: { lessons: Partial<Record<Tense, TenseL
                 aria-describedby="verb-feedback"
               />
               {!verdict ? (
-                <button key="check" type="submit" className="ui quiz-check">
+                <button key="check" type="submit" className="ui btn">
                   Check
                 </button>
               ) : (
-                <button key="next" type="button" className="ui quiz-check" onClick={next} autoFocus>
+                <button key="next" type="button" className="ui btn" onClick={next} autoFocus>
                   Next
                 </button>
               )}
@@ -393,17 +404,9 @@ export function VerbTrainer({ lessons }: { lessons: Partial<Record<Tense, TenseL
           <div id="verb-feedback" role="status" className="ui mt-3">
             {error && <p className="text-sm text-[var(--err)]">{error}</p>}
             {verdict && (
-              <div className={`quiz-fb ${verdict.ok ? "quiz-ok" : "quiz-no"}`}>
-                <p className="font-medium">{verdict.ok ? "Correct." : "Not quite."}</p>
-                {verdict.note && <Rich text={verdict.note} translit={false} />}
-                {verdict.hint && <Rich text={verdict.hint} translit={false} />}
-                {!verdict.ok && (
-                  <p>
-                    You typed: <span className="fa">{input}</span>
-                  </p>
-                )}
+              <Feedback verdict={verdict} typed={input}>
                 <VerbSolution q={q.question} />
-              </div>
+              </Feedback>
             )}
           </div>
 

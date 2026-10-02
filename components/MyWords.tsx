@@ -26,7 +26,7 @@ export function MyWords() {
 
   if (list.length === 0) {
     return (
-      <div className="empty-state mt-4">
+      <div className="panel panel-dashed empty-state mt-4">
         <p className="font-medium">No starred words yet.</p>
         <p className="mt-1 text-sm text-muted">
           Tap the star on a dictionary word, or on an example or dialogue line in a lesson, and it collects here.
@@ -38,7 +38,7 @@ export function MyWords() {
   return (
     <>
       <div className="mt-4 flex flex-wrap items-center gap-3">
-        <button type="button" className="drill-btn" onClick={download}>
+        <button type="button" className="btn" onClick={download}>
           Download as CSV
         </button>
         <span className="text-sm text-muted">Persian, transliteration, meaning and source, ready for Anki or a spreadsheet.</span>

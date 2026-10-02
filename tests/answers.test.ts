@@ -99,3 +99,15 @@ describe("checkFa: بخیر and به خیر", () => {
     expect(checkFa("صبح خیر", ["صبح بخیر"]).ok).toBe(false);
   });
 });
+
+describe("near misses", () => {
+  it("marks the nearly-right slips as near", () => {
+    expect(checkFa("می روم", ["می‌رَوَم"]).near).toBe(true);
+    expect(checkFa("اب", ["آب"]).near).toBe(true);
+    expect(checkFa("سبح", ["صُبْح"]).near).toBe(true);
+  });
+  it("leaves a plain miss and a right answer without it", () => {
+    expect(checkFa("کتاب", ["دَفْتَر"]).near).toBeUndefined();
+    expect(checkFa("کتاب", ["کِتاب"]).near).toBeUndefined();
+  });
+});

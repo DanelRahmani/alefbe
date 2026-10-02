@@ -20,7 +20,7 @@ export function SkipAhead({ keys, groups, label, text }: { keys: string[]; group
   };
 
   return (
-    <section className="ui skip-ahead glass" aria-labelledby="skip-ahead-title">
+    <section className="ui panel skip-ahead" aria-labelledby="skip-ahead-title">
       <p id="skip-ahead-title" className="font-medium">
         {label}
       </p>
@@ -28,12 +28,12 @@ export function SkipAhead({ keys, groups, label, text }: { keys: string[]; group
         <Rich text={text} />
       </p>
       {allDone ? (
-        <p role="status" className="mt-3 backup-msg quiz-ok">
+        <p role="status" className="mt-3 feedback feedback-right">
           Done: those lessons carry their seal and the trainer has every letter open. Carry on with the next unfinished
           lesson on the path.
         </p>
       ) : asking ? (
-        <div className="confirm-box" role="alertdialog" aria-labelledby="skip-ahead-q">
+        <div className="panel panel-accent confirm-box" role="alertdialog" aria-labelledby="skip-ahead-q">
           <p id="skip-ahead-q" className="font-medium">
             Mark {keys.length} lessons finished and open every letter group?
           </p>
@@ -41,16 +41,16 @@ export function SkipAhead({ keys, groups, label, text }: { keys: string[]; group
             You can still open any of them, and undo each one with “Mark as not finished”.
           </p>
           <div className="mt-3 flex gap-2">
-            <button type="button" className="drill-btn" onClick={skip}>
+            <button type="button" className="btn" onClick={skip}>
               Skip ahead
             </button>
-            <button type="button" className="drill-btn drill-btn-quiet" onClick={() => setAsking(false)}>
+            <button type="button" className="btn btn-quiet" onClick={() => setAsking(false)}>
               Cancel
             </button>
           </div>
         </div>
       ) : (
-        <button type="button" className="drill-btn mt-3" onClick={() => setAsking(true)}>
+        <button type="button" className="btn mt-3" onClick={() => setAsking(true)}>
           {label}
         </button>
       )}

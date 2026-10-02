@@ -46,7 +46,7 @@ export default function Home() {
           <svg className="hero-frame" viewBox="0 0 100 125" preserveAspectRatio="none" focusable="false">
             <path d="M0 125V52C0 26 30 12 50 0c20 12 50 26 50 52v73z" vectorEffect="non-scaling-stroke" />
           </svg>
-          <p className="hero-pane glass naskh">
+          <p className="hero-pane naskh">
             <FaText text="اَلِفْبا" translit="none" />
           </p>
         </div>

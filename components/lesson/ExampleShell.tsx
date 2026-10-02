@@ -17,7 +17,7 @@ export function ExampleShell({
   written,
   en,
   source,
-  className = "example",
+  className = "panel example",
   peek = true,
 }: {
   children: React.ReactNode;

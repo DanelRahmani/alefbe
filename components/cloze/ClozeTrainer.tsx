@@ -11,6 +11,7 @@ import { formatWait, useMinuteClock } from "../drill/useDrillClock";
 import { parseMarkup } from "@/lib/markup";
 import { FaText } from "../FaText";
 import { Rich } from "../Rich";
+import { Feedback } from "../practice/Feedback";
 import { FaAnswerField } from "../practice/FaAnswerField";
 
 const plain = (text: string) => [{ kind: "text" as const, text, hl: false, bold: false, it: false }];
@@ -196,7 +197,7 @@ export function ClozeTrainer({ cards }: { cards: ClozeCard[] }) {
       </div>
 
       {!started ? (
-        <div className="ui drill-panel">
+        <div className="ui panel trainer-card">
           {met ? (
             <>
               <p className="font-medium">Read the English; fill the gap in the Persian.</p>
@@ -210,11 +211,11 @@ export function ClozeTrainer({ cards }: { cards: ClozeCard[] }) {
                       : "Nothing due right now."}
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
-                <button type="button" className="drill-btn" onClick={() => start(false)}>
+                <button type="button" className="btn" onClick={() => start(false)}>
                   Start
                 </button>
                 {!stats.due && !stats.fresh && (
-                  <button type="button" className="drill-btn drill-btn-quiet" onClick={() => start(true)}>
+                  <button type="button" className="btn btn-quiet" onClick={() => start(true)}>
                     Practise anyway
                   </button>
                 )}
@@ -228,10 +229,10 @@ export function ClozeTrainer({ cards }: { cards: ClozeCard[] }) {
                 the course; nothing is scheduled.
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
-                <Link href="/" className="drill-btn">
+                <Link href="/" className="btn">
                   Go to the lessons
                 </Link>
-                <button type="button" className="drill-btn drill-btn-quiet" onClick={() => start(true)}>
+                <button type="button" className="btn btn-quiet" onClick={() => start(true)}>
                   Practise anyway
                 </button>
               </div>
@@ -239,15 +240,15 @@ export function ClozeTrainer({ cards }: { cards: ClozeCard[] }) {
           )}
         </div>
       ) : !card ? (
-        <div className="ui drill-panel">
+        <div className="ui panel trainer-card">
           <p className="font-medium">All caught up.</p>
           <p className="mt-1 text-muted">{stats.nextDue ? `Next review in ${formatWait(stats.nextDue - now)}.` : "Nothing is scheduled yet."}</p>
-          <button type="button" className="drill-btn mt-4" onClick={() => start(true)}>
+          <button type="button" className="btn mt-4" onClick={() => start(true)}>
             Practise anyway
           </button>
         </div>
       ) : (
-        <div className="drill-card">
+        <div className="panel trainer-card">
           <ClozePrompt card={card} />
           <FaAnswerField
             id="cloze-input"
@@ -266,17 +267,9 @@ export function ClozeTrainer({ cards }: { cards: ClozeCard[] }) {
           <div id="cloze-feedback" role="status" className="ui mt-3">
             {error && <p className="text-sm text-[var(--err)]">{error}</p>}
             {verdict && (
-              <div className={`quiz-fb ${verdict.ok ? "quiz-ok" : "quiz-no"}`}>
-                <p className="font-medium">{verdict.ok ? "Correct." : "Not quite."}</p>
-                {verdict.note && <Rich text={verdict.note} translit={false} />}
-                {verdict.hint && <Rich text={verdict.hint} translit={false} />}
-                {!verdict.ok && (
-                  <p>
-                    You typed: <span className="fa">{input}</span>
-                  </p>
-                )}
+              <Feedback verdict={verdict} typed={input}>
                 <ClozeSolution card={card} />
-              </div>
+              </Feedback>
             )}
           </div>
 

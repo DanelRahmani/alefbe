@@ -56,11 +56,13 @@ describe("checkDrill: sound → letter", () => {
     const r = checkDrill("letter", "ص", "س");
     expect(r.ok).toBe(false);
     expect(r.hint).toMatch(/same sound/i);
+    expect(r.near).toBe(true);
   });
   it("asks for the Persian digit when a Western one is typed", () => {
     const r = checkDrill("letter", "۳", "3");
     expect(r.ok).toBe(false);
     expect(r.hint).toMatch(/۳/);
+    expect(r.near).toBe(true);
   });
 });
 

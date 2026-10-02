@@ -23,6 +23,7 @@ import { checkConvert } from "@/lib/convert";
 import { ConvertPrompt, ConvertSolution } from "./convert/ConvertTrainer";
 import { PersianKeyboard } from "./drill/PersianKeyboard";
 import { FaText } from "./FaText";
+import { Feedback } from "./practice/Feedback";
 import { Rich } from "./Rich";
 
 /** A lesson's quiz, for replaying its missed questions. */
@@ -298,7 +299,7 @@ function Review({ cards, onEnd }: { cards: NotebookCard[]; onEnd: () => void }) 
     const right = results.filter(Boolean).length;
     const cleared = cards.filter((c) => !nb[c.id]).length;
     return (
-      <div className="ui drill-panel" role="status">
+      <div className="ui panel trainer-card" role="status">
         <p className="text-lg font-medium">
           {right} of {cards.length} right.
         </p>
@@ -307,7 +308,7 @@ function Review({ cards, onEnd }: { cards: NotebookCard[]; onEnd: () => void }) 
             ? "Nothing cleared yet: an item leaves after two right answers in a row."
             : `${cleared} ${cleared === 1 ? "item has" : "items have"} left the notebook.`}
         </p>
-        <button type="button" className="drill-btn mt-4" onClick={onEnd} autoFocus>
+        <button type="button" className="btn mt-4" onClick={onEnd} autoFocus>
           Back to the notebook
         </button>
       </div>
@@ -343,7 +344,7 @@ function Review({ cards, onEnd }: { cards: NotebookCard[]; onEnd: () => void }) 
           End
         </button>
       </div>
-      <div className="drill-card">
+      <div className="panel trainer-card">
         {card.item.kind === "lesson" ? <div className="drill-prompt has-fa text-lg">{card.prompt}</div> : card.prompt}
         <p className="ui mt-1 text-center text-xs text-muted">
           From{" "}
@@ -379,7 +380,7 @@ function Review({ cards, onEnd }: { cards: NotebookCard[]; onEnd: () => void }) 
               autoCapitalize="off"
               spellCheck={false}
             />
-            <button type="submit" className="ui quiz-check">
+            <button type="submit" className="ui btn">
               {verdict ? "Next" : "Check"}
             </button>
           </div>
@@ -401,19 +402,20 @@ function Review({ cards, onEnd }: { cards: NotebookCard[]; onEnd: () => void }) 
         </form>
         <div role="status" className="ui mt-3">
           {verdict && (
-            <div className={`quiz-fb ${verdict.ok ? "quiz-ok" : "quiz-no"}`}>
-              <p className="font-medium">{verdict.ok ? "Correct." : "Not quite."}</p>
-              {verdict.note && <p>{verdict.note}</p>}
-              {verdict.hint && <p>{verdict.hint}</p>}
-              <p className="has-fa">{card.solution}</p>
-              <p className="text-sm">
-                {!standing
-                  ? "Cleared from the notebook."
-                  : verdict.ok
-                    ? `${standing.streak} of ${CLEAR_AFTER} right in a row.`
-                    : "It stays in the notebook."}
-              </p>
-            </div>
+            <Feedback
+              verdict={verdict}
+              after={
+                <p className="text-sm">
+                  {!standing
+                    ? "Cleared from the notebook."
+                    : verdict.ok
+                      ? `${standing.streak} of ${CLEAR_AFTER} right in a row.`
+                      : "It stays in the notebook."}
+                </p>
+              }
+            >
+              {card.solution}
+            </Feedback>
           )}
         </div>
       </div>
@@ -441,7 +443,7 @@ export function MistakeNotebook({ lessons }: { lessons: Record<string, LessonQui
 
   if (list.length === 0) {
     return (
-      <div className="ui empty-state">
+      <div className="ui panel panel-dashed empty-state">
         <p className="font-medium">Nothing to review.</p>
         <p className="mt-1 text-sm text-muted">
           Wrong answers from lesson quizzes, the trainers, the letter quiz and the games land here, and leave after two right
@@ -457,7 +459,7 @@ export function MistakeNotebook({ lessons }: { lessons: Record<string, LessonQui
   return (
     <div className="ui">
       <div className="flex flex-wrap items-center gap-3">
-        <button type="button" className="drill-btn" onClick={start}>
+        <button type="button" className="btn" onClick={start}>
           Review {Math.min(list.length, SESSION)} {list.length === 1 ? "mistake" : "mistakes"}
         </button>
         <span className="text-sm text-muted">

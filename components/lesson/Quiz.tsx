@@ -7,6 +7,7 @@ import { checkAnswer, type Verdict } from "@/lib/answers";
 import { useStore } from "@/lib/storage";
 import { lessonsStore, noteResult } from "@/lib/stores";
 import { Rich, hasFa } from "../Rich";
+import { Feedback } from "../practice/Feedback";
 import { FaText } from "../FaText";
 
 function Question({ q, n, onFirst }: { q: QuizQuestion; n: number; onFirst: (ok: boolean) => void }) {
@@ -59,38 +60,29 @@ function Question({ q, n, onFirst }: { q: QuizQuestion; n: number; onFirst: (ok:
             aria-invalid={verdict ? !verdict.ok : undefined}
             aria-describedby={`${id}-fb`}
           />
-          <button type="submit" className="ui quiz-check">
+          <button type="submit" className="ui btn">
             Check
           </button>
         </div>
         <div id={`${id}-fb`} role="status" className="ui mt-2 text-sm">
           {error && <p className="text-[var(--err)]">{error}</p>}
-          {verdict?.ok && (
-            <div className="quiz-fb quiz-ok">
-              <p className="font-medium">Correct.</p>
-              {verdict.note && <p>{verdict.note}</p>}
-              <p className="has-fa font-serif">
-                <Rich text={q.explain} />
-              </p>
-            </div>
-          )}
-          {verdict && !verdict.ok && (
-            <div className="quiz-fb quiz-no">
-              <p className="font-medium">Not quite.</p>
-              {verdict.hint && <p>{verdict.hint}</p>}
-              {revealed ? (
-                <p className="has-fa font-serif">
-                  Answer:{" "}
-                  {isFa ? <FaText text={q.answers[0]} translit="none" /> : <strong>{q.answers[0]}</strong>}
-                  {". "}
-                  <Rich text={q.explain} />
-                </p>
-              ) : (
-                <button type="button" onClick={() => setRevealed(true)} className="underline underline-offset-4">
-                  Show the answer
-                </button>
-              )}
-            </div>
+          {verdict && (
+            <Feedback
+              verdict={verdict}
+              after={
+                verdict.ok || revealed ? (
+                  <p className="has-fa font-serif">
+                    <Rich text={q.explain} />
+                  </p>
+                ) : (
+                  <button type="button" onClick={() => setRevealed(true)} className="justify-self-start underline underline-offset-4">
+                    Show the answer
+                  </button>
+                )
+              }
+            >
+              {!verdict.ok && revealed && (isFa ? <FaText text={q.answers[0]} translit="none" /> : <strong>{q.answers[0]}</strong>)}
+            </Feedback>
           )}
         </div>
       </form>
@@ -155,7 +147,7 @@ export function Quiz({ questions, lessonKey }: { questions: QuizQuestion[]; less
         ))}
       </ol>
       {complete && (
-        <div className="ui quiz-summary" role="status">
+        <div className="ui panel quiz-summary" role="status">
           <p className="font-medium">
             {retrying
               ? missed.length
@@ -165,11 +157,11 @@ export function Quiz({ questions, lessonKey }: { questions: QuizQuestion[]; less
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             {missed.length > 0 && (
-              <button type="button" className="drill-btn" onClick={retryMissed}>
+              <button type="button" className="btn" onClick={retryMissed}>
                 Retry the {missed.length === 1 ? "one" : missed.length} I missed
               </button>
             )}
-            <button type="button" className="drill-btn drill-btn-quiet" onClick={startOver}>
+            <button type="button" className="btn btn-quiet" onClick={startOver}>
               Start over
             </button>
           </div>

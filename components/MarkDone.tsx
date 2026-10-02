@@ -40,7 +40,7 @@ export function MarkDone({ lessonKey }: { lessonKey: string }) {
         <button
           type="button"
           onClick={finish}
-          className="rounded-full border-2 border-accent px-5 py-2.5 font-medium text-accent hover:bg-accent-soft"
+          className="btn btn-quiet"
         >
           Mark as finished
         </button>

@@ -22,7 +22,6 @@ export default function PracticePage() {
   return (
     <>
       <section className="page-head">
-        <p className="ui eyebrow">Practice</p>
         <h1 className="page-title">Practise letters, verbs and words</h1>
         <p className="page-lede">
           The trainers schedule reviews so letters, verb forms and words stick: a card comes back just before you would forget it. The quiz,
@@ -62,25 +61,25 @@ export default function PracticePage() {
           <MistakesCard />
         </li>
         <li>
-          <Link href="/practice/quiz" className="drill-mode">
+          <Link href="/practice/quiz" className="panel card-link">
             <span className="drill-mode-title">Letter quiz</span>
             <span className="drill-mode-blurb">Names, sounds, joined forms and flashcards, by choice or typed.</span>
           </Link>
         </li>
         <li>
-          <Link href="/practice/trace" className="drill-mode">
+          <Link href="/practice/trace" className="panel card-link">
             <span className="drill-mode-title">Tracing</span>
             <span className="drill-mode-blurb">Write any letter in any form, guided, in outline or from memory.</span>
           </Link>
         </li>
         <li>
-          <Link href="/practice/trace/session" className="drill-mode">
+          <Link href="/practice/trace/session" className="panel card-link">
             <span className="drill-mode-title">Tracing session</span>
             <span className="drill-mode-blurb">A set of letters and forms one after another, with a summary at the end.</span>
           </Link>
         </li>
         <li>
-          <Link href="/practice/sheets" className="drill-mode">
+          <Link href="/practice/sheets" className="panel card-link">
             <span className="drill-mode-title">Tracing sheets</span>
             <span className="drill-mode-blurb">Print the letters in every form to trace on paper, with a key word each.</span>
           </Link>

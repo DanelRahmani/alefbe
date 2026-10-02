@@ -70,7 +70,7 @@ export function TodayCard({ words }: { words: DayWord[] }) {
   const word = date ? pickForDay(words, date) : undefined;
 
   return (
-    <section className="today glass" aria-labelledby={`${id}-title`}>
+    <section className="panel today" aria-labelledby={`${id}-title`}>
       <header className="today-head">
         <h2 id={`${id}-title`} className="ui eyebrow">
           Today{iran && <span className="today-date-en"> · {iran.en}</span>}
@@ -97,7 +97,7 @@ export function TodayCard({ words }: { words: DayWord[] }) {
                 <button
                   key={g}
                   type="button"
-                  className="goal-chip"
+                  className="chip goal-chip"
                   aria-pressed={goal === g}
                   onClick={() => todayStore.set({ goal: g })}
                 >

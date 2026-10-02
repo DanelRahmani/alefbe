@@ -19,7 +19,6 @@ export default function ScriptPage() {
   return (
     <>
       <section className="page-head">
-        <p className="ui eyebrow">The script</p>
         <h1 className="page-title">Letters, marks and digits</h1>
         <p className="page-lede">
           Persian is written right to left in 32 letters. Most letters join the next one and change shape with their
@@ -125,7 +124,7 @@ export default function ScriptPage() {
       <p className="ui mt-1 text-sm text-muted">Persian digits are written left to right, like Western ones: ۱۴۰۵ is 1405.</p>
       <ol className="digit-row">
         {DIGITS.map((d) => (
-          <li key={d.ch} className="digit-card">
+          <li key={d.ch} className="panel digit-card">
             <span className="fa text-3xl" lang="fa">
               {d.ch}
             </span>

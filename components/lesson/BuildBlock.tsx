@@ -8,7 +8,7 @@ export function BuildBlock({ items }: { items: { word: string; en: string }[] })
       {items.map((it) => {
         const parts = formsInWord(it.word.replace(/[{}*]/g, ""));
         return (
-          <li key={it.word} className="build">
+          <li key={it.word} className="panel build">
             <p className="build-letters naskh" lang="fa" dir="rtl" aria-label="The letters, separately">
               {parts.map((p, i) => (
                 <span key={i}>

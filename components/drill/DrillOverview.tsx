@@ -19,7 +19,7 @@ export function DrillOverview() {
         const s = deckStats(cands, deck, now);
         return (
           <li key={m.id}>
-            <Link href={`/practice/drill/${m.id}`} className="drill-mode">
+            <Link href={`/practice/drill/${m.id}`} className="panel card-link">
               <span className="drill-mode-title">{m.title}</span>
               <span className="drill-mode-blurb">{m.blurb}</span>
               <span className="ui drill-mode-stats">

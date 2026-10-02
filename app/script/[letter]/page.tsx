@@ -106,7 +106,7 @@ export default async function LetterPage({ params }: PageProps<"/script/[letter]
       <h2 className="lesson-h2 mt-8">Its forms</h2>
       <ol className="form-row">
         {forms.map((f) => (
-          <li key={f} className="form-card">
+          <li key={f} className="panel form-card">
             <span className="form-glyph naskh" lang="fa" dir="rtl">
               {formOf(l, f)}
             </span>

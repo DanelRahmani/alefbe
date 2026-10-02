@@ -83,8 +83,8 @@ export function checkDrill(mode: DrillMode, id: string, input: string): Verdict 
       const typed = normalizeFa(input);
       if (typed === id) return { ok: true };
       const d = digitByChar.get(id);
-      if (d && typed === String(d.value)) return { ok: false, hint: `Type the Persian digit ${d.ch}, not ${d.value}.` };
-      if (family(id)?.includes(typed)) return { ok: false, hint: `Same sound, other letter: ${id} not ${typed}.` };
+      if (d && typed === String(d.value)) return { ok: false, near: true, hint: `Type the Persian digit ${d.ch}, not ${d.value}.` };
+      if (family(id)?.includes(typed)) return { ok: false, near: true, hint: `Same sound, other letter: ${id} not ${typed}.` };
       return { ok: false };
     }
     case "read":

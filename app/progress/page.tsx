@@ -11,7 +11,6 @@ export default function ProgressPage() {
   return (
     <>
       <section className="page-head">
-        <p className="ui eyebrow">Progress</p>
         <h1 className="page-title">Your progress</h1>
       </section>
       <ProgressPanel totalLessons={ALL_LESSONS.length} />

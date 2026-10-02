@@ -48,7 +48,7 @@ export function LetterChart() {
         ))}
       </div>
       {shown.length === 0 ? (
-        <p className="ui empty-state">Every letter here is learned in the trainer. Choose another filter to see them.</p>
+        <p className="ui panel panel-dashed empty-state">Every letter here is learned in the trainer. Choose another filter to see them.</p>
       ) : (
         <ol className="letter-chart">
           {shown.map((l) => {

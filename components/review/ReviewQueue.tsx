@@ -19,8 +19,8 @@ import { DrillPrompt, DrillSolution, recordDrillAnswer } from "../drill/Drill";
 import { useMinuteClock } from "../drill/useDrillClock";
 import { cardOf, type LessonQuiz } from "../MistakeNotebook";
 import { FaAnswerField } from "../practice/FaAnswerField";
-import { Rich } from "../Rich";
 import { VerbPrompt, VerbSolution, recordVerbAnswer } from "../verbs/VerbTrainer";
+import { Feedback } from "../practice/Feedback";
 import { VocabPrompt, VocabSolution, recordVocabAnswer } from "../vocab/VocabTrainer";
 
 /** A vocabulary card as the queue asks it. */
@@ -203,7 +203,7 @@ export function ReviewQueue({
   const parts = COUNT_LABELS.filter(([k]) => counts[k]).map(([k, one, many]) => `${counts[k]} ${counts[k] === 1 ? one : many}`);
 
   return (
-    <div className="ui drill-panel">
+    <div className="ui panel trainer-card">
       {!now ? (
         <p className="text-muted">Looking for reviews…</p>
       ) : queue.length ? (
@@ -215,7 +215,7 @@ export function ReviewQueue({
             Cards due in every deck, earliest first, then the mistake notebook. Each answer is scheduled in its own deck, as if you
             had answered it there.
           </p>
-          <button type="button" className="drill-btn mt-4" onClick={start}>
+          <button type="button" className="btn mt-4" onClick={start}>
             Start
           </button>
         </>
@@ -227,7 +227,7 @@ export function ReviewQueue({
             ones, open a trainer.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
-            <Link href="/practice" className="drill-btn">
+            <Link href="/practice" className="btn">
               Practise anyway
             </Link>
           </div>
@@ -254,12 +254,12 @@ function Session({ questions, onEnd }: { questions: Question[]; onEnd: () => voi
 
   if (!q) {
     return (
-      <div className="ui drill-panel" role="status">
+      <div className="ui panel trainer-card" role="status">
         <p className="text-lg font-medium">
           {right} of {results.length} right.
         </p>
         <p className="mt-1">Every answer was scheduled in its own deck. Misses are in the mistake notebook.</p>
-        <button type="button" className="drill-btn mt-4" onClick={onEnd} autoFocus>
+        <button type="button" className="btn mt-4" onClick={onEnd} autoFocus>
           Back to the review
         </button>
       </div>
@@ -312,7 +312,7 @@ function Session({ questions, onEnd }: { questions: Question[]; onEnd: () => voi
       <p role="status" className="ui drill-banner has-fa" hidden={!banner}>
         {banner}
       </p>
-      <div className="drill-card" key={q.key}>
+      <div className="panel trainer-card" key={q.key}>
         {q.prompt}
         <p className="ui mt-1 text-center text-xs text-muted">
           From{" "}
@@ -363,11 +363,11 @@ function Session({ questions, onEnd }: { questions: Question[]; onEnd: () => voi
                 aria-describedby="review-feedback"
               />
               {!verdict ? (
-                <button key="check" type="submit" className="ui quiz-check">
+                <button key="check" type="submit" className="ui btn">
                   Check
                 </button>
               ) : (
-                <button key="next" type="button" className="ui quiz-check" onClick={next} autoFocus>
+                <button key="next" type="button" className="ui btn" onClick={next} autoFocus>
                   Next
                 </button>
               )}
@@ -377,26 +377,24 @@ function Session({ questions, onEnd }: { questions: Question[]; onEnd: () => voi
         <div id="review-feedback" role="status" className="ui mt-3">
           {error && <p className="text-sm text-[var(--err)]">{error}</p>}
           {verdict && (
-            <div className={`quiz-fb ${verdict.ok ? "quiz-ok" : "quiz-no"}`}>
-              <p className="font-medium">{verdict.ok ? "Correct." : "Not quite."}</p>
-              {verdict.note && <Rich text={verdict.note} translit={false} />}
-              {verdict.hint && <Rich text={verdict.hint} translit={false} />}
-              {!verdict.ok && (
-                <p>
-                  You typed: <span className={fa ? "fa" : undefined}>{input}</span>
-                </p>
-              )}
-              <div className="has-fa">{q.solution}</div>
-              {q.notebook && (
-                <p className="text-sm">
-                  {!standing
-                    ? "Cleared from the notebook."
-                    : verdict.ok
-                      ? `${standing.streak} of ${CLEAR_AFTER} right in a row.`
-                      : "It stays in the notebook."}
-                </p>
-              )}
-            </div>
+            <Feedback
+              verdict={verdict}
+              typed={input}
+              typedFa={fa}
+              after={
+                q.notebook && (
+                  <p className="text-sm">
+                    {!standing
+                      ? "Cleared from the notebook."
+                      : verdict.ok
+                        ? `${standing.streak} of ${CLEAR_AFTER} right in a row.`
+                        : "It stays in the notebook."}
+                  </p>
+                )
+              }
+            >
+              {q.solution}
+            </Feedback>
           )}
         </div>
       </div>

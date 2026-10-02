@@ -153,7 +153,7 @@ export function LetterQuiz() {
         {setup.type !== "flashcards" && (
           <fieldset>
             <legend className="font-medium">Answer by</legend>
-            <div className="chips chips-wrap">
+            <div className="chip-row">
               <button type="button" className="chip" aria-pressed={setup.style === "choice"} onClick={() => set({ style: "choice" })}>
                 Picking from four
               </button>
@@ -165,7 +165,7 @@ export function LetterQuiz() {
         )}
         <fieldset>
           <legend className="font-medium">Letters</legend>
-          <div className="chips chips-wrap">
+          <div className="chip-row">
             {scopes.map(([id, label]) => (
               <button key={id} type="button" className="chip" aria-pressed={setup.scope === id} onClick={() => set({ scope: id })}>
                 {id.startsWith("g") ? (
@@ -181,7 +181,7 @@ export function LetterQuiz() {
         </fieldset>
         <fieldset>
           <legend className="font-medium">Questions</legend>
-          <div className="chips chips-wrap">
+          <div className="chip-row">
             {QUIZ_COUNTS.map((n) => (
               <button key={n} type="button" className="chip" aria-pressed={setup.count === n} onClick={() => set({ count: n })}>
                 {n}
@@ -190,7 +190,7 @@ export function LetterQuiz() {
           </div>
           {pool.length < setup.count && <p className="mt-1 text-sm text-muted">{pool.length} letters in this set, so {pool.length} questions.</p>}
         </fieldset>
-        <button type="button" className="drill-btn" disabled={pool.length === 0} onClick={() => start(pool)}>
+        <button type="button" className="btn" disabled={pool.length === 0} onClick={() => start(pool)}>
           Start the quiz
         </button>
         <p className="text-sm text-muted">Quizzes don&apos;t change the trainer&apos;s review schedule.</p>
@@ -204,7 +204,7 @@ export function LetterQuiz() {
     const pct = percent(right, answers.length);
     const missed = answers.filter((a) => !a.ok).map((a) => a.item.letter);
     return (
-      <div className="ui drill-panel" role="status">
+      <div className="ui panel trainer-card" role="status">
         <p className="text-lg font-medium">
           {pct === 100 ? "Perfect." : pct >= 80 ? "Excellent." : pct >= 60 ? "Good progress." : "Keep at it: these come quickly with practice."}
         </p>
@@ -227,15 +227,15 @@ export function LetterQuiz() {
           </>
         )}
         <div className="mt-4 flex flex-wrap gap-2">
-          <button type="button" className="drill-btn" onClick={() => start(pool)}>
+          <button type="button" className="btn" onClick={() => start(pool)}>
             Again
           </button>
           {missed.length > 0 && (
-            <button type="button" className="drill-btn drill-btn-quiet" onClick={() => start(missed)}>
+            <button type="button" className="btn btn-quiet" onClick={() => start(missed)}>
               Retry the {missed.length} missed
             </button>
           )}
-          <button type="button" className="drill-btn drill-btn-quiet" onClick={() => setRound(null)}>
+          <button type="button" className="btn btn-quiet" onClick={() => setRound(null)}>
             Change the quiz
           </button>
         </div>
@@ -261,7 +261,7 @@ export function LetterQuiz() {
         </button>
       </div>
 
-      <div className="drill-card">
+      <div className="panel trainer-card">
         <div className="drill-prompt">
           {showsGlyph ? (
             <p className="drill-glyph naskh" lang="fa" dir="rtl">
@@ -293,7 +293,7 @@ export function LetterQuiz() {
 
         {setup.type === "flashcards" ? (
           !revealed ? (
-            <button type="button" className="drill-btn mt-4" onClick={() => setRevealed(true)} autoFocus>
+            <button type="button" className="btn mt-4" onClick={() => setRevealed(true)} autoFocus>
               Turn the card
             </button>
           ) : (
@@ -302,7 +302,7 @@ export function LetterQuiz() {
               <div className="mt-3 flex gap-2">
                 <button
                   type="button"
-                  className="drill-btn"
+                  className="btn"
                   autoFocus
                   onClick={() => {
                     note(l.ch, true);
@@ -314,7 +314,7 @@ export function LetterQuiz() {
                 </button>
                 <button
                   type="button"
-                  className="drill-btn drill-btn-quiet"
+                  className="btn btn-quiet"
                   onClick={() => {
                     note(l.ch, false);
                     setAnswers((a) => [...a, { item, ok: false }]);
@@ -378,11 +378,11 @@ export function LetterQuiz() {
                 spellCheck={false}
               />
               {!verdict ? (
-                <button key="check" type="submit" className="ui quiz-check">
+                <button key="check" type="submit" className="ui btn">
                   Check
                 </button>
               ) : (
-                <button key="next" type="button" ref={nextRef} className="ui quiz-check" onClick={next}>
+                <button key="next" type="button" ref={nextRef} className="ui btn" onClick={next}>
                   Next
                 </button>
               )}
@@ -407,13 +407,13 @@ export function LetterQuiz() {
 
         <div role="status" className="ui mt-3">
           {verdict && (
-            <div className={`quiz-fb ${verdict.ok ? "quiz-ok" : "quiz-no"}`}>
-              <p className="font-medium">{verdict.ok ? "Correct." : "Not quite."}</p>
+            <div className={`feedback feedback-${verdict.ok ? "right" : verdict.near ? "near" : "wrong"}`}>
+              <p className="feedback-verdict">{verdict.ok ? "Correct." : verdict.near ? "Nearly." : "Not quite."}</p>
               {verdict.note && <p>{verdict.note}</p>}
               {verdict.hint && <p>{verdict.hint}</p>}
               {!verdict.ok && <LetterFacts l={l} />}
               {!verdict.ok && choice && (
-                <button type="button" ref={nextRef} className="drill-btn mt-2" onClick={next}>
+                <button type="button" ref={nextRef} className="btn mt-2" onClick={next}>
                   Next
                 </button>
               )}

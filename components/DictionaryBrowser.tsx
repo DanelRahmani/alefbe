@@ -74,7 +74,7 @@ export function DictionaryBrowser({
         id="dict-search"
         type="search"
         className="quiz-input dict-search"
-        placeholder="Search in Persian, transliteration or English"
+        placeholder="Persian, transliteration or English"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         autoComplete="off"
@@ -146,7 +146,7 @@ export function DictionaryBrowser({
       </p>
 
       {shown.length === 0 ? (
-        <p className="empty-state">No words match. Try fewer letters, or search in English.</p>
+        <p className="panel panel-dashed empty-state">No words match. Try fewer letters, or search in English.</p>
       ) : (
         <ul className="dict-list">
           {shown.map((e) => (

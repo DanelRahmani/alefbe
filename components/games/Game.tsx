@@ -68,7 +68,7 @@ export function Game({ id, items = [] }: { id: GameId; items?: TypeItem[] }) {
   if (final) {
     const pct = percent(final.right, final.total);
     return (
-      <div className="ui drill-panel" role="status">
+      <div className="ui panel trainer-card" role="status">
         <p className="text-lg font-medium">
           {pct === 100 ? "Perfect." : pct >= 80 ? "Excellent." : pct >= 50 ? "Good work." : "Keep going: it gets easier."}
         </p>
@@ -76,10 +76,10 @@ export function Game({ id, items = [] }: { id: GameId; items?: TypeItem[] }) {
           {final.right} of {final.total} ({pct}%). Best so far: {Math.max(best?.best ?? 0, pct)}%.
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
-          <button type="button" className="drill-btn" onClick={start} autoFocus>
+          <button type="button" className="btn" onClick={start} autoFocus>
             Play again
           </button>
-          <Link href="/practice#games" className="drill-btn drill-btn-quiet">
+          <Link href="/practice#games" className="btn btn-quiet">
             All games
           </Link>
         </div>
@@ -109,7 +109,7 @@ export function Game({ id, items = [] }: { id: GameId; items?: TypeItem[] }) {
             </label>
             <fieldset>
               <legend className="font-medium">Speed</legend>
-              <div className="chips chips-wrap">
+              <div className="chip-row">
                 {FLASH_SPEEDS.map(([ms, label]) => (
                   <button
                     key={ms}
@@ -125,7 +125,7 @@ export function Game({ id, items = [] }: { id: GameId; items?: TypeItem[] }) {
             </fieldset>
           </>
         )}
-        <button type="button" className="drill-btn" onClick={start}>
+        <button type="button" className="btn" onClick={start}>
           Start
         </button>
         {best && (
@@ -203,7 +203,7 @@ function TileRound({
   };
 
   return (
-    <div className="drill-card">
+    <div className="panel trainer-card">
       <div className="drill-prompt">
         {fa ? (
           <>
@@ -254,22 +254,22 @@ function TileRound({
       <div className="ui mt-4 flex flex-wrap gap-2">
         {checked === null ? (
           <>
-            <button type="button" className="drill-btn" disabled={!full} onClick={check}>
+            <button type="button" className="btn" disabled={!full} onClick={check}>
               Check
             </button>
-            <button type="button" className="drill-btn drill-btn-quiet" disabled={!placed.length} onClick={() => setPlaced((p) => p.slice(0, -1))}>
+            <button type="button" className="btn btn-quiet" disabled={!placed.length} onClick={() => setPlaced((p) => p.slice(0, -1))}>
               Undo
             </button>
             <button
               type="button"
-              className="drill-btn drill-btn-quiet"
+              className="btn btn-quiet"
               onClick={() => settle(false)}
             >
               Show me
             </button>
           </>
         ) : (
-          <button type="button" className="drill-btn" onClick={() => onDone(checked)} autoFocus>
+          <button type="button" className="btn" onClick={() => onDone(checked)} autoFocus>
             Next
           </button>
         )}
@@ -277,7 +277,7 @@ function TileRound({
 
       <div role="status" className="ui mt-3">
         {checked !== null && (
-          <div className={`quiz-fb ${checked ? "quiz-ok" : "quiz-no"}`}>
+          <div className={`feedback feedback-${checked ? "right" : "wrong"}`}>
             <p className="font-medium">{checked ? "Correct." : "Here it is:"}</p>
             <p className="has-fa">
               <FaText text={word.fa} translit="none" force="all" className="text-2xl" /> <em>{word.translit}</em>, “{word.en}”
@@ -362,7 +362,7 @@ function LetterByLetter({ words, onEnd }: PlayProps) {
   return (
     <div className="drill">
       <Head at={doneBefore} total={total} right={right} unit=" letters" />
-      <div className="drill-card">
+      <div className="panel trainer-card">
         <div className="drill-prompt">
           <p className="drill-word">
             <FaText text={highlightLetter(words[w].fa, step)} translit="none" force="none" />
@@ -390,12 +390,12 @@ function LetterByLetter({ words, onEnd }: PlayProps) {
         </ol>
         <div role="status" className="ui mt-3">
           {picked && (
-            <div className={`quiz-fb ${picked === step.letter.ch ? "quiz-ok" : "quiz-no"}`}>
+            <div className={`feedback feedback-${picked === step.letter.ch ? "right" : "wrong"}`}>
               <p>
                 <span className="fa text-xl">{step.ch}</span> is <strong>{step.letter.name}</strong>
                 {step.ch === "آ" ? " (alef with a madde)" : ""}, {FORM_WORD[step.form]} ({step.form} form).
               </p>
-              <button type="button" className="drill-btn mt-2" onClick={next} autoFocus>
+              <button type="button" className="btn mt-2" onClick={next} autoFocus>
                 {k + 1 < steps.length ? "Next letter" : w + 1 < words.length ? "Next word" : "Finish"}
               </button>
             </div>
@@ -445,7 +445,7 @@ function Flash({ letters, onEnd, speed }: PlayProps & { speed: number }) {
   return (
     <div className="drill">
       <Head at={at} total={letters.length} right={right} />
-      <div className="drill-card">
+      <div className="panel trainer-card">
         <div className="drill-prompt flash-stage">
           {phase === "ask" ? (
             <p className="flash-hidden ui" aria-live="polite">
@@ -478,11 +478,11 @@ function Flash({ letters, onEnd, speed }: PlayProps & { speed: number }) {
         </ol>
         <div role="status" className="ui mt-3">
           {phase === "done" && (
-            <div className={`quiz-fb ${picked === letter.ch ? "quiz-ok" : "quiz-no"}`}>
+            <div className={`feedback feedback-${picked === letter.ch ? "right" : "wrong"}`}>
               <p>
                 <span className="fa text-xl">{letter.ch}</span> is <strong>{letter.name}</strong> ({letter.sounds[0]}).
               </p>
-              <button type="button" className="drill-btn mt-2" onClick={next} autoFocus>
+              <button type="button" className="btn mt-2" onClick={next} autoFocus>
                 {at + 1 < letters.length ? "Next" : "Finish"}
               </button>
             </div>
@@ -580,7 +580,7 @@ function TypeIt({ items, onEnd }: { items: TypeItem[]; onEnd: PlayProps["onEnd"]
   return (
     <div className="drill">
       <Head at={at} total={items.length} right={right} />
-      <div className="drill-card">
+      <div className="panel trainer-card">
         <div className="drill-prompt">
           <p className="drill-word type-target">
             <FaText text={item.fa} translit="none" />
@@ -624,11 +624,11 @@ function TypeIt({ items, onEnd }: { items: TypeItem[]; onEnd: PlayProps["onEnd"]
               aria-describedby="type-feedback"
             />
             {!verdict ? (
-              <button key="check" type="submit" className="ui quiz-check">
+              <button key="check" type="submit" className="ui btn">
                 Check
               </button>
             ) : (
-              <button key="next" type="button" className="ui quiz-check" onClick={next} autoFocus>
+              <button key="next" type="button" className="ui btn" onClick={next} autoFocus>
                 {at + 1 < items.length ? "Next" : "Finish"}
               </button>
             )}
@@ -650,8 +650,8 @@ function TypeIt({ items, onEnd }: { items: TypeItem[]; onEnd: PlayProps["onEnd"]
         <div id="type-feedback" role="status" className="ui mt-3">
           {error && <p className="text-sm text-[var(--err)]">{error}</p>}
           {verdict && (
-            <div className={`quiz-fb ${verdict.ok ? "quiz-ok" : "quiz-no"}`}>
-              <p className="font-medium">{verdict.ok ? "Correct." : "Not quite."}</p>
+            <div className={`feedback feedback-${verdict.ok ? "right" : verdict.near ? "near" : "wrong"}`}>
+              <p className="feedback-verdict">{verdict.ok ? "Correct." : verdict.near ? "Nearly." : "Not quite."}</p>
               {verdict.hint && <p className="has-fa">{verdict.hint}</p>}
               <p className="has-fa">
                 <span className="text-muted">Shown: </span>

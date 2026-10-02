@@ -120,7 +120,7 @@ export function WordInspector() {
       role="dialog"
       aria-label={tapped ? `The word ${tapped.translit}` : "Word"}
       tabIndex={-1}
-      className="inspector ui"
+      className="panel inspector ui"
       data-no-inspect
       onToggle={(e) => {
         if (e.newState === "closed") setTapped(null);

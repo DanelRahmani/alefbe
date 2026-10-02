@@ -189,8 +189,8 @@ export function checkCopy(input: string, target: string): Verdict {
   const want = normalizeFa(target);
   if (typed === want) return { ok: true };
   const spacing = spacingIssues(typed, want);
-  if (spacing) return { ok: false, hint: spacing.join(" ") };
+  if (spacing) return { ok: false, near: true, hint: spacing.join(" ") };
   const v = checkFa(input, [target]);
-  if (v.ok) return { ok: false, hint: "That spelling is also seen, but copy the one shown." };
+  if (v.ok) return { ok: false, near: true, hint: "That spelling is also seen, but copy the one shown." };
   return v;
 }

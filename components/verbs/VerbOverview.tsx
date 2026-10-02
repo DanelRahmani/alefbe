@@ -16,7 +16,7 @@ export function VerbOverview() {
   return (
     <ul className="drill-modes">
       <li>
-        <Link href="/verbs" className="drill-mode">
+        <Link href="/verbs" className="panel card-link">
           <span className="drill-mode-title">Verb trainer</span>
           <span className="drill-mode-blurb">A verb, a person, spoken or written: type the form, one tense at a time.</span>
           <span className="ui drill-mode-stats">

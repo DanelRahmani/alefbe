@@ -17,6 +17,7 @@ import {
 import { traceScore, type Pt, type TracePaths } from "@/lib/trace-path";
 import { computePaths } from "./paths";
 import { useStore } from "@/lib/storage";
+import { rgba } from "@/lib/color";
 import { logActivity, practiceUiStore, settingsStore, traceStore, type PenSize } from "@/lib/stores";
 
 const FORM_LABEL = FORM_LABELS;
@@ -41,10 +42,19 @@ const DOT_WEIGHT = 4;
 function cssVar(name: string): string {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 }
-function rgba(hex: string, a: number): string {
-  const h = hex.replace("#", "");
-  const n = parseInt(h.length === 3 ? h.replace(/./g, "$&$&") : h, 16);
-  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
+/**
+ * A colour token as the canvas can use it. The tokens are light-dark() pairs,
+ * so the raw value is not a colour: a probe element resolves it for the
+ * current theme (to "rgb(r, g, b)").
+ */
+function cssColor(name: string, fallback: string): string {
+  const probe = document.createElement("span");
+  probe.style.color = `var(${name}, ${fallback})`;
+  probe.hidden = true;
+  document.body.append(probe);
+  const color = getComputedStyle(probe).color;
+  probe.remove();
+  return color || fallback;
 }
 
 interface Progress {
@@ -142,7 +152,7 @@ export function Tracer({ initial, session }: { initial?: TraceStart; session?: T
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.direction = "rtl";
-      ctx.fillStyle = rgba(cssVar("--ink") || "#1b1f3b", alpha);
+      ctx.fillStyle = rgba(cssColor("--ink", "#1b1f3b"), alpha);
       ctx.fillText(glyph, x, y);
     });
     return () => {
@@ -160,9 +170,9 @@ export function Tracer({ initial, session }: { initial?: TraceStart; session?: T
     const ctx = prepare(overlayRef.current);
     if (!ctx || !ready) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const accent = cssVar("--accent") || "#1f4aa8";
-    const gold = cssVar("--gold") || "#74580d";
-    const bg = cssVar("--surface") || "#ffffff";
+    const accent = cssColor("--accent", "#1f4aa8");
+    const gold = cssColor("--gold", "#74580d");
+    const bg = cssColor("--surface", "#ffffff");
     const { strokes, dots } = ready;
     const offsets = strokes.map((_, i) => strokes.slice(0, i).reduce((n, s) => n + s.length, 0));
     const lenOf = (s: Pt[]) => s.slice(1).reduce((n, p, i) => n + Math.hypot(p.x - s[i].x, p.y - s[i].y), 0);
@@ -396,7 +406,7 @@ export function Tracer({ initial, session }: { initial?: TraceStart; session?: T
     return snapToPath(samples, p, hitR * 1.5, strength);
   };
   const brush = () => Math.max(6, size * PEN[ui.pen]);
-  const inkColor = () => rgba(cssVar("--ink") || "#1b1f3b", 0.55);
+  const inkColor = () => rgba(cssColor("--ink", "#1b1f3b"), 0.55);
 
   const onDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (locked.current || !ready) return;
@@ -489,18 +499,19 @@ export function Tracer({ initial, session }: { initial?: TraceStart; session?: T
             );
           })}
         </div>
-        <div className="tracer-tabs" role="group" aria-label="Letter form">
+        <div className="chip-row" role="group" aria-label="Letter form">
           {formsFor(index).map((f) => (
-            <button key={f} type="button" aria-pressed={form === f} onClick={() => load(index, f)}>
+            <button key={f} type="button" className="chip" aria-pressed={form === f} onClick={() => load(index, f)}>
               {FORM_LABEL[f]}
             </button>
           ))}
         </div>
-        <div className="tracer-tabs" role="group" aria-label="Level">
+        <div className="chip-row" role="group" aria-label="Level">
           {TRACE_LEVELS.map((l) => (
             <button
               key={l.id}
               type="button"
+              className="chip"
               aria-pressed={level === l.id}
               title={l.hint}
               onClick={() => {
@@ -512,11 +523,12 @@ export function Tracer({ initial, session }: { initial?: TraceStart; session?: T
             </button>
           ))}
         </div>
-        <div className="tracer-tabs" role="group" aria-label="Pen size">
+        <div className="chip-row" role="group" aria-label="Pen size">
           {(["thin", "medium", "thick"] as PenSize[]).map((p) => (
             <button
               key={p}
               type="button"
+              className="chip"
               aria-pressed={ui.pen === p}
               onClick={() => practiceUiStore.set((u) => ({ ...u, pen: p }))}
             >
@@ -565,28 +577,28 @@ export function Tracer({ initial, session }: { initial?: TraceStart; session?: T
       </p>
 
       <div className="ui mt-3 flex flex-wrap gap-2">
-        <button type="button" className="drill-btn" onClick={check} disabled={!drawn || !!result?.passed}>
+        <button type="button" className="btn" onClick={check} disabled={!drawn || !!result?.passed}>
           Check
         </button>
-        <button type="button" className="drill-btn drill-btn-quiet" onClick={reset}>
+        <button type="button" className="btn btn-quiet" onClick={reset}>
           {result?.passed ? "Trace again" : "Clear"}
         </button>
-        <button type="button" className="drill-btn drill-btn-quiet" onClick={() => setDemo((d) => d + 1)} disabled={!ready}>
+        <button type="button" className="btn btn-quiet" onClick={() => setDemo((d) => d + 1)} disabled={!ready}>
           Show me
         </button>
         {level !== "guided" && !result?.passed && (
-          <button type="button" className="drill-btn drill-btn-quiet" onClick={showLetter}>
+          <button type="button" className="btn btn-quiet" onClick={showLetter}>
             Show the letter
           </button>
         )}
-        <button type="button" className={result?.passed ? "drill-btn" : "drill-btn drill-btn-quiet"} onClick={next}>
+        <button type="button" className={result?.passed ? "btn" : "btn btn-quiet"} onClick={next}>
           {result?.passed ? "Next" : "Skip"}
         </button>
       </div>
 
       <div role="status" className="ui mt-3">
         {result && (
-          <div className={`quiz-fb ${result.passed ? "quiz-ok" : "quiz-no"}`}>
+          <div className={`feedback feedback-${result.passed ? "right" : "wrong"}`}>
             <p className="font-medium">
               {result.passed ? "Letter complete." : "Not yet."} {result.score}%{" "}
               <span aria-label={`${starsFor(result.score)} of 3 stars`}>

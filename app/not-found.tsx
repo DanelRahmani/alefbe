@@ -3,7 +3,6 @@ import Link from "next/link";
 export default function NotFound() {
   return (
     <section className="page-head">
-      <p className="ui eyebrow">Page not found</p>
       <h1 className="page-title">This page isn&apos;t here</h1>
       <p className="page-lede">
         The address may have a typo, or the page may have moved. The path, the script and the practice pages are one tap

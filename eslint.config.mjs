@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Playwright MCP output and the capture scripts' configured copies (git-ignored).
+    ".playwright-mcp/**",
   ]),
 ]);
 

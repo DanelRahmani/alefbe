@@ -16,7 +16,7 @@ describe("checkCopy", () => {
     expect(checkCopy("خوبي", "خوبی").ok).toBe(true);
   });
   it("names a half-space typed as a space, or left out", () => {
-    expect(checkCopy("می خرم", MI_KHARAM)).toEqual({ ok: false, hint: "Half-space between می and خرم (you typed a space)." });
+    expect(checkCopy("می خرم", MI_KHARAM)).toEqual({ ok: false, near: true, hint: "Half-space between می and خرم (you typed a space)." });
     expect(checkCopy("میخرم", MI_KHARAM).hint).toBe("Half-space between می and خرم (you typed nothing).");
   });
   it("names a half-space where a space belongs, and a stray gap", () => {
@@ -28,7 +28,7 @@ describe("checkCopy", () => {
     expect(checkCopy("ساعت", "صاعَت").hint).toMatch(/Same sound, other letter/);
   });
   it("wants the spelling shown, not a variant", () => {
-    expect(checkCopy("بلیط", "بِلیت")).toEqual({ ok: false, hint: "That spelling is also seen, but copy the one shown." });
+    expect(checkCopy("بلیط", "بِلیت")).toEqual({ ok: false, near: true, hint: "That spelling is also seen, but copy the one shown." });
   });
 });
 

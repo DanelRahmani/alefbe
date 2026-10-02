@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { VERBS } from "@/content/verbs";
-import { TENSES, personEnOf, pronounOf, lacks, personsOf, stylesOf, table, tenseInfo, type Tense, type Verb } from "@/lib/conjugate";
+import { personEnOf, pronounOf, lacks, personsOf, stylesOf, table, tenseInfo, type Tense, type Verb } from "@/lib/conjugate";
+import { TENSE_GROUPS } from "@/lib/tense-groups";
 import { FaText } from "../FaText";
 import { Rich } from "../Rich";
 
@@ -57,11 +58,20 @@ export function VerbTables() {
   const info = tenseInfo(tense);
   return (
     <>
-      <div className="ui chips chips-wrap mt-4" role="group" aria-label="Tense of the tables">
-        {TENSES.map((t) => (
-          <button key={t.id} type="button" className="chip" aria-pressed={tense === t.id} onClick={() => setTense(t.id)}>
-            {t.title}
-          </button>
+      <div className="ui tense-groups mt-4" role="group" aria-label="Tense of the tables">
+        {TENSE_GROUPS.map((g) => (
+          <div key={g.title} className="tense-group" role="group" aria-label={g.title}>
+            <p className="tense-group-title" aria-hidden="true">
+              {g.title}
+            </p>
+            <div className="chip-row">
+              {g.tenses.map((t) => (
+                <button key={t.id} type="button" className="chip" aria-pressed={tense === t.id} onClick={() => setTense(t.id)}>
+                  {t.title}
+                </button>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
       <p className="ui verb-says">
@@ -77,7 +87,7 @@ export function VerbTables() {
           // A verb with no such tense at all says so once; the negative alone is noted under the table.
           const none = lacks(v, tense, false, VERBS);
           return (
-            <details key={v.id} className="verb-details">
+            <details key={v.id} className="panel verb-details">
               <summary className="has-fa">
                 <FaText text={v.inf} translit="inline" /> <span className="ui text-muted">{v.en}</span>
                 {none && <span className="ui verb-none-tag">no {tenseInfo(tense).title.toLowerCase()}</span>}

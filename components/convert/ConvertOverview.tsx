@@ -16,7 +16,7 @@ export function ConvertOverview({ cards }: { cards: Pick<ConvertCard, "id" | "le
   return (
     <ul className="drill-modes">
       <li>
-        <Link href="/practice/convert" className="drill-mode">
+        <Link href="/practice/convert" className="panel card-link">
           <span className="drill-mode-title">Spoken and written</span>
           <span className="drill-mode-blurb">See a lesson line as it is said; type it as it is written, or the other way round.</span>
           <span className="drill-mode-blurb">Unit 12, “Spoken and written”, gathers the rules.</span>

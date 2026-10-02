@@ -19,9 +19,9 @@
   display: grid;
   place-items: center;
   border: 1px solid var(--rule);
-  border-radius: 10px;
+  border-radius: var(--r-md);
   background: var(--surface);
-  font-size: 1.35rem;
+  font-size: var(--fa-sm);
   line-height: 1;
   padding-bottom: 0.2rem;
 }
@@ -44,7 +44,7 @@
 }
 .pen-dot {
   display: inline-block;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: currentColor;
   vertical-align: middle;
 }
@@ -62,12 +62,8 @@
 .session-setup legend {
   margin-bottom: 0.4rem;
 }
-.chips.chips-wrap {
-  flex-wrap: wrap;
-  overflow: visible;
-}
 .fa-chip .fa {
-  font-size: 1.1rem;
+  font-size: var(--fa-sm);
   word-spacing: 0.2em;
 }
 .session-head {
@@ -75,13 +71,13 @@
   align-items: center;
   gap: 0.75rem;
   margin-top: 1rem;
-  font-size: 0.9rem;
+  font-size: var(--fs-sm);
   color: var(--muted);
 }
 .session-bar {
   flex: 1;
   height: 6px;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: var(--rule);
   overflow: hidden;
 }
@@ -102,7 +98,7 @@
   align-items: center;
   gap: 0.6rem;
   padding: 0.4rem 0.6rem;
-  border-radius: 10px;
+  border-radius: var(--r-md);
   border: 1px solid var(--rule);
 }
 .session-results .is-pass {
@@ -112,7 +108,7 @@
   background: var(--err-soft);
 }
 .session-glyph {
-  font-size: 1.8rem;
+  font-size: var(--fa-md);
   line-height: 1.4;
   min-width: 2.2rem;
   text-align: center;
@@ -148,7 +144,7 @@
   gap: 0.6rem;
   padding: 0.4rem 0.7rem;
   border: 1.5px solid var(--rule);
-  border-radius: 12px;
+  border-radius: var(--r-md);
   background: var(--surface);
   position: relative;
 }
@@ -170,11 +166,11 @@
   position: absolute;
   top: 0.3rem;
   left: 0.5rem;
-  font-size: 0.7rem;
+  font-size: var(--fs-2xs);
   color: var(--muted);
 }
 .quiz-option-glyph {
-  font-size: 2rem;
+  font-size: var(--fa-lg);
   line-height: 1.5;
 }
 .missed-list {
@@ -188,10 +184,10 @@
   justify-items: center;
   padding: 0.2rem 0.6rem;
   border: 1px solid var(--rule);
-  border-radius: 10px;
+  border-radius: var(--r-md);
 }
 .missed-list .naskh {
-  font-size: 1.8rem;
+  font-size: var(--fa-md);
   line-height: 1.5;
 }
 
@@ -210,10 +206,10 @@
   display: grid;
   place-items: center;
   border-bottom: 2px solid var(--rule);
-  font-size: 1.3rem;
+  font-size: var(--fs-lg);
 }
 .tile-slots-fa .tile-slot {
-  font-size: 1.6rem;
+  font-size: var(--fa-md);
 }
 .tile-slot.is-right {
   border-color: var(--ok);
@@ -226,7 +222,7 @@
 .tile-preview {
   margin-top: 0.4rem;
   text-align: center;
-  font-size: 2.4rem;
+  font-size: var(--fa-lg);
   line-height: 1.6;
   color: var(--accent);
 }
@@ -242,14 +238,14 @@
   height: 3rem;
   padding: 0 0.6rem;
   border: 1.5px solid var(--accent);
-  border-radius: 10px;
+  border-radius: var(--r-md);
   background: var(--surface);
   color: var(--accent);
-  font-size: 1.25rem;
+  font-size: var(--fs-lg);
   font-weight: 600;
 }
 .tiles-fa .tile {
-  font-size: 1.6rem;
+  font-size: var(--fa-md);
   font-weight: 400;
 }
 .tile:disabled {
@@ -266,7 +262,7 @@
 .flash-bar {
   width: 60%;
   height: 4px;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: var(--rule);
   overflow: hidden;
 }
@@ -310,7 +306,7 @@ a.letter-card:hover {
   display: inline-block;
   width: 0.55rem;
   height: 0.55rem;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   vertical-align: middle;
 }
 .status-dot-open {
@@ -323,7 +319,7 @@ a.letter-card:hover {
   background: var(--gold);
 }
 .trace-mark {
-  font-size: 0.8rem;
+  font-size: var(--fs-xs);
   line-height: 1;
 }
 .trace-guided {
@@ -348,7 +344,7 @@ a.letter-card:hover {
   white-space: nowrap;
 }
 .zwnj-sign {
-  font-size: 1.2rem;
+  font-size: var(--fa-sm);
   border-inline-start: 1px dashed var(--accent);
   padding-inline-start: 0.1rem;
 }
@@ -361,7 +357,7 @@ a.letter-card:hover {
   margin-top: 1rem;
 }
 .letter-hero {
-  font-size: 6.5rem;
+  font-size: var(--fa-2xl);
   line-height: 1.3;
   color: var(--accent);
   min-width: 6rem;
@@ -370,9 +366,9 @@ a.letter-card:hover {
 .same-sound {
   margin-top: 1rem;
   padding: 0.7rem 0.9rem;
-  border-radius: 12px;
+  border-radius: var(--r-md);
   background: var(--accent-soft);
-  font-size: 0.95rem;
+  font-size: var(--fs-sm);
 }
 .form-row {
   display: grid;
@@ -385,27 +381,24 @@ a.letter-card:hover {
   justify-items: center;
   gap: 0.1rem;
   padding: 0.6rem 0.4rem 0.7rem;
-  border: 1px solid var(--rule);
-  border-radius: 14px;
-  background: var(--surface);
   text-align: center;
 }
 .form-glyph {
-  font-size: 3rem;
+  font-size: var(--fa-xl);
   line-height: 1.5;
   color: var(--accent);
 }
 .form-label {
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: var(--fs-sm);
 }
 .form-note {
-  font-size: 0.75rem;
+  font-size: var(--fs-2xs);
   color: var(--muted);
 }
 .form-trace {
   margin-top: 0.3rem;
-  font-size: 0.8rem;
+  font-size: var(--fs-xs);
   color: var(--accent);
 }
 .key-word {
@@ -437,7 +430,7 @@ a.letter-card:hover {
   display: grid;
   grid-template-columns: 5.5rem 1fr auto;
   gap: 0.6rem;
-  font-size: 0.9rem;
+  font-size: var(--fs-sm);
 }
 
 /* ── Letter cards inside lessons ───────────────────────────────────────── */
@@ -452,7 +445,7 @@ a.letter-card:hover {
 }
 .lesson-letter {
   padding: 0.9rem 1rem;
-  border-radius: 16px;
+  border-radius: var(--r-lg);
   background: var(--surface);
 }
 .lesson-letter-top {
@@ -461,7 +454,7 @@ a.letter-card:hover {
   align-items: center;
 }
 .lesson-letter-big {
-  font-size: 3.6rem;
+  font-size: var(--fa-xl);
   line-height: 1.3;
   color: var(--accent);
   min-width: 3.4rem;
@@ -478,11 +471,11 @@ a.letter-card:hover {
   justify-items: center;
 }
 .lesson-letter-forms .naskh {
-  font-size: 1.8rem;
+  font-size: var(--fa-md);
   line-height: 1.5;
 }
 .lesson-letter-forms .ui {
-  font-size: 0.7rem;
+  font-size: var(--fs-2xs);
   color: var(--muted);
 }
 .lesson-letter-key {
@@ -492,9 +485,6 @@ a.letter-card:hover {
   display: flex;
   gap: 1rem;
   margin-top: 0.4rem;
-}
-.lesson-letter-links a {
-  color: var(--accent);
 }
 
 /* ── Dictionary ────────────────────────────────────────────────────────── */
@@ -508,12 +498,15 @@ a.letter-card:hover {
   gap: 0.5rem;
   margin-top: 0.75rem;
 }
+/* The two filters share the row, each as wide as the other. */
+.dict-filters label {
+  flex: 1 1 9rem;
+  min-width: 0;
+}
 .dict-filters select {
+  width: 100%;
   padding: 0.4rem 0.6rem;
-  border: 1px solid var(--rule);
-  border-radius: 10px;
-  background: var(--surface);
-  font-size: 0.9rem;
+  font-size: var(--fs-sm);
 }
 .dict-index {
   margin-top: 0.75rem;
@@ -547,7 +540,7 @@ a.letter-card:hover {
   font-family: var(--font-literata), Georgia, serif;
   font-style: italic;
   color: var(--muted);
-  font-size: 0.95rem;
+  font-size: var(--fs-sm);
   line-height: 1.3;
 }
 .dict-meaning > p:first-child {
@@ -574,10 +567,10 @@ a.letter-card:hover {
   place-items: center;
   min-width: 1.6rem;
   height: 1.6rem;
-  border-radius: 6px;
+  border-radius: var(--r-sm);
   border: 1px solid var(--rule);
   text-decoration: none;
-  font-size: 0.85rem;
+  font-size: var(--fs-sm);
 }
 .dict-letter:hover {
   border-color: var(--accent);
@@ -585,16 +578,12 @@ a.letter-card:hover {
 }
 
 /* ── Progress statistics ───────────────────────────────────────────────── */
-@media (min-width: 640px) {
-  .stat-grid-6 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
 .activity-cal {
   display: flex;
   gap: 4px;
   margin-top: 0.75rem;
   overflow-x: auto;
+  overflow-y: hidden;
 }
 .activity-days,
 .activity-week {
@@ -603,7 +592,7 @@ a.letter-card:hover {
   gap: 4px;
 }
 .activity-days span {
-  font-size: 0.65rem;
+  font-size: var(--fs-2xs);
   line-height: 1rem;
   color: var(--muted);
   padding-inline-end: 0.3rem;
@@ -632,10 +621,10 @@ a.letter-card:hover {
   display: grid;
   place-items: center;
   height: 3.2rem;
-  border-radius: 10px;
+  border-radius: var(--r-md);
   border: 1px solid var(--rule);
   text-decoration: none;
-  font-size: 1.5rem;
+  font-size: var(--fa-md);
   line-height: 1;
   padding-bottom: 0.25rem;
 }
@@ -654,14 +643,14 @@ a.letter-card:hover {
   position: absolute;
   top: 0.15rem;
   right: 0.25rem;
-  font-size: 0.65rem;
+  font-size: var(--fs-2xs);
 }
 .mastery-count {
   position: absolute;
   bottom: 0.1rem;
   left: 0.3rem;
   font-family: var(--font-vazirmatn), system-ui, sans-serif;
-  font-size: 0.6rem;
+  font-size: var(--fs-2xs);
   color: var(--muted);
 }
 .form-bars {
@@ -674,11 +663,11 @@ a.letter-card:hover {
   grid-template-columns: 5rem 1fr 2.5rem;
   align-items: center;
   gap: 0.6rem;
-  font-size: 0.85rem;
+  font-size: var(--fs-sm);
 }
 .form-bar {
   height: 8px;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: var(--rule);
   overflow: hidden;
 }
@@ -694,7 +683,6 @@ a.letter-card:hover {
 }
 .display-inline {
   padding: 1rem 1.1rem;
-  border-radius: 18px;
 }
 .build-list {
   display: grid;
@@ -710,25 +698,22 @@ a.letter-card:hover {
   justify-items: center;
   gap: 0.15rem;
   padding: 0.8rem 0.9rem 0.9rem;
-  border: 1px solid var(--rule);
-  border-radius: 16px;
-  background: var(--surface);
   text-align: center;
 }
 .build-letters {
-  font-size: 1.7rem;
+  font-size: var(--fa-md);
   line-height: 1.6;
 }
 .build-plus {
   margin: 0 0.35rem;
   font-family: var(--font-vazirmatn), system-ui, sans-serif;
-  font-size: 1rem;
+  font-size: var(--fs-base);
   color: var(--muted);
 }
 .build-forms {
   display: flex;
   gap: 0.5rem;
-  font-size: 1.7rem;
+  font-size: var(--fa-md);
   line-height: 1.6;
   color: var(--accent);
 }
@@ -745,7 +730,7 @@ a.letter-card:hover {
   width: 100%;
 }
 .build-word .fa {
-  font-size: 2.1rem;
+  font-size: var(--fa-lg);
 }
 .syllable-grid th,
 .syllable-grid td {
@@ -757,33 +742,32 @@ a.letter-card:hover {
 }
 .syllable-how {
   display: block;
-  font-size: 0.75rem;
+  font-size: var(--fs-2xs);
   font-weight: 400;
   color: var(--muted);
 }
 .syllable-letter {
-  font-size: 1.6rem;
+  font-size: var(--fa-md);
   color: var(--accent);
 }
 .syllable-fa {
   display: block;
-  font-size: 1.7rem;
+  font-size: var(--fa-md);
   line-height: 1.7;
 }
 .syllable-sound {
   display: block;
   font-family: var(--font-literata), Georgia, serif;
   font-style: italic;
-  font-size: 0.85rem;
+  font-size: var(--fs-sm);
   color: var(--muted);
 }
 .practice-links,
 .skip-ahead {
   padding: 1.1rem 1.25rem;
-  border-radius: 20px;
 }
 .practice-chars {
-  font-size: 2rem;
+  font-size: var(--fa-lg);
   line-height: 1.6;
   word-spacing: 0.3em;
   color: var(--accent);
@@ -835,10 +819,6 @@ a.letter-card:hover {
 }
 .grammar-topic {
   padding: 1.1rem 1.25rem 1.25rem;
-  border: 1px solid var(--rule);
-  border-radius: 20px;
-  background: var(--surface);
-  box-shadow: var(--shadow);
 }
 .grammar-topic .lesson-h2 {
   margin-top: 0;
@@ -872,7 +852,7 @@ a.letter-card:hover {
 }
 .notebook-meta {
   grid-column: 1;
-  font-size: 0.8rem;
+  font-size: var(--fs-xs);
   color: var(--muted);
 }
 .notebook-remove {
@@ -880,7 +860,7 @@ a.letter-card:hover {
   grid-row: 1 / span 2;
   width: 2.25rem;
   height: 2.25rem;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   color: var(--muted);
 }
 .notebook-remove:hover {
@@ -920,9 +900,6 @@ a.letter-card:hover {
 .sheet {
   --sheet-glyph: min(9vw, 2.6rem);
   padding: 1rem;
-  border: 1px solid var(--rule);
-  border-radius: 12px;
-  background: var(--surface);
 }
 .sheet-head {
   display: flex;
@@ -934,12 +911,12 @@ a.letter-card:hover {
 }
 .sheet-title {
   font-family: var(--font-markazi), var(--font-literata), serif;
-  font-size: 1.2rem;
+  font-size: var(--fs-lg);
   font-weight: 600;
 }
 .sheet-name,
 .sheet-how {
-  font-size: 0.8rem;
+  font-size: var(--fs-xs);
   color: var(--muted);
 }
 .sheet-how {
@@ -950,10 +927,10 @@ a.letter-card:hover {
   break-inside: avoid;
 }
 .sheet-label {
-  font-size: 0.85rem;
+  font-size: var(--fs-sm);
 }
 .sheet-label-fa {
-  font-size: 1.3rem;
+  font-size: var(--fa-sm);
 }
 .sheet-row {
   position: relative;
@@ -993,7 +970,7 @@ a.letter-card:hover {
   position: absolute;
   top: 0.1rem;
   left: 0.3rem;
-  font-size: 0.62rem;
+  font-size: var(--fs-2xs);
   color: var(--muted);
 }
 
@@ -1082,7 +1059,7 @@ a.letter-card:hover {
 /* The result of the placement check. */
 .placement-start {
   margin-top: 0.3rem;
-  font-size: 1.25rem;
+  font-size: var(--fs-lg);
   font-weight: 600;
   line-height: 1.6;
 }

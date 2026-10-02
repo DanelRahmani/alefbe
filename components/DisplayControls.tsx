@@ -103,7 +103,7 @@ export function DisplayControls({ theme = true }: { theme?: boolean }) {
         <legend className="font-medium">Text size</legend>
         <div className="flex gap-2">
           {SIZE_OPTIONS.map((o) => (
-            <label key={o.value} className="settings-chip">
+            <label key={o.value} className="chip">
               <input
                 type="radio"
                 name={`${id}-size`}
@@ -123,7 +123,7 @@ export function DisplayControls({ theme = true }: { theme?: boolean }) {
           <legend className="font-medium">Theme</legend>
           <div className="flex gap-2">
             {THEME_OPTIONS.map((o) => (
-              <label key={o.value} className="settings-chip">
+              <label key={o.value} className="chip">
                 <input
                   type="radio"
                   name={`${id}-theme`}

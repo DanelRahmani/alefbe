@@ -23,7 +23,7 @@ export function SheetBuilder() {
       <div className="ui sheet-controls" data-no-print>
         <fieldset>
           <legend className="font-medium">Letters</legend>
-          <div className="chips chips-wrap">
+          <div className="chip-row">
             {DRILL_GROUPS.map((_, g) => (
               <button key={g} type="button" className="chip" aria-pressed={opts.groups.includes(g)} onClick={() => toggle(g)}>
                 <span lang={g === DRILL_GROUPS.length - 1 ? undefined : "fa"}>{groupLabel(g)}</span>
@@ -33,7 +33,7 @@ export function SheetBuilder() {
         </fieldset>
         <fieldset>
           <legend className="font-medium">Forms</legend>
-          <div className="chips chips-wrap">
+          <div className="chip-row">
             <button type="button" className="chip" aria-pressed={opts.forms === "all"} onClick={() => setOpts((o) => ({ ...o, forms: "all" }))}>
               All joining forms
             </button>
@@ -52,7 +52,7 @@ export function SheetBuilder() {
           Add each letter&apos;s key word
         </label>
         <div className="flex flex-wrap items-center gap-3">
-          <button type="button" className="drill-btn" disabled={!letters.length} onClick={() => window.print()}>
+          <button type="button" className="btn" disabled={!letters.length} onClick={() => window.print()}>
             Print
           </button>
           <span className="text-sm text-muted">
@@ -62,7 +62,7 @@ export function SheetBuilder() {
       </div>
 
       {letters.length > 0 && (
-        <section className="sheet" aria-label="Sheet preview">
+        <section className="panel sheet" aria-label="Sheet preview">
           <header className="sheet-head">
             <p className="sheet-title">
               Alefbe · tracing sheet · <bdi lang="fa">{sheetTitle(opts)}</bdi>

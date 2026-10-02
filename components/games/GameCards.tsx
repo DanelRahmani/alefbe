@@ -11,7 +11,7 @@ export function GameCards() {
     <ul className="drill-modes">
       {GAMES.map((g) => (
         <li key={g.id}>
-          <Link href={`/practice/games/${g.id}`} className="drill-mode">
+          <Link href={`/practice/games/${g.id}`} className="panel card-link">
             <span className="drill-mode-title">
               {g.title}{" "}
               <span className="fa text-muted" lang="fa" dir="rtl" aria-hidden="true">

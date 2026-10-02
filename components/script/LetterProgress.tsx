@@ -20,7 +20,7 @@ export function LetterProgress({ ch, slug }: { ch: string; slug: string }) {
 
   return (
     <div className="ui letter-progress">
-      <dl className="stat-grid">
+      <dl className="panel stat-list">
         <div className="stat">
           <dt>Letter → sound</dt>
           <dd className="text-base">{STATUS_LABEL[letterStatus(sound, ch)]}</dd>

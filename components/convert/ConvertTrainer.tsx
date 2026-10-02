@@ -23,6 +23,7 @@ import { convertStore, logActivity, noteResult, progressStore } from "@/lib/stor
 import { formatWait, useMinuteClock } from "../drill/useDrillClock";
 import { FaText } from "../FaText";
 import { Rich } from "../Rich";
+import { Feedback } from "../practice/Feedback";
 import { FaAnswerField } from "../practice/FaAnswerField";
 
 /** The question: one form of the line, its English, and which form to type. */
@@ -152,7 +153,7 @@ export function ConvertTrainer({ cards }: { cards: ConvertCard[] }) {
       </div>
 
       {!started ? (
-        <div className="ui drill-panel">
+        <div className="ui panel trainer-card">
           {met ? (
             <>
               <p className="font-medium">See a line as a lesson gives it; type it in its {to} form.</p>
@@ -166,11 +167,11 @@ export function ConvertTrainer({ cards }: { cards: ConvertCard[] }) {
                       : "Nothing due right now."}
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
-                <button type="button" className="drill-btn" onClick={() => start(false)}>
+                <button type="button" className="btn" onClick={() => start(false)}>
                   Start
                 </button>
                 {!stats.due && !stats.fresh && (
-                  <button type="button" className="drill-btn drill-btn-quiet" onClick={() => start(true)}>
+                  <button type="button" className="btn btn-quiet" onClick={() => start(true)}>
                     Practise anyway
                   </button>
                 )}
@@ -184,10 +185,10 @@ export function ConvertTrainer({ cards }: { cards: ConvertCard[] }) {
                 course; nothing is scheduled.
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
-                <Link href="/" className="drill-btn">
+                <Link href="/" className="btn">
                   Go to the lessons
                 </Link>
-                <button type="button" className="drill-btn drill-btn-quiet" onClick={() => start(true)}>
+                <button type="button" className="btn btn-quiet" onClick={() => start(true)}>
                   Practise anyway
                 </button>
               </div>
@@ -195,15 +196,15 @@ export function ConvertTrainer({ cards }: { cards: ConvertCard[] }) {
           )}
         </div>
       ) : !card ? (
-        <div className="ui drill-panel">
+        <div className="ui panel trainer-card">
           <p className="font-medium">All caught up.</p>
           <p className="mt-1 text-muted">{stats.nextDue ? `Next review in ${formatWait(stats.nextDue - now)}.` : "Nothing is scheduled yet."}</p>
-          <button type="button" className="drill-btn mt-4" onClick={() => start(true)}>
+          <button type="button" className="btn mt-4" onClick={() => start(true)}>
             Practise anyway
           </button>
         </div>
       ) : (
-        <div className="drill-card">
+        <div className="panel trainer-card">
           <ConvertPrompt card={card} dir={dir} />
           <FaAnswerField
             id="convert-input"
@@ -222,17 +223,9 @@ export function ConvertTrainer({ cards }: { cards: ConvertCard[] }) {
           <div id="convert-feedback" role="status" className="ui mt-3">
             {error && <p className="text-sm text-[var(--err)]">{error}</p>}
             {verdict && (
-              <div className={`quiz-fb ${verdict.ok ? "quiz-ok" : "quiz-no"}`}>
-                <p className="font-medium">{verdict.ok ? "Correct." : "Not quite."}</p>
-                {verdict.note && <Rich text={verdict.note} translit={false} />}
-                {verdict.hint && <Rich text={verdict.hint} translit={false} />}
-                {!verdict.ok && (
-                  <p>
-                    You typed: <span className="fa">{input}</span>
-                  </p>
-                )}
+              <Feedback verdict={verdict} typed={input}>
                 <ConvertSolution card={card} />
-              </div>
+              </Feedback>
             )}
           </div>
 

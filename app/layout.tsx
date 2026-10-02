@@ -61,7 +61,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <header className="site-header glass">
           <div className="site-header-inner">
             <Link href="/" className="brand">
-              <span className="brand-mark khatam naskh" aria-hidden="true">
+              <span className="brand-mark khatam" aria-hidden="true">
                 ا
               </span>
               Alefbe

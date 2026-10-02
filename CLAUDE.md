@@ -351,9 +351,18 @@ Phase 9 is polish (owner's brief: `docs/PROMPT-phase-9.md`). Order: 9a design au
 - **Before 9a:** the tree was clean and `nextgen` contained `main` (Phase 8 not merged yet); 1177 tests passed.
 - **9a** (2026-10-02): the audit and plan, in `docs/DESIGN-PASS.md` (findings ranked by how much each improves a learner's day, the 9b–9e plan, and the owner's decisions).
   - Baseline, Lighthouse mobile on `alefbe-static`: performance 51 on `/`, 56 on lesson 4.2, 56 on `/practice`, 47 on `/practice/review`; LCP 5.4–6.1 s; accessibility 100. The CSS is 79 KB (16.2 KB gzipped).
-  - The main findings: Amiri loads on every page (the brand mark, hero, seal), about 228 KB; blur on seven surfaces; `.has-fa` double-spaces English lines; a bidi bug reverses two Persian phrases in one bracket (10.5); feedback doesn't put the right form first; about 49 font sizes, 10 radii and six button looks.
+  - The main findings: Amiri loads on every page (the brand mark, hero, seal), about 228 KB; blur on seven surfaces; `.has-fa` double-spaces English lines; feedback doesn't put the right form first; about 49 font sizes, 10 radii and six button looks.
   - The owner said to continue without choosing, so the four decisions were taken as recommended: a near-miss look, kickers dropped where they repeat the section, the verb chips grouped and the progress stats as a list, the brand mark in Vazirmatn.
   - Tools: `scripts/design-shots.cjs` with `scripts/design-shots-config.mjs` (before/after screenshots through the Playwright MCP, seeded progress, 375 and 1280 px, light and dark; the copy it writes must live inside the project, e.g. `.playwright-mcp/run.cjs`), and `scripts/lighthouse.sh <out-dir> <label> [paths…]` (Lighthouse 13 on the static build).
+  - The audit's bidi finding (two Persian phrases in one bracket reversed in 10.5) was a misreading: measured with text ranges in 9b, the order is right.
+- **9b** (2026-10-03): one design system; details in `docs/DESIGN-PASS.md` ("Carried out").
+  - Tokens in `globals.css`: `--fs-*` (Latin), `--fa-*` (Persian standalone), `--lh-*`, `--r-*`; Tailwind's `text-*` read them. Colours are `light-dark(day, night)`, the theme set by `color-scheme` on the root (`data-theme` light/dark, or the system's). Scripts that need a colour value must resolve it through an element (see `cssColor` in `components/trace/Tracer.tsx`); `getPropertyValue` returns the unresolved pair.
+  - Shared components at the top of `components.css`: `.btn` (`.btn-quiet`, `.btn-danger`), `.chip` / `.chip-row`, `.panel` (`-dashed`, `-accent`), `.card-link`, `.feedback-*`. New UI uses these, not new one-offs.
+  - `components/practice/Feedback.tsx` for every typed answer; `near` on `Verdict` (lib/answers.ts) marks the nearly-right slips, shown in saffron, still a miss.
+  - `.has-fa` is 1.8 with Persian runs at 1.5 (1.35 in Naskh). Unlayered `.fa` beats Tailwind utilities, so size Persian runs with component classes, not `text-*`.
+  - Glass only on the header and tab bar. The brand mark is Vazirmatn (it used to pull Amiri onto every page). Kickers that repeat a page's name were dropped. Verb tense chips are grouped (`lib/tense-groups.ts`). Progress stats are one `stat-list` panel.
+  - The service worker serves the previous build on localhost: the capture scripts unregister it first; do the same before checking a fresh build by hand.
+  - CSS 79,063 bytes (16,147 gzipped), from 79,064 (16,339). Lighthouse accessibility 100 on `/`, 4.2, `/practice`, `/verbs`, `/progress`; performance there 74–85 (was 47–56), not yet re-measured carefully (9d).
 
 ## Practice extras status
 

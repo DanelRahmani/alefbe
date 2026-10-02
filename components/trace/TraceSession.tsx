@@ -111,11 +111,11 @@ export function TraceSession() {
     const missed = done.filter((d) => !d.passed);
     const pct = percent(passed, done.length);
     return (
-      <div className="ui drill-panel" role="status">
+      <div className="ui panel trainer-card" role="status">
         <p className="font-medium text-lg">
           {pct >= 90 ? "Beautifully written." : pct >= 70 ? "Well done." : pct >= 50 ? "Good progress." : "Keep going: every pass counts."}
         </p>
-        <dl className="stat-grid mt-3">
+        <dl className="panel stat-list mt-3">
           <div className="stat">
             <dt>Passed</dt>
             <dd>
@@ -144,15 +144,15 @@ export function TraceSession() {
           ))}
         </ul>
         <div className="mt-4 flex flex-wrap gap-2">
-          <button type="button" className="drill-btn" onClick={() => start(build(chosen()))}>
+          <button type="button" className="btn" onClick={() => start(build(chosen()))}>
             Again
           </button>
           {missed.length > 0 && (
-            <button type="button" className="drill-btn drill-btn-quiet" onClick={() => start(shuffle(missed.map(({ letter, form, level }) => ({ letter, form, level })), Math.random))}>
+            <button type="button" className="btn btn-quiet" onClick={() => start(shuffle(missed.map(({ letter, form, level }) => ({ letter, form, level })), Math.random))}>
               Retry the {missed.length} missed
             </button>
           )}
-          <button type="button" className="drill-btn drill-btn-quiet" onClick={() => setQueue(null)}>
+          <button type="button" className="btn btn-quiet" onClick={() => setQueue(null)}>
             Change the setup
           </button>
         </div>
@@ -170,14 +170,14 @@ export function TraceSession() {
     <div className="ui session-setup">
       <fieldset>
         <legend className="font-medium">Letters</legend>
-        <div className="chips chips-wrap">
+        <div className="chip-row">
           {chip<Pick>("group", pick, setPick, "A lesson group")}
           {chip<Pick>("persian", pick, setPick, "Persian letters پ چ ژ گ")}
           {chip<Pick>("weakest", pick, setPick, "My weakest")}
           {chip<Pick>("custom", pick, setPick, "Choose")}
         </div>
         {pick === "group" && (
-          <div className="chips chips-wrap mt-2">
+          <div className="chip-row mt-2">
             {DRILL_GROUPS.slice(0, 8).map((g, i) => (
               <button key={i} type="button" className="chip fa-chip" aria-pressed={group === i} onClick={() => setGroup(i)}>
                 <span lang="fa" dir="rtl" className="fa">
@@ -212,7 +212,7 @@ export function TraceSession() {
 
       <fieldset>
         <legend className="font-medium">Forms</legend>
-        <div className="chips chips-wrap">
+        <div className="chip-row">
           {chip<FormPick>("all", formPick, setFormPick, "Every form")}
           {(["isolated", "initial", "medial", "final"] as Form[]).map((f) => chip<FormPick>(f, formPick, setFormPick, FORM_LABELS[f]))}
         </div>
@@ -221,7 +221,7 @@ export function TraceSession() {
 
       <fieldset>
         <legend className="font-medium">Level</legend>
-        <div className="chips chips-wrap">
+        <div className="chip-row">
           {chip<LevelPick>("step", levelPick, setLevelPick, "Step up")}
           {TRACE_LEVELS.map((l) => chip<LevelPick>(l.id, levelPick, setLevelPick, l.label))}
         </div>
@@ -234,10 +234,10 @@ export function TraceSession() {
 
       <fieldset>
         <legend className="font-medium">Rounds</legend>
-        <div className="chips chips-wrap">{[1, 2, 3].map((n) => chip<number>(n, rounds, setRounds, `${n}×`))}</div>
+        <div className="chip-row">{[1, 2, 3].map((n) => chip<number>(n, rounds, setRounds, `${n}×`))}</div>
       </fieldset>
 
-      <button type="button" className="drill-btn" disabled={planned === 0} onClick={() => start(build(chosen()))}>
+      <button type="button" className="btn" disabled={planned === 0} onClick={() => start(build(chosen()))}>
         Start: {planned} letter form{planned === 1 ? "" : "s"}
       </button>
       <p className="text-sm text-muted">A form passes at {PASS_SCORE}%. Skipping moves on without counting it as passed.</p>

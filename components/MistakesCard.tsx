@@ -8,7 +8,7 @@ import { mistakesStore } from "@/lib/stores";
 export function MistakesCard() {
   const n = Object.keys(useStore(mistakesStore)).length;
   return (
-    <Link href="/practice/mistakes" className="drill-mode">
+    <Link href="/practice/mistakes" className="panel card-link">
       <span className="drill-mode-title">
         Mistake notebook{" "}
         {n > 0 && (

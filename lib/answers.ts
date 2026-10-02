@@ -11,6 +11,12 @@ export interface Verdict {
   note?: string;
   /** Shown with a wrong answer: what exactly went wrong. */
   hint?: string;
+  /**
+   * A wrong answer that is nearly right: the right word with one slip of
+   * spelling or spacing (a half-space, a madde, a same-sound letter). Shown in
+   * its own colour; it still counts as a miss.
+   */
+  near?: boolean;
 }
 
 // Common variant spellings → the Academy (فرهنگستان) spelling. Normalised forms.
@@ -67,19 +73,19 @@ export function checkFa(input: string, accepted: string[]): Verdict {
 
   for (const a of accs) {
     if (squash(inp) === squash(a)) {
-      return { ok: false, hint: "Nearly: the letters are right, but check the half-space (‌) and spacing." };
+      return { ok: false, near: true, hint: "Nearly: the letters are right, but check the half-space (‌) and spacing." };
     }
   }
   const noMadde = (s: string) => s.replace(/آ/g, "ا");
   if (accs.some((a) => a.includes("آ") && noMadde(a) === noMadde(inp))) {
-    return { ok: false, hint: "Nearly: a long â that starts a word or syllable is written آ (alef with a madde), not ا." };
+    return { ok: false, near: true, hint: "Nearly: a long â that starts a word or syllable is written آ (alef with a madde), not ا." };
   }
   for (const a of accs) {
     const x = squash(v.text);
     const y = squash(a);
     if (x.length === y.length && collapse(x) === collapse(y)) {
       const k = [...x].findIndex((ch, i) => ch !== y[i]);
-      return { ok: false, hint: `Same sound, other letter: ${y[k]} not ${x[k]}.` };
+      return { ok: false, near: true, hint: `Same sound, other letter: ${y[k]} not ${x[k]}.` };
     }
   }
   return { ok: false };
