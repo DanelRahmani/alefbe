@@ -62,6 +62,15 @@ function block(b: Block, i: number) {
       b.lines.forEach((l, j) => ex(`${L} ${l.who} ${j + 1}`, { fa: l.fa, written: l.written, en: l.en }));
       if (b.note) rich(`${L} note`, b.note);
       return;
+    case "reading":
+      if (b.title) rich(`${L} ${b.style} title`, b.title);
+      b.lines.forEach((l, j) => {
+        fa(`${L} ${l.who ?? b.style} ${j + 1}`, l.fa);
+        if (l.price) fa(`${L} price ${j + 1}`, l.price);
+        rich(`${L} en ${j + 1}`, l.en);
+      });
+      if (b.note) rich(`${L} note`, b.note);
+      return;
     case "link":
       return rich(`${L} ${b.href}`, b.text ?? b.label);
     case "quiz":

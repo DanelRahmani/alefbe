@@ -54,6 +54,12 @@ export function checkFa(input: string, accepted: string[]): Verdict {
   const accs = accepted.map(normalizeFa);
   if (accs.includes(inp)) return { ok: true };
 
+  // بخیر is also written به خیر (صبح بخیر, lesson 13.3).
+  const joinKheyr = (s: string) => s.replace(/(^| )به خیر( |$)/g, "$1بخیر$2");
+  if (joinKheyr(inp) !== inp || accs.some((a) => joinKheyr(a) !== a)) {
+    if (accs.some((a) => joinKheyr(a) === joinKheyr(inp))) return { ok: true, note: "بخیر is also written به خیر; both are right." };
+  }
+
   const v = applyVariants(inp);
   if (v.notes.length && accs.some((a) => applyVariants(a).text === v.text)) {
     return { ok: true, note: v.notes.join(" ") };

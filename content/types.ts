@@ -66,7 +66,27 @@ export interface QuizQuestion {
   explain: Rich;
 }
 
+/** One line of a reading text: a sentence, a sign's line, a menu item, a chat message or a half-line of verse. */
+export interface ReadingLine {
+  /** Fully vowel-marked; shown without marks until the reader turns them on. */
+  fa: Fa;
+  en: Rich;
+  /** Chat: who sent it. */
+  who?: string;
+  /** Chat: sent by the reader's side, drawn on the other side. */
+  mine?: boolean;
+  /** Menu: the price, in Persian digits. */
+  price?: Fa;
+  /** Story: this line starts a new paragraph. */
+  para?: boolean;
+}
+
+/** How a reading text is drawn. */
+export type ReadingStyle = "sign" | "menu" | "chat" | "headline" | "story" | "poem";
+
 export type Block =
+  /** A text to read, printed the Iranian way (no vowel marks), with each line revealable. Never made into cards. */
+  | { type: "reading"; style: ReadingStyle; title?: Rich; lines: ReadingLine[]; note?: Rich }
   | { type: "idea"; text: Rich }
   | { type: "heading"; text: Rich }
   | { type: "text"; text: Rich }

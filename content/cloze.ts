@@ -28,6 +28,11 @@ export const CLOZE_LEAVE_OUT: Record<string, string> = {
   "want-can-must/commands#mxn56k": "“sit” leaves open which “you”, and the verb is not in the engine to give the other",
   "spelling/z-letters#19sutpd": "the English names no food, and the midday meal has its own word",
   "spoken-written/different-words#133sal6": "“like this” has another everyday spoken word",
+  "culture/greetings#13rj5vf": "“goodbye” has another word (lesson 13.3)",
+  "culture/greetings#68ptrk": "“goodbye” has another word (lesson 13.3)",
+  "culture/set-phrases#6xfid6": "“thanks” has other everyday words",
+  "culture/taarof#yqek0b": "“would you like” is also asked with the verb want",
+  "culture/calendar#18l3fs7": "“Happy Nowruz” leaves open which “you”, and the other form is not in the lessons",
   "more-verbs/passive#znqoxd": "a plural thing can also take the singular verb, which the gap does not accept",
 };
 

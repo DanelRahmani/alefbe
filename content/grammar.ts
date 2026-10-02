@@ -418,6 +418,7 @@ export const GRAMMAR: GrammarTopic[] = [
     slug: "phrases",
     title: "Everyday phrases",
     unit: "culture",
+    lesson: "culture/set-phrases",
     blocks: [
       { type: "idea", text: "A handful of set phrases carry most everyday politeness." },
       {

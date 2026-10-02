@@ -91,3 +91,11 @@ describe("checkEn", () => {
     expect(checkEn("a book", ["the book"]).ok).toBe(false);
   });
 });
+
+describe("checkFa: بخیر and به خیر", () => {
+  it("accepts either spelling, with a note", () => {
+    expect(checkFa("صبح به خیر", ["صبح بخیر"])).toMatchObject({ ok: true });
+    expect(checkFa("صبح بخیر", ["صبح به خیر"])).toMatchObject({ ok: true });
+    expect(checkFa("صبح خیر", ["صبح بخیر"]).ok).toBe(false);
+  });
+});

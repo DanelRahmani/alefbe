@@ -72,6 +72,10 @@ export const CONVERT_LEAVE_OUT: Record<string, ConvertLeave> = {
   "spoken-written/different-words#ldn47e": W("the spoken verb is also the present perfect, so the written line could be either tense"),
   "spoken-written/different-words#zby0su": W("a fragment: writing would drop را here as readily as keep it"),
   "spoken-written/different-words#97c9lb": S("“like this” has another everyday spoken word"),
+  // Unit 13.
+  "culture/set-phrases#48jq7c": S("the written phrasing is just as natural in speech"),
+  "culture/names-and-titles#3dtyvv": { why: "the written line uses a separate pronoun where the ending is just as right" },
+  "culture/shoma-and-to#1yp34n1": S("the written line uses a separate pronoun where the ending is just as right"),
 };
 
 const built = buildConvertCards(ALL_LESSONS, { verbs: VERBS, leaveOut: CONVERT_LEAVE_OUT });

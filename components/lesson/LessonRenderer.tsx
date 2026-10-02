@@ -10,6 +10,7 @@ import { BuildBlock } from "./BuildBlock";
 import { ExampleShell } from "./ExampleShell";
 import { LetterCards } from "./LetterCards";
 import { PracticeLinks } from "./PracticeLinks";
+import { ReadingBlock } from "./ReadingBlock";
 import { Quiz } from "./Quiz";
 import { SkipAhead } from "./SkipAhead";
 import { SyllableGrid } from "./SyllableGrid";
@@ -224,6 +225,8 @@ function BlockView({ b, ctx }: { b: Block; ctx: Ctx }) {
           )}
         </p>
       );
+    case "reading":
+      return <ReadingBlock style={b.style} title={b.title} lines={b.lines} note={b.note} />;
     case "quiz":
       return <Quiz questions={b.questions} lessonKey={ctx.lessonKey} />;
     case "letters":

@@ -89,6 +89,16 @@ function blockStrs(b: Block, where: string): Str[] {
         { where, kind: "rich", s: b.text },
         { where: where + " label", kind: "rich", s: b.label },
       ];
+    case "reading":
+      return [
+        ...(b.title ? [{ where, kind: "rich" as const, s: b.title }] : []),
+        ...(b.note ? [{ where, kind: "rich" as const, s: b.note }] : []),
+        ...b.lines.flatMap((l, i) => [
+          { where: `${where} line ${i + 1}`, kind: "fa" as const, s: l.fa },
+          { where: `${where} line ${i + 1} en`, kind: "rich" as const, s: l.en },
+          ...(l.price ? [{ where: `${where} line ${i + 1} price`, kind: "fa" as const, s: l.price }] : []),
+        ]),
+      ];
     case "quiz":
       return b.questions.flatMap((q, i) => [
         { where: `${where} q${i + 1}`, kind: "rich" as const, s: q.prompt },

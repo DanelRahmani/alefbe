@@ -317,6 +317,17 @@ Phase 8 is Units 12–14 (owner's brief: `docs/PROMPT-phase-8.md`). Order: 8a Un
   - The content reviewer raised 1 error, 12 should-fix, 9 polish and 3 it could not verify; the card reviewer 2 errors, 4 should-fix, 4 polish, 1 it could not verify. All were applied by content changes, rule changes or leave-outs, except: the cloze note on فَرْدا {چی}؟ still calls چِطُور "the written words" (it is accepted; the note is generic); chat joinings after a vowel (کلیدارو) are not accepted (no lesson teaches them); 9.6's English *more slowly* (also *more quietly*) is earlier content, listed for the owner; 7.5's written progressive kept.
   - Cards: cloze 419 (was 417; 4 new left out by hand or as repeats, 6 whole sentences, 1 answer in the English); spoken ↔ written 418 (was 412; 4 directions left out by hand). Vocabulary: 482 cards (was 476; 6 new words).
   - Checked on the static build at 375 px in light and dark: no horizontal scroll, every table fits (the stem tables were split in two to fit); only the known local-only 404s in the console. Lighthouse accessibility is 100 on 12.1, 12.4 and 12.6.
+- **8b** (2026-10-02): Unit 13, "Culture in conversation", lessons 13.1–13.6, in `content/lessons/culture.ts`.
+  - The lessons are: شُما and تُو; names, جان, آقا and خانُم; greetings and goodbyes; taarof and the polite verbs; set phrases; Nowruz, Yalda and the Iranian calendar. Slugs: `shoma-and-to`, `names-and-titles`, `greetings`, `taarof`, `set-phrases`, `calendar`.
+  - Culture claims are kept to what holds broadly and hedged where they vary (family, region, generation); no figures. Each set phrase has its literal meaning, its reply and when it would be odd (a table in 13.5). Lines reused from earlier lessons are marked with a comment (4.4's dialogue, 8.5, 5.3, 3.7, 10.4, 0.2).
+  - The polite verbs (تَشْریف آوَرْدَن, مَیل کَرْدَن, فَرْمودَن) are not in the engine: they are used of the person addressed, in a few set forms, never of oneself, so a table would teach forms nobody uses. مَیل داشْتَن (*to feel like*, also of oneself) is told apart from مَیل کَرْدَن.
+  - 13.6 shows the months from `content/calendar.ts` with their season and rough start, links to the Today card, and the Today card's Iranian date now links to 13.6. شَبِ جُمْعه as Thursday night is the common mistake. The grammar overview's "Everyday phrases" topic links to 13.5. No placement band (a culture unit).
+  - Dari callouts, `checked: false`: 13.2 کاکا for uncle and an older man; 13.3 Kabul greetings and *mânda nabâshi*; 13.6 the zodiac month names.
+  - Card rules: `lib/convert.ts` keeps a line left out both ways out where it is repeated (as cloze does), and toward speech accepts ممنون for مرسی (lesson 12.5) and باز هم for بازم; earlier cards gained ممنون. `lib/cloze.ts`: بفرما / بفرمایین fix which "you"; a hyphenated name in the English (Sizdah-bedar) counts as a name. `lib/answers.ts` accepts بخیر and به خیر for each other, with a note.
+  - The content reviewer raised 4 errors (نو read *nu*, سیزْدَه read *sizda*, a word count, an override lost in a table cell), 9 should-fix, 13 polish and 4 it could not verify; the card reviewer 5 errors, 8 should-fix, 6 polish, 1 it could not verify. All were applied, except: the عید / نَوروز example kept (both are taught); Persian digits not accepted in an English-language quiz answer (the quiz format forbids them); مادَرِت for مامانِت toward speech, چای for چایی, and عید شما for عیدتان are not accepted (the course pairs them that way throughout); the شَبِ یَلْدا cloze card kept (it tests the ezafe order).
+  - Cards: vocabulary 515 (was 482); cloze 439 (was 419); spoken ↔ written 443 (was 418).
+  - Checked on the static build at 375 px in light and dark: no horizontal scroll, every table fits; the Today card's date links to 13.6. Lighthouse accessibility is 100 on 13.2, 13.5, 13.6 and `/`.
+  - Also in this commit, not yet used by any lesson: the `reading` block for 8c (`content/types.ts`, `components/lesson/ReadingBlock.tsx`, `ReadingShell.tsx`, the `.reading` CSS in `app/components.css`), walked by the content tests and `scripts/dump.ts`.
 
 ## Practice extras status
 
@@ -397,6 +408,12 @@ Not part of Phase 6. Ranked by how easy each is. Everything in `docs/PROMPT-prac
   - تِلِفُن رُو جَواب دادَن or گوشی رُو جَواب دادَن for answering a (mobile) phone in speech;
   - شایَد خونه رَفْته باشه (as given) or شایَد رَفْته باشه خونه, with the place after the verb;
   - نَیومَده بود said *nayumade* (as given) or *niyumade* (tied to the نَیومَد question).
+- Confirm the Unit 13 (8b) Dari callouts: 13.2 کاکا (*kâkâ*) for a father's brother and for an older man; 13.3 *as-salâmu alaykum* in Kabul and *mânda nabâshi* for خَسْته نَباشی; 13.6 the zodiac month names (حَمَل, ثَور, جَوزا), and whether Afghanistan still uses the solar calendar officially (the callout says "have long used").
+- Confirm these from Unit 13 (8b):
+  - written صُبْح بِخَیر, or صُبْح بِه خَیر as the Academy may prefer (the checker accepts both);
+  - شَب بِخَیر as "mostly a farewell" (hosts may open an evening programme with it);
+  - the month دِی marked with a zir in `content/calendar.ts` (STYLE writes *ey* with a zabar, دَی);
+  - that Stilo et al. and *Farsi Shirin Ast* cover forms of address and set phrases (cited in 13.1–13.5), and the Encyclopaedia Iranica entries cited in 13.6.
 - Confirm these from Unit 12 (8a):
   - آپارْتِمان kept with *ân* in speech (some say it with *un*);
   - اِمْتِحان / اِمْتِحون both heard in speech, as 12.2 says;

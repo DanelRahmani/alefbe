@@ -1,6 +1,7 @@
 import type { Lesson, Unit } from "./types";
 import { alphabet } from "./lessons/alphabet";
 import { coreSentence } from "./lessons/core-sentence";
+import { culture } from "./lessons/culture";
 import { nouns } from "./lessons/nouns";
 import { longerSentences } from "./lessons/longer-sentences";
 import { moreVerbs } from "./lessons/more-verbs";
@@ -114,7 +115,7 @@ export const UNITS: Unit[] = [
     title: "Culture in conversation",
     titleFa: "فَرْهَنْگ دَر [گُفْت‌وگو|goftogu]",
     description: "شُما and تُو, greetings, taarof, set phrases, names and the Persian calendar.",
-    lessons: [],
+    lessons: culture,
   },
   {
     slug: "reading",

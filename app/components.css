@@ -466,6 +466,14 @@
   color: var(--muted);
   font-size: 1rem;
 }
+.today-date-link {
+  color: inherit;
+  text-decoration: underline dotted;
+  text-underline-offset: 0.3em;
+}
+.today-date-link:hover {
+  color: var(--ink);
+}
 .today-body {
   display: grid;
   gap: 0.9rem;
@@ -1580,4 +1588,213 @@ a.inspector-letter:hover {
   font-size: 0.72rem;
   color: var(--muted);
   white-space: nowrap;
+}
+
+/* Reading texts (Unit 14): printed without marks unless the reader turns them
+   on, whatever the display setting; each drawn as the thing it is. */
+.reading {
+  margin: 1.5rem 0;
+}
+.reading .vm {
+  display: none !important;
+}
+.reading:not([data-marks]) .vm-none,
+.reading[data-marks] .vm-all {
+  display: inline !important;
+}
+.reading-tools {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.4rem;
+}
+.reading-marks[aria-pressed="true"] {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.reading-title {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.reading-text {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.reading-line + .reading-line {
+  margin-top: 0.5rem;
+}
+.reading-line-body {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.reading-fa {
+  flex: 1;
+  direction: rtl;
+  text-align: start;
+  font-size: 1.35rem;
+  line-height: 1.9;
+}
+.reading-show {
+  flex: none;
+}
+.reading-reveal:empty {
+  display: none;
+}
+.reading-reveal {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.3rem 0 0.2rem;
+  font-size: 0.9rem;
+}
+.reading-tr {
+  font-family: var(--font-literata), Georgia, serif;
+  font-style: italic;
+  color: var(--muted);
+}
+.reading-note {
+  margin-top: 0.6rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* A street sign: a lapis plate with a white border, the same in both themes. */
+.reading-sign .reading-text {
+  max-width: 22rem;
+  margin: 0 auto;
+  padding: 0.9rem 1rem;
+  border: 3px solid #fff;
+  outline: 3px solid #1d4ea0;
+  border-radius: 8px;
+  background: #1d4ea0;
+  color: #fff;
+  box-shadow: var(--shadow);
+}
+.reading-sign .reading-fa {
+  text-align: center;
+  font-size: 1.7rem;
+  font-weight: 700;
+}
+.reading-sign .reading-line + .reading-line .reading-fa {
+  font-size: 1.15rem;
+  font-weight: 400;
+}
+.reading-sign .reading-show,
+.reading-sign .reading-tr {
+  color: #fff;
+}
+.reading-sign .reading-show:hover {
+  background: rgb(255 255 255 / 0.18);
+  color: #fff;
+}
+.reading-sign .reading-reveal {
+  text-align: center;
+}
+
+/* A menu card: a saffron double rule, items with dotted leaders to the price. */
+.reading-menu .reading-text {
+  padding: 1rem;
+  border: 3px double var(--gold);
+  border-radius: 6px;
+  background: var(--surface);
+}
+.reading-menu .reading-fa {
+  display: flex;
+  align-items: baseline;
+  font-size: 1.2rem;
+}
+.reading-leader {
+  flex: 1;
+  min-width: 1rem;
+  margin: 0 0.4rem;
+  border-bottom: 2px dotted var(--rule);
+}
+.reading-price {
+  color: var(--gold);
+}
+.reading-menu .reading-line:first-child .reading-fa {
+  justify-content: center;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* Chat: bubbles on a phone-like panel; the reader's side on the right. */
+.reading-chat .reading-text {
+  display: flex;
+  flex-direction: column;
+  padding: 0.8rem;
+  border-radius: 18px;
+  background: var(--surface-2);
+  border: 1px solid var(--rule);
+}
+.reading-chat .reading-line {
+  max-width: 88%;
+  padding: 0.35rem 0.7rem 0.4rem;
+  border-radius: 16px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+}
+.reading-chat .chat-theirs {
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+.reading-chat .chat-mine {
+  align-self: flex-end;
+  background: var(--accent-soft);
+  border-bottom-right-radius: 4px;
+}
+.reading-who {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--turquoise);
+}
+.reading-chat .reading-line-body {
+  flex-wrap: wrap;
+}
+.reading-chat .reading-fa {
+  font-size: 1.15rem;
+}
+
+/* A news headline: a masthead rule above and below, the headline large. */
+.reading-headline .reading-text {
+  padding: 0.8rem 0;
+  border-top: 4px double var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.reading-headline .reading-line:first-child .reading-fa {
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.6;
+}
+.reading-headline .reading-line + .reading-line .reading-fa {
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+/* A story: a page. */
+.reading-story .reading-text {
+  padding: 1rem;
+  border-radius: 6px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+}
+.reading-story .reading-para {
+  margin-top: 1.1rem;
+}
+.reading-story .reading-fa {
+  font-size: 1.2rem;
+}
+
+/* Verse: centred half-lines between saffron rules. */
+.reading-poem .reading-text {
+  padding: 1rem 0.5rem;
+  border-top: 1px solid var(--gold);
+  border-bottom: 1px solid var(--gold);
+}
+.reading-poem .reading-fa {
+  text-align: center;
+  font-size: 1.45rem;
+}
+.reading-poem .reading-reveal {
+  text-align: center;
 }

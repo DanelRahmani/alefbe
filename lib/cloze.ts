@@ -191,7 +191,7 @@ const fold = (s: string) => s.toLowerCase().normalize("NFC").replace(/[^a-zâ]/g
 const italicsIn = (en: string) => parseMarkup(en).filter((t) => t.it).map((t) => fold(tokenText(t)));
 
 /** The capitalised words of an English gloss, possessive 's off: Maryam's → maryam. */
-const namesIn = (en: string) => (en.replace(/\*[^*]*\*/g, " ").match(/\b[A-Z][a-zâ]+/g) ?? []).map((w) => fold(w.replace(/'s$/, "")));
+const namesIn = (en: string) => (en.replace(/\*[^*]*\*/g, " ").match(/\b[A-Z][a-zâ]+(?:-[a-zâ]+)*/g) ?? []).map((w) => fold(w.replace(/'s$/, "").replace(/-/g, "")));
 
 /** Levenshtein distance, for lining up the written line's highlights with the spoken one's. */
 export function distance(a: string, b: string): number {
@@ -235,8 +235,13 @@ const WHICH_YOU = /polite|formal|friend|several|you all|plural|singular|child|to
 const youWord = (w: string) =>
   w === `ت${DAMMA}و` || w === `ش${DAMMA}ما` || new RegExp(`(${KASRA}|${FATHA}|${ZWNJ})ت(${DAMMA}?ون|ان)?$`).test(w);
 
-/** "You are" in a word: کُجایی, کُجایین, هَسْتی (the course's present of to be is not in the engine). */
-const youBe = (w: string) => /ا(یی|یین|یید)$/.test(w) || ["هستی", "هستین", "هستید", "نیستی", "نیستین", "نیستید"].includes(w);
+/**
+ * "You are" in a word: کُجایی, کُجایین, هَسْتی (the course's present of to be
+ * is not in the engine); and the polite command بفرما / بفرمایین (lessons 8.5,
+ * 13.4), whose verb, فرمودن, is not in the engine either.
+ */
+const youBe = (w: string) =>
+  /ا(یی|یین|یید)$/.test(w) || ["هستی", "هستین", "هستید", "نیستی", "نیستین", "نیستید", "بفرما", "بفرمایین", "بفرمایید"].includes(w);
 
 /**
  * که that opens what was said, known or hoped (lesson 10.2), which speech often

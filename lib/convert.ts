@@ -230,6 +230,9 @@ function altsOf(target: string, paired: string, index: FormIndex | null, verbs: 
     for (const s of objectSpellings(target, paired)) put(s, `The same object marker, spelled another way. The lesson writes it ${target}`);
     put(swapWord(typed, "منو", "من رو"), `The same object marker, spelled another way. The lesson writes it ${target}`);
     put(swapWord(typed, "آره", "بله"), `That fits too. The lesson's line has ${target}`);
+    // Speech says مرسی or ممنون for thanks (lesson 12.5), and بازم or باز هم for again.
+    put(swapWord(typed, "مرسی", "ممنون"), `That fits too: speech thanks with ممنون as well. The lesson's line has ${target}`);
+    put(swapWord(typed, "بازم", "باز هم"), `That fits too. The lesson's line has ${target}`);
     for (const r of writtenOrder(target, paired, index)) put(r, BE_NOTE(target));
   } else {
     // Writing says "in" with دَر or تویِ.
@@ -262,6 +265,8 @@ export function buildConvertCards(lessons: readonly ConvertLesson[], opts: Conve
   const index = verbs.length ? formIndex(verbs) : null;
   const cards: ConvertCard[] = [];
   const byLines = new Map<string, ConvertCard>();
+  // A line left out by hand both ways stays out where a later lesson repeats it.
+  const outByHand = new Map<string, string>();
   const leftOut: ConvertLeftOut[] = [];
   for (const ref of lessons) {
     // The written line shows only where the lesson shows both registers.
@@ -279,6 +284,12 @@ export function buildConvertCards(lessons: readonly ConvertLesson[], opts: Conve
           if (!same.lessons.includes(ref.key)) same.lessons.push(ref.key);
           continue;
         }
+        const lineKey = `${normalizeFa(spoken)}\n${normalizeFa(written)}`;
+        const outWhy = outByHand.get(lineKey);
+        if (outWhy) {
+          for (const d of ["to-written", "to-spoken"] as const) leftOut.push({ id: `${ref.key}#${hashLine(key)}`, lesson: ref.number, fa: spoken, written, dir: d, why: `repeats a line left out by hand (${outWhy})` });
+          continue;
+        }
         const id = `${ref.key}#${hashLine(key)}`;
         const writtenAlts = altsOf(written, spoken, index, verbs, ref.key, false);
         const spokenAlts = altsOf(spoken, written, index, verbs, ref.key, true);
@@ -286,6 +297,7 @@ export function buildConvertCards(lessons: readonly ConvertLesson[], opts: Conve
         const out = new Map<ConvertDir, string>();
         const byHand = opts.leaveOut?.[id];
         if (byHand) for (const d of byHand.dir ? [byHand.dir] : (["to-written", "to-spoken"] as const)) out.set(d, byHand.why);
+        if (byHand && !byHand.dir) outByHand.set(lineKey, byHand.why);
         if (fullBeAfterConsonant(written) && !out.has("to-written"))
           out.set("to-written", "the written line has the full verb to be after a consonant, which lesson 4.2 does not predict");
         // The written line is itself good speech (دیروز به بازار رفتم): nothing to convert toward speech.

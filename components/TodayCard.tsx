@@ -77,7 +77,10 @@ export function TodayCard({ words }: { words: DayWord[] }) {
         </h2>
         {iran && (
           <p className="today-date fa" lang="fa" dir="rtl">
-            {iran.fa}
+            <Link href="/learn/culture/calendar" className="today-date-link" title="About the Iranian calendar">
+              {iran.fa}
+              <span className="sr-only" lang="en">, about the Iranian calendar</span>
+            </Link>
           </p>
         )}
       </header>

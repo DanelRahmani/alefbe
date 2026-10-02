@@ -259,3 +259,15 @@ describe("convert: the object marker typed apart", () => {
     expect(checkConvert(cards[1], "to-spoken", "ال رو، کجایی؟").ok).toBe(false);
   });
 });
+
+describe("convert: repeats of a line left out by hand", () => {
+  it("stay out in a later lesson", () => {
+    const line = { fa: "اِسْمِتون چیه؟", written: "نامِ شُما چیسْت؟", en: "What's your name?" };
+    const A = lesson("a/x", "1.1", [{ type: "examples", items: [line] }]);
+    const B = lesson("b/y", "2.1", [{ type: "examples", items: [line] }]);
+    const id = `a/x#${hashLine("اِسْمِتون چیه؟\nنامِ شُما چیسْت؟")}`;
+    const { cards, leftOut } = buildConvertCards([A, B], { verbs: VERBS, leaveOut: { [id]: { why: "test" } } });
+    expect(cards).toHaveLength(0);
+    expect(leftOut.filter((l) => l.lesson === "2.1").map((l) => l.why)).toEqual(["repeats a line left out by hand (test)", "repeats a line left out by hand (test)"]);
+  });
+});
