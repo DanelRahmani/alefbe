@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { VERBS } from "@/content/verbs";
-import { PERSON_EN, PRONOUNS, TENSES, lacks, personsOf, stylesOf, table, tenseInfo, type Tense, type Verb } from "@/lib/conjugate";
+import { TENSES, personEnOf, pronounOf, lacks, personsOf, stylesOf, table, tenseInfo, type Tense, type Verb } from "@/lib/conjugate";
 import { FaText } from "../FaText";
 import { Rich } from "../Rich";
 
@@ -36,7 +36,7 @@ function VerbTable({ verb, tense, negative }: { verb: Verb; tense: Tense; negati
           {personsOf(tense).map((p, i) => (
             <tr key={p}>
               <th scope="row" className="has-fa">
-                {PERSON_EN[p]} <FaText text={PRONOUNS[p].written} translit="none" />
+                {personEnOf(tense, p)} <FaText text={pronounOf(tense, p, "written")} translit="none" />
               </th>
               {columns.map((c) => (
                 <td key={c.style} className="has-fa">

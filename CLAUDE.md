@@ -265,6 +265,18 @@ Phase 7 is the placement check, the engine forms for Unit 11, and Units 10–11 
   - Links: lesson 0.3 (an English `link` block after the skip button), the home page (a line under the first-lesson card while nothing is finished and no check has been taken), the search index and `content/routes.ts`.
   - Fix found while testing, in every typed-answer trainer (`FaAnswerField`, vocab, verbs, drill, games, letter quiz, review queue): clicking **Next** with the mouse showed "Type an answer first". React reused one `<button>` for Check and Next, so it became `type="submit"` before the click's default action and submitted the empty field. The two buttons now have their own `key`. Pressing Enter was never affected.
   - Checked on the static build at 375 px in light and dark: no horizontal scroll; a fail, a slip and an all-pass run gave the right start; marking opened 28 lessons and all letter groups; the focus ring shows on every control. Lighthouse accessibility is 100 on `/placement`, `/` and lesson 0.3.
+- **7b** (2026-10-02): the past perfect, the past subjunctive and the passive in the engine.
+  - `Tense` gained `past-perfect` (ماضیِ بَعید, lesson `more-verbs/past-perfect`), `past-subjunctive` (ماضیِ اِلْتِزامی, `more-verbs/past-subjunctive`), and the passive as two tenses, `passive` and `past-passive` (مُضارِعِ اِخْباریِ مَجْهول, ماضیِ سادهٔ مَجْهول), both opening with `more-verbs/passive`.
+  - Forms, all built on the participle (past stem + ه; in speech from the spoken stem, اومَده, خونْده, آوُرْده):
+    - past perfect: participle + بودن in the simple past (رَفْته بودَم); speech is the same with its own endings (بودین, بودَن); نَـ on the participle (نَرَفْته بودَم, نَیامَده, spoken نَذاشْته);
+    - past subjunctive: participle + باشَم (رَفْته باشَم, spoken باشه, باشین); نَـ on the participle;
+    - passive: participle + شدن in the present or the simple past (دیده می‌شَوَد, spoken دیده می‌شه; دیده شُد); نَـ on شدن (دیده نِمی‌شَوَد, دیده نَشُد). Only *it* and *they* (`persons`), as the subject is usually a thing; the prompt shows آن / اون, and این / اینا are accepted (`pronounOf`, `personEnOf`).
+  - Missing forms (`lacks`, with the reason): بودن's past perfect (exists, but uncommon); داشتن's past subjunctive (داشْته باشَم serves for both). No passive for a verb that takes no object (new flag `intransitive`: بودن, رفتن, آمدن, شدن and the three compounds) or with `noPassive`: کردن (its compounds put شدن in its place, lesson 11.5), گفتن, خواستن (impersonal), دانستن (*is considered*), فهمیدن, توانستن, داشتن. 12 verbs are drilled in the passive.
+  - English: "I had gone", "that I have gone", "he/she/it is seen"; a state's past passive is an event (شِناخْته شُد, *was recognised*); a modal adds "(do it)".
+  - Golden tables in `tests/conjugate-unit11.test.ts`, by hand: every past perfect and passive row typed whole; the past subjunctive as each verb's participle plus the باشَم row, with four verbs typed out whole; the negatives by rule, with the exceptions listed (آمدن, آوردن, spoken گذاشتن).
+  - The trainer, the tables and the practice hub take the tenses from `TENSES`; the gate says the lessons are on the way until Unit 11 is written. A wrong tense is named ("That is the past passive…"). The cloze and spoken ↔ written decks are unchanged (their scripts' output diffed before and after).
+  - The reviewer found no wrong form, mark, negation or half-space, and raised 3 should-fix, 7 polish and 2 it could not verify; all were applied, and the two went to "Waiting on the owner". Among them: آن / اون for the passive's *it*; گفتن out of the passive drill; fairer reasons for بودن, کردن, دانستن and فهمیدن; a note on the past perfect (کُجا رَفْته بودی؟) and on a plural thing with a singular verb (کِتاب‌ها خوانْده شُد).
+  - Checked at 375 px in light and dark: no horizontal scroll; the tables show the right rows. Lighthouse accessibility is 100 on `/verbs`.
 
 ## Practice extras status
 
@@ -340,6 +352,9 @@ Not part of Phase 6. Ranked by how easy each is. Everything in `docs/PROMPT-prac
   - the spoken present perfect spelled like the simple past (رَفْتَم … رَفْته), told apart by stress; whether the negative (نَرَفْتَم) differs in stress at all; and whether the spelling رفته‌م should be taught;
   - شناختن treated as a state, with no progressive;
   - the term مُسْتَمِر: *mostamer* (the dictionary form, as written) or *mostamar*.
+- Confirm these from Phase 7b (the reviewer could not verify them):
+  - spoken گذاشتن without a prefix in the new tenses: گُذاشْته بودَم, گُذاشْته باشَم, گُذاشْته می‌شه (as given), or ذاشْته…; the trainer accepts ذاشته as a variant, also in the passive;
+  - the spoken negative of آوردن: نَیاوُرْده بودَم (*nayâvorde*, as given), *nayovorde* or *nayâvarde* (tied to the *âvord-* / *âvard-* question).
 - Confirm these from Unit 9 (6e):
   - سالَمه (*sâlame*) for "I'm … years old" in speech; شیش for شِش, "usually";
   - تِهْرون as the spoken form (many Tehranis now say *tehrân*);

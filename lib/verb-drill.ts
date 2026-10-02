@@ -11,6 +11,7 @@ import { VERBS, verbById } from "@/content/verbs";
 import { checkFa, type Verdict } from "./answers";
 import {
   PERSON_EN,
+  personEnOf,
   TENSES,
   acceptedAnswers,
   conjugate,
@@ -118,7 +119,7 @@ export const SPOKEN_PERFECT_HE_SHARE = 0.5;
 export const NEGATIVE_SHARE = 0.3;
 
 /** Subject pronouns a typed answer may start with (unmarked, spoken and written). */
-const PRONOUN_WORDS = new Set(["من", "تو", "او", "اون", "ما", "شما", "آن‌ها", "آنها", "اونا"]);
+const PRONOUN_WORDS = new Set(["من", "تو", "او", "اون", "ما", "شما", "آن‌ها", "آنها", "اونا", "آن", "این", "این‌ها", "اینها", "اینا"]);
 
 /** One random form of an item. `rand` is called three times: person, style, polarity. */
 export function askFor(id: string, ask: StyleChoice, rand: () => number): VerbQuestion | null {
@@ -145,8 +146,9 @@ export function askFor(id: string, ask: StyleChoice, rand: () => number): VerbQu
 }
 
 /** "the spoken form for “we”, negative"; with `tense`, "the simple past (the spoken form for “we”)". */
-export function describeSpec(s: Omit<FormSpec, "tense">, tense?: Tense): string {
-  const form = `the ${s.style} form for “${PERSON_EN[s.person]}”${s.negative ? ", negative" : ""}`;
+export function describeSpec(s: Omit<FormSpec, "tense"> & { tense?: Tense }, tense?: Tense): string {
+  const t = tense ?? s.tense;
+  const form = `the ${s.style} form for “${t ? personEnOf(t, s.person) : PERSON_EN[s.person]}”${s.negative ? ", negative" : ""}`;
   return tense ? `the ${tenseInfo(tense).title.toLowerCase()} (${form})` : form;
 }
 

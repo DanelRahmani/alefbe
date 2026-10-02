@@ -22,6 +22,10 @@ import type { Verb } from "@/lib/conjugate";
 // (boro) is the one command given with it. `command` holds a command to one
 // person that is not بِـ + stem; `bare` marks the compounds with کردن, which
 // usually drop بِـ (کار کُنَم).
+//
+// The passive (participle + شدن) is drilled for a verb that takes an object;
+// `intransitive` marks the ones that don't, and `noPassive` says why a
+// verb that does is left out.
 
 export const VERBS: Verb[] = [
   // To be. Its present is the short endings and هست (lesson 4.2), so the
@@ -37,6 +41,7 @@ export const VERBS: Verb[] = [
     past: "رَفْت",
     present: "رَو",
     spoken: { present: "ر" },
+    intransitive: true,
     // Said boro in speech and in reading aloud alike.
     command: { spoken: ["بُرُو", "نَرُو"], written: ["بُرُو", "نَرُو"] },
   },
@@ -48,10 +53,21 @@ export const VERBS: Verb[] = [
     past: "آمَد",
     present: "آ",
     spoken: { present: "آ", past: "اومَد" },
+    intransitive: true,
   },
-  { id: "kardan", inf: "کَرْدَن", en: "to do, to make", enForms: ["do", "does", "did", "done", "doing"], past: "کَرْد", present: "کُن" },
-  { id: "shodan", inf: "شُدَن", en: "to become", enForms: ["become", "becomes", "became", "become", "becoming"], past: "شُد", present: "شَو", spoken: { present: "ش" }, command: { spoken: ["بِشُو", "نَشُو"] } },
-  { id: "goftan", inf: "گُفْتَن", en: "to say", enForms: ["say", "says", "said", "said", "saying"], past: "گُفْت", present: "گو", spoken: { present: "گ" }, command: { spoken: ["بِگو", "نَگو"] } },
+  { id: "kardan", inf: "کَرْدَن", en: "to do, to make", enForms: ["do", "does", "did", "done", "doing"], past: "کَرْد", present: "کُن", noPassive: "Not used in the passive. A compound with کَرْدَن that takes an object puts شُدَن in its place (lesson 11.5)." },
+  { id: "shodan", inf: "شُدَن", en: "to become", enForms: ["become", "becomes", "became", "become", "becoming"], past: "شُد", present: "شَو", spoken: { present: "ش" }, command: { spoken: ["بِشُو", "نَشُو"] }, intransitive: true },
+  {
+    id: "goftan",
+    inf: "گُفْتَن",
+    en: "to say",
+    enForms: ["say", "says", "said", "said", "saying"],
+    past: "گُفْت",
+    present: "گو",
+    spoken: { present: "گ" },
+    command: { spoken: ["بِگو", "نَگو"] },
+    noPassive: "Its passive is mostly impersonal (*it is said that…*), so it is not drilled.",
+  },
   {
     id: "dâdan",
     inf: "دادَن",
@@ -64,11 +80,12 @@ export const VERBS: Verb[] = [
     command: { spoken: ["بِده", "نَده"] },
   },
   { id: "didan", inf: "دیدَن", en: "to see", enForms: ["see", "sees", "saw", "seen", "seeing"], enNow: "watching", past: "دید", present: "بین" },
-  { id: "khâstan", inf: "خواسْتَن", en: "to want", enForms: ["want", "wants", "wanted", "wanted", "wanting"], past: "خواسْت", present: "خواه", spoken: { present: "خوا" }, stative: true, enEvent: ["wanted (at that moment)", "want (at that moment)"], noCommand: "Rarely used as a command, so it is not drilled here." },
+  { id: "khâstan", inf: "خواسْتَن", en: "to want", enForms: ["want", "wants", "wanted", "wanted", "wanting"], past: "خواسْت", present: "خواه", spoken: { present: "خوا" }, stative: true, enEvent: ["wanted (at that moment)", "want (at that moment)"], noCommand: "Rarely used as a command, so it is not drilled here.", noPassive: "Its passive is used only in formal writing, and impersonally (*it is requested that…*), so it is not drilled." },
   {
     id: "dânestan",
     stative: true,
     noNegCommand: true,
+    noPassive: "Its passive is rare in speech, and in writing means *is considered*, not *is known*, so it is not drilled.",
     enEvent: ["found out", "find out"],
     inf: "دانِسْتَن",
     en: "to know (a fact)",
@@ -82,6 +99,7 @@ export const VERBS: Verb[] = [
     id: "tavânestan",
     stative: true,
     noCommand: "This verb is not used as a command.",
+    noPassive: "A helper verb: it has no passive.",
     enEvent: ["managed to", "manage to"],
     inf: "تَوانِسْتَن",
     en: "to be able, can",
@@ -93,7 +111,7 @@ export const VERBS: Verb[] = [
   },
 
   // Everyday verbs.
-  { id: "dâshtan", inf: "داشْتَن", en: "to have", enForms: ["have", "has", "had", "had", "having"], past: "داشْت", present: "دار", noMi: true, stative: true },
+  { id: "dâshtan", inf: "داشْتَن", en: "to have", enForms: ["have", "has", "had", "had", "having"], past: "داشْت", present: "دار", noMi: true, stative: true, noPassive: "Not used in the passive." },
   { id: "khordan", inf: "خُورْدَن", en: "to eat; to drink", enForms: ["eat", "eats", "ate", "eaten", "eating"], past: "خُورْد", present: "خُور" },
   { id: "kharidan", inf: "خَریدَن", en: "to buy", enForms: ["buy", "buys", "bought", "bought", "buying"], past: "خَرید", present: "خَر" },
   { id: "neveshtan", inf: "نِوِشْتَن", en: "to write", enForms: ["write", "writes", "wrote", "written", "writing"], past: "نِوِشْت", present: "نِویس" },
@@ -127,12 +145,12 @@ export const VERBS: Verb[] = [
     spoken: { present: "ذار", pastPrefixed: "ذاشْت" },
   },
   { id: "porsidan", inf: "پُرْسیدَن", en: "to ask", enForms: ["ask", "asks", "asked", "asked", "asking"], past: "پُرْسید", present: "پُرْس" },
-  { id: "fahmidan", inf: "فَهْمیدَن", en: "to understand", enForms: ["understand", "understands", "understood", "understood", "understanding"], enNow: "starting to understand", noNegCommand: true, past: "فَهْمید", present: "فَهْم" },
+  { id: "fahmidan", inf: "فَهْمیدَن", en: "to understand", enForms: ["understand", "understands", "understood", "understood", "understanding"], enNow: "starting to understand", noNegCommand: true, noPassive: "Rarely used in the passive, and then impersonally (*it is understood that…*).", past: "فَهْمید", present: "فَهْم" },
   { id: "shenâkhtan", inf: "شِناخْتَن", en: "to know (a person)", enForms: ["know", "knows", "knew", "known", "knowing"], enHint: "a person", past: "شِناخْت", present: "شِناس", stative: true, enEvent: ["recognised", "recognise"], noNegCommand: true, enCommand: "get to know" },
 
   // Compound verbs (lesson 5.6): a noun plus a light verb, which carries the endings.
-  { id: "kâr-kardan", inf: "کار کَرْدَن", en: "to work", enForms: ["work", "works", "worked", "worked", "working"], past: "کَرْد", present: "کُن", part: "کار", light: "kardan", bare: true },
-  { id: "harf-zadan", inf: "حَرْف زَدَن", en: "to talk, to speak", enForms: ["talk", "talks", "talked", "talked", "talking"], past: "زَد", present: "زَن", part: "حَرْف", light: "zadan" },
+  { id: "kâr-kardan", inf: "کار کَرْدَن", en: "to work", enForms: ["work", "works", "worked", "worked", "working"], past: "کَرْد", present: "کُن", part: "کار", light: "kardan", bare: true, intransitive: true },
+  { id: "harf-zadan", inf: "حَرْف زَدَن", en: "to talk, to speak", enForms: ["talk", "talks", "talked", "talked", "talking"], past: "زَد", present: "زَن", part: "حَرْف", light: "zadan", intransitive: true },
   {
     id: "zendegi-kardan",
     inf: "زِنْدِگی کَرْدَن",
@@ -143,6 +161,7 @@ export const VERBS: Verb[] = [
     part: "زِنْدِگی",
     light: "kardan",
     bare: true,
+    intransitive: true,
   },
 ];
 

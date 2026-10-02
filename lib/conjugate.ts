@@ -1,7 +1,8 @@
 // The conjugation engine: every verb form is generated from the verb's stems.
 // Pure. It covers the present, the past tenses of Unit 7 (simple past,
 // present perfect, past continuous, and the progressive with داشتن) and the
-// forms of Unit 8 (subjunctive, imperative, and the written future),
+// forms of Unit 8 (subjunctive, imperative, and the written future) and of
+// Unit 11 (past perfect, past subjunctive, and the passive with شدن),
 // affirmative and negative, spoken (Tehrani) and written.
 //
 // Output is fully vowel-marked (content/STYLE.md), so it transliterates and
@@ -27,7 +28,11 @@ export type Tense =
   | "past-progressive"
   | "subjunctive"
   | "imperative"
-  | "future";
+  | "future"
+  | "past-perfect"
+  | "past-subjunctive"
+  | "passive"
+  | "past-passive";
 
 export interface TenseInfo {
   id: Tense;
@@ -45,6 +50,9 @@ export interface TenseInfo {
   /** The styles it has, when not both: the future with خواستن belongs to writing. */
   styles?: Style[];
 }
+
+const PASSIVE_NOTE =
+  "The subject of a passive is usually a thing, so only *it* and *they* are drilled; in writing, a plural thing often takes the singular verb: کِتاب‌ها خوانْده شُد. Speech uses the passive less than writing, and often says *they* with the active verb instead: *they built it* for *it was built*.";
 
 export const TENSES: TenseInfo[] = [
   { id: "present", title: "Present", titleFa: "مُضارِعِ اِخْباری", says: "I go, I'm going" },
@@ -86,6 +94,39 @@ export const TENSES: TenseInfo[] = [
     says: "I will go",
     styles: ["written"],
     note: "This future belongs to writing and formal speech. Everyday speech uses the present: فَرْدا می‌رَم, *I'll go tomorrow*. *I'm going to go* is می‌خوام بِرَم.",
+  },
+  {
+    id: "past-perfect",
+    title: "Past perfect",
+    titleFa: "ماضیِ بَعید",
+    lesson: "more-verbs/past-perfect",
+    says: "I had gone",
+    note: "Persian uses it more than English does: کُجا رَفْته بودی؟ is the everyday *where have you been?*, said to someone who has just come back.",
+  },
+  {
+    id: "past-subjunctive",
+    title: "Past subjunctive",
+    titleFa: "ماضیِ اِلْتِزامی",
+    lesson: "more-verbs/past-subjunctive",
+    says: "that I have gone (after maybe, I hope, must)",
+  },
+  {
+    id: "passive",
+    title: "Present passive",
+    titleFa: "مُضارِعِ اِخْباریِ مَجْهول",
+    lesson: "more-verbs/passive",
+    says: "it is seen",
+    persons: ["3s", "3p"],
+    note: PASSIVE_NOTE,
+  },
+  {
+    id: "past-passive",
+    title: "Past passive",
+    titleFa: "ماضیِ سادهٔ مَجْهول",
+    lesson: "more-verbs/passive",
+    says: "it was seen",
+    persons: ["3s", "3p"],
+    note: PASSIVE_NOTE,
   },
 ];
 
@@ -145,6 +186,10 @@ export interface Verb {
   copula?: boolean;
   /** A state, not an action (have, want, know, can): no progressive with داشتن. */
   stative?: boolean;
+  /** Takes no object (go, come, become, work): no passive. A compound's own, not its light verb's. */
+  intransitive?: boolean;
+  /** No passive is drilled, and why ("Rich"), for a verb that takes an object. */
+  noPassive?: string;
   /** Compound verbs: the non-verbal part (کار) and the light verb's id ("kardan"). */
   part?: string;
   light?: string;
@@ -161,6 +206,8 @@ const FATHA = "َ";
 
 /** The verb the progressive is built with. */
 const HAVE = "dâshtan";
+/** The verb the passive is built with. */
+const BECOME = "shodan";
 
 // Personal endings of the present, by the stem's last sound.
 const ENDINGS: Record<Style, { cons: string[]; vowel: string[] }> = {
@@ -310,6 +357,29 @@ function imperative(v: Verb, person: Person, style: Style, negative: boolean, al
   return v.copula || bare ? stem : withBe(stem);
 }
 
+/** The past participle: the past stem + ه (رَفْته), in speech from the spoken stem (اومَده, and نَذاشْته after نـ). */
+const participle = (v: Verb, style: Style, prefixed: boolean) => pastStem(v, style, prefixed) + "ه";
+
+/** The past perfect: the participle, then بودن in the simple past: رَفْته بودَم. نَـ goes on the participle. */
+function pastPerfect(v: Verb, person: Person, style: Style, negative: boolean, all: readonly Verb[]): string {
+  const form = participle(v, style, negative) + " " + past(copulaOf(all), person, style, false);
+  return negative ? negate(form) : form;
+}
+
+/** The past subjunctive: the participle, then بودن in the subjunctive: رَفْته باشَم, نَرَفْته باشَم. */
+function pastSubjunctive(v: Verb, person: Person, style: Style, negative: boolean, all: readonly Verb[]): string {
+  const form = participle(v, style, negative) + " " + subjunctive(copulaOf(all), person, style, false, all);
+  return negative ? negate(form) : form;
+}
+
+/** The passive: the participle, then شدن in the present or the simple past: دیده می‌شَوَد, دیده شُد. نَـ goes on شدن. */
+function passive(v: Verb, person: Person, style: Style, negative: boolean, all: readonly Verb[], wasDone: boolean): string {
+  const become = all.find((x) => x.id === BECOME);
+  if (!become) throw new Error("The passive needs شدن in the verb list");
+  const aux = wasDone ? past(become, person, style, negative) : present(become, person, style, negative);
+  return participle(v, style, false) + " " + aux;
+}
+
 /** The written future: خواستن's present without می, then the past stem: خواهَم رَفْت. */
 function future(v: Verb, person: Person, negative: boolean): string {
   return (negative ? "نَ" : "") + "خواه" + ENDINGS.written.cons[idx(person)] + " " + v.past;
@@ -336,6 +406,14 @@ export function lacks(v: Verb, tense: Tense, negative: boolean, all: readonly Ve
       if (v.noCommand) return v.noCommand;
       if (negative && v.noNegCommand) return "This verb is not said as a negative command.";
       return null;
+    case "past-perfect":
+      return v.copula ? "Not drilled: بوده بودَم exists but is uncommon, and the simple past بودَم usually serves." : null;
+    case "past-subjunctive":
+      return stemVerb(v, all).noMi ? "Its present subjunctive, داشْته باشَم, serves for this too." : null;
+    case "passive":
+    case "past-passive":
+      if (v.copula || v.intransitive) return "This verb takes no object, so it has no passive.";
+      return v.noPassive ?? null;
     default:
       return null;
   }
@@ -377,6 +455,13 @@ export function conjugate(v: Verb, spec: FormSpec, all: readonly Verb[]): string
       return withPart(imperative(base, person, style, negative, all, v.bare));
     case "future":
       return withPart(future(base, person, negative));
+    case "past-perfect":
+      return withPart(pastPerfect(base, person, style, negative, all));
+    case "past-subjunctive":
+      return withPart(pastSubjunctive(base, person, style, negative, all));
+    case "passive":
+    case "past-passive":
+      return withPart(passive(base, person, style, negative, all, spec.tense === "past-passive"));
   }
 }
 
@@ -394,6 +479,25 @@ export const PRONOUNS: Record<Person, Record<Style, string>> = {
   "2p": { spoken: "شُما", written: "شُما" },
   "3p": { spoken: "اونا", written: "آن‌ها" },
 };
+
+const isPassive = (t: Tense) => t === "passive" || t === "past-passive";
+
+/** The subject pronoun shown for a form: a thing's (آن, اون) in the passive. */
+export function pronounOf(tense: Tense, person: Person, style: Style): string {
+  if (isPassive(tense) && person === "3s") return style === "written" ? "آن" : "اون";
+  return PRONOUNS[person][style];
+}
+
+/** Every pronoun a typed answer may start with, the shown one first: the passive also takes این, اینا. */
+function pronounsOf(tense: Tense, person: Person, style: Style): string[] {
+  const shown = pronounOf(tense, person, style);
+  if (!isPassive(tense)) return [shown];
+  if (person === "3s") return [shown, "این"];
+  return [shown, style === "written" ? "این‌ها" : "اینا"];
+}
+
+/** The person in English, as the prompt shows it: "it" for a passive's he/she. */
+export const personEnOf = (tense: Tense, person: Person) => (isPassive(tense) && person === "3s" ? "it" : PERSON_EN[person]);
 
 export const PERSON_EN: Record<Person, string> = {
   "1s": "I",
@@ -462,6 +566,20 @@ export function englishOf(v: Verb, spec: FormSpec): string {
     case "future":
       text = `${negative ? "won't" : "will"} ${inf}`;
       break;
+    case "past-perfect":
+      text = `${negative ? "hadn't" : "had"} ${participle}${v.modal ? " (do it)" : ""}`;
+      break;
+    // "that I have gone", as after maybe and I hope.
+    case "past-subjunctive":
+      return `that ${PERSON_EN[person]} ${not(have)} ${participle}${v.modal ? " (do it)" : ""}${hint}`;
+    // The passive's subject is usually a thing.
+    case "passive":
+    case "past-passive": {
+      const who = he ? "he/she/it" : "they";
+      const was = spec.tense === "past-passive";
+      const aux = was ? (he ? "was" : "were") : he ? "is" : "are";
+      return `${who} ${not(aux)} ${was && v.enEvent ? v.enEvent[0] : participle}`;
+    }
   }
   return `${PERSON_EN[person]} ${text}${hint}`;
 }
@@ -477,13 +595,13 @@ export interface Accepted {
 }
 
 const usesMi = (t: Tense) => t === "present" || t === "imperfect" || t === "progressive" || t === "past-progressive";
-const usesPastStem = (t: Tense) => t === "past" || t === "perfect" || t === "imperfect" || t === "past-progressive";
+const usesPastStem = (t: Tense) =>
+  t === "past" || t === "perfect" || t === "imperfect" || t === "past-progressive" || t === "past-perfect" || t === "past-subjunctive" || t === "passive" || t === "past-passive";
 const usesPresentStem = (t: Tense) => t === "present" || t === "progressive" || t === "subjunctive" || t === "imperative";
 
 export function acceptedAnswers(v: Verb, spec: FormSpec, all: readonly Verb[]): Accepted {
   const form = unmarked(conjugate(v, spec, all));
-  const pronoun = unmarked(PRONOUNS[spec.person][spec.style]);
-  const answers = [form, `${pronoun} ${form}`];
+  const answers = [form, ...pronounsOf(spec.tense, spec.person, spec.style).map((p) => `${unmarked(p)} ${form}`)];
   const variants: string[] = [];
   const base = stemVerb(v, all);
 
@@ -522,7 +640,7 @@ export function acceptedAnswers(v: Verb, spec: FormSpec, all: readonly Verb[]): 
     }
     // گذاشتن: the full stem after a prefix (نگذاشتم), and the short one without (ذاشتم), are both heard.
     if (!v.light && v.spoken?.pastPrefixed && usesPastStem(spec.tense)) {
-      const usedShort = spec.negative || spec.tense === "imperfect" || spec.tense === "past-progressive";
+      const usedShort = !isPassive(spec.tense) && (spec.negative || spec.tense === "imperfect" || spec.tense === "past-progressive");
       const other: Verb = { ...v, spoken: { ...v.spoken, past: usedShort ? v.past : v.spoken.pastPrefixed, pastPrefixed: undefined } };
       const others = all.map((x) => (x.id === v.id ? other : x));
       variants.push(unmarked(conjugate(other, spec, others)));
