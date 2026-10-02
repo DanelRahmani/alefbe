@@ -10,7 +10,7 @@ Continue building Alefbe (Next.js static export, Iranian Persian course) on the 
 
 1. Get oriented:
    - Read "Alefbe: where the work stands" in CLAUDE.md: Phase 6 and 7 status, "Practice extras status", "Feature ideas", "Waiting on the owner" and "Working habits".
-   - `nextgen` is one merge commit behind `main` after PR #10. Fast-forward it (`git merge --ff-only origin/main`) and push. Then confirm the tree is clean and `git log nextgen..main` is empty. If either fails, stop and tell me.
+   - Confirm the tree is clean and `nextgen` contains `main` (`git fetch`, then `git log nextgen..origin/main` must be empty; `git log origin/main..nextgen` may show commits, such as these prompts). If not, stop and tell me.
    - Run `npx vitest run`; every test should pass. Start the dev server `alefbe-dev` from .claude/launch.json.
    - Read, as models: `content/STYLE.md`; `content/lessons/longer-sentences.ts` and `content/lessons/more-verbs.ts` (the newest units); `content/lessons/start-here.ts` (lesson 0.3 already introduces spoken and written); `content/types.ts` and `components/lesson/LessonRenderer.tsx` (the blocks); `components/WordInspector.tsx` and `lib/inspect.ts` (the tap-a-word popover); `lib/cloze.ts`, `lib/convert.ts` and their content files (how lines become cards, and the leave-out lists).
    - Run `npx tsx scripts/check-words.ts` on any word you are unsure of before writing it.
