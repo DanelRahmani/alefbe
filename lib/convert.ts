@@ -137,17 +137,21 @@ function linesOf(b: Block): Line[] {
 const plain = (markup: string) => plainOf(parseMarkup(markup));
 
 /**
- * The spoken object marker joined to its word: کِتاب رُو → کتابو. Only this
- * way round: no spoken line in the course writes the joined form, and reading
- * every ـُو as را would turn اَلُو or مِتْرُو into a noun and its marker.
+ * The spoken object marker joined to its word or written apart: کِتاب رُو →
+ * کتابو, and کِلیدِ ماشینُو → کلید ماشین رو (lesson 6.7: chat types it either
+ * way). A joined ـُو counts as را only where the written line has را, so اَلُو
+ * and مِتْرُو stay whole.
  */
-function objectSpellings(line: string): string[] {
+function objectSpellings(line: string, paired: string): string[] {
   const words = markedWords(line);
   const typed = words.map(normalizeFa);
+  const ra = normalizeFa(paired).split(" ").filter((w) => w === "را").length;
   const out: string[] = [];
   words.forEach((w, i) => {
     if (w === `ر${DAMMA}و` && i > 0 && !/[اویه]$/.test(typed[i - 1]))
       out.push([...typed.slice(0, i - 1), typed[i - 1] + "و", ...typed.slice(i + 1)].join(" "));
+    else if (ra && w.endsWith(`${DAMMA}و`) && typed[i].length > 2 && !/[اویه]$/.test(typed[i].slice(0, -1)))
+      out.push([...typed.slice(0, i), typed[i].slice(0, -1), "رو", ...typed.slice(i + 1)].join(" "));
   });
   return out;
 }
@@ -223,7 +227,7 @@ function altsOf(target: string, paired: string, index: FormIndex | null, verbs: 
       const j = typed.findIndex((t, k) => t === pw[i - 1] && typed[k + 1] !== "که");
       if (j >= 0) put([...typed.slice(0, j + 1), "که", ...typed.slice(j + 1)].join(" "), keNote);
     });
-    for (const s of objectSpellings(target)) put(s, `The same object marker, spelled another way. The lesson writes it ${target}`);
+    for (const s of objectSpellings(target, paired)) put(s, `The same object marker, spelled another way. The lesson writes it ${target}`);
     put(swapWord(typed, "منو", "من رو"), `The same object marker, spelled another way. The lesson writes it ${target}`);
     put(swapWord(typed, "آره", "بله"), `That fits too. The lesson's line has ${target}`);
     for (const r of writtenOrder(target, paired, index)) put(r, BE_NOTE(target));

@@ -394,6 +394,27 @@ export const GRAMMAR: GrammarTopic[] = [
     ],
   },
   {
+    slug: "spoken-written",
+    title: "Spoken and written",
+    unit: "spoken-written",
+    lesson: "spoken-written/endings",
+    blocks: [
+      { type: "idea", text: "Speech says ـه for written اَسْت and shortens three verb endings; ten common verbs also have a short spoken stem." },
+      {
+        type: "table",
+        headers: ["", "Spoken", "Written"],
+        rows: [
+          ["it is cold", "سَرْده", "سَرْد اَسْت"],
+          ["she eats", "می‌خُوره", "می‌خُورَد"],
+          ["you have (شُما)", "دارین", "دارید"],
+          ["they buy", "می‌خَرَن", "می‌خَرَنْد"],
+          ["I go", "می‌رَم", "می‌رَوَم"],
+          ["bread", "نون", "نان"],
+        ],
+      },
+    ],
+  },
+  {
     slug: "phrases",
     title: "Everyday phrases",
     unit: "culture",

@@ -243,7 +243,7 @@ export const present: Lesson[] = [
           {
             who: "Sara",
             fa: "مَن وُ مینا اِمْشَب {می‌ریم} سینِما. {میای}؟",
-            written: "مَن وُ مینا اِمْشَب به سینِما {می‌رَویم}. {می‌آیی}؟",
+            written: "مَن وَ مینا اِمْشَب به سینِما {می‌رَویم}. {می‌آیی}؟",
             en: "Mina and I are going to the cinema tonight. Are you coming?",
           },
           { who: "Babak", fa: "آره، {میام}!", written: "بَله، {می‌آیَم}!", en: "Yes, I'm coming!" },

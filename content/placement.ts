@@ -29,4 +29,6 @@ export const PLACEMENT: PlacementBand[] = [
   { id: "longer-sentences", title: "Longer sentences", topic: "clauses with که and اَگه", units: ["longer-sentences"], questions: [q("longer-sentences/the-book-that", 0), q("longer-sentences/if", 1)] },
   // The past perfect; an unreal condition.
   { id: "more-verbs", title: "More verb forms", topic: "the past perfect and unreal conditions", units: ["more-verbs"], questions: [q("more-verbs/past-perfect", 0), q("more-verbs/unreal-if", 0)] },
+  // A spoken verb ending; a short spoken stem.
+  { id: "spoken-written", title: "Spoken and written", topic: "the spoken forms", units: ["spoken-written"], questions: [q("spoken-written/endings", 2), q("spoken-written/short-stems", 0)] },
 ];

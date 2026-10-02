@@ -114,7 +114,7 @@ export interface ClozeLesson {
   lesson: Pick<Lesson, "register" | "showMarks" | "blocks">;
 }
 
-export type ClozeSkip = "whole sentence" | "part of a word" | "answer in the English" | "a name the English gives" | "left out by hand";
+export type ClozeSkip = "whole sentence" | "part of a word" | "answer in the English" | "a name the English gives" | "left out by hand" | "repeats a line left out by hand";
 
 export interface ClozeLeftOut {
   lesson: string;
@@ -440,6 +440,8 @@ export function buildClozeCards(lessons: readonly ClozeLesson[], opts: ClozeOpti
   const index = verbs.length ? formIndex(verbs) : null;
   const cards: ClozeCard[] = [];
   const byLine = new Map<string, ClozeCard>();
+  // A line left out by hand stays out wherever it is repeated (Unit 12 reuses earlier lines).
+  const outByHand = new Map<string, string>();
   const leftOut: ClozeLeftOut[] = [];
   for (const ref of lessons) {
     for (const b of ref.lesson.blocks) {
@@ -447,6 +449,11 @@ export function buildClozeCards(lessons: readonly ClozeLesson[], opts: ClozeOpti
         const same = byLine.get(l.fa);
         if (same) {
           if (!same.lessons.includes(ref.key)) same.lessons.push(ref.key);
+          continue;
+        }
+        const outWhy = outByHand.get(l.fa);
+        if (outWhy) {
+          leftOut.push({ lesson: ref.number, fa: l.fa, reason: "repeats a line left out by hand", why: outWhy });
           continue;
         }
         const made = cardOf(l, others, ref, index, verbs);
@@ -458,6 +465,7 @@ export function buildClozeCards(lessons: readonly ClozeLesson[], opts: ClozeOpti
         const id = `${ref.key}#${hashLine(l.fa)}`;
         const why = opts.leaveOut?.[id];
         if (why) {
+          outByHand.set(l.fa, why);
           leftOut.push({ lesson: ref.number, fa: l.fa, reason: "left out by hand", why });
           continue;
         }

@@ -242,3 +242,20 @@ describe("convert: the Unit 10 rules", () => {
     expect(alts(1, "alsoWritten")).toContain(normalizeFa("اتاقم کوچک است ولی قشنگ است"));
   });
 });
+
+describe("convert: the object marker typed apart", () => {
+  it("accepts a joined ـو typed as رو only where the written line has را", () => {
+    const L = lesson("x/y", "1.1", [
+      {
+        type: "examples",
+        items: [
+          { fa: "کِلیدِ ماشینُو بِده.", written: "کِلیدِ ماشین را بِده.", en: "Give me the car key." },
+          { fa: "اَلُو، کُجایی؟", written: "اَلُو، کُجا هَسْتی؟", en: "Hello, where are you?" },
+        ],
+      },
+    ]);
+    const { cards } = buildConvertCards([L], { verbs: VERBS });
+    expect(checkConvert(cards[0], "to-spoken", "کلید ماشین رو بده").ok).toBe(true);
+    expect(checkConvert(cards[1], "to-spoken", "ال رو، کجایی؟").ok).toBe(false);
+  });
+});

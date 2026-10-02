@@ -299,7 +299,24 @@ Phase 7 is the placement check, the engine forms for Unit 11, and Units 10–11 
   - The content reviewer found no error in marks, half-spaces, readings or forms, and raised 4 should-fix, 6 polish and 4 it could not verify. The card reviewer raised 3 errors (two kinds of wrong tense hint; the past continuous rejected in a spoken if-half), 8 should-fix, 5 polish and 1 it could not verify. All were applied by content changes, rule changes or leave-outs, among them: a natural passive (این غَذا سَرْد خُورْده می‌شه) in place of *dinner is served*; written گُم کَرْده‌اَم for *I've lost*; written اِشْکال نَدارَد; written اَگَر به تِلِفُن جَواب می‌دادی. These needed no change: توی not accepted for spoken تو (the checker can't tell it from تُو, *you*); سُروده شُد for a poem (not in reviewed data, and the English says *written*); two unreal-if gaps without a hint (the English decides). The unverified ones are under "Waiting on the owner".
   - Checked on the static build at 375 px in light and dark: no horizontal scroll on the five lessons, `/verbs` or `/placement`; the passive tables show two rows; the gate links to lesson 11.4. Lighthouse accessibility is 100 on 11.1, 11.4, 11.5, `/placement` and `/verbs`.
 
-Phase 7 is complete on `nextgen`; the owner reviews and merges.
+Phase 7 is complete on `nextgen`; the owner merged it through PR #10.
+
+## Phase 8 status
+
+Phase 8 is Units 12–14 (owner's brief: `docs/PROMPT-phase-8.md`). Order: 8a Unit 12, 8b Unit 13, 8c the reading view and Unit 14.
+
+- **Before 8a:** the tree was clean and `nextgen` contained `origin/main`; 1155 tests passed.
+- **8a** (2026-10-02): Unit 12, "Spoken and written", lessons 12.1–12.6, in `content/lessons/spoken-written.ts`.
+  - The lessons are: the two registers; sound changes; *is* and the verb endings; the short spoken stems; words that differ; how Iranians type chat (spoken spellings, Finglish, the half-space). Slugs: `two-registers`, `sound-changes`, `endings`, `short-stems`, `different-words`, `chat`.
+  - Reused lines: almost every example, pair and dialogue line is an earlier lesson's line, copied with its markup (a comment names the lesson), so the cloze and spoken ↔ written decks join the existing card. New Persian: the tables, اینْجوری / این‌طُور بِنِویس, the callouts' wrong/right lines, and the 4.3 and 10.1 lines with a new highlight on چی.
+  - Each lesson ends with a link to `/practice/convert`; the practice hub's convert card names Unit 12. The stem tables (12.3, 12.4) come from the engine.
+  - What the lessons take care over: ân → un is a tendency of particular words (ایران, دانِشْگاه, دانِشْجو, اِنْسان keep it; اِمْتِحان has both); the plural *-â* only after a consonant; *is* as ـه only after a consonant (کُجاسْت, often *kojâs*; آفْتابیه); one spoken ـه for two written things (ـَد and اَسْت); the past stem changes in a few verbs only; آره / بَله is a matter of politeness, not register alone; چی is written چه or چِطُور; Finglish has no standard and writes ق as *gh*.
+  - Placement: Unit 12 has a band (12.3 دارین, 12.4 می‌گَم): it tests rules, and a learner who knows the grammar but not the spoken forms should land there. The grammar overview gained a "Spoken and written" topic, linked to 12.3.
+  - Card rules: `lib/cloze.ts` keeps a line left out by hand out wherever a later lesson repeats it (reason "repeats a line left out by hand"). `lib/convert.ts` accepts a joined ـُو typed as a separate رو where the written line has را (lesson 6.7); one earlier card gained it (10.5 اونُو دیدَم also takes اون رو دیدم).
+  - Earlier content fixed: lesson 5.2's written line had the spoken وُ (مَن وُ مینا); it is now وَ. Its convert card's text changed, nothing else.
+  - The content reviewer raised 1 error, 12 should-fix, 9 polish and 3 it could not verify; the card reviewer 2 errors, 4 should-fix, 4 polish, 1 it could not verify. All were applied by content changes, rule changes or leave-outs, except: the cloze note on فَرْدا {چی}؟ still calls چِطُور "the written words" (it is accepted; the note is generic); chat joinings after a vowel (کلیدارو) are not accepted (no lesson teaches them); 9.6's English *more slowly* (also *more quietly*) is earlier content, listed for the owner; 7.5's written progressive kept.
+  - Cards: cloze 419 (was 417; 4 new left out by hand or as repeats, 6 whole sentences, 1 answer in the English); spoken ↔ written 418 (was 412; 4 directions left out by hand). Vocabulary: 482 cards (was 476; 6 new words).
+  - Checked on the static build at 375 px in light and dark: no horizontal scroll, every table fits (the stem tables were split in two to fit); only the known local-only 404s in the console. Lighthouse accessibility is 100 on 12.1, 12.4 and 12.6.
 
 ## Practice extras status
 
@@ -380,6 +397,12 @@ Not part of Phase 6. Ranked by how easy each is. Everything in `docs/PROMPT-prac
   - تِلِفُن رُو جَواب دادَن or گوشی رُو جَواب دادَن for answering a (mobile) phone in speech;
   - شایَد خونه رَفْته باشه (as given) or شایَد رَفْته باشه خونه, with the place after the verb;
   - نَیومَده بود said *nayumade* (as given) or *niyumade* (tied to the نَیومَد question).
+- Confirm these from Unit 12 (8a):
+  - آپارْتِمان kept with *ân* in speech (some say it with *un*);
+  - اِمْتِحان / اِمْتِحون both heard in speech, as 12.2 says;
+  - این‌طوری (*intori*) as an everyday spoken *like this* beside اینْجوری (the cards that ask اینْجوری toward speech are left out until then);
+  - 9.6's آروم‌تَر حَرْف بِزَن glossed *more slowly*; it is as often *more quietly*;
+  - the spoken past آوُرْدَم, now in 12.4's table (the *âvord-* / *âvard-* question).
 - Confirm these from Unit 10 (7c):
   - دوسْتِت دارَم read *dustet dâram* (as given), or *duset dâram*, as most Tehranis say it;
   - spoken مادَرَم تِهْرانیه (*tehrâniye*, as given) or تِهْرونیه, beside the course's spoken تِهْرون;

@@ -19,6 +19,7 @@ export function ConvertOverview({ cards }: { cards: Pick<ConvertCard, "id" | "le
         <Link href="/practice/convert" className="drill-mode">
           <span className="drill-mode-title">Spoken and written</span>
           <span className="drill-mode-blurb">See a lesson line as it is said; type it as it is written, or the other way round.</span>
+          <span className="drill-mode-blurb">Unit 12, “Spoken and written”, gathers the rules.</span>
           <span className="ui drill-mode-stats">
             {s.fresh + s.seen} of {convertCards(cards, data.dir).length} lines met · {due} due · {s.fresh} new
           </span>

@@ -102,6 +102,13 @@ describe("cloze: cards", () => {
     expect(cards.some((c) => c.fa === "مَن نون نَدارَم.")).toBe(false); // no highlight, no card
   });
 
+  it("keeps a line left out by hand out where a later lesson repeats it", () => {
+    const D = lesson("two/d", "2.1", [{ type: "examples", items: [{ fa: "{یه کیلو} بِدین.", en: "Give me a kilo." }] }]);
+    const again = buildClozeCards([A, B, C, D], { verbs: VERBS, leaveOut: { [`one/a#${hashLine("{یه کیلو} بِدین.")}`]: "test" } });
+    expect(again.cards).toHaveLength(cards.length);
+    expect(again.leftOut.at(-1)).toEqual({ lesson: "2.1", fa: "{یه کیلو} بِدین.", reason: "repeats a line left out by hand", why: "test" });
+  });
+
   it("shows the line before a dialogue line", () => {
     expect(one("کَی {اومَدی}؟").before).toEqual({ fa: "تُو چِطُوری؟", en: "How are you?" });
     expect(one("کُجا {زِنْدِگی می‌کُنی}؟").before).toBeUndefined();

@@ -27,6 +27,7 @@ export const CLOZE_LEAVE_OUT: Record<string, string> = {
   "present/two-stems#16ofyag": "“can’t see” is also said with can",
   "want-can-must/commands#mxn56k": "“sit” leaves open which “you”, and the verb is not in the engine to give the other",
   "spelling/z-letters#19sutpd": "the English names no food, and the midday meal has its own word",
+  "spoken-written/different-words#133sal6": "“like this” has another everyday spoken word",
   "more-verbs/passive#znqoxd": "a plural thing can also take the singular verb, which the gap does not accept",
 };
 

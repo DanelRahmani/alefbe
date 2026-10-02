@@ -67,6 +67,11 @@ export const CONVERT_LEAVE_OUT: Record<string, ConvertLeave> = {
   "more-verbs/unreal-if#n8pyl0": S("speech also says the past continuous in the if-half (lesson 11.3)"),
   "more-verbs/unreal-if#u6uyoq": W("a written real condition may also take the subjunctive"),
   "more-verbs/passive#10121bk": W("in writing a plural thing can take either verb"),
+  // Unit 12 (lines from 6.7, a spoken-only lesson, asked here for the first time).
+  "spoken-written/different-words#139ainp": S(OBJECT_PRONOUN),
+  "spoken-written/different-words#ldn47e": W("the spoken verb is also the present perfect, so the written line could be either tense"),
+  "spoken-written/different-words#zby0su": W("a fragment: writing would drop را here as readily as keep it"),
+  "spoken-written/different-words#97c9lb": S("“like this” has another everyday spoken word"),
 };
 
 const built = buildConvertCards(ALL_LESSONS, { verbs: VERBS, leaveOut: CONVERT_LEAVE_OUT });

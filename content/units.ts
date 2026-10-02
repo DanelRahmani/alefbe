@@ -9,6 +9,7 @@ import { present } from "./lessons/present";
 import { sounds } from "./lessons/sounds";
 import { spelling } from "./lessons/spelling";
 import { startHere } from "./lessons/start-here";
+import { spokenWritten } from "./lessons/spoken-written";
 import { wantCanMust } from "./lessons/want-can-must";
 import { whereWhen } from "./lessons/where-when";
 
@@ -106,7 +107,7 @@ export const UNITS: Unit[] = [
     title: "Spoken and written",
     titleFa: "گُفْتاری وَ نِوِشْتاری",
     description: "The regular changes between how Tehranis talk and how Persian is written.",
-    lessons: [],
+    lessons: spokenWritten,
   },
   {
     slug: "culture",
