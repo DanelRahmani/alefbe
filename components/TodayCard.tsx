@@ -21,9 +21,9 @@ export interface DayWord {
 const RING_R = 26;
 const RING_C = 2 * Math.PI * RING_R;
 
-function GoalRing({ done, goal, fraction }: { done: number; goal: number; fraction: number }) {
+function GoalRing({ done, goal, fraction, met }: { done: number; goal: number; fraction: number; met: boolean }) {
   return (
-    <svg className="goal-ring" viewBox="0 0 64 64" role="img" aria-label={`${done} of ${goal} activities today`}>
+    <svg className={met ? "goal-ring goal-met" : "goal-ring"} viewBox="0 0 64 64" role="img" aria-label={`${done} of ${goal} activities today`}>
       <circle className="goal-ring-track" cx="32" cy="32" r={RING_R} />
       <circle
         className="goal-ring-fill"

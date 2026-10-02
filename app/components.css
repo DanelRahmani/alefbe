@@ -160,8 +160,16 @@
   padding: 0.75rem 0.9rem;
   border-radius: var(--r-md);
 }
+/* A right answer settles in; a wrong one simply appears. */
 .feedback-right {
   background: var(--ok-soft);
+  animation: settle 220ms cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
 }
 .feedback-near {
   background: var(--near-soft);
@@ -659,6 +667,18 @@
   stroke-linecap: round;
   transition: stroke-dashoffset 400ms ease-out;
 }
+/* Goal met: one soft saffron halo comes up, then stays still. */
+.goal-met {
+  animation: goal-glow 900ms cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+@keyframes goal-glow {
+  from {
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  to {
+    filter: drop-shadow(0 0 5px var(--pane-saffron));
+  }
+}
 .goal-ring-num {
   fill: var(--ink);
   font-size: var(--fs-lg);
@@ -814,6 +834,7 @@
   margin-top: 1.1rem;
 }
 .unit-card {
+  position: relative;
   padding: 1.1rem 1rem 0.6rem;
   transition: border-color 150ms;
 }
@@ -949,6 +970,53 @@
 }
 .lesson-row:hover .todo-ring {
   border-color: var(--accent);
+}
+
+/* A unit's girih band: one star per lesson, lit as each is finished. */
+.girih-band {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  margin-inline-start: 0.5rem;
+  vertical-align: -0.1em;
+}
+.girih-band::before {
+  content: "";
+  position: absolute;
+  inset: 50% -0.15rem auto;
+  height: 1px;
+  background: var(--rule);
+}
+.girih-star {
+  position: relative;
+  width: 0.62rem;
+  height: 0.62rem;
+  background: var(--rule);
+  transition: background-color 300ms ease-out;
+}
+.girih-star.is-done {
+  background: var(--accent);
+}
+
+/* The path as one journey: a thread from each unit's star to the next,
+   lit once the unit is finished. It runs through the gap between the cards. */
+.unit-card:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: calc(1rem + 1.3rem - 1px);
+  width: 2px;
+  height: 1rem;
+  background: var(--rule);
+}
+.unit-done:not(:last-child)::after {
+  background: var(--accent);
+}
+@media (min-width: 640px) {
+  .unit-card:not(:last-child)::after {
+    left: calc(1rem + 1.45rem - 1px);
+  }
 }
 
 /* ── Progress page ─────────────────────────────────────────────────────── */

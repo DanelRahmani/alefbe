@@ -188,7 +188,11 @@ export function PathBrowser({ units, words }: { units: PathUnit[]; words: DayWor
             const done = u.lessons.filter((l) => progress[l.key]).length;
             const empty = u.lessons.length === 0;
             return (
-              <li key={u.slug} id={u.slug} className={empty ? "panel panel-dashed unit-card unit-card-empty" : "panel unit-card"}>
+              <li
+                key={u.slug}
+                id={u.slug}
+                className={empty ? "panel panel-dashed unit-card unit-card-empty" : done === u.lessons.length ? "panel unit-card unit-done" : "panel unit-card"}
+              >
                 <header className="unit-head">
                   <span className="unit-num khatam" aria-hidden="true">
                     {u.numberFa}
@@ -200,6 +204,13 @@ export function PathBrowser({ units, words }: { units: PathUnit[]; words: DayWor
                         <span className="unit-count">
                           {" "}
                           · {done}/{u.lessons.length}
+                        </span>
+                      )}
+                      {!empty && (
+                        <span className="girih-band" aria-hidden="true">
+                          {u.lessons.map((l) => (
+                            <span key={l.key} className={progress[l.key] ? "khatam girih-star is-done" : "khatam girih-star"} />
+                          ))}
                         </span>
                       )}
                     </p>

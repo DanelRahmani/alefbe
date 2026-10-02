@@ -150,6 +150,17 @@ A rerunnable script under `scripts/` that walks every route in `content/routes.t
 - **Found on the way:** Tailwind size classes on Persian runs (`fa text-xl`) never applied (the unlayered `.fa` rule wins); the tracer read colour tokens as hex, now resolved through the browser (`lib/color.ts`).
 - **CSS:** 79,064 → 79,063 bytes (16,339 → 16,147 gzipped). Lightning CSS transpiles `light-dark()` for older browsers, which costs back most of the colour dedupe.
 
+### 9c (2026-10-03)
+
+All CSS and markup, no new dependencies; each ends in its final state at once under reduced motion (the global rule in `globals.css`).
+
+- **The seal** comes down and settles (320 ms, ease-out-quart, scale 1.35 → 1); the old curve dipped to 0.94 and bounced back.
+- **A girih band per unit:** in the unit's kicker, one eight-point star per lesson on a hairline, lit in lapis (saffron at night) as each lesson is finished. It is decorative (`aria-hidden`); the "3/10" count still reads.
+- **The path as a journey:** a 2 px thread joins each unit's khatam to the next one in the gap between the cards, lit once the unit is finished.
+- **The goal ring** gains a soft saffron halo when the day's goal is met: it eases in once (900 ms) and stays still.
+- **A right answer settles:** the feedback fades in and rises 4 px (220 ms); a wrong or near one appears without motion.
+- Skipped, as planned: the hero catching light on hover.
+
 ## Decisions for the owner
 
 The owner said to continue without choosing, so each is taken as recommended (yes to all four; the brand mark in Vazirmatn, whose Arabic subset is already preloaded). Any of them can be reverted on review.

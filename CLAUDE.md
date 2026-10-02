@@ -363,6 +363,7 @@ Phase 9 is polish (owner's brief: `docs/PROMPT-phase-9.md`). Order: 9a design au
   - Glass only on the header and tab bar. The brand mark is Vazirmatn (it used to pull Amiri onto every page). Kickers that repeat a page's name were dropped. Verb tense chips are grouped (`lib/tense-groups.ts`). Progress stats are one `stat-list` panel.
   - The service worker serves the previous build on localhost: the capture scripts unregister it first; do the same before checking a fresh build by hand.
   - CSS 79,063 bytes (16,147 gzipped), from 79,064 (16,339). Lighthouse accessibility 100 on `/`, 4.2, `/practice`, `/verbs`, `/progress`; performance there 74–85 (was 47–56), not yet re-measured carefully (9d).
+- **9c** (2026-10-03): moments of craft, CSS only, all still under reduced motion. The seal settles (no overshoot); each unit's kicker has a girih band, one star per lesson, lit as lessons are finished (`PathBrowser`, `.girih-band`); a thread joins finished units on the path (`.unit-done`); the goal ring glows once when the goal is met (`.goal-met`); a right answer settles in (`.feedback-right`). The hover light on the hero was skipped.
 
 ## Practice extras status
 
