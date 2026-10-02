@@ -2,6 +2,8 @@ import type { Lesson, Unit } from "./types";
 import { alphabet } from "./lessons/alphabet";
 import { coreSentence } from "./lessons/core-sentence";
 import { nouns } from "./lessons/nouns";
+import { longerSentences } from "./lessons/longer-sentences";
+import { moreVerbs } from "./lessons/more-verbs";
 import { past } from "./lessons/past";
 import { present } from "./lessons/present";
 import { sounds } from "./lessons/sounds";
@@ -90,14 +92,14 @@ export const UNITS: Unit[] = [
     title: "Longer sentences",
     titleFa: "جُمْله‌هایِ بُلَنْد",
     description: "“The book that…”, clauses with که, if, the linking words, object endings and word-building. Beyond the core.",
-    lessons: [],
+    lessons: longerSentences,
   },
   {
     slug: "more-verbs",
     title: "More verb forms",
     titleFa: "فِعْل‌هایِ بیشْتَر",
     description: "The past perfect, the past subjunctive, unreal conditions, the passive and causatives. Beyond the core.",
-    lessons: [],
+    lessons: moreVerbs,
   },
   {
     slug: "spoken-written",

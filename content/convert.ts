@@ -6,6 +6,7 @@ import { ALL_LESSONS } from "./units";
 import { VERBS } from "./verbs";
 
 const REWORDED = "the written line rewords it beyond the spoken and written rules, so the target can't be worked out";
+const OBJECT_PRONOUN = "the written pronoun becomes an ending in speech or stays a spoken pronoun, and both are right";
 const W = (why: string): ConvertLeave => ({ dir: "to-written", why });
 const S = (why: string): ConvertLeave => ({ dir: "to-spoken", why });
 
@@ -45,6 +46,27 @@ export const CONVERT_LEAVE_OUT: Record<string, ConvertLeave> = {
   "present/present-tense#1czq1oz": S("speech keeps or drops “in” before home; only one is accepted"),
   "past/simple-past#a6t2yo": S("speech keeps or drops “in” before home; only one is accepted"),
   "want-can-must/subjunctive#6tth92": S("speech keeps or drops “in” before home; only one is accepted"),
+  "longer-sentences/if#19ekcpm": S("speech keeps or drops “in” before home; only one is accepted"),
+  "longer-sentences/linking-words#va7bzl": S("speech keeps or drops “in” before home; only one is accepted"),
+  "longer-sentences/linking-words#g25lxd": S("speech keeps or drops “in” before home; only one is accepted"),
+  "longer-sentences/that-clauses#igyw0c": S("speech keeps or drops “in” before a country; only one is accepted"),
+  "longer-sentences/the-book-that#1cmyiwd": S("speech may keep or drop the word that points back to the place"),
+  // Unit 10: a written pronoun becomes an ending in speech, or a spoken pronoun (اونُو, به اون); both are right.
+  "longer-sentences/object-endings#l9rpkw": S(OBJECT_PRONOUN),
+  "longer-sentences/object-endings#k192": S(OBJECT_PRONOUN),
+  "longer-sentences/object-endings#1nz376f": S(OBJECT_PRONOUN),
+  "longer-sentences/object-endings#qoybac": S(OBJECT_PRONOUN),
+  "longer-sentences/object-endings#1avw6t3": S(OBJECT_PRONOUN),
+  "longer-sentences/object-endings#1e79z0n": S(OBJECT_PRONOUN),
+  "longer-sentences/object-endings#inmj9m": S(OBJECT_PRONOUN),
+  // Unit 11.
+  "more-verbs/past-perfect#1nm49af": { why: "به before *there* is optional in both registers; only one is accepted" },
+  "more-verbs/unreal-if#fcre55": S(OBJECT_PRONOUN),
+  "more-verbs/unreal-if#9jg042": S(OBJECT_PRONOUN),
+  "more-verbs/unreal-if#c5hxob": { why: "toward writing, the if-half may also take the past perfect; toward speech, the pronoun may stay" },
+  "more-verbs/unreal-if#n8pyl0": S("speech also says the past continuous in the if-half (lesson 11.3)"),
+  "more-verbs/unreal-if#u6uyoq": W("a written real condition may also take the subjunctive"),
+  "more-verbs/passive#10121bk": W("in writing a plural thing can take either verb"),
 };
 
 const built = buildConvertCards(ALL_LESSONS, { verbs: VERBS, leaveOut: CONVERT_LEAVE_OUT });

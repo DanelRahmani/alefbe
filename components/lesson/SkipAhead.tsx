@@ -1,10 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { DRILL_GROUPS } from "@/lib/persian/letters";
-import { emptyDeck } from "@/lib/srs";
 import { useStore } from "@/lib/storage";
-import { logActivity, progressStore, srsStore } from "@/lib/stores";
+import { logActivity, openLetterGroups, progressStore } from "@/lib/stores";
 import { Rich } from "../Rich";
 
 /** The fast track: mark the script units finished and open the trainer's letter groups. */
@@ -16,13 +14,7 @@ export function SkipAhead({ keys, groups, label, text }: { keys: string[]; group
   const skip = () => {
     const fresh = keys.filter((k) => !progressStore.get()[k]);
     progressStore.set((p) => ({ ...p, ...Object.fromEntries(keys.map((k) => [k, true as const])) }));
-    srsStore.set((s) => {
-      const lift = (mode: "sound" | "letter") => {
-        const d = s.decks[mode] ?? emptyDeck();
-        return { ...d, unlocked: Math.min(DRILL_GROUPS.length, Math.max(d.unlocked, groups)) };
-      };
-      return { ...s, decks: { ...s.decks, sound: lift("sound"), letter: lift("letter") } };
-    });
+    openLetterGroups(groups);
     if (fresh.length) logActivity({ kind: "lesson", count: fresh.length });
     setAsking(false);
   };

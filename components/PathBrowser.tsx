@@ -5,7 +5,7 @@ import { KIND_LABELS, type LessonKind } from "@/content/types";
 import { DRILL_GROUPS } from "@/lib/drill";
 import { deckStats, unlockedIds } from "@/lib/srs";
 import { useStore } from "@/lib/storage";
-import { deckOf, lessonsStore, pathFilterStore, progressStore, srsStore } from "@/lib/stores";
+import { deckOf, lessonsStore, pathFilterStore, placementStore, progressStore, srsStore } from "@/lib/stores";
 import { useMinuteClock } from "./drill/useDrillClock";
 import { FaText } from "./FaText";
 import { Rich } from "./Rich";
@@ -90,6 +90,7 @@ export function PathBrowser({ units, words }: { units: PathUnit[]; words: DayWor
   const progress = useStore(progressStore);
   const lessons = useStore(lessonsStore);
   const srs = useStore(srsStore);
+  const placement = useStore(placementStore);
   const now = useMinuteClock();
 
   const soundDeck = deckOf(srs, "sound");
@@ -115,6 +116,15 @@ export function PathBrowser({ units, words }: { units: PathUnit[]; words: DayWor
   return (
     <div>
       <NextCard units={units} progress={progress} last={lessons.last} />
+      {finished === 0 && !placement.last && (
+        <p className="ui placement-offer">
+          Already know some Persian?{" "}
+          <Link href="/placement" className="underline underline-offset-4">
+            Take the placement check
+          </Link>{" "}
+          to find where to start.
+        </p>
+      )}
       <TodayCard words={words} />
 
       <div className="ui quick-links">

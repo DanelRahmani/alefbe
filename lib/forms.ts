@@ -194,6 +194,14 @@ function tenseOf(hits: readonly FormHit[], lessonKey?: string): Tense | null {
   return taught.length === 1 ? taught[0] : null;
 }
 
+/** The tense a participle makes with this helper: شدن → the passive, بودن → the past perfect or past subjunctive; null for another form of them, undefined for another verb. */
+function participleTense(hits: readonly FormHit[]): Tense | null | undefined {
+  const h = hits.find((x) => x.verb.id === "shodan" || x.verb.id === "budan");
+  if (!h) return undefined;
+  if (h.verb.id === "shodan") return h.spec.tense === "present" ? "passive" : h.spec.tense === "past" ? "past-passive" : null;
+  return h.spec.tense === "past" ? "past-perfect" : h.spec.tense === "subjunctive" ? "past-subjunctive" : null;
+}
+
 /** داشتن in the present or the past, as the progressive puts it in front: دارَم, داشْتَم. */
 const progressiveHave = (hits: readonly FormHit[] | undefined): Tense | null => {
   const h = hits?.find((x) => x.verb.id === HAVE && !x.spec.negative && (x.spec.tense === "present" || x.spec.tense === "past"));
@@ -206,9 +214,14 @@ const progressiveHave = (hits: readonly FormHit[] | undefined): Tense | null => 
  * by the tense its lesson teaches, or the gap gets no hint. داشتن followed by
  * a verb with می is the progressive, also across two gaps (دارَم … می‌رَم), or
  * where the verb is not in the engine's list (دارَن می‌رِسَن); the progressive
- * is named once, on the gap with داشتن.
+ * is named once, on the gap with داشتن. Not across a clause break: `breaks[i]` says
+ * the line has a comma or a stop between gap i and the next (اَگه پول داشْتَم، … می‌خَریدَم).
+ *
+ * A participle the engine doesn't know (خوابیده, ساخْته) followed by بودن or شدن
+ * is named by the tense it makes, but only in the lesson that teaches that tense:
+ * elsewhere خَسْته شُدَم is a compound in the simple past. شُده after one gets no hint.
  */
-export function gapTenses(phrases: readonly string[], index: FormIndex, lessonKey?: string): (Tense[] | null)[] {
+export function gapTenses(phrases: readonly string[], index: FormIndex, lessonKey?: string, breaks?: readonly boolean[]): (Tense[] | null)[] {
   const flat = phrases.flatMap((p, gap) => segments(p, index).map((seg) => ({ gap, seg })));
   const out: (Tense[] | null)[] = phrases.map(() => []);
   for (let k = 0; k < flat.length; k++) {
@@ -219,13 +232,29 @@ export function gapTenses(phrases: readonly string[], index: FormIndex, lessonKe
     // The main verb has the same person (دارَم … می‌رَم). A verb the engine lacks
     // can't be checked, so it counts only inside the same gap (دارَن می‌رِسَن).
     const persons = new Set(seg.hits?.map((h) => h.spec.person));
-    const main = next && /^ن?می/.test(next.seg.words) && (next.seg.hits ? next.seg.hits.some((h) => persons.has(h.spec.person)) : next.gap === gap);
+    const main =
+      next &&
+      (next.gap === gap || !breaks?.[gap]) &&
+      /^ن?می/.test(next.seg.words) &&
+      (next.seg.hits ? next.seg.hits.some((h) => persons.has(h.spec.person)) : next.gap === gap);
     if (prog && main) {
       out[gap]!.push(prog);
       k++; // the main verb belongs to it
       continue;
     }
     if (!seg.hits) continue;
+    const prev = flat[k - 1];
+    if (prev && prev.gap === gap && !prev.seg.hits && /ه$/.test(prev.seg.words)) {
+      const made = participleTense(seg.hits);
+      if (made && TENSES.find((x) => x.id === made)?.lesson === lessonKey) {
+        out[gap]!.push(made);
+        continue;
+      }
+      if (made === null && lessonKey === TENSES.find((x) => x.id === "passive")?.lesson) {
+        out[gap] = null;
+        continue;
+      }
+    }
     const t = tenseOf(seg.hits, lessonKey);
     if (t === null) out[gap] = null;
     else out[gap]!.push(t);

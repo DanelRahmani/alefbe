@@ -428,6 +428,16 @@
 .next-card:hover .next-arrow {
   transform: translateX(3px);
 }
+/* Under the first-lesson card, for a learner who has finished nothing yet. */
+.placement-offer {
+  margin-top: 0.6rem;
+  padding: 0 0.25rem;
+  font-size: 0.93rem;
+  color: var(--muted);
+}
+.placement-offer a:hover {
+  color: var(--accent);
+}
 
 /* The Today card: the day's goal, what waits for review, a word of the day. */
 .today {

@@ -185,13 +185,17 @@ describe("conjugate: every form is course-quality Persian", () => {
     const unit7 = 25 * 24 + 26 * 24 + 26 * 24 + 24 * 24 + 20 * 12 + 20 * 12;
     // Subjunctive: all 26. Imperative: 24 (not خواستن, توانستن), two persons. Future: all 26, written only.
     // Three of those 24 have no negative command (دانستن, شناختن, فهمیدن).
-    expect(forms.length).toBe(unit7 + 26 * 24 + (24 + 21) * 2 * 2 + 26 * 12);
+    const unit8 = 26 * 24 + (24 + 21) * 2 * 2 + 26 * 12;
+    // Past perfect: 25 (not بودن). Past subjunctive: 25 (not داشتن). The two passives: the 12 verbs
+    // that take an object and are drilled in it, two persons each.
+    const unit11 = 25 * 24 + 25 * 24 + 12 * 2 * 2 * 2 * 2;
+    expect(forms.length).toBe(unit7 + unit8 + unit11);
   });
   it("names the tenses in readable Persian, and explains a missing form in readable Persian", () => {
     const problems: string[] = [];
     const check = (fa: string) => {
       problems.push(...transliterateWithErrors(fa).errors);
-      for (const w of fa.split(/[ ،.:()]+/).filter(Boolean)) problems.push(...checkReadable(w));
+      for (const w of fa.split(/[ ،.:()؟]+/).filter(Boolean)) problems.push(...checkReadable(w));
     };
     for (const t of TENSES) check(t.titleFa);
     expect(new Set(TENSES.map((t) => t.title)).size).toBe(TENSES.length);
@@ -199,7 +203,8 @@ describe("conjugate: every form is course-quality Persian", () => {
     const reasons = new Set<string>();
     for (const v of VERBS) for (const t of TENSES) for (const neg of [false, true]) reasons.add(lacks(v, t.id, neg, VERBS) ?? "");
     reasons.delete("");
-    expect(reasons.size).toBe(7);
+    // Unit 11 added ten: the past perfect of بودن, the past subjunctive of داشتن, "no object", and seven noPassive reasons.
+    expect(reasons.size).toBe(17);
     const notes = TENSES.flatMap((t) => (t.note ? [t.note] : []));
     for (const r of [...reasons, ...notes]) for (const tok of parseMarkup(r)) if (tok.kind === "text") for (const part of splitScript(tok.text)) if (part.fa) check(part.s);
     expect(problems).toEqual([]);

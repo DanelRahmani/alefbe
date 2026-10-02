@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useLayoutEffect, useRef, useState } from "react";
 import type { Verdict } from "@/lib/answers";
-import { PRONOUNS, PERSON_EN, TENSES, englishOf, tenseInfo, type Tense } from "@/lib/conjugate";
+import { TENSES, englishOf, personEnOf, pronounOf, tenseInfo, type Tense } from "@/lib/conjugate";
 import { answer, deckStats, nextCard, practiceCard, unlockNext } from "@/lib/srs";
 import { useStore } from "@/lib/storage";
 import { drillUiStore, logActivity, noteResult, progressStore, verbsStore } from "@/lib/stores";
@@ -44,7 +44,7 @@ export function VerbPrompt({ q }: { q: VerbQuestion }) {
       <p className="ui drill-sub">{verb.en}</p>
       <p className="ui verb-cue">
         <span className="verb-tag has-fa">
-          <FaText text={PRONOUNS[spec.person][spec.style]} translit="none" force="all" /> {PERSON_EN[spec.person]}
+          <FaText text={pronounOf(spec.tense, spec.person, spec.style)} translit="none" force="all" /> {personEnOf(spec.tense, spec.person)}
         </span>
         <span className="verb-tag">{spec.style === "spoken" ? "Spoken" : "Written"}</span>
         <span className="verb-tag">{tenseInfo(spec.tense).title}</span>
@@ -367,11 +367,11 @@ export function VerbTrainer({ lessons }: { lessons: Partial<Record<Tense, TenseL
                 aria-describedby="verb-feedback"
               />
               {!verdict ? (
-                <button type="submit" className="ui quiz-check">
+                <button key="check" type="submit" className="ui quiz-check">
                   Check
                 </button>
               ) : (
-                <button type="button" className="ui quiz-check" onClick={next} autoFocus>
+                <button key="next" type="button" className="ui quiz-check" onClick={next} autoFocus>
                   Next
                 </button>
               )}

@@ -307,6 +307,93 @@ export const GRAMMAR: GrammarTopic[] = [
     ],
   },
   {
+    slug: "the-book-that",
+    title: "“The book that…”",
+    unit: "longer-sentences",
+    lesson: "longer-sentences/the-book-that",
+    blocks: [
+      { type: "idea", text: "A clause that describes a noun follows it: the noun takes ـی, then که opens the clause: کِتابی که خَریدَم, *the book (that) I bought*." },
+      {
+        type: "examples",
+        items: [{ fa: "{چیزی که} گُفْتی دُرُسْته.", written: "{چیزی که} گُفْتی دُرُسْت اَسْت.", en: "What you said is right." }],
+      },
+    ],
+  },
+  {
+    slug: "if",
+    title: "If",
+    unit: "longer-sentences",
+    lesson: "longer-sentences/if",
+    blocks: [
+      { type: "idea", text: "اَگه (written اَگَر) takes the subjunctive for something that may happen." },
+      {
+        type: "examples",
+        items: [{ fa: "{اَگه} بارون بیاد، خونه می‌مونیم.", written: "{اَگَر} باران بیایَد، دَر خانه می‌مانیم.", en: "If it rains, we'll stay at home." }],
+      },
+    ],
+  },
+  {
+    slug: "linking-words",
+    title: "When, because, but, so",
+    unit: "longer-sentences",
+    lesson: "longer-sentences/linking-words",
+    blocks: [
+      { type: "idea", text: "Each linking word starts its own clause, and each clause keeps its verb at the end." },
+      {
+        type: "table",
+        headers: ["Word", "Meaning"],
+        rows: [
+          ["وَقْتی", "when (at the time that)"],
+          ["چون", "because"],
+          ["وَلی، اَمّا", "but (اَمّا is more formal)"],
+          ["پَس", "so, then"],
+        ],
+      },
+    ],
+  },
+  {
+    slug: "object-endings",
+    title: "Me, you, him",
+    unit: "longer-sentences",
+    lesson: "longer-sentences/object-endings",
+    blocks: [
+      {
+        type: "idea",
+        text: "In speech the endings for *my, your, his* also mean *me, you, him* on a verb or a preposition: دیدَمِش, *I saw him*; بِهِش, *to him*. Writing prefers او را, به او.",
+      },
+      {
+        type: "examples",
+        items: [{ fa: "دیروز {دیدَمِش}.", written: "دیروز {او را دیدَم}.", en: "I saw him yesterday." }],
+      },
+    ],
+  },
+  {
+    slug: "unreal-if",
+    title: "If I knew…",
+    unit: "more-verbs",
+    lesson: "more-verbs/unreal-if",
+    blocks: [
+      { type: "idea", text: "For what isn't so, or didn't happen, both halves take past forms, usually the past continuous." },
+      {
+        type: "examples",
+        items: [{ fa: "اَگه پول {داشْتَم}، یه ماشین {می‌خَریدَم}.", written: "اَگَر پول {داشْتَم}، یِک ماشین {می‌خَریدَم}.", en: "If I had money, I'd buy a car." }],
+      },
+    ],
+  },
+  {
+    slug: "passive",
+    title: "The passive",
+    unit: "more-verbs",
+    lesson: "more-verbs/passive",
+    blocks: [
+      { type: "idea", text: "The participle with شُدَن: دیده می‌شَوَد, *it is seen*; دیده شُد, *it was seen*." },
+      {
+        type: "examples",
+        items: [{ fa: "این خونه پارْسال {ساخْته شُد}.", written: "این خانه پارْسال {ساخْته شُد}.", en: "This house was built last year." }],
+      },
+    ],
+  },
+  {
     slug: "phrases",
     title: "Everyday phrases",
     unit: "culture",

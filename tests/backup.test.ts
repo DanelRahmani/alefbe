@@ -58,6 +58,14 @@ describe("makeBackup", () => {
     applyBackup(parseBackup(JSON.stringify(makeBackup(from.read, NOW))), to.read, to.write);
     expect(to.map.get("alefbe2:convert")).toBe(deck);
   });
+  it("includes the last placement check, and restores it", () => {
+    expect(BACKUP_KEYS).toContain("alefbe2:placement");
+    const last = JSON.stringify({ v: 1, data: { last: { at: 1759000000000, answers: { "alphabet/lam-to-vav#2": true, "spelling/half-space#0": false } } } });
+    const from = fakeStorage({ "alefbe2:placement": last });
+    const to = fakeStorage();
+    applyBackup(parseBackup(JSON.stringify(makeBackup(from.read, NOW))), to.read, to.write);
+    expect(to.map.get("alefbe2:placement")).toBe(last);
+  });
   it("names the file by date", () => {
     expect(backupFileName(NOW)).toBe("alefbe-progress-2026-09-29.json");
   });

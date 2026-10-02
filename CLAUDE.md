@@ -2,7 +2,7 @@
 
 # Alefbe: where the work stands
 
-Updated 2026-10-01. Read this first when picking the work back up.
+Updated 2026-10-02. Read this first when picking the work back up.
 
 ## The project
 
@@ -251,6 +251,56 @@ Phase 6 is Units 7–9 and the vocabulary deck (see `docs/PLAN.md`). The owner's
 
 Phase 6 and the practice extras are complete; the owner merged them into `main` through PR #8 (2026-10-01). Next: Phase 7 (the placement check, the engine forms for Unit 11, Units 10–11), with a ready prompt in `docs/PROMPT-phase-7.md`.
 
+## Phase 7 status
+
+Phase 7 is the placement check, the engine forms for Unit 11, and Units 10–11 (owner's brief: `docs/PROMPT-phase-7.md`). Order: 7a placement check, 7b engine, 7c Unit 10, 7d Unit 11.
+
+- **Before 7a:** the tree was clean; `nextgen` matched `origin/main` (the local `main` ref was stale and was fast-forwarded).
+- **7a** (2026-10-02): the placement check at `/placement` (not `/start`, which reads like the "Start here" unit at `/learn/start-here`).
+  - The hard rule of the practice extras holds: every question is a lesson-quiz question from `LESSON_QUIZZES`, unchanged.
+  - `content/placement.ts` lists them by hand, two per band, in course order: a band per unit, with Units 1–3 sharing the script band. 18 questions (14 up to Unit 9; Units 10 and 11 were added in 7d). Adding a unit is one line. Persian-script answers were preferred, since most people taking the check don't know the transliteration scheme (`ketab-e khub` fails against `ketâb-e khub`); the one transliteration question, لیوان, has no vowel to guess.
+  - `lib/placement.ts` (pure, with tests): the first band with two misses is where to start (its first lesson), and the check stops there, as later answers can't change it. A single miss in a band is a slip: the band counts as known, but that lesson stays unfinished. With no band failed, the start is the first lesson after the last band; with nothing after it, the result says "You know what Units 1–9 teach" and links to the review queue. An "I don't know" button counts as a miss.
+  - The result page names the reason ("You missed both questions on the past tenses (from lessons 7.1 and 7.4)"), links to the lesson, lists the slips as "worth a look", and offers to mark the earlier lessons finished, slips excepted, after a confirmation. Marking a lesson finished opens its vocabulary, cloze and spoken ↔ written cards, and its verb tense (`tenseOpen` already reads `progress`), so the tenses open with their lessons and nothing separate was needed. When Units 1 and 2 are all marked, every letter group opens too, as the fast track does (`openLetterGroups` in `lib/stores.ts`, now shared with `SkipAhead`). No activity is logged.
+  - Misses don't go to the notebook and nothing is scheduled. Store `alefbe2:placement` (`placementStore`: `{ last: { at, answers } }`; the suggestion is worked out from the answers), in `ALL_STORES` and `BACKUP_KEYS`, with a backup round-trip test.
+  - Links: lesson 0.3 (an English `link` block after the skip button), the home page (a line under the first-lesson card while nothing is finished and no check has been taken), the search index and `content/routes.ts`.
+  - Fix found while testing, in every typed-answer trainer (`FaAnswerField`, vocab, verbs, drill, games, letter quiz, review queue): clicking **Next** with the mouse showed "Type an answer first". React reused one `<button>` for Check and Next, so it became `type="submit"` before the click's default action and submitted the empty field. The two buttons now have their own `key`. Pressing Enter was never affected.
+  - Checked on the static build at 375 px in light and dark: no horizontal scroll; a fail, a slip and an all-pass run gave the right start; marking opened 28 lessons and all letter groups; the focus ring shows on every control. Lighthouse accessibility is 100 on `/placement`, `/` and lesson 0.3.
+- **7b** (2026-10-02): the past perfect, the past subjunctive and the passive in the engine.
+  - `Tense` gained `past-perfect` (ماضیِ بَعید, lesson `more-verbs/past-perfect`), `past-subjunctive` (ماضیِ اِلْتِزامی, `more-verbs/past-subjunctive`), and the passive as two tenses, `passive` and `past-passive` (مُضارِعِ اِخْباریِ مَجْهول, ماضیِ سادهٔ مَجْهول), both opening with `more-verbs/passive`.
+  - Forms, all built on the participle (past stem + ه; in speech from the spoken stem, اومَده, خونْده, آوُرْده):
+    - past perfect: participle + بودن in the simple past (رَفْته بودَم); speech is the same with its own endings (بودین, بودَن); نَـ on the participle (نَرَفْته بودَم, نَیامَده, spoken نَذاشْته);
+    - past subjunctive: participle + باشَم (رَفْته باشَم, spoken باشه, باشین); نَـ on the participle;
+    - passive: participle + شدن in the present or the simple past (دیده می‌شَوَد, spoken دیده می‌شه; دیده شُد); نَـ on شدن (دیده نِمی‌شَوَد, دیده نَشُد). Only *it* and *they* (`persons`), as the subject is usually a thing; the prompt shows آن / اون, and این / اینا are accepted (`pronounOf`, `personEnOf`).
+  - Missing forms (`lacks`, with the reason): بودن's past perfect (exists, but uncommon); داشتن's past subjunctive (داشْته باشَم serves for both). No passive for a verb that takes no object (new flag `intransitive`: بودن, رفتن, آمدن, شدن and the three compounds) or with `noPassive`: کردن (its compounds put شدن in its place, lesson 11.5), گفتن, خواستن (impersonal), دانستن (*is considered*), فهمیدن, توانستن, داشتن. 12 verbs are drilled in the passive.
+  - English: "I had gone", "that I have gone", "he/she/it is seen"; a state's past passive is an event (شِناخْته شُد, *was recognised*); a modal adds "(do it)".
+  - Golden tables in `tests/conjugate-unit11.test.ts`, by hand: every past perfect and passive row typed whole; the past subjunctive as each verb's participle plus the باشَم row, with four verbs typed out whole; the negatives by rule, with the exceptions listed (آمدن, آوردن, spoken گذاشتن).
+  - The trainer, the tables and the practice hub take the tenses from `TENSES`; the gate says the lessons are on the way until Unit 11 is written. A wrong tense is named ("That is the past passive…"). The cloze and spoken ↔ written decks are unchanged (their scripts' output diffed before and after).
+  - The reviewer found no wrong form, mark, negation or half-space, and raised 3 should-fix, 7 polish and 2 it could not verify; all were applied, and the two went to "Waiting on the owner". Among them: آن / اون for the passive's *it*; گفتن out of the passive drill; fairer reasons for بودن, کردن, دانستن and فهمیدن; a note on the past perfect (کُجا رَفْته بودی؟) and on a plural thing with a singular verb (کِتاب‌ها خوانْده شُد).
+  - Checked at 375 px in light and dark: no horizontal scroll; the tables show the right rows. Lighthouse accessibility is 100 on `/verbs`.
+- **7c** (2026-10-02): Unit 10, "Longer sentences", lessons 10.1–10.6, in `content/lessons/longer-sentences.ts`.
+  - The lessons are: "the book that…" (ـی + که); که clauses; اَگه with real conditions; the linking words وَقْتی, چون, وَلی, پَس; object endings; word-building (ـی, ـگاه, ـچی, ـسْتان). Slugs: `the-book-that`, `that-clauses`, `if`, `linking-words`, `object-endings`, `word-building`.
+  - Object endings are the first contracted pronoun endings in the course. The engine reads them right with no override (دیدَمِش *didamesh*, بِهِش *behesh*, بِهَم *beham*, باهاش *bâhâsh*, دوسْتِت *dustet*). Only verbs ending in a consonant carry them in examples; the text names the vowel-final forms (دیدیش, می‌بینَتِش) without using them. Writing is shown with the pronoun (او را دیدَم, به او), except دوسْتَت دارَم, which writing has too.
+  - What the lessons take care over: که can't be dropped before a relative clause, and ـی goes on the describer (کِتابِ خوبی که), not on a name; where را goes in writing and speech; reported speech keeps the speaker's tense (گُفْت که میاد); اَگه with the subjunctive, the present for what is taken as given, and the simple past for a future event, which وَقْتی shares; *if* meaning *whether* is not اَگه; کَی asks, وَقْتی joins; پَس for a decision or a conclusion; derivational ـی is stressed, and after a silent ه is often ای, often ـگی (خَسْتِگی).
+  - The grammar overview gained four topics under Unit 10 (the book that, if, the linking words, me/you/him), each linked to its lesson, with examples copied from the lessons.
+  - Vocabulary: 33 new words; 6 existing words also gain a Unit 10 lesson, with their English unchanged. The vocabulary deck has 458 cards (was 425).
+  - Cloze: 376 cards (was 322), 63 left out (one more, a whole-sentence blank). 10.1's pair line «کِتابی خَریدَم» is 6.5's line, so it is one card that also joins with 10.1. New rules in `lib/cloze.ts` (all from lesson rules, no new Persian): که after a verb of saying, knowing, hearing, hoping or thinking may go (`clauseKe`, also used by convert; not a که meaning *when*, nor after ـی); وَقْتی که and چون که; اون before a line-initial noun with ـی + که; اونو / اون رو + the verb for a verb with ـِش; the written option of a gap with که gets a "both are right" note.
+  - Spoken ↔ written: 379 cards (was 322), 57 directions left out (12 more, by hand). New rules in `lib/convert.ts`: که kept or left out after those verbs, both ways; toward writing, اَمّا and وَلی for each other (five earlier cards gained this too). Left out toward speech by hand: seven object-ending lines (the pronoun may become an ending or stay a spoken pronoun), three "in" before home, one "in" before a country, one where writing points back with به آنْجا.
+  - The content reviewer raised 2 errors (اونُو read *unu*; an unmarked conjunction و), 8 should-fix, 10 polish and 3 it could not verify. The card reviewer raised 2 errors (a written option that dropped the verb; وَلی rejected in writing), about 11 should-fix, 8 polish and 2 it could not verify. All were applied, by content changes (the unit was new), rule changes or leave-outs, except these, which needed no change: باران می‌آیَد kept in writing (standard, and parallel to the spoken line); the simple past not accepted on the pair card that asks for the subjunctive; no tense hint for شنیدن (not in the engine); written word order and a repeated به kept as the line has them; خَسْته هَسْتی not added (the line's short ending is right too). The unverified ones are under "Waiting on the owner".
+  - Earlier content: رِسْتوران is read *resturân* (since Unit 6); the reviewer expects *restorân*. Listed for the owner, not changed.
+  - Checked on the static build at 375 px in light and dark: no horizontal scroll on the six lessons or `/grammar`. Lighthouse accessibility is 100 on 10.1, 10.5 and `/grammar`. Its `td-has-header` audit (not scored) fails on tables with an empty first header, here and already on lesson 4.5.
+- **7d** (2026-10-02): Unit 11, "More verb forms", lessons 11.1–11.5, in `content/lessons/more-verbs.ts`.
+  - The lessons are: the past perfect; the past subjunctive; unreal conditions; the passive with شدن; کردن / شدن pairs and causatives. Slugs: `past-perfect`, `past-subjunctive`, `unreal-if`, `passive`, `kardan-shodan`; the three tense lessons are the ones `TENSES` opens with, and the trainer's gate now links to them.
+  - Tables come from the engine through `table()`; the passive tables have the two rows the tense has, labelled *it* and *they*.
+  - What the lessons take care over: the past perfect before another past moment (and not the present perfect for *had*); کُجا رَفْته بودی؟ as *where did you go?*; the past subjunctive after شایَد, اُمیدْوارَم, فِکْر نِمی‌کُنَم, and بایَد as *must have* (usually a conclusion; with a deadline, done by then), against بایَد + past continuous (*should have*, 8.4); unreal conditions with the past continuous in both halves in speech, the past perfect in the if-half in either register, writing more often; بودن and داشتن with the simple past, so اَگه وَقْت داشْتَم، میام (a plan) and …، میومَدَم (unreal) differ only in the second half; *would* is the past continuous; the passive with شدن carrying tense and negative, only for verbs with an object, with no را and usually no doer; a plural thing can take the singular verb in writing; کردن / شدن pairs (گُم کَرْدَم / گُم شُدَم); causatives in ـانْدَن (spoken ـونْدَن, also ـانیدَن).
+  - The grammar overview gained two topics under Unit 11 (unreal conditions, the passive).
+  - The placement check gained its Units 10 and 11 bands: 10.1 *the book that I bought*, 10.3 *if it rains*, 11.1 *I had gone*, 11.3 *if I knew*.
+  - Vocabulary: 476 cards (was 458). Cloze: 417 cards (was 376), 64 left out. Spoken ↔ written: 412 cards (was 379), 66 directions left out. One 11.5 line is the same as a 9.5 line and joins its convert card.
+  - Card rules (`lib/forms.ts`, `lib/convert.ts`): the progressive is no longer read across a comma between two gaps (اَگه پول داشْتَم، … می‌خَریدَم); a participle the engine doesn't know with بودن or شدن is named as the past perfect, past subjunctive or passive in the lesson that teaches that tense (elsewhere خَسْته شُدَم stays a compound in the simple past), and a perfect passive (فِرِسْتاده نَشُده) gets no hint; toward writing مَرا also as من را, toward speech مَنُو also as من رو.
+  - The content reviewer found no error in marks, half-spaces, readings or forms, and raised 4 should-fix, 6 polish and 4 it could not verify. The card reviewer raised 3 errors (two kinds of wrong tense hint; the past continuous rejected in a spoken if-half), 8 should-fix, 5 polish and 1 it could not verify. All were applied by content changes, rule changes or leave-outs, among them: a natural passive (این غَذا سَرْد خُورْده می‌شه) in place of *dinner is served*; written گُم کَرْده‌اَم for *I've lost*; written اِشْکال نَدارَد; written اَگَر به تِلِفُن جَواب می‌دادی. These needed no change: توی not accepted for spoken تو (the checker can't tell it from تُو, *you*); سُروده شُد for a poem (not in reviewed data, and the English says *written*); two unreal-if gaps without a hint (the English decides). The unverified ones are under "Waiting on the owner".
+  - Checked on the static build at 375 px in light and dark: no horizontal scroll on the five lessons, `/verbs` or `/placement`; the passive tables show two rows; the gate links to lesson 11.4. Lighthouse accessibility is 100 on 11.1, 11.4, 11.5, `/placement` and `/verbs`.
+
+Phase 7 is complete on `nextgen`; the owner reviews and merges.
+
 ## Practice extras status
 
 The owner's brief is `docs/PROMPT-practice-extras.md`: X1 cloze, X2 spoken ↔ written, X3 one review queue. The hard rule: no new Persian. Every Persian string a learner sees comes unchanged from reviewed lesson data; a card that would need another string is left out.
@@ -301,11 +351,10 @@ The owner's brief is `docs/PROMPT-practice-extras.md`: X1 cloze, X2 spoken ↔ w
 
 ## Feature ideas (owner asked, 2026-09-30)
 
-Not part of Phase 6. Ranked by how easy each is. Everything in `docs/PROMPT-practice-extras.md` (cloze, spoken ↔ written, one review queue) is built (see "Practice extras status").
+Not part of Phase 6. Ranked by how easy each is. Everything in `docs/PROMPT-practice-extras.md` (cloze, spoken ↔ written, one review queue) is built (see "Practice extras status"), and so is the placement check (see "Phase 7 status").
 
 1. **Reading without vowel marks** (medium, not quite ready). Show a dictionary word unmarked and ask for its reading, later short sentences. The data and `checkTranslit` exist. Harder than it looks: an unmarked word often reads several ways (کشتی, کرم, مرد/مُرد), and every reading must come from reviewed data, so the deck needs a pass that finds each unmarked spelling's readings across the dictionary and the conjugation tables and either accepts all of them or leaves the word out; sentences add ezafe and contraction ambiguity, as the cloze and convert work showed. Expect a reviewer round like X1's.
-2. **Placement check** (medium; ready now if built from existing quizzes). Ten to fifteen questions that suggest where a heritage or Dari speaker should start, in place of skipping units on trust in lesson 0.3. Sampling the lesson quizzes avoids new content; purpose-written questions would need a reviewer pass.
-3. **Audio** (hard; blocked). The largest gap: stress (*ráftam* / *raftám*), *be-* / *bo-*, and every form under "Waiting on the owner" are things text cannot carry. It needs recordings by a Tehrani speaker, starting with dialogue lines and verb tables; browser speech synthesis is not good enough. It would unlock listening and dictation drills. Blocked until there is a speaker.
+2. **Audio** (hard; blocked). The largest gap: stress (*ráftam* / *raftám*), *be-* / *bo-*, and every form under "Waiting on the owner" are things text cannot carry. It needs recordings by a Tehrani speaker, starting with dialogue lines and verb tables; browser speech synthesis is not good enough. It would unlock listening and dictation drills. Blocked until there is a speaker.
 
 ## Waiting on the owner
 
@@ -326,6 +375,19 @@ Not part of Phase 6. Ranked by how easy each is. Everything in `docs/PROMPT-prac
   - the spoken present perfect spelled like the simple past (رَفْتَم … رَفْته), told apart by stress; whether the negative (نَرَفْتَم) differs in stress at all; and whether the spelling رفته‌م should be taught;
   - شناختن treated as a state, with no progressive;
   - the term مُسْتَمِر: *mostamer* (the dictionary form, as written) or *mostamar*.
+- Confirm these from Unit 11 (7d):
+  - کُجا رَفْته بودی؟ as the everyday question to someone just back (or کُجا بودی؟); the lesson glosses it *where did you go?*;
+  - تِلِفُن رُو جَواب دادَن or گوشی رُو جَواب دادَن for answering a (mobile) phone in speech;
+  - شایَد خونه رَفْته باشه (as given) or شایَد رَفْته باشه خونه, with the place after the verb;
+  - نَیومَده بود said *nayumade* (as given) or *niyumade* (tied to the نَیومَد question).
+- Confirm these from Unit 10 (7c):
+  - دوسْتِت دارَم read *dustet dâram* (as given), or *duset dâram*, as most Tehranis say it;
+  - spoken مادَرَم تِهْرانیه (*tehrâniye*, as given) or تِهْرونیه, beside the course's spoken تِهْرون;
+  - ایرانی هَسْتین (as given) or ایرانی‌این in speech;
+  - رِسْتوران read *resturân* (as the course has it since Unit 6) or *restorân* (spelled رِسْتُوران under STYLE's o-spelling rule).
+- Confirm these from Phase 7b (the reviewer could not verify them):
+  - spoken گذاشتن without a prefix in the new tenses: گُذاشْته بودَم, گُذاشْته باشَم, گُذاشْته می‌شه (as given), or ذاشْته…; the trainer accepts ذاشته as a variant, also in the passive;
+  - the spoken negative of آوردن: نَیاوُرْده بودَم (*nayâvorde*, as given), *nayovorde* or *nayâvarde* (tied to the *âvord-* / *âvard-* question).
 - Confirm these from Unit 9 (6e):
   - سالَمه (*sâlame*) for "I'm … years old" in speech; شیش for شِش, "usually";
   - تِهْرون as the spoken form (many Tehranis now say *tehrân*);
@@ -374,6 +436,7 @@ Not part of Phase 6. Ranked by how easy each is. Everything in `docs/PROMPT-prac
 - **Editing Persian text:** use the Edit tool, or a small Node script in the scratchpad.
   - Shell heredocs break on quotes.
   - `\uXXXX` escapes typed in tool input turn into real characters, so use constants such as `TATWEEL` and `ZWNJ`, or `String.fromCharCode`.
+- **Lesson-quiz questions:** `npx tsx scripts/quizzes.ts [unit…] < /dev/null` prints every question with its lesson key and index (for `content/placement.ts`).
 - **Checking the engine's reading of words:** `npx tsx scripts/check-words.ts <words> < /dev/null`.
 - **Content tests:** `tests/content.test.ts` checks every string for readability, transliteration errors, links and valid blocks.
 - **New pages:** add them to `content/routes.ts`.
