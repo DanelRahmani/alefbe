@@ -22,7 +22,9 @@
 // - In a dialogue the line before is shown, as the answer may hang on it.
 // - Also right: the engine's other spellings of a verb form (میام, می‌آم),
 //   the other "you" where nothing fixes تُو or شُما, را spelled را, رُو or ـو,
-//   تو / تویِ / دَر for "in", and اون for او.
+//   تو / تویِ / دَر for "in", and اون for او. From Unit 10: که after a verb
+//   left out (گُفْت که → گُفْت), وَقْتی که and چون که, اون before a noun with
+//   ـی + که that starts the line, and اونُو + the verb for a verb with ـِش.
 // - Left out: callouts (so every `wrong` example), lines whose blank would be
 //   the whole sentence, highlights on part of a word (a prefix such as می‌),
 //   lines whose English holds the answer (in Persian or transliterated), a gap
@@ -236,6 +238,19 @@ const youWord = (w: string) =>
 /** "You are" in a word: کُجایی, کُجایین, هَسْتی (the course's present of to be is not in the engine). */
 const youBe = (w: string) => /ا(یی|یین|یید)$/.test(w) || ["هستی", "هستین", "هستید", "نیستی", "نیستین", "نیستید"].includes(w);
 
+/**
+ * که that opens what was said, known or hoped (lesson 10.2), which speech often
+ * leaves out: after a form of گفتن, دانستن, شنیدن, اُمیدْوار or فِکْر کَرْدَن.
+ * Not a که that means *when* (داشْتَم می‌رَفْتَم که…) or follows ـی (کِتابی که).
+ * `ws` are unmarked words; `i` is the که.
+ */
+export function clauseKe(ws: readonly string[], i: number): boolean {
+  if (ws[i] !== "که" || i === 0) return false;
+  const v = ws[i - 1].replace(/^ن?می‌?/, "");
+  if (/^(گفت|دونست|دانست|شنید)/.test(v) || /^(دون|دان|گ|گوی|شنو)(م|ی|ه|د|یم|ین|ید|ن|ند)$/.test(v) || /^امیدوار/.test(v)) return true;
+  return ws[i - 2] === "فکر" && /^کن/.test(v);
+}
+
 /** The object marker: X رُو, Xُو (کِتابُو), or مَنُو. */
 const RO = `ر${DAMMA}و`;
 
@@ -274,6 +289,15 @@ function gapAlts(fa: string, index: FormIndex | null, verbs: readonly Verb[], yo
     // تو for "in" (unmarked: tu, not تُو "you"), with تویِ and دَر.
     if (w === "تو" || p === "توی") for (const x of ["تو", "توی", "در"]) add(swap(i, [x]), `That fits too; the lesson's line has ${fa}.`);
     if (w === "او") add(swap(i, ["اون"]), `That fits too; the lesson's line has ${fa}.`);
+    // که after a verb of saying, knowing or hoping may go (lesson 10.2): گُفْت که, گُفْت.
+    // Not after ـی (کِتابی که, lesson 10.1) or a silent ه (بَچّه که).
+    if (i === words.length - 1 && clauseKe(plainWords, i))
+      add(plainWords.slice(0, i).join(" "), `Speech often leaves که out here; both are right. The lesson's line has ${fa}.`);
+    // وَقْتی که and چون که say the same (lesson 10.4).
+    if ((p === "وقتی" || p === "چون") && plainWords[i + 1] !== "که") add(swap(i, [p, "که"]), `${p} که says the same; the lesson's line has ${fa}.`);
+    // A verb with the ending ـِش is also said with the pronoun before it (lesson 10.5): دیدَمِش, اونُو دیدَم.
+    if (words.length === 1 && index && p.length > 2 && p.endsWith("ش") && !isVerb(w) && index.get(p.slice(0, -1))?.some((h) => h.spec.style === "spoken"))
+      for (const pro of ["اونو", "اون رو"]) add(`${pro} ${p.slice(0, -1)}`, `The separate pronoun is right too, a little heavier; the lesson's line has ${fa}.`);
     // The other "your": ـِت ⇄ ـِتون.
     if (you && !isVerb(w)) {
       if (new RegExp(`(${KASRA}|${FATHA}|${ZWNJ})ت$`).test(w)) add(swap(i, [p + "ون"]), youNote, true);
@@ -377,7 +401,10 @@ function cardOf(l: Line, others: readonly string[], ref: ClozeLesson, index: For
     const asWritten = (x: Pick<ClozeAlt, "fa" | "you">): ClozeAlt =>
       x.you
         ? { fa: x.fa, note: `Those are the written words, for the other “you”. This line is spoken: ${a}.`, you: true }
-        : { fa: x.fa, note: `Those are the written words; this line is spoken: ${a}.` };
+        : // The written words add a که that speech may keep or drop (lesson 10.2).
+          x.fa === `${own} که`
+          ? { fa: x.fa, note: `Speech keeps or drops که here; both are right. The lesson's line has ${a}.` }
+          : { fa: x.fa, note: `Those are the written words; this line is spoken: ${a}.` };
     const also: ClozeAlt[] = [];
     const add = (x: ClozeAlt) => {
       if (x.fa !== own && !also.some((o) => o.fa === x.fa)) also.push(x);
@@ -387,6 +414,9 @@ function cardOf(l: Line, others: readonly string[], ref: ClozeLesson, index: For
       add(w ? asWritten({ fa: x.fa, you: x.you ?? w.you }) : x);
     }
     for (const x of writtenSet) add(asWritten(x));
+    // A noun with ـی + که that starts the line also takes اون in front (lesson 10.1): اون کِتابی که خَریدی.
+    if (i === 0 && runs[0].start === 0 && /ی که$/.test(own) && own.split(" ")[0] !== "وقتی")
+      add({ fa: `اون ${own}`, note: `اون in front is right too; the lesson's line has ${a}.` });
     const tense = tenseLists[i]?.map((t) => tenseInfo(t).title.toLowerCase()).join(" + ");
     return { fa: a, ...(wa ? { written: wa } : {}), ...(also.length ? { also } : {}), ...(tense ? { tense } : {}) };
   });

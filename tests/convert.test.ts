@@ -220,3 +220,25 @@ describe("spoken ↔ written: the course's cards", () => {
     for (const id of Object.keys(CONVERT_LEAVE_OUT)) expect(ids, id).toContain(id);
   });
 });
+
+describe("convert: the Unit 10 rules", () => {
+  const U = lesson("ten/b", "10.2", [
+    {
+      type: "examples",
+      items: [
+        { fa: "فِکْر می‌کُنَم فَرْدا بارون میاد.", written: "فِکْر می‌کُنَم که فَرْدا باران می‌آیَد.", en: "I think it'll rain tomorrow." },
+        { fa: "اُتاقَم کوچیکه وَلی قَشَنْگه.", written: "اُتاقَم کوچَک اَسْت اَمّا قَشَنْگ اَسْت.", en: "My room is small but nice." },
+      ],
+    },
+  ]);
+  const { cards } = buildConvertCards([U], { verbs: VERBS });
+  const alts = (i: number, side: "alsoWritten" | "alsoSpoken") => (cards[i][side] ?? []).map((a) => a.fa);
+
+  it("lets که go in writing, and stay in speech", () => {
+    expect(alts(0, "alsoWritten")).toContain(normalizeFa("فکر می‌کنم فردا باران می‌آید"));
+    expect(alts(0, "alsoSpoken")).toContain(normalizeFa("فکر می‌کنم که فردا بارون میاد"));
+  });
+  it("takes ولی for اما in writing", () => {
+    expect(alts(1, "alsoWritten")).toContain(normalizeFa("اتاقم کوچک است ولی قشنگ است"));
+  });
+});

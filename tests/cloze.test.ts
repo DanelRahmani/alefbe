@@ -3,7 +3,7 @@ import type { Block } from "@/content/types";
 import { CLOZE_CARDS, CLOZE_LEAVE_OUT, CLOZE_LEFT_OUT } from "@/content/cloze";
 import { ALL_LESSONS } from "@/content/units";
 import { VERBS } from "@/content/verbs";
-import { buildClozeCards, checkCloze, clozeAsk, clozeCandidates, clozeDue, clozeStats, emptyClozeData, gapCount, hashLine, pruneDeck, type ClozeLesson } from "@/lib/cloze";
+import { buildClozeCards, checkCloze, clauseKe, clozeAsk, clozeCandidates, clozeDue, clozeStats, emptyClozeData, gapCount, hashLine, pruneDeck, type ClozeLesson } from "@/lib/cloze";
 import { parseMarkup } from "@/lib/markup";
 import { ZWNJ } from "@/lib/persian/chars";
 import { normalizeFa } from "@/lib/persian/normalize";
@@ -272,5 +272,45 @@ describe("cloze: the course's cards", () => {
   it("leave out by hand only cards that exist", () => {
     const byHand = CLOZE_LEFT_OUT.filter((l) => l.reason === "left out by hand");
     expect(byHand).toHaveLength(Object.keys(CLOZE_LEAVE_OUT).length);
+  });
+});
+
+describe("cloze: the Unit 10 rules", () => {
+  const U = lesson("ten/a", "10.1", [
+    {
+      type: "examples",
+      items: [
+        { fa: "{کِتابی که} دیروز خَریدَم خیلی خوبه.", en: "The book I bought yesterday is very good." },
+        { fa: "عَلی {گُفْت که} دیر میاد.", en: "Ali said he'd be late." },
+        { fa: "{وَقْتی} رِسیدَم، زَنْگ زَدَم.", en: "When I arrived, I called." },
+        { fa: "دیروز {دیدَمِش}.", en: "I saw him yesterday." },
+      ],
+    },
+  ]);
+  const { cards } = buildClozeCards([U], { verbs: VERBS });
+  const also = (i: number) => (cards[i].gaps[0].also ?? []).map((a) => a.fa);
+
+  it("takes اون before a noun with ـی + که that starts the line", () => {
+    expect(also(0)).toContain("اون کتابی که");
+  });
+  it("takes که left out after a verb of saying", () => {
+    expect(also(1)).toContain("گفت");
+    expect(checkCloze(cards[1], "گفت").ok).toBe(true);
+  });
+  it("takes وقتی که for وقتی", () => {
+    expect(also(2)).toContain("وقتی که");
+  });
+  it("takes the separate pronoun for a verb with ـِش", () => {
+    expect(also(3)).toEqual(expect.arrayContaining(["اونو دیدم", "اون رو دیدم"]));
+  });
+  it("knows which که opens what was said", () => {
+    const w = (s: string) => normalizeFa(s).split(" ");
+    expect(clauseKe(w("علی گفت که"), 2)).toBe(true);
+    expect(clauseKe(w("می‌دونم که"), 1)).toBe(true);
+    expect(clauseKe(w("فکر می‌کنم که"), 2)).toBe(true);
+    expect(clauseKe(w("امیدوارم که"), 1)).toBe(true);
+    // که for "when" after a verb, and که after ـی, are not.
+    expect(clauseKe(w("داشتم می‌رفتم بیرون که"), 3)).toBe(false);
+    expect(clauseKe(w("کتابی که"), 1)).toBe(false);
   });
 });

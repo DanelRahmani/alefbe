@@ -6,6 +6,7 @@ import { ALL_LESSONS } from "./units";
 import { VERBS } from "./verbs";
 
 const REWORDED = "the written line rewords it beyond the spoken and written rules, so the target can't be worked out";
+const OBJECT_PRONOUN = "the written pronoun becomes an ending in speech or stays a spoken pronoun, and both are right";
 const W = (why: string): ConvertLeave => ({ dir: "to-written", why });
 const S = (why: string): ConvertLeave => ({ dir: "to-spoken", why });
 
@@ -45,6 +46,19 @@ export const CONVERT_LEAVE_OUT: Record<string, ConvertLeave> = {
   "present/present-tense#1czq1oz": S("speech keeps or drops “in” before home; only one is accepted"),
   "past/simple-past#a6t2yo": S("speech keeps or drops “in” before home; only one is accepted"),
   "want-can-must/subjunctive#6tth92": S("speech keeps or drops “in” before home; only one is accepted"),
+  "longer-sentences/if#19ekcpm": S("speech keeps or drops “in” before home; only one is accepted"),
+  "longer-sentences/linking-words#va7bzl": S("speech keeps or drops “in” before home; only one is accepted"),
+  "longer-sentences/linking-words#g25lxd": S("speech keeps or drops “in” before home; only one is accepted"),
+  "longer-sentences/that-clauses#igyw0c": S("speech keeps or drops “in” before a country; only one is accepted"),
+  "longer-sentences/the-book-that#1cmyiwd": S("speech may keep or drop the word that points back to the place"),
+  // Unit 10: a written pronoun becomes an ending in speech, or a spoken pronoun (اونُو, به اون); both are right.
+  "longer-sentences/object-endings#l9rpkw": S(OBJECT_PRONOUN),
+  "longer-sentences/object-endings#k192": S(OBJECT_PRONOUN),
+  "longer-sentences/object-endings#1nz376f": S(OBJECT_PRONOUN),
+  "longer-sentences/object-endings#qoybac": S(OBJECT_PRONOUN),
+  "longer-sentences/object-endings#1avw6t3": S(OBJECT_PRONOUN),
+  "longer-sentences/object-endings#1e79z0n": S(OBJECT_PRONOUN),
+  "longer-sentences/object-endings#inmj9m": S(OBJECT_PRONOUN),
 };
 
 const built = buildConvertCards(ALL_LESSONS, { verbs: VERBS, leaveOut: CONVERT_LEAVE_OUT });

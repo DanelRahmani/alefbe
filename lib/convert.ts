@@ -24,13 +24,15 @@
 //   perfect spelled رفته‌ام in chat, رفته for written رفته است, بـ on a compound
 //   that usually drops it;
 // - toward speech, را spelled رو or joined as ـو (کتابو, کتاب رو);
+// - toward writing, اَمّا and وَلی for "but" (both are written);
+// - که after a verb of saying or knowing kept or left out (lesson 10.2);
 // - the target of a card with the same line shown (a line written two ways).
 
 import type { Block, Lesson } from "@/content/types";
 import { checkFa, type Verdict } from "./answers";
 import type { Verb } from "./conjugate";
 import { formIndex, phraseAlts, presentForFuture, verbIdsIn, type FormHit, type FormIndex } from "./forms";
-import { distance, hashLine } from "./cloze";
+import { clauseKe, distance, hashLine } from "./cloze";
 import { parseMarkup, plainOf } from "./markup";
 import { DAMMA, NON_JOINING, ZWNJ } from "./persian/chars";
 import { markedWords, normalizeFa } from "./persian/normalize";
@@ -206,7 +208,21 @@ function altsOf(target: string, paired: string, index: FormIndex | null, verbs: 
     for (const a of phraseAlts(target, index, verbs, false, lessonKey, 48, keep)) put(a.text, note);
     if (!spoken) put(presentForFuture(target, index, verbs, keep), `The present is right in writing too, but this line uses the future: ${target}`);
   }
+  // که after a verb of saying, knowing or hoping may go (lesson 10.2): see clauseKe.
+  const keNote = spoken
+    ? `Speech keeps or drops که here; both are right. The lesson's line has ${target}`
+    : `Writing usually keeps که here, but it can go. The lesson's line has ${target}`;
+  typed.forEach((_, i) => {
+    if (clauseKe(typed, i)) put([...typed.slice(0, i), ...typed.slice(i + 1)].join(" "), keNote);
+  });
   if (spoken) {
+    // And speech may keep the که the written line has: فِکْر می‌کُنَم که….
+    const pw = normalizeFa(paired).split(" ");
+    pw.forEach((_, i) => {
+      if (!clauseKe(pw, i)) return;
+      const j = typed.findIndex((t, k) => t === pw[i - 1] && typed[k + 1] !== "که");
+      if (j >= 0) put([...typed.slice(0, j + 1), "که", ...typed.slice(j + 1)].join(" "), keNote);
+    });
     for (const s of objectSpellings(target)) put(s, `The same object marker, spelled another way. The lesson writes it ${target}`);
     put(swapWord(typed, "آره", "بله"), `That fits too. The lesson's line has ${target}`);
     for (const r of writtenOrder(target, paired, index)) put(r, BE_NOTE(target));
@@ -214,6 +230,9 @@ function altsOf(target: string, paired: string, index: FormIndex | null, verbs: 
     // Writing says "in" with دَر or تویِ.
     put(swapWord(typed, "در", "توی"), `That fits too: writing says “in” both ways. The lesson's line has ${target}`);
     put(swapWord(typed, "توی", "در"), `That fits too: writing says “in” both ways. The lesson's line has ${target}`);
+    // Writing says "but" both ways (lesson 10.4).
+    put(swapWord(typed, "اما", "ولی"), `That fits too: writing says “but” both ways. The lesson's line has ${target}`);
+    put(swapWord(typed, "ولی", "اما"), `That fits too: writing says “but” both ways. The lesson's line has ${target}`);
   }
   return [...out].map(([fa, n]) => ({ fa, note: n }));
 }
