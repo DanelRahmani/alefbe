@@ -75,6 +75,10 @@ export const CONVERT_LEAVE_OUT: Record<string, ConvertLeave> = {
   // Unit 13.
   "culture/set-phrases#48jq7c": S("the written phrasing is just as natural in speech"),
   "culture/names-and-titles#3dtyvv": { why: "the written line uses a separate pronoun where the ending is just as right" },
+  // Unit 14.
+  "reading/headline#hqzkyr": { why: "the written line uses the formal plural مَدارِس where مَدْرِسه‌ها is just as right, and a plural thing may take the singular verb" },
+  "reading/headline#yyw0oc": W(`${REWORDED} (بارِش and پایان where باران and آخَر are just as right)`),
+  "reading/chat#13f5mv2": W("a chat fragment: writing would phrase “I'm on my way” otherwise"),
   "culture/shoma-and-to#1yp34n1": S("the written line uses a separate pronoun where the ending is just as right"),
 };
 

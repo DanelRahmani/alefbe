@@ -11,12 +11,12 @@ export function ReadingShell({ style, label, title, note, children }: { style: s
   const [marks, setMarks] = useState(false);
   return (
     <figure className={`reading reading-${style}`} data-marks={marks ? "on" : undefined} aria-label={label}>
-      <div className="ui reading-tools">
-        <button type="button" className="tool-btn reading-marks" aria-pressed={marks} onClick={() => setMarks((m) => !m)}>
+      <figcaption className="reading-head">
+        <span className="reading-title">{title}</span>
+        <button type="button" className="tool-btn reading-marks ui" aria-pressed={marks} onClick={() => setMarks((m) => !m)}>
           <span aria-hidden="true">اَ</span> Vowel marks
         </button>
-      </div>
-      {title && <figcaption className="reading-title">{title}</figcaption>}
+      </figcaption>
       <ol className="reading-text" data-inspect>
         {children}
       </ol>

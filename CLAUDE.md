@@ -328,6 +328,21 @@ Phase 8 is Units 12–14 (owner's brief: `docs/PROMPT-phase-8.md`). Order: 8a Un
   - Cards: vocabulary 515 (was 482); cloze 439 (was 419); spoken ↔ written 443 (was 418).
   - Checked on the static build at 375 px in light and dark: no horizontal scroll, every table fits; the Today card's date links to 13.6. Lighthouse accessibility is 100 on 13.2, 13.5, 13.6 and `/`.
   - Also in this commit, not yet used by any lesson: the `reading` block for 8c (`content/types.ts`, `components/lesson/ReadingBlock.tsx`, `ReadingShell.tsx`, the `.reading` CSS in `app/components.css`), walked by the content tests and `scripts/dump.ts`.
+- **8c** (2026-10-02): the reading view, and Unit 14, "Reading real texts", lessons 14.1–14.6, in `content/lessons/reading.ts`.
+  - The `reading` block (`{ type: "reading", style, title?, lines, note? }`; a line has `fa`, `en`, and `who` / `mine` for chat, `price` for a menu, `para` for a story). `ReadingBlock` (server) draws it; `ReadingShell` / `RevealLine` (client) hold the state.
+    - The text shows without vowel marks whatever the display setting (CSS on `.reading` picks the *none* variant); "Vowel marks" (`aria-pressed`) shows them all for that text.
+    - Each line has a Show/Hide button (`aria-expanded`, named "Show line n") that reveals its transliteration and translation in a live region.
+    - Tapping a word opens the word inspector: it reads the marked `vm-all` variant, so the reading is exact though the marks are hidden.
+    - Styles, in CSS only: a white-on-lapis street sign; a menu card with a saffron double rule and dotted leaders; chat bubbles (the reader's side on the right); a newspaper masthead; a story page; centred verse between saffron rules (each half-line keeps its width at 375 px, its button beneath). No motion.
+  - Decision: reading texts make no cards. The cloze and spoken ↔ written decks read only examples, pairs and dialogues, so no code was needed; each lesson's examples and pairs still make cards.
+  - The lessons: signs; a menu; chat messages; a news headline; a short story (Yalda night, a power cut, a فال from Hafez); one beyt of Hafez. Slugs: `signs`, `menu`, `chat`, `headline`, `story`, `hafez`. All texts are original but the Hafez beyt, «صبا به لطف بگو آن غزال رعنا را / که سر به کوه و بیابان تو داده‌ای ما را», from the Qazvini–Ghani edition (ghazal 4), with a literal translation and why it is hard (an unwritten ezafe, را after the verb for the rhyme, an image no one says today). STYLE.md now places the quotation in 14.6.
+  - Prose that quotes unmarked print uses overrides ([خیابان حافظ|khiyâbân-e hâfez]), which carry the reading.
+  - Dictionary: the texts' base words were added as vocab. Words the inspector reads but can't look up are inflected or suffixed forms (47 at first, now fewer): verb forms (بودَنْد, می‌کَرْدَنْد, گِرِفْتَم, بِکِشید…), plurals and suffixes (بِلیتا, بُزُرْگ‌تَرْها, شَمْعی, شِعْری), possessed or ezafe forms (راهَم, جِلُویِ, سالادِ), and function words (را, وَ, وُ, اَسْت). The inspector shows their reading and letters, without a meaning.
+  - The content reviewer raised 4 errors (تو in the Hafez line read *tu*; *mirasam* for می‌رِسَم; *sinamâ*; "i came" accepted), 7 should-fix, 9 polish and 3 it could not verify; the card reviewer 1 error ("doughs"), 4 should-fix, 3 polish and 1 it could not verify. All were applied, except the optional note on دَقیقهٔ دیگَر's ezafe. Found while checking: دَه (*da*) for *ten* in the chat, now دَهْ.
+  - Cards: vocabulary 556 (was 515); cloze 451 (was 439); spoken ↔ written 451 (was 443). No placement band (a reading unit).
+  - Checked on the static build at 375 px in light and dark: no horizontal scroll; the marks switch, the reveals and the word inspector work; the focus ring shows on the controls; only the known local-only 404s. Lighthouse accessibility is 100 on all six lessons.
+
+Phase 8 is complete on `nextgen`; the owner reviews and merges.
 
 ## Practice extras status
 
@@ -409,6 +424,12 @@ Not part of Phase 6. Ranked by how easy each is. Everything in `docs/PROMPT-prac
   - شایَد خونه رَفْته باشه (as given) or شایَد رَفْته باشه خونه, with the place after the verb;
   - نَیومَده بود said *nayumade* (as given) or *niyumade* (tied to the نَیومَد question).
 - Confirm the Unit 13 (8b) Dari callouts: 13.2 کاکا (*kâkâ*) for a father's brother and for an older man; 13.3 *as-salâmu alaykum* in Kabul and *mânda nabâshi* for خَسْته نَباشی; 13.6 the zodiac month names (حَمَل, ثَور, جَوزا), and whether Afghanistan still uses the solar calendar officially (the callout says "have long used").
+- Confirm these from Unit 14 (8c):
+  - the Hafez beyt as printed in Qazvini–Ghani (ghazal 4) and its readings (*sabâ be lotf begu ân ghazâl-e ra'nâ râ / ke sar be kuh o biyâbân to dâde-i mâ râ*);
+  - door signs: هُل دَهید beside the at least as common فِشار دَهید for *push*; white-on-blue street signs with Latin names in big cities;
+  - a semicolon (؛) joining two statements in one headline (front pages may prefer two lines);
+  - written جِلُویِ سینِما مُنْتَظِر هَسْتَم (14.3): an eighth هستم after a consonant, the X2 question below;
+  - 9.4's بِفَرْمایین glossed *this way, please* (closer to *yes, please?* when taking an order).
 - Confirm these from Unit 13 (8b):
   - written صُبْح بِخَیر, or صُبْح بِه خَیر as the Academy may prefer (the checker accepts both);
   - شَب بِخَیر as "mostly a farewell" (hosts may open an evening programme with it);

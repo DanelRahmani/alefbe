@@ -7,6 +7,7 @@ import { longerSentences } from "./lessons/longer-sentences";
 import { moreVerbs } from "./lessons/more-verbs";
 import { past } from "./lessons/past";
 import { present } from "./lessons/present";
+import { reading } from "./lessons/reading";
 import { sounds } from "./lessons/sounds";
 import { spelling } from "./lessons/spelling";
 import { startHere } from "./lessons/start-here";
@@ -122,7 +123,7 @@ export const UNITS: Unit[] = [
     title: "Reading real texts",
     titleFa: "خوانْدَنِ مَتْنِ واقِعی",
     description: "Signs, a menu, messages, a headline, a short story and a line of Hafez, without vowel marks.",
-    lessons: [],
+    lessons: reading,
   },
 ];
 

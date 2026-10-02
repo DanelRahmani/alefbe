@@ -126,7 +126,7 @@ Answers typed in the drills are lenient:
 
 ## Accuracy
 
-- **Examples:** original, never copied from videos or textbooks. The only quotation planned is a line of Hafez (public domain) in unit 12.
+- **Examples:** original, never copied from videos or textbooks. The only quotation is a line of Hafez (public domain) in lesson 14.6, with its edition named in `source`.
 - **Sources:** every lesson names its sources in `source`:
   - Stilo, Talattof and Clinton, *Modern Persian: Spoken and Written*;
   - Thackston, *An Introduction to Persian*;

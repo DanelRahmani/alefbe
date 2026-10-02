@@ -33,6 +33,9 @@ export const CLOZE_LEAVE_OUT: Record<string, string> = {
   "culture/set-phrases#6xfid6": "“thanks” has other everyday words",
   "culture/taarof#yqek0b": "“would you like” is also asked with the verb want",
   "culture/calendar#18l3fs7": "“Happy Nowruz” leaves open which “you”, and the other form is not in the lessons",
+  "reading/headline#rapqb3": "“is falling” is also said of rain with آمدن (lessons 7.5, 10.4)",
+  "reading/headline#aki4c4": "a plural thing can also take the singular verb, which the gap does not accept",
+  "reading/story#1bvtfd4": "“the power went out” is also said with قطع شدن; the pair card asks برق",
   "more-verbs/passive#znqoxd": "a plural thing can also take the singular verb, which the gap does not accept",
 };
 
