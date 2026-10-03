@@ -121,7 +121,11 @@ function BlockView({ b, ctx }: { b: Block; ctx: Ctx }) {
           </div>
         </div>
       );
-    case "table":
+    case "table": {
+      // An empty first header means the first column labels the rows: those
+      // cells are row headers, and the empty corner is a plain cell (so every
+      // data cell has a header for screen readers).
+      const rowHeads = b.headers[0].trim() === "";
       return (
         <div className="table-wrap">
           <table className="lesson-table">
@@ -132,27 +136,38 @@ function BlockView({ b, ctx }: { b: Block; ctx: Ctx }) {
             )}
             <thead>
               <tr>
-                {b.headers.map((h, i) => (
-                  <th key={i} scope="col">
-                    <Rich text={h} />
-                  </th>
-                ))}
+                {b.headers.map((h, i) =>
+                  i === 0 && rowHeads ? (
+                    <td key={i} />
+                  ) : (
+                    <th key={i} scope="col">
+                      <Rich text={h} />
+                    </th>
+                  ),
+                )}
               </tr>
             </thead>
             <tbody>
               {b.rows.map((row, i) => (
                 <tr key={i}>
-                  {row.map((c, j) => (
-                    <td key={j} className={hasFa(c) ? "has-fa" : undefined}>
-                      <Rich text={c} />
-                    </td>
-                  ))}
+                  {row.map((c, j) =>
+                    j === 0 && rowHeads ? (
+                      <th key={j} scope="row" className={hasFa(c) ? "has-fa" : undefined}>
+                        <Rich text={c} />
+                      </th>
+                    ) : (
+                      <td key={j} className={hasFa(c) ? "has-fa" : undefined}>
+                        <Rich text={c} />
+                      </td>
+                    ),
+                  )}
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       );
+    }
     case "callout":
       return (
         <aside className={`panel callout callout-${b.kind}`}>

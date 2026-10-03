@@ -1271,6 +1271,10 @@
   border-bottom: 1px solid var(--rule);
   vertical-align: top;
 }
+/* Row labels are headers for screen readers, but stay as quiet as the cells. */
+.lesson-table th[scope="row"] {
+  font-weight: inherit;
+}
 /* Persian in a table is what the table is for: a step up from the small text. */
 .lesson-table .fa {
   font-size: 1.25em;

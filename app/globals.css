@@ -1,4 +1,10 @@
 @import "tailwindcss";
+/* Only the app's code holds class names: the docs, tests and scripts would
+   otherwise turn their words ("fixed", "hidden"…) into unused utilities. */
+@source not "../docs";
+@source not "../scripts";
+@source not "../tests";
+@source not "../public";
 
 /* ── Tokens: porcelain glaze, lapis, turquoise, saffron ("Orosi") ─────── */
 /* Light: glazed tile white with lapis ink. Dark: a night interior lit

@@ -371,6 +371,13 @@ Phase 9 is polish (owner's brief: `docs/PROMPT-phase-9.md`). Order: 9a design au
   - Fonts: Amiri loads only for letters, tracing and the Naskh setting; decorative Persian on the home page and path is `.display-fa` (Markazi). Lazy: the legacy migration (`components/legacy-run.ts`), the search code, the display controls.
   - The path: lesson lists use `content-visibility: auto` with a per-list placeholder (12rem a lesson, never too small: a smaller one made axe see the last unit's rows over the footer); titles and summaries are rendered on the server and passed as elements.
   - `scripts/lighthouse.sh` runs each page three times and prints the median.
+- **9e** (2026-10-03): accessibility and the 375 px sweep; details in `docs/DESIGN-PASS.md` ("9e").
+  - `scripts/sweep-375.js` checks every route (`/data/routes.json`, from `content/routes.ts`) at 375 px, light and dark: horizontal scroll, a focus ring on every Tab stop (simulated, so it works in a background window), motion at rest and under reduced motion, and the order of Persian phrases in English brackets. Copy it into `out/` and `eval` it in a tab on `alefbe-static` (its header says how). Last run: 152 routes, 10,406 Tab stops, nothing failing; also clean under reduced motion in Playwright.
+  - Lesson tables with an empty first header use row headers (`LessonRenderer`), so `td-has-header` passes. Lighthouse accessibility 100 on the four target pages and 18 more; best practices 96, from the local-only 404s.
+  - Tailwind no longer scans `docs/`, `scripts/`, `tests/` or `public/` (`@source not` in `globals.css`): their words became unused utilities.
+  - CSS at the end of Phase 9: 79,860 bytes (16,339 gzipped), from 79,064 (16,339).
+  - Build lock: OneDrive can hold `.next/` or `out/` while syncing (EBUSY/EPERM); retry after a few seconds, or clear `.next/` when nothing holds it.
+- **9f**: the production smoke test on www.alefbe.study, after the owner merges Phase 9 (not started: `main` does not have it yet).
 
 ## Practice extras status
 

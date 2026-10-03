@@ -182,6 +182,20 @@ What the measurements showed, and what was done:
 - **Glass:** blur only on the header and tab bar (9b). The hero pane is a solid plate.
 - Not reached: performance 90 on `/` (83) and on a lesson (88), and LCP under 2.5 s anywhere (see the floor above). What would go further: rendering the path as server HTML with small client islands (no hydration of the list at all), and a lighter framework footprint, which is out of this app's hands.
 
+### 9e (2026-10-03)
+
+- **The sweep** (`scripts/sweep-375.js`, rerunnable; instructions at its top): every route in `content/routes.ts` (151, served as `/data/routes.json`) plus a missing page, in a 375 px frame, light and dark. Result: **152 routes, 10,406 Tab stops, nothing failing**, in the in-app browser, and again in Playwright with reduced motion emulated (10,419 stops).
+  - No horizontal scroll at 375 px, light or dark.
+  - A visible focus ring on every Tab stop. The rings are simulated: a background window never matches `:focus-visible`, so each focus rule gets a twin keyed to a test class, inserted beside it (cascade order kept), and checked on each stop. A planted `outline: none` is caught.
+  - Nothing moving at rest; under reduced motion, nothing longer than the global rule's 0.01 ms transitions.
+  - Persian phrases inside English brackets keep their order on the line (checked on the line fragments, English lines only).
+  - Console: script errors none; the only 404s are the local-only ones (Vercel Analytics, Next's prefetch files that `serve` can't map).
+- **Tables:** a lesson table with an empty first header now has row headers (`<th scope="row">`) and a plain corner cell; `td-has-header` passes (lesson 4.5 and four more). The labels keep their regular weight.
+- **Lighthouse accessibility 100** on the four target pages and on 18 more: lessons 1.2, 4.5, 10.5, 14.2; `/script`, `/script/be`, `/verbs`, `/vocab`, `/dictionary`, `/grammar`, `/progress`, `/placement`, the letter trainer, the type-it game, `/practice/sheets`, `/practice/cloze`, `/practice/mistakes`, `/offline`. (The missing page returns 404, which Lighthouse won't audit.) Best practices 96 everywhere, from the local-only 404s alone.
+- **Found on the way:** the footer links were 23.8 px tall (under the 24 px target size) and, on the home page, reported as covered by the skipped lesson lists while Lighthouse measured them; both fixed (9d). Tailwind scanned the docs, tests and scripts for class names and generated unused utilities from their words; they are excluded now (`@source not` in `globals.css`).
+- **Bidi in brackets:** no rendering fault (see finding 3); `Rich` needed no change.
+- **CSS at the end of Phase 9:** 79,860 bytes, 16,339 gzipped, from 79,064 and 16,339. 9b alone ended a byte smaller; the craft rules of 9c and the performance rules of 9d (content-visibility, the display face, the loading card, the target sizes) add about 0.8 KB raw and nothing gzipped.
+
 ## Decisions for the owner
 
 The owner said to continue without choosing, so each is taken as recommended (yes to all four; the brand mark in Vazirmatn, whose Arabic subset is already preloaded). Any of them can be reverted on review.
