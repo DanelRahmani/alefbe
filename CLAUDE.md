@@ -377,7 +377,14 @@ Phase 9 is polish (owner's brief: `docs/PROMPT-phase-9.md`). Order: 9a design au
   - Tailwind no longer scans `docs/`, `scripts/`, `tests/` or `public/` (`@source not` in `globals.css`): their words became unused utilities.
   - CSS at the end of Phase 9: 79,860 bytes (16,339 gzipped), from 79,064 (16,339).
   - Build lock: OneDrive can hold `.next/` or `out/` while syncing (EBUSY/EPERM); retry after a few seconds, or clear `.next/` when nothing holds it.
-- **9f**: the production smoke test on www.alefbe.study, after the owner merges Phase 9 (not started: `main` does not have it yet).
+- **9f** (2026-10-03): the owner asked for the merge; `main` was fast-forwarded to `nextgen` (Phases 8 and 9; commit 72dddc7) and production went live within a minute. Smoke test on www.alefbe.study:
+  - every route in `/data/routes.json` and every data file returns 200 (164 URLs); a missing page 404; the apex redirects to www;
+  - no console or page errors on 16 pages of every kind (only the missing page's own 404);
+  - Analytics loads (served from a hashed path, `/<hash>/script.js`, not `/_vercel/insights`) and sends the page view;
+  - the service worker is active; offline, a visited lesson loads from its cache, an unvisited page shows the offline page, and the vocabulary trainer still has its cards from the cached `/data/` file;
+  - a backup written by the previous release's own code (`makeBackup` at c22f5fc: settings, progress, quiz scores, decks, notebook, stars, goal) imports cleanly: 7 lessons with their seals, the settings applied, 3 reviews due as expected, the notebook entry there.
+
+Phase 9 is complete and on `main`.
 
 ## Practice extras status
 
