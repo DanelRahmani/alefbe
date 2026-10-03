@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ConvertTrainer } from "@/components/convert/ConvertTrainer";
-import { CONVERT_CARDS } from "@/content/convert";
+import { ConvertTrainerLoader } from "@/components/practice/Loaders";
 
 export const metadata: Metadata = {
   title: "Spoken and written",
@@ -23,7 +22,7 @@ export default function ConvertPage() {
         lesson done, and each direction keeps its own schedule.
       </p>
       <div className="mt-6">
-        <ConvertTrainer cards={CONVERT_CARDS} />
+        <ConvertTrainerLoader />
       </div>
     </>
   );

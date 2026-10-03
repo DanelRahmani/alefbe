@@ -3,91 +3,20 @@
 
 import { PERSIAN_MONTHS } from "@/content/calendar";
 import { dayKey, dayTotal, type ActivityData } from "./activity";
-import { MODES, drillCandidates, type DrillMode } from "./drill";
-import { deckStats, type DeckState } from "./srs";
 import { transliterate } from "./translit";
-import { TENSES } from "./conjugate";
-import { emptyVerbsData, verbCandidates, type VerbsData } from "./verb-drill";
-import { vocabDue, type VocabData } from "./vocab";
-import { clozeDue, type ClozeData } from "./cloze";
-import { convertDue, type ConvertData } from "./convert";
+import type { ReviewDeck } from "./due";
+import { DEFAULT_GOAL } from "./store-defaults";
+export { DEFAULT_GOAL };
 
 /** Activities a day (trainer answers, traces, quiz answers, game rounds, lessons). */
 export const GOALS = [5, 10, 20] as const;
 export type DailyGoal = (typeof GOALS)[number];
-export const DEFAULT_GOAL: DailyGoal = 10;
 
-/** A deck with reviews: a letter-trainer mode, the conjugation trainer, the vocabulary deck, cloze practice or the spoken ↔ written drill. */
-export type ReviewDeck = DrillMode | "verbs" | "vocab" | "cloze" | "convert";
-
-export interface ReviewsDue {
-  total: number;
-  byMode: Record<DrillMode, number>;
-  /** Conjugation-trainer items due, across tenses. */
-  verbs: number;
-  /** Vocabulary cards due. */
-  vocab: number;
-  /** Cloze cards due. */
-  cloze: number;
-  /** Spoken ↔ written cards due, both directions. */
-  convert: number;
-  /** The deck with the most cards due, or null when nothing is. */
-  top: ReviewDeck | null;
-}
+export type { MoreDecks, ReviewDeck, ReviewsDue, VocabDeck } from "./due";
 
 /** Where a deck's reviews happen. */
 export const reviewHref = (d: ReviewDeck) =>
   d === "verbs" ? "/verbs" : d === "vocab" ? "/vocab" : d === "cloze" ? "/practice/cloze" : d === "convert" ? "/practice/convert" : `/practice/drill/${d}`;
-
-/** The vocabulary deck and the ids of the words still in the course (lib/vocab.ts vocabDue). */
-export interface VocabDeck {
-  data: VocabData;
-  known: ReadonlySet<string> | null;
-}
-
-/** The decks kept apart from the letter trainer and the verbs. */
-export interface MoreDecks {
-  cloze?: ClozeData;
-  convert?: ConvertData;
-}
-
-/** Cards due now across every trainer deck (new cards don't count). */
-export function reviewsDue(
-  decks: Partial<Record<DrillMode, DeckState>>,
-  now: number,
-  verbs: VerbsData = emptyVerbsData(),
-  vocab?: VocabDeck,
-  more: MoreDecks = {},
-): ReviewsDue {
-  const byMode = {} as Record<DrillMode, number>;
-  let total = 0;
-  let top: ReviewDeck | null = null;
-  let topDue = 0;
-  for (const m of MODES) {
-    const deck = decks[m.id];
-    const due = deck ? deckStats(drillCandidates(m.id, decks), deck, now).due : 0;
-    byMode[m.id] = due;
-    total += due;
-    if (due > topDue) [top, topDue] = [m.id, due];
-  }
-  let verbsDue = 0;
-  for (const t of TENSES) {
-    const deck = verbs.decks[t.id];
-    if (deck) verbsDue += deckStats(verbCandidates(verbs, t.id), deck, now).due;
-  }
-  total += verbsDue;
-  if (verbsDue > topDue) [top, topDue] = ["verbs", verbsDue];
-  const vocabDueNow = vocab ? vocabDue(vocab.data, vocab.known, now) : 0;
-  total += vocabDueNow;
-  if (vocabDueNow > topDue) [top, topDue] = ["vocab", vocabDueNow];
-  const clozeDueNow = more.cloze ? clozeDue(more.cloze, now) : 0;
-  total += clozeDueNow;
-  if (clozeDueNow > topDue) [top, topDue] = ["cloze", clozeDueNow];
-  const convertDueNow = more.convert ? convertDue(more.convert, now) : 0;
-  total += convertDueNow;
-  if (convertDueNow > topDue) top = "convert";
-  return { total, byMode, verbs: verbsDue, vocab: vocabDueNow, cloze: clozeDueNow, convert: convertDueNow, top };
-}
 
 export interface GoalProgress {
   done: number;

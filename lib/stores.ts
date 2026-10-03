@@ -7,16 +7,25 @@ import { createPersistentStore } from "./storage";
 import { emptyDeck, type DeckState } from "./srs";
 import type { DrillMode } from "./drill";
 import { emptyActivity, record, type ActivityData, type ActivityEvent } from "./activity";
-import { migrateTraceV1 } from "./trace";
-import { DEFAULT_QUIZ, type QuizSetup } from "./quiz";
+import type { QuizSetup } from "./quiz";
 import { noteAnswer, type MistakeItem, type Notebook } from "./mistakes";
 import type { Starred } from "./starred";
-import { DEFAULT_GOAL, type DailyGoal } from "./today";
-import { emptyVerbsData, type VerbsData } from "./verb-drill";
-import { emptyVocabData, type VocabData } from "./vocab";
-import { emptyClozeData, type ClozeData } from "./cloze";
-import { emptyConvertData, type ConvertData } from "./convert";
-import { emptyPlacementData, type PlacementData } from "./placement";
+import type { DailyGoal } from "./today";
+import type { VerbsData } from "./verb-drill";
+import type { VocabData } from "./vocab";
+import type { ClozeData } from "./cloze";
+import type { ConvertData } from "./convert";
+import type { PlacementData } from "./placement";
+import {
+  DEFAULT_GOAL,
+  DEFAULT_QUIZ,
+  emptyClozeData,
+  emptyConvertData,
+  emptyPlacementData,
+  emptyVerbsData,
+  emptyVocabData,
+  migrateTraceV1,
+} from "./store-defaults";
 import { DRILL_GROUPS } from "./persian/letters";
 
 export type Theme = "system" | "light" | "dark";

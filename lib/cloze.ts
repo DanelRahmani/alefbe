@@ -41,7 +41,9 @@ import { formIndex, gapTenses, hasCommand, hasYouVerb, phraseAlts, segments, typ
 import { parseMarkup, plainOf, sliceTokens, tokenText, translitOf, type Token } from "./markup";
 import { ARABIC_SCRIPT, DAMMA, FATHA, HAMZA_ABOVE, KASRA, ZWNJ, isLetter, isMark } from "./persian/chars";
 import { canonicalFa, markedWords, normalizeFa } from "./persian/normalize";
-import { deckStats, emptyDeck, type DeckState, type DeckStats } from "./srs";
+import { deckStats, type DeckState, type DeckStats } from "./srs";
+import { emptyClozeData } from "./store-defaults";
+export { emptyClozeData };
 
 /** A piece of the asked line: lesson text, or a gap (numbered from 0). */
 export type ClozePart = { text: string } | { gap: number };
@@ -104,7 +106,6 @@ export interface ClozeData {
   deck: DeckState;
 }
 
-export const emptyClozeData = (): ClozeData => ({ deck: emptyDeck() });
 
 /** A lesson as the builder needs it (content/units.ts LessonRef fits). */
 export interface ClozeLesson {
@@ -570,11 +571,7 @@ export const clozeStats = (cards: readonly Pick<ClozeCard, "id" | "lessons">[], 
   deckStats(clozeCandidates(cards, done), data.deck, now);
 
 /** Cards due now, from the deck alone: for the Today card, which has no card list. */
-export function clozeDue(data: ClozeData, now: number): number {
-  let due = 0;
-  for (const c of Object.values(data.deck.cards)) if (c.due <= now) due++;
-  return due;
-}
+export { clozeDue } from "./due";
 
 /**
  * The deck without cards that have left the course (a line rewritten or

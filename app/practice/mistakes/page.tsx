@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { MistakeNotebook } from "@/components/MistakeNotebook";
-import { LESSON_QUIZZES } from "@/content/lesson-quizzes";
+import { MistakeNotebookLoader } from "@/components/practice/Loaders";
 
 export const metadata: Metadata = {
   title: "Mistake notebook",
@@ -21,7 +20,7 @@ export default function MistakesPage() {
         Every wrong answer lands here: from lesson quizzes, the trainer, the letter quiz and the games. Answer an item right
         twice in a row, here or anywhere else, and it leaves the notebook.
       </p>
-      <MistakeNotebook lessons={LESSON_QUIZZES} />
+      <MistakeNotebookLoader />
     </>
   );
 }

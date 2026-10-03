@@ -36,7 +36,9 @@ import { clauseKe, distance, hashLine } from "./cloze";
 import { parseMarkup, plainOf } from "./markup";
 import { DAMMA, NON_JOINING, ZWNJ } from "./persian/chars";
 import { markedWords, normalizeFa } from "./persian/normalize";
-import { deckStats, emptyDeck, type DeckState, type DeckStats } from "./srs";
+import { deckStats, type DeckState, type DeckStats } from "./srs";
+import { emptyConvertData } from "./store-defaults";
+export { emptyConvertData };
 
 export type ConvertDir = "to-written" | "to-spoken";
 export const CONVERT_DIRS: { id: ConvertDir; label: string; from: string; to: string }[] = [
@@ -88,7 +90,6 @@ export interface ConvertData {
   dir: ConvertDir;
 }
 
-export const emptyConvertData = (): ConvertData => ({ decks: { "to-written": emptyDeck(), "to-spoken": emptyDeck() }, dir: "to-written" });
 
 /** A lesson as the builder needs it (content/units.ts LessonRef fits). */
 export interface ConvertLesson {
@@ -415,8 +416,4 @@ export const convertStats = (cards: readonly Pick<ConvertCard, "id" | "lessons" 
   deckStats(convertCandidates(cards, done, dir), data.decks[dir], now);
 
 /** Cards due now in both directions, from the decks alone: for the Today card. */
-export function convertDue(data: ConvertData, now: number): number {
-  let due = 0;
-  for (const d of CONVERT_DIRS) for (const c of Object.values(data.decks[d.id]?.cards ?? {})) if (c.due <= now) due++;
-  return due;
-}
+export { convertDue } from "./due";

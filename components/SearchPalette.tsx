@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
-import { KIND_TITLES, search, type SearchItem } from "@/lib/search";
+import type { SearchItem } from "@/lib/search";
 import { isTyping } from "./Shortcuts";
 
 let cached: Promise<SearchItem[]> | null = null;
@@ -15,6 +15,12 @@ export const loadSearchIndex = () =>
       return [];
     }));
 
+// The search code (normalising Persian, transliteration) is fetched on first
+// open, with the index: it is not needed to draw the page.
+type SearchLib = typeof import("@/lib/search");
+let searchLib: Promise<SearchLib> | null = null;
+const loadSearchLib = () => (searchLib ??= import("@/lib/search"));
+
 /** Search everything: `/` or Ctrl+K opens it; arrows move, Enter opens, Esc closes. */
 export function SearchPalette() {
   const router = useRouter();
@@ -22,6 +28,7 @@ export function SearchPalette() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [items, setItems] = useState<SearchItem[] | null>(null);
+  const [lib, setLib] = useState<SearchLib | null>(null);
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
 
@@ -31,6 +38,7 @@ export function SearchPalette() {
     d.showModal();
     inputRef.current?.focus();
     loadSearchIndex().then(setItems);
+    loadSearchLib().then(setLib);
   }, []);
 
   useEffect(() => {
@@ -52,7 +60,7 @@ export function SearchPalette() {
     };
   }, [open]);
 
-  const groups = items && query.trim() ? search(items, query) : [];
+  const groups = items && lib && query.trim() ? lib.search(items, query) : [];
   const flat = groups.flatMap((g) => g.items);
   const current = Math.min(active, Math.max(0, flat.length - 1));
 
@@ -126,8 +134,8 @@ export function SearchPalette() {
           </button>
         </div>
         <div id={`${id}-results`} role="listbox" aria-label="Results" className="search-results">
-          {!items && query && <p className="search-empty">Loading…</p>}
-          {items && query.trim() && flat.length === 0 && (
+          {(!items || !lib) && query && <p className="search-empty">Loading…</p>}
+          {items && lib && query.trim() && flat.length === 0 && (
             <p className="search-empty">Nothing matches “{query}”. Try fewer letters, or search in English.</p>
           )}
           {!query.trim() && (
@@ -136,8 +144,8 @@ export function SearchPalette() {
             </p>
           )}
           {groups.map((g, gi) => (
-            <div key={g.kind} role="group" aria-label={KIND_TITLES[g.kind]}>
-              <p className="search-group">{KIND_TITLES[g.kind]}</p>
+            <div key={g.kind} role="group" aria-label={lib?.KIND_TITLES[g.kind]}>
+              <p className="search-group">{lib?.KIND_TITLES[g.kind]}</p>
               {g.items.map((item, ii) => {
                 const i = offsets[gi] + ii;
                 return (

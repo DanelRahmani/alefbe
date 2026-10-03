@@ -5,6 +5,8 @@
 import type { Form } from "./persian/letters";
 import { WAYPOINTS } from "./trace-data";
 import type { ControlPoint, Pt } from "./trace-path";
+import { migrateTraceV1 } from "./store-defaults";
+export { migrateTraceV1 };
 
 export type TraceLevel = "guided" | "outline" | "freehand";
 export const TRACE_LEVELS: { id: TraceLevel; label: string; hint: string }[] = [
@@ -64,16 +66,6 @@ export function glyphLayout(size: number) {
 /** Best scores are kept per letter, form and level: "ب:initial:outline". */
 export const traceKey = (ch: string, form: Form, level: TraceLevel) => `${ch}:${form}:${level}`;
 
-/** Version 1 kept one best score per form; those were guided traces. */
-export function migrateTraceV1(old: unknown): Record<string, number> {
-  const out: Record<string, number> = {};
-  if (!old || typeof old !== "object") return out;
-  for (const [k, v] of Object.entries(old as Record<string, unknown>)) {
-    if (typeof v !== "number") continue;
-    out[k.split(":").length === 2 ? `${k}:guided` : k] = v;
-  }
-  return out;
-}
 
 /** The hardest level at which any form of a letter has been passed. */
 export function letterMastery(best: Record<string, number>, ch: string): TraceLevel | null {

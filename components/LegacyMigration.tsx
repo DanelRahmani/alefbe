@@ -1,10 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { applyLegacy } from "@/lib/backup";
-import { legacyTheme, parseLegacyStore } from "@/lib/legacy";
-import { SETTINGS_KEY } from "@/lib/prepaint";
-import { activityStore, srsStore, traceStore, updateSettings } from "@/lib/stores";
+import { activityStore, srsStore, traceStore } from "@/lib/stores";
 
 const read = (k: string) => {
   try {
@@ -14,31 +11,37 @@ const read = (k: string) => {
   }
 };
 
+const refresh = () => {
+  srsStore.refresh();
+  traceStore.refresh();
+  activityStore.refresh();
+};
+
 /**
  * Once per browser, on alefbe.study: fold the old app's data (key `alefbe_v1`)
  * into the new stores — learned letters open trainer groups, passed traces and
  * quiz totals carry over — and keep its light or dark theme. The old keys are
- * left untouched.
+ * left untouched. The migration code (components/legacy-run.ts) is fetched only
+ * when there is an old key to read.
  */
 export function LegacyMigration() {
   useEffect(() => {
     if (activityStore.get().legacy) return;
-    const old = parseLegacyStore(read("alefbe_v1"));
-    try {
-      if (old) {
-        if (srsStore.get().legacyChecked) old.learned = [];
-        applyLegacy(old, read, (k, v) => window.localStorage.setItem(k, v));
-      } else {
+    if (read("alefbe_v1") === null && read("alefbe_theme") === null) {
+      try {
         activityStore.set((a) => ({ ...a, legacy: true }));
+      } catch {
+        // Storage blocked: nothing to migrate.
       }
-      const theme = legacyTheme(read("alefbe_theme"));
-      if (theme && read(SETTINGS_KEY) === null) updateSettings({ theme });
-    } catch {
-      // Storage blocked: nothing to migrate.
+      refresh();
+      return;
     }
-    srsStore.refresh();
-    traceStore.refresh();
-    activityStore.refresh();
+    import("./legacy-run")
+      .then((m) => m.runLegacy(read))
+      .catch(() => {
+        // Storage blocked: nothing to migrate.
+      })
+      .finally(refresh);
   }, []);
   return null;
 }

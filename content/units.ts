@@ -154,6 +154,4 @@ export function findLesson(unitSlug: string, lessonSlug: string): LessonRef | un
   return ALL_LESSONS.find((r) => r.unit.slug === unitSlug && r.lesson.slug === lessonSlug);
 }
 
-const PERSIAN_DIGITS = "۰۱۲۳۴۵۶۷۸۹";
-/** "6.1" → "۶٫۱" (Persian digits and decimal separator). */
-export const faNumber = (n: string) => n.replace(/\d/g, (d) => PERSIAN_DIGITS[+d]).replace(".", "٫");
+export { faNumber } from "@/lib/persian/chars";

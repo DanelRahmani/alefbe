@@ -1,3 +1,5 @@
+import { emptyPlacementData } from "./store-defaults";
+export { emptyPlacementData };
 // The placement check: a fixed set of lesson-quiz questions, grouped in bands
 // of units, that suggests where a learner who already knows some Persian
 // should start. Pure.
@@ -98,4 +100,3 @@ export interface PlacementData {
   last?: { at: number; answers: PlacementAnswers };
 }
 
-export const emptyPlacementData = (): PlacementData => ({});

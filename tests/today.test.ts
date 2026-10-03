@@ -4,7 +4,8 @@ import { emptyActivity, record } from "@/lib/activity";
 import { DRILL_GROUPS, drillCandidates } from "@/lib/drill";
 import { normalizeFa } from "@/lib/persian/normalize";
 import { DAY, emptyDeck, schedule, type DeckState } from "@/lib/srs";
-import { goalProgress, iranianDate, pickForDay, reviewHref, reviewsDue } from "@/lib/today";
+import { reviewsDue } from "@/lib/due-data";
+import { goalProgress, iranianDate, pickForDay, reviewHref } from "@/lib/today";
 import { emptyVerbsData, verbGroups } from "@/lib/verb-drill";
 import { emptyVocabData } from "@/lib/vocab";
 

@@ -364,6 +364,13 @@ Phase 9 is polish (owner's brief: `docs/PROMPT-phase-9.md`). Order: 9a design au
   - The service worker serves the previous build on localhost: the capture scripts unregister it first; do the same before checking a fresh build by hand.
   - CSS 79,063 bytes (16,147 gzipped), from 79,064 (16,339). Lighthouse accessibility 100 on `/`, 4.2, `/practice`, `/verbs`, `/progress`; performance there 74–85 (was 47–56), not yet re-measured carefully (9d).
 - **9c** (2026-10-03): moments of craft, CSS only, all still under reduced motion. The seal settles (no overshoot); each unit's kicker has a girih band, one star per lesson, lit as lessons are finished (`PathBrowser`, `.girih-band`); a thread joins finished units on the path (`.unit-done`); the goal ring glows once when the goal is met (`.goal-met`); a right answer settles in (`.feedback-right`). The hover light on the hero was skipped.
+- **9d** (2026-10-03): performance; details and the table in `docs/DESIGN-PASS.md` ("9d").
+  - Lighthouse medians of three (mobile, `alefbe-static`): `/` 51 → 83, lesson 4.2 56 → 88, `/practice` 56 → 91, `/practice/review` 47 → 92; accessibility 100 on all four; CLS ≤ 0.017. LCP 3.4–4.0 s: the floor here is 3.1 s (`/offline`), as headless Chrome paints late and the framework is about 125 KB gzipped.
+  - Large client data is prerendered JSON under `/data/` (`app/data/*/route.ts` from `content/static-data.ts`; URLs in `lib/data-urls.ts`), fetched when idle by `useStaticData` (`lib/static-data.ts`). Trainers with big card lists render through `components/practice/Loaders.tsx`. New client components that need a big list should do the same rather than take it as a prop.
+  - Light modules on purpose: `lib/store-defaults.ts` (the stores' defaults; `lib/stores.ts` runs on every page and must not import trainer modules), `lib/due.ts` (due counts from `/data/due.json`; `lib/due-data.ts` builds it and holds the full `reviewsDue`; `tests/due.test.ts` checks they agree). `lib/today.ts` no longer imports trainer code.
+  - Fonts: Amiri loads only for letters, tracing and the Naskh setting; decorative Persian on the home page and path is `.display-fa` (Markazi). Lazy: the legacy migration (`components/legacy-run.ts`), the search code, the display controls.
+  - The path: lesson lists use `content-visibility: auto` with a per-list placeholder (12rem a lesson, never too small: a smaller one made axe see the last unit's rows over the footer); titles and summaries are rendered on the server and passed as elements.
+  - `scripts/lighthouse.sh` runs each page three times and prints the median.
 
 ## Practice extras status
 

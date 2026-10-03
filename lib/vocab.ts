@@ -18,7 +18,9 @@
 import { checkFa, type Verdict } from "./answers";
 import type { DictEntry } from "./dictionary";
 import { normalizeFa } from "./persian/normalize";
-import { deckStats, emptyDeck, type DeckState, type DeckStats } from "./srs";
+import { deckStats, type DeckState, type DeckStats } from "./srs";
+import { emptyVocabData } from "./store-defaults";
+export { emptyVocabData };
 
 export interface VocabCard {
   /** The dictionary entry's id: the marked written spelling. */
@@ -44,7 +46,6 @@ export interface VocabData {
   sound: boolean;
 }
 
-export const emptyVocabData = (): VocabData => ({ deck: emptyDeck(), sound: false });
 
 /** "/learn/past/simple-past" → "past/simple-past" */
 const lessonKey = (href: string) => href.replace(/^\/learn\//, "");
@@ -150,8 +151,4 @@ export const vocabStats = (cards: readonly Pick<VocabCard, "id" | "lessons">[], 
  * list. `known` holds the dictionary's ids, so a card whose word has left the
  * course is not counted.
  */
-export function vocabDue(data: VocabData, known: ReadonlySet<string> | null, now: number): number {
-  let due = 0;
-  for (const [id, c] of Object.entries(data.deck.cards)) if (c.due <= now && (!known || known.has(id))) due++;
-  return due;
-}
+export { vocabDue } from "./due";

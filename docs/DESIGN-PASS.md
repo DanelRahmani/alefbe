@@ -161,6 +161,27 @@ All CSS and markup, no new dependencies; each ends in its final state at once un
 - **A right answer settles:** the feedback fades in and rises 4 px (220 ms); a wrong or near one appears without motion.
 - Skipped, as planned: the hero catching light on hover.
 
+### 9d (2026-10-03)
+
+Lighthouse, mobile, simulated throttling, static build; the median of three runs (`scripts/lighthouse.sh`, `RUNS=3` by default):
+
+| Page | 9a | 9d | LCP 9a → 9d | TBT 9d | CLS 9d | Accessibility |
+|---|---|---|---|---|---|---|
+| `/` | 51 | 83 | 5.9 → 4.0 s | 240 ms | 0 | 100 |
+| Lesson 4.2 | 56 | 88 | 5.5 → 3.9 s | 120 ms | 0.001 | 100 |
+| `/practice` | 56 | 91 | 5.4 → 3.5 s | 40 ms | 0 | 100 |
+| `/practice/review` | 47 | 92 | 6.1 → 3.4 s | 60 ms | 0.017 | 100 |
+
+What the measurements showed, and what was done:
+
+- **Why LCP stays above 2.5 s here.** The smallest page, `/offline` (the header, a heading, a paragraph), scores 94 with LCP 3.1 s: that is the floor of this setup. Headless Chrome paints late (0.5–1.5 s even without scripts), and Lighthouse's simulation then counts every byte and script that arrived before that paint. Stripping all scripts from `/practice` gave LCP 2.1 s; so the remaining LCP is the framework (about 125 KB gzipped of React and Next on every page) and the fonts, not anything a page adds. A returning learner's layout shift was measured separately (Lighthouse has empty storage): 0.005 on the home page.
+- **Amiri off every page.** The header's Display glyph and the brand mark asked for Amiri on every page (about 228 KB); now they use Vazirmatn. The home page's decorative Persian (the hero, the next-lesson mark, unit titles, the seal's «تمام») is set in Markazi, the display face drawn for Persian (40 KB for its Arabic, against Amiri's 200 KB). Amiri stays for letters, tracing and the Naskh setting, and loads only there.
+- **Data out of the HTML.** Big lists the client needs are prerendered as static JSON under `/data/` (`app/data/*/route.ts`, `content/static-data.ts`) and fetched when the browser is idle after load (`lib/static-data.ts`): the review queue's cards, each trainer's cards, the lesson quizzes for the notebook, the practice hub's counts, the words for the word of the day, and what due counts need. HTML, gzipped: `/practice/review` 105 → 6 KB, `/practice/cloze` 43 → 6 KB, `/vocab` 25 → 6 KB, `/practice` 24 → 7 KB. The service worker keeps a copy, as for the search index; a trainer that can't load its cards says so.
+- **Less JavaScript on every page.** `lib/stores.ts` imported its defaults from the trainers' modules and so brought the verb tables, the conjugation engine, the card logic and the stroke data into every page; the defaults now live in `lib/store-defaults.ts`. The due counts on the home page and the practice hub run on `lib/due.ts` with prebuilt data (`/data/due.json`, built by `lib/due-data.ts`), not on the trainers' code; tests check that both give the same answers. The old app's migration is fetched only when an old key exists; the search code when the palette first opens; the display controls when the panel is about to open. App JavaScript on the home page and the practice hub fell by about 10 KB gzipped each.
+- **The path.** Each unit's lesson list is drawn only near the screen (`content-visibility: auto`, with a placeholder height per list that is never too small, so nothing below is overlapped while it waits); style and layout on the home page fell from about 940 to 600 ms. The path's titles and summaries arrive rendered from the server, so hydration doesn't parse their markup again (blocking time about halved), and the props carry only what can't be derived.
+- **Glass:** blur only on the header and tab bar (9b). The hero pane is a solid plate.
+- Not reached: performance 90 on `/` (83) and on a lesson (88), and LCP under 2.5 s anywhere (see the floor above). What would go further: rendering the path as server HTML with small client islands (no hydration of the list at all), and a lighter framework footprint, which is out of this app's hands.
+
 ## Decisions for the owner
 
 The owner said to continue without choosing, so each is taken as recommended (yes to all four; the brand mark in Vazirmatn, whose Arabic subset is already preloaded). Any of them can be reverted on review.

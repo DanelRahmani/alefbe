@@ -74,5 +74,8 @@ export const isLetter = (ch: string) => LETTER_SET.has(ch);
 export const isMark = (ch: string) => MARKS.has(ch);
 export const isPersianDigit = (ch: string) => PERSIAN_DIGITS.includes(ch);
 
+/** "6.1" → "۶٫۱" (Persian digits and decimal separator). */
+export const faNumber = (n: string) => n.replace(/\d/g, (d) => PERSIAN_DIGITS[+d]).replace(".", "٫");
+
 /** Any character from the Arabic-script blocks (letters, marks, digits, punctuation). */
 export const ARABIC_SCRIPT = /[؀-ۿݐ-ݿﭐ-﷿ﹰ-﻿]/;

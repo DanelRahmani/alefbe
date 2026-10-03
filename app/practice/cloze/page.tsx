@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ClozeTrainer } from "@/components/cloze/ClozeTrainer";
-import { CLOZE_CARDS } from "@/content/cloze";
+import { ClozeTrainerLoader } from "@/components/practice/Loaders";
 
 export const metadata: Metadata = {
   title: "Cloze practice",
@@ -23,7 +22,7 @@ export default function ClozePage() {
         too. A lesson&apos;s lines join the deck when you mark the lesson done.
       </p>
       <div className="mt-6">
-        <ClozeTrainer cards={CLOZE_CARDS} />
+        <ClozeTrainerLoader />
       </div>
     </>
   );

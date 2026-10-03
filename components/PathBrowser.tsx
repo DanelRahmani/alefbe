@@ -1,42 +1,44 @@
 "use client";
 
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { KIND_LABELS, type LessonKind } from "@/content/types";
-import { DRILL_GROUPS } from "@/lib/drill";
+import { DRILL_GROUPS } from "@/lib/persian/letters";
+import { faNumber } from "@/lib/persian/chars";
 import { deckStats, unlockedIds } from "@/lib/srs";
 import { useStore } from "@/lib/storage";
 import { deckOf, lessonsStore, pathFilterStore, placementStore, progressStore, srsStore } from "@/lib/stores";
 import { useMinuteClock } from "./drill/useDrillClock";
-import { FaText } from "./FaText";
-import { Rich } from "./Rich";
 import { Seal } from "./Seal";
-import { TodayCard, type DayWord } from "./TodayCard";
+import { TodayCard } from "./TodayCard";
 
+// The text arrives rendered (the page renders Rich and FaText on the server),
+// so hydrating the path doesn't parse every title's markup again in the
+// browser. The link and the Persian number are derived here.
 export interface PathLesson {
   key: string;
-  href: string;
   number: string;
-  numberFa: string;
-  title: string;
-  summary: string;
+  title: ReactNode;
+  summary: ReactNode;
+  /** A short Persian mark for the lesson (its key word), rendered. */
+  mark: ReactNode;
   kinds: LessonKind[];
-  /** A short Persian mark for the lesson (its key word). */
-  mark: string;
-  unitTitle: string;
 }
+
+const lessonHref = (key: string) => `/learn/${key}`;
 
 export interface PathUnit {
   slug: string;
   number: number;
   numberFa: string;
-  title: string;
-  titleFa: string;
-  description: string;
+  title: ReactNode;
+  titleFa: ReactNode;
+  description: ReactNode;
   lessons: PathLesson[];
 }
 
 function NextCard({ units, progress, last }: { units: PathUnit[]; progress: Record<string, true>; last?: string }) {
-  const all = units.flatMap((u) => u.lessons);
+  const all = units.flatMap((u) => u.lessons.map((l) => ({ ...l, unitTitle: u.title })));
   if (!all.length) return null;
   const started = all.some((l) => progress[l.key]);
   // The lesson opened last, if it isn't finished; otherwise the first unfinished one.
@@ -62,19 +64,19 @@ function NextCard({ units, progress, last }: { units: PathUnit[]; progress: Reco
   const target = next;
   const label = resume ? "Continue" : started ? "Next lesson" : "First lesson";
   return (
-    <Link href={target.href} className="panel card-link next-card">
-      <span className="next-mark naskh" aria-hidden="true">
-        <FaText text={target.mark} translit="none" force="none" />
+    <Link href={lessonHref(target.key)} className="panel card-link next-card">
+      <span className="next-mark display-fa" aria-hidden="true">
+        {target.mark}
       </span>
       <span className="next-text">
         <span className="ui eyebrow">
-          {label} · {target.number} · <Rich text={target.unitTitle} translit={false} />
+          {label} · {target.number} · {target.unitTitle}
         </span>
         <span className="next-title has-fa">
-          <Rich text={target.title} translit={false} />
+          {target.title}
         </span>
         <span className="next-summary">
-          <Rich text={target.summary} translit={false} />
+          {target.summary}
         </span>
       </span>
       <span className="next-arrow" aria-hidden="true">
@@ -85,7 +87,7 @@ function NextCard({ units, progress, last }: { units: PathUnit[]; progress: Reco
 }
 
 /** The path, with the next-lesson card and the Today card on top. */
-export function PathBrowser({ units, words }: { units: PathUnit[]; words: DayWord[] }) {
+export function PathBrowser({ units }: { units: PathUnit[] }) {
   const filter = useStore(pathFilterStore);
   const progress = useStore(progressStore);
   const lessons = useStore(lessonsStore);
@@ -125,7 +127,7 @@ export function PathBrowser({ units, words }: { units: PathUnit[]; words: DayWor
           to find where to start.
         </p>
       )}
-      <TodayCard words={words} />
+      <TodayCard />
 
       <div className="ui quick-links">
         <Link href="/practice/drill/sound" className="pill-link">
@@ -135,13 +137,13 @@ export function PathBrowser({ units, words }: { units: PathUnit[]; words: DayWor
           Letter trainer <span aria-hidden="true">→</span>
         </Link>
         <Link href="/practice/trace" className="pill-link">
-          <span className="pill-count pill-count-quiet naskh" aria-hidden="true">
+          <span className="pill-count pill-count-quiet display-fa" aria-hidden="true">
             ب
           </span>
           Trace the letters <span aria-hidden="true">→</span>
         </Link>
         <Link href="/grammar" className="pill-link">
-          <span className="pill-count pill-count-quiet naskh" aria-hidden="true">
+          <span className="pill-count pill-count-quiet display-fa" aria-hidden="true">
             د
           </span>
           Grammar at a glance <span aria-hidden="true">→</span>
@@ -215,35 +217,40 @@ export function PathBrowser({ units, words }: { units: PathUnit[]; words: DayWor
                       )}
                     </p>
                     <h3 className="unit-title">
-                      <Rich text={u.title} translit={false} />
+                      {u.title}
                     </h3>
                     <p className="unit-desc has-fa">
-                      <Rich text={u.description} translit={false} />
+                      {u.description}
                     </p>
                   </div>
-                  <p className="unit-fa naskh" aria-hidden="true">
-                    <FaText text={u.titleFa} translit="none" force="none" />
+                  <p className="unit-fa display-fa" aria-hidden="true">
+                    {u.titleFa}
                   </p>
                 </header>
                 {empty ? (
                   <p className="ui coming-soon">Lessons in preparation</p>
                 ) : (
-                  <ol className="lessons">
+                  <ol
+                    className="lessons"
+                    // Until it is drawn, a generous height per lesson: never less than the real one,
+                    // so nothing below it is ever overlapped (content-visibility, components.css).
+                    style={{ containIntrinsicBlockSize: `auto ${u.lessons.length * 12}rem` }}
+                  >
                     {u.lessons.map((l) => (
                       <li key={l.key}>
-                        <Link href={l.href} className="lesson-row">
+                        <Link href={lessonHref(l.key)} className="lesson-row">
                           <span className="lesson-row-num ui">
                             <span>{l.number}</span>
                             <span className="fa" lang="fa">
-                              {l.numberFa}
+                              {faNumber(l.number)}
                             </span>
                           </span>
                           <span className="lesson-row-text">
                             <span className="lesson-row-title has-fa">
-                              <Rich text={l.title} translit={false} />
+                              {l.title}
                             </span>
                             <span className="lesson-row-summary">
-                              <Rich text={l.summary} translit={false} />
+                              {l.summary}
                             </span>
                             {lessons.quiz[l.key] && (
                               <span className="ui lesson-row-quiz">

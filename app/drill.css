@@ -351,3 +351,9 @@
   font-size: var(--fs-xs);
   color: var(--muted);
 }
+
+/* A trainer whose cards are still on the way (components/practice/Loaders.tsx). */
+.loading-card {
+  min-height: 12rem;
+  color: var(--muted);
+}

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { VocabTrainer } from "@/components/vocab/VocabTrainer";
-import { VOCAB_CARDS } from "@/content/vocab";
+import { VocabTrainerLoader } from "@/components/practice/Loaders";
 
 export const metadata: Metadata = {
   title: "Vocabulary deck",
@@ -27,7 +26,7 @@ export default function VocabPage() {
         .
       </p>
       <div className="mt-6">
-        <VocabTrainer cards={VOCAB_CARDS} />
+        <VocabTrainerLoader />
       </div>
     </>
   );

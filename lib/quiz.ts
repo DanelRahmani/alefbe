@@ -4,6 +4,8 @@
 import { checkTranslit, type Verdict } from "./answers";
 import { DRILL_GROUPS, LETTERS, SAME_SOUND, formsOf, letterByChar, type Form, type Letter } from "./persian/letters";
 import { normalizeFa } from "./persian/normalize";
+import { DEFAULT_QUIZ } from "./store-defaults";
+export { DEFAULT_QUIZ };
 
 export type QuizType = "letter-name" | "name-letter" | "letter-sound" | "sound-letter" | "form-letter" | "flashcards";
 export type QuizStyle = "choice" | "typed";
@@ -16,7 +18,6 @@ export interface QuizSetup {
   count: number;
 }
 
-export const DEFAULT_QUIZ: QuizSetup = { type: "letter-name", style: "choice", scope: "all", count: 10 };
 export const QUIZ_COUNTS = [10, 16, 32];
 
 export interface QuizTypeInfo {

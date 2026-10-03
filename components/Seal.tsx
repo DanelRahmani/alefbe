@@ -20,7 +20,7 @@ export function Seal({ size = 72, stamp = false, label = "Finished" }: { size?: 
           textAnchor="middle"
           direction="rtl"
           fill="currentColor"
-          style={{ fontFamily: "var(--font-amiri), serif", fontSize: "36px", fontWeight: 700 }}
+          style={{ fontFamily: "var(--font-markazi), serif", fontSize: "36px", fontWeight: 700 }}
         >
           تمام
         </text>

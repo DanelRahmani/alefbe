@@ -6,9 +6,12 @@ import { modeInfo } from "@/lib/drill";
 import { streak } from "@/lib/activity";
 import { useStore } from "@/lib/storage";
 import { activityStore, clozeStore, convertStore, mistakesStore, srsStore, todayStore, verbsStore, vocabStore } from "@/lib/stores";
-import { GOALS, goalProgress, iranianDate, pickForDay, reviewHref, reviewsDue } from "@/lib/today";
+import { reviewsDueFrom, type DueData } from "@/lib/due";
+import { GOALS, goalProgress, iranianDate, pickForDay, reviewHref } from "@/lib/today";
 import { useMinuteClock } from "./drill/useDrillClock";
 import { FaText } from "./FaText";
+import { DATA_URL } from "@/lib/data-urls";
+import { useStaticData } from "@/lib/static-data";
 import { StarButton } from "./StarButton";
 
 export interface DayWord {
@@ -47,7 +50,11 @@ function GoalRing({ done, goal, fraction, met }: { done: number; goal: number; f
  * Everything here depends on the clock and the browser's stores, so the
  * static HTML renders the frame and the numbers arrive on hydration.
  */
-export function TodayCard({ words }: { words: DayWord[] }) {
+export function TodayCard() {
+  // The dictionary's words, fetched after the first paint (they used to be props in the page's HTML).
+  const words = useStaticData<DayWord[]>(DATA_URL.words).data;
+  // What counting due cards needs (lib/due.ts), also fetched: not the trainers' code.
+  const dueData = useStaticData<DueData>(DATA_URL.due).data;
   const now = useMinuteClock();
   const srs = useStore(srsStore);
   const verbs = useStore(verbsStore);
@@ -55,7 +62,7 @@ export function TodayCard({ words }: { words: DayWord[] }) {
   const cloze = useStore(clozeStore);
   const convert = useStore(convertStore);
   // The words still in the course: a vocabulary card whose word was removed is not counted.
-  const known = useMemo(() => new Set(words.map((w) => w.id)), [words]);
+  const known = useMemo(() => new Set((words ?? []).map((w) => w.id)), [words]);
   const activity = useStore(activityStore);
   const mistakes = Object.keys(useStore(mistakesStore)).length;
   const { goal } = useStore(todayStore);
@@ -64,10 +71,10 @@ export function TodayCard({ words }: { words: DayWord[] }) {
   const ready = now > 0;
   const date = ready ? new Date(now) : null;
   const iran = date ? iranianDate(date) : null;
-  const due = ready ? reviewsDue(srs.decks, now, verbs, { data: vocab, known }, { cloze, convert }) : null;
+  const due = ready && words && dueData ? reviewsDueFrom(dueData, srs.decks, now, verbs, { data: vocab, known }, { cloze, convert }) : null;
   const progress = date ? goalProgress(activity, date, goal) : { done: 0, goal, met: false, fraction: 0 };
   const days = date ? streak(activity, date) : 0;
-  const word = date ? pickForDay(words, date) : undefined;
+  const word = date && words ? pickForDay(words, date) : undefined;
 
   return (
     <section className="panel today" aria-labelledby={`${id}-title`}>

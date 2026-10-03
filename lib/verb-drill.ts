@@ -27,6 +27,8 @@ import {
 } from "./conjugate";
 import { normalizeFa } from "./persian/normalize";
 import { deckStats, emptyDeck, unlockedIds, type DeckState } from "./srs";
+import { emptyVerbsData } from "./store-defaults";
+export { emptyVerbsData };
 
 /** Which forms a review may ask for. */
 export type StyleChoice = "both" | Style;
@@ -41,7 +43,6 @@ export interface VerbsData {
   opened?: Tense[];
 }
 
-export const emptyVerbsData = (): VerbsData => ({ decks: {}, ask: "both" });
 
 export const GROUP_SIZE = 5;
 

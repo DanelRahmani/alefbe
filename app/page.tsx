@@ -1,38 +1,29 @@
 import { LegacyHash } from "@/components/LegacyHash";
 import { PathBrowser, type PathUnit } from "@/components/PathBrowser";
 import { FaText } from "@/components/FaText";
-import { OROSI_PATTERN } from "@/components/Orosi";
-import type { DayWord } from "@/components/TodayCard";
-import { DICTIONARY } from "@/content/dictionary";
-import { UNITS, faNumber } from "@/content/units";
+import { Rich } from "@/components/Rich";
 import { splitScript } from "@/lib/markup";
-
-/** A lesson's mark: the first Persian run in its title, else its number in Persian digits. */
-const markOf = (title: string, fallback: string) => splitScript(title).find((r) => r.fa)?.s ?? fallback;
+import { OROSI_PATTERN } from "@/components/Orosi";
+import { UNITS, faNumber } from "@/content/units";
 
 // Only what the path needs goes to the browser, not whole lessons.
 const units: PathUnit[] = UNITS.map((u, i) => ({
   slug: u.slug,
   number: i,
   numberFa: faNumber(String(i)),
-  title: u.title,
-  titleFa: u.titleFa,
-  description: u.description,
+  title: <Rich text={u.title} translit={false} />,
+  titleFa: <FaText text={u.titleFa} translit="none" force="none" />,
+  description: <Rich text={u.description} translit={false} />,
   lessons: u.lessons.map((l, j) => ({
     key: `${u.slug}/${l.slug}`,
-    href: `/learn/${u.slug}/${l.slug}`,
     number: `${i}.${j + 1}`,
-    numberFa: faNumber(`${i}.${j + 1}`),
-    title: l.title,
-    summary: l.summary,
+    title: <Rich text={l.title} translit={false} />,
+    summary: <Rich text={l.summary} translit={false} />,
+    mark: <FaText text={splitScript(l.title).find((r) => r.fa)?.s ?? faNumber(`${i}.${j + 1}`)} translit="none" force="none" />,
     kinds: l.kinds,
-    mark: markOf(l.title, faNumber(`${i}.${j + 1}`)),
-    unitTitle: u.title,
   })),
 }));
 
-// The word of the day is picked in the browser, by its date, from these.
-const words: DayWord[] = DICTIONARY.map((e) => ({ fa: e.fa, en: e.en, id: e.id }));
 
 export default function Home() {
   return (
@@ -46,7 +37,7 @@ export default function Home() {
           <svg className="hero-frame" viewBox="0 0 100 125" preserveAspectRatio="none" focusable="false">
             <path d="M0 125V52C0 26 30 12 50 0c20 12 50 26 50 52v73z" vectorEffect="non-scaling-stroke" />
           </svg>
-          <p className="hero-pane naskh">
+          <p className="hero-pane display-fa">
             <FaText text="اَلِفْبا" translit="none" />
           </p>
         </div>
@@ -59,7 +50,7 @@ export default function Home() {
           </p>
         </div>
       </section>
-      <PathBrowser units={units} words={words} />
+      <PathBrowser units={units} />
       <LegacyHash />
     </>
   );
