@@ -4,10 +4,16 @@ import { useStore } from "@/lib/storage";
 import { starKey, toggleStar, type StarredItem } from "@/lib/starred";
 import { starredStore } from "@/lib/stores";
 
+type StarProps = { item: Omit<StarredItem, "at">; className?: string };
+
 /** Star or unstar a word or example; starred items collect under "My words" in the dictionary. */
-export function StarButton({ item, className = "tool-btn" }: { item: Omit<StarredItem, "at">; className?: string }) {
+export function StarButton(props: StarProps) {
   const starred = useStore(starredStore);
-  const on = Boolean(starred[starKey(item.fa)]);
+  return <StarToggle {...props} on={Boolean(starred[starKey(props.item.fa)])} />;
+}
+
+/** The star button for a list that reads the starred items once and passes each one its state. */
+export function StarToggle({ item, on, className = "tool-btn" }: StarProps & { on: boolean }) {
   return (
     <button
       type="button"

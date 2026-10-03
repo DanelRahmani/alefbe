@@ -180,7 +180,7 @@ What the measurements showed, and what was done:
 - **Less JavaScript on every page.** `lib/stores.ts` imported its defaults from the trainers' modules and so brought the verb tables, the conjugation engine, the card logic and the stroke data into every page; the defaults now live in `lib/store-defaults.ts`. The due counts on the home page and the practice hub run on `lib/due.ts` with prebuilt data (`/data/due.json`, built by `lib/due-data.ts`), not on the trainers' code; tests check that both give the same answers. The old app's migration is fetched only when an old key exists; the search code when the palette first opens; the display controls when the panel is about to open. App JavaScript on the home page and the practice hub fell by about 10 KB gzipped each.
 - **The path.** Each unit's lesson list is drawn only near the screen (`content-visibility: auto`, with a placeholder height per list that is never too small, so nothing below is overlapped while it waits); style and layout on the home page fell from about 940 to 600 ms. The path's titles and summaries arrive rendered from the server, so hydration doesn't parse their markup again (blocking time about halved), and the props carry only what can't be derived.
 - **Glass:** blur only on the header and tab bar (9b). The hero pane is a solid plate.
-- Not reached: performance 90 on `/` (83) and on a lesson (88), and LCP under 2.5 s anywhere (see the floor above). What would go further: rendering the path as server HTML with small client islands (no hydration of the list at all), and a lighter framework footprint, which is out of this app's hands.
+- Not reached: performance 90 on `/` (83) and on a lesson (88), and LCP under 2.5 s anywhere (see the floor above). Server HTML with client islands for the path was tried afterwards and ruled out (see "After Phase 9" below).
 
 ### 9e (2026-10-03)
 
@@ -195,6 +195,24 @@ What the measurements showed, and what was done:
 - **Found on the way:** the footer links were 23.8 px tall (under the 24 px target size) and, on the home page, reported as covered by the skipped lesson lists while Lighthouse measured them; both fixed (9d). Tailwind scanned the docs, tests and scripts for class names and generated unused utilities from their words; they are excluded now (`@source not` in `globals.css`).
 - **Bidi in brackets:** no rendering fault (see finding 3); `Rich` needed no change.
 - **CSS at the end of Phase 9:** 79,860 bytes, 16,339 gzipped, from 79,064 and 16,339. 9b alone ended a byte smaller; the craft rules of 9c and the performance rules of 9d (content-visibility, the display face, the loading card, the target sizes) add about 0.8 KB raw and nothing gzipped.
+
+### After Phase 9: the home page and the dictionary (2026-10-03)
+
+The owner asked to go on toward 90 on the home page and lessons, and to look at the dictionary. OneDrive kept the CPU at 70–100 % throughout, so absolute scores were lower than in 9d. Each change was therefore measured as an interleaved A/B: two builds served side by side (ports 3101 and 3102), Lighthouse alternating between them, four to six runs each. Two copies of the same build differed by about 3 points, which is the noise.
+
+- **The home page: stopped, with evidence.** In App Router, hydration covers server-rendered output too, so "server HTML with client islands" would not remove the path's hydration. Two bounding tests:
+  - with plain `<a>` in place of `<Link>` on the 92 lesson rows, the score went down (59 against 69), so `Link` stays;
+  - with the whole lesson list removed (100 KB less HTML), the score rose by only 3 (79 against 76), with the same blocking time and LCP.
+
+  So no rewrite of the path can reach 90. A trace explains why. All files arrive by 0.33 s and the page is laid out at 0.3 s, then the main thread idles until a paint is reported at 1.6 s. The gap is in Chrome's GPU process presenting the first frame of a long page; a one-line page paints at 0.09 s. Lighthouse's simulation then charges all the JavaScript loaded before that paint to LCP (4.3 s simulated, against 1.25 s for FCP). That is this machine's headless Chrome, not the page. PageSpeed Insights (Google's servers) would say more, but its keyless quota was used up.
+- **The dictionary** (604 entries, about 1 MB of HTML, 80 KB gzipped) went from about 55 to about 59. Its blocking time fell from 4.0–5.8 s to 1.7 s:
+  - **Lazy layout:** each entry is drawn only near the screen (`content-visibility: auto`, with a placeholder of one entry's height, 11rem at phone width and 7rem from 640 px, and the real height remembered once drawn). Style and layout fell from 6.6 s to 1.0 s, and rendering from 1.0 s to 0.2 s. Paint containment would clip the focus rings of the star and the letter links, which sit 3 px from the entry's edge, so `overflow-clip-margin: 0.5rem` lets them show; this was checked on screen at both edges.
+  - **Plain links:** the list's 3,095 links (2,476 letters, 619 lessons) are plain anchors. One click listener on the list (`lib/client-link.ts`, with tests) gives them the client-side navigation a `Link` would, and leaves modified clicks, other targets and downloads to the browser. Script evaluation fell from 5.0 s to 3.2 s. Viewport prefetching of those pages is gone; a click fetches the page then, as it would for an unprefetched link.
+  - **One subscription:** the dictionary already read the starred items for its "My words" count, so it now passes each star its state (`StarToggle`) instead of 604 stars subscribing to the store each. Blocking time fell from 2.2 s to 1.7 s.
+
+  Checked on the static build at 375 px: a letter link navigates in place (same document, scrolled to the top), Back returns, stars toggle and the count follows, and there is no horizontal scroll. Lighthouse accessibility is 100.
+
+  What's left is hydrating about 15,000 DOM nodes for 604 entries. Going further would mean drawing fewer entries at first, which changes behaviour (find in page, the full list without JavaScript), so it was not done.
 
 ## Decisions for the owner
 

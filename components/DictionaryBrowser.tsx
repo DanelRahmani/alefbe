@@ -1,15 +1,17 @@
 "use client";
 
-import Link from "next/link";
-import { useDeferredValue, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useDeferredValue, useState, type MouseEvent } from "react";
 import { TOPIC_LABELS, type Topic } from "@/content/topics";
+import { clientHref } from "@/lib/client-link";
 import { matches, rank, type DictEntry } from "@/lib/dictionary";
 import { LETTERS, letterByChar } from "@/lib/persian/letters";
 import { useStore } from "@/lib/storage";
+import { starKey } from "@/lib/starred";
 import { starredStore } from "@/lib/stores";
 import { FaText } from "./FaText";
 import { MyWords } from "./MyWords";
-import { StarButton } from "./StarButton";
+import { StarToggle } from "./StarButton";
 
 export function DictionaryBrowser({
   entries,
@@ -23,12 +25,23 @@ export function DictionaryBrowser({
   initialView?: "all" | "mine";
 }) {
   const [view, setView] = useState(initialView);
-  const starredCount = Object.keys(useStore(starredStore)).length;
+  const starred = useStore(starredStore);
+  const starredCount = Object.keys(starred).length;
   const [query, setQuery] = useState(initialQuery);
   const [topic, setTopic] = useState<Topic | "all">("all");
   const [unit, setUnit] = useState("all");
   const [initial, setInitial] = useState<string | null>(null);
   const q = useDeferredValue(query);
+  const router = useRouter();
+
+  // The list's links (about 3,000) are plain anchors; this one listener gives
+  // them the client-side navigation a Link would, without hydrating each one.
+  const follow = (e: MouseEvent) => {
+    const href = clientHref(e, (e.target as Element).closest("a"), location.origin);
+    if (href === null) return;
+    e.preventDefault();
+    router.push(href);
+  };
 
   const topics = (Object.keys(TOPIC_LABELS) as Topic[]).filter((t) => entries.some((e) => e.topic === t));
   const shown = entries
@@ -148,7 +161,7 @@ export function DictionaryBrowser({
       {shown.length === 0 ? (
         <p className="panel panel-dashed empty-state">No words match. Try fewer letters, or search in English.</p>
       ) : (
-        <ul className="dict-list">
+        <ul className="dict-list" onClick={follow}>
           {shown.map((e) => (
             <li key={e.id} className="dict-entry">
               <div className="dict-word has-fa">
@@ -164,23 +177,26 @@ export function DictionaryBrowser({
                   </p>
                 )}
                 <p className="dict-meta">
-                  <StarButton item={{ fa: e.fa, en: e.en, source: "Dictionary", href: `/dictionary?q=${encodeURIComponent(e.id)}` }} />
+                  <StarToggle
+                    item={{ fa: e.fa, en: e.en, source: "Dictionary", href: `/dictionary?q=${encodeURIComponent(e.id)}` }}
+                    on={Boolean(starred[starKey(e.fa)])}
+                  />
                   {e.topic && <span className="meta-tag meta-tag-quiet">{TOPIC_LABELS[e.topic]}</span>}
                   {e.lessons.map((l) => (
-                    <Link key={l.href} href={l.href} className="meta-tag">
+                    <a key={l.href} href={l.href} className="meta-tag">
                       Lesson {l.number}
-                    </Link>
+                    </a>
                   ))}
                   {e.trainer && <span className="meta-tag meta-tag-quiet">in the trainer</span>}
                   <span className="dict-letters" aria-label="Letters">
                     {[...new Set([...e.id].map((c) => (c === "آ" ? "ا" : c)))]
                       .filter((c) => letterByChar.has(c))
                       .map((c) => (
-                        <Link key={c} href={`/script/${letterByChar.get(c)!.slug}`} className="dict-letter" aria-label={letterByChar.get(c)!.name}>
+                        <a key={c} href={`/script/${letterByChar.get(c)!.slug}`} className="dict-letter" aria-label={letterByChar.get(c)!.name}>
                           <span className="fa" lang="fa">
                             {c}
                           </span>
-                        </Link>
+                        </a>
                       ))}
                   </span>
                 </p>

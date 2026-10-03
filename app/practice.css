@@ -525,10 +525,17 @@ a.letter-card:hover {
   gap: 0.3rem 1rem;
   padding: 0.8rem 0.2rem;
   border-bottom: 1px solid var(--rule);
+  /* 600 entries: lay out only those near the screen. The placeholder is about
+     one entry; once drawn, the real height is remembered (auto). Paint is
+     contained, so let the focus rings at the edges show past it. */
+  content-visibility: auto;
+  contain-intrinsic-block-size: auto 11rem;
+  overflow-clip-margin: 0.5rem;
 }
 @media (min-width: 640px) {
   .dict-entry {
     grid-template-columns: 12rem 1fr;
+    contain-intrinsic-block-size: auto 7rem;
   }
 }
 .dict-word {
