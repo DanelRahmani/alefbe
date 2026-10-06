@@ -387,7 +387,7 @@ Phase 9 is polish (owner's brief: `docs/PROMPT-phase-9.md`). Order: 9a design au
 Phase 9 is complete and on `main`.
 
 - **After Phase 9** (2026-10-03, on `nextgen`): performance follow-up; details in `docs/DESIGN-PASS.md` ("After Phase 9").
-  - The home page: no change. Bounding tests showed a path rewrite can't reach 90: plain anchors scored lower than `Link`, and removing the whole lesson list gained 3 points. The late LCP is headless Chrome on this machine presenting the first frame late (a trace shows the main thread idle from 0.5 to 1.6 s).
+  - The home page: no change. Bounding tests showed a path rewrite can't reach 90: plain anchors scored lower than `Link`, and removing the whole lesson list gained 3 points. The late LCP is headless Chrome on this machine presenting the first frame late (a trace shows the main thread idle from 0.5 to 1.6 s). Lesson 4.2 scored 90 in the one run where the first frame came promptly (0.49 s), and 81–87 when it came late, so lessons reach the target as they are.
   - The dictionary: entries use `content-visibility: auto` (with `overflow-clip-margin` so the edge focus rings show); the list's ~3,100 links are plain anchors with one delegated click listener (`lib/client-link.ts`, tested), which keeps client-side navigation; the stars take their state from the list's one store read (`StarToggle`). Blocking time is 1.7 s, down from 4–6 s; style and layout are 1.0 s, down from 6.6 s.
   - Measuring on this machine: OneDrive keeps the CPU busy, so compare builds as an interleaved A/B (two `serve` copies outside OneDrive, Lighthouse alternating), not against old absolute numbers. Two copies of the same build differ by about 3 points.
 
