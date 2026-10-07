@@ -139,7 +139,7 @@ export const BATCH_D1: CommonWord[] = [
   { fa: "ایمِیْل", en: "email", topic: "things" },
   { fa: "سُکوت", en: "silence", topic: "everyday" },
   { fa: "خَلَبان", en: "pilot", topic: "people" },
-  { fa: "کیلومِتْر", en: "kilometre", topic: "numbers" },
+  { fa: "کیلُومِتْر", en: "kilometre", topic: "numbers" },
   { fa: "مُرَخَّصی", en: "leave (time off work)", topic: "society" },
   { fa: "عَذاب", en: "torment", topic: "feelings" },
   { fa: "خیس", en: "wet", topic: "describing" },

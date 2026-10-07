@@ -184,7 +184,7 @@ export const BATCH_A: CommonWord[] = [
   { fa: "شِکَسْت", en: "defeat, failure", topic: "ideas" },
   { fa: "شوخی", en: "joke", topic: "everyday" },
   { fa: "بَعْدی", en: "next", topic: "time" },
-  { fa: "زِنْدان", en: "prison", topic: "society" },
+  { fa: "زِنْدان", spoken: "زِنْدون", en: "prison", topic: "society" },
   { fa: "رَفْتار", en: "behaviour", topic: "ideas" },
   { fa: "مَعْذِرَت", en: "apology", topic: "everyday" },
   { fa: "اِفْتِخار", en: "honour, pride", topic: "feelings" },

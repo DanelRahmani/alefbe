@@ -2,7 +2,7 @@
 
 # Alefbe: where the work stands
 
-Updated 2026-10-03. Read this first when picking the work back up.
+Updated 2026-10-07. Read this first when picking the work back up.
 
 ## The project
 
@@ -396,7 +396,7 @@ Phase 9 is complete and on `main`.
   - Dictionary entries now keep `[base|translit]` overrides' readings, and a merged spoken form keeps its transliteration (پِدَر / بابا).
   - /dictionary draws 40 entries in its HTML (14 KB gzipped); the full list is `/data/dictionary.json` (65 KB gzipped), drawn in a React transition in doubling batches (40, 80, 160 … all 2,052 about 2.4 s after load on a desktop); search keys are built on first search. Lighthouse A/B: about the same score as the old 604-word page; doubling batches beat fixed batches of 100 (TBT 0.7 s vs 1.9 s, script time halved).
   - Lesson 5.3: کیک read *kik*, now کَیک *keyk*; that line's cloze and convert cards get new ids.
-  - For the owner: گِره read *gere*; توالِت *tuvâlet*; spoken زِنْدون and کیلومتر wait on the کیلو question.
+  - The owner left four choices to Claude (2026-10-07): گِرِهْ read *gereh* (the dictionary reading, like مِهْ); توالِت *tuvâlet*; زِنْدان gets the spoken زِنْدون; کیلُومِتْر read *kilometr* (کیلو *kilu* stays, as the everyday short form).
 
 ## Practice extras status
 

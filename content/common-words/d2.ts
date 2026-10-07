@@ -52,7 +52,7 @@ export const BATCH_D2: CommonWord[] = [
   { fa: "مَصْنوعی", en: "artificial", topic: "describing" },
   { fa: "وابَسْته", en: "dependent; attaché", topic: "describing" },
   { fa: "کُنْفِرانْس", en: "conference", topic: "society" },
-  { fa: "گِره", en: "knot", topic: "things" },
+  { fa: "گِرِهْ", en: "knot", topic: "things" },
   { fa: "هِنْگام", en: "time, moment; (هِنْگامِ …) at the time of (written)", topic: "time" },
   { fa: "ساک", en: "holdall, bag", topic: "things" },
   { fa: "مُنْشی", en: "secretary", topic: "people" },
