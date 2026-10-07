@@ -26,8 +26,8 @@ export interface DictionaryProps {
   units: { slug: string; label: string }[];
 }
 
-/** Entries drawn per idle moment once the full list has loaded. */
-const STEP = 100;
+/** The first batch drawn once the full list has loaded; each batch after it doubles what is drawn, so the list is complete in a few steps. */
+const STEP = 40;
 
 const onIdle = (f: () => void) => {
   if (typeof requestIdleCallback === "function") {
@@ -101,7 +101,7 @@ export function DictionaryBrowser({
     if (!complete || limit >= shown.length) return;
     // A transition renders in small slices the browser can interrupt, so drawing
     // the rest of the list never holds up a tap or a keystroke for long.
-    return onIdle(() => startTransition(() => setLimit((n) => n + STEP)));
+    return onIdle(() => startTransition(() => setLimit((n) => n + Math.max(STEP, n))));
   }, [complete, limit, shown.length]);
   // Until the full list is here, a search or filter would only see the first entries.
   // (If it failed to load, search the first entries.)
