@@ -17,6 +17,9 @@ export type Topic =
   | "verbs"
   | "numbers"
   | "learning"
+  | "society"
+  | "ideas"
+  | "grammar"
   | "everyday";
 
 export const TOPIC_LABELS: Record<Topic, string> = {
@@ -36,6 +39,9 @@ export const TOPIC_LABELS: Record<Topic, string> = {
   verbs: "Verbs",
   numbers: "Numbers",
   learning: "Learning",
+  society: "Society and work",
+  ideas: "Ideas and qualities",
+  grammar: "Little words",
   everyday: "Everyday words",
 };
 

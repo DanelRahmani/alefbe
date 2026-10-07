@@ -4,10 +4,10 @@
 
 import type { Topic } from "@/content/topics";
 import type { Fa } from "@/content/types";
+import { parseMarkup, translitOf } from "./markup";
 import { ZWNJ } from "./persian/chars";
 import { LETTERS } from "./persian/letters";
 import { normalizeFa } from "./persian/normalize";
-import { transliterate } from "./translit";
 
 export interface DictSource {
   /** The headword: the written form. */
@@ -19,6 +19,8 @@ export interface DictSource {
   /** The lesson that teaches it, if any. */
   lesson?: { href: string; number: string; title: string; unit: string };
   trainer?: boolean;
+  /** From the frequency list (content/common-words), not taught in a lesson. */
+  common?: boolean;
 }
 
 export interface DictEntry {
@@ -32,6 +34,7 @@ export interface DictEntry {
   topic?: Topic;
   lessons: { href: string; number: string; title: string; unit: string }[];
   trainer: boolean;
+  common: boolean;
   /** First letter, for the alphabet index (آ files under ا). */
   initial: string;
   /** Pre-folded search keys. */
@@ -78,8 +81,12 @@ export function buildDictionary(sources: DictSource[]): DictEntry[] {
     if (prev) {
       prev.en = mergeEn(prev.en, s.en);
       prev.topic ??= s.topic;
-      prev.spoken ??= s.spoken;
+      if (!prev.spoken && s.spoken) {
+        prev.spoken = stripMarkup(s.spoken);
+        prev.spokenTranslit = translitOf(parseMarkup(s.spoken));
+      }
       prev.trainer ||= !!s.trainer;
+      prev.common ||= !!s.common;
       if (s.lesson && !prev.lessons.some((l) => l.href === s.lesson!.href)) prev.lessons.push(s.lesson);
       continue;
     }
@@ -90,25 +97,36 @@ export function buildDictionary(sources: DictSource[]): DictEntry[] {
       fa,
       spoken,
       en: s.en,
-      translit: transliterate(fa),
-      spokenTranslit: spoken ? transliterate(spoken) : undefined,
+      // Read from the markup, so a [base|translit] override keeps its reading (رادیو râdiyo).
+      translit: translitOf(parseMarkup(s.fa)),
+      spokenTranslit: s.spoken ? translitOf(parseMarkup(s.spoken)) : undefined,
       topic: s.topic,
       lessons: s.lesson ? [s.lesson] : [],
       trainer: !!s.trainer,
+      common: !!s.common,
       initial: foldFa(fa)[0] ?? "",
       keys: { fa: "", tr: "", en: "" },
     });
   }
   const entries = [...byId.values()];
-  for (const e of entries) {
-    e.keys = {
-      fa: [foldFa(e.fa), e.spoken ? foldFa(e.spoken) : ""].join(" "),
-      tr: [foldLatin(e.translit), e.spokenTranslit ? foldLatin(e.spokenTranslit) : ""].join(" "),
-      en: e.en.toLowerCase(),
-    };
-  }
+  for (const e of entries) e.keys = searchKeys(e);
   return entries.sort((a, b) => compareFa(a.fa, b.fa));
 }
+
+/** An entry without its search keys, as /data/dictionary.json carries it (the keys are rebuilt in the browser). */
+export type DictData = Omit<DictEntry, "keys">;
+
+/** The pre-folded search keys of an entry. */
+export function searchKeys(e: Pick<DictEntry, "fa" | "spoken" | "translit" | "spokenTranslit" | "en">): DictEntry["keys"] {
+  return {
+    fa: [foldFa(e.fa), e.spoken ? foldFa(e.spoken) : ""].join(" "),
+    tr: [foldLatin(e.translit), e.spokenTranslit ? foldLatin(e.spokenTranslit) : ""].join(" "),
+    en: e.en.toLowerCase(),
+  };
+}
+
+/** Entries from /data/dictionary.json, ready to search. */
+export const withKeys = (data: DictData[]): DictEntry[] => data.map((e) => ({ ...e, keys: searchKeys(e) }));
 
 const ARABIC = /[؀-ۿ]/;
 

@@ -52,6 +52,16 @@ const GOLDEN: [string, string][] = [
   ["بیا", "biyâ"],
   // A bare و after a long i: u before a consonant, v before a vowel letter or a final silent ه.
   ["میومَدَم", "miyumadam"],
+  // A ی with tashdid after a bare consonant: the long i, then the doubled y.
+  ["بَقیّه", "baqiyye"],
+  ["وَضْعیَّت", "vaz'iyyat"],
+  ["اَهَمّیَّت", "ahammiyyat"],
+  // Pish + و before ا: the consonant v, not the o-spelling.
+  ["مُوافِق", "movâfeq"],
+  ["خُوش", "khosh"],
+  // A sukun on ی after zabar closes the syllable: the diphthong, even before و.
+  ["پَیْوَنْد", "peyvand"],
+  ["حَیْوان", "heyvân"],
   ["دیوار", "divâr"],
   ["میوه", "mive"],
   ["هِدیه", "hediye"],

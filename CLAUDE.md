@@ -391,6 +391,13 @@ Phase 9 is complete and on `main`.
   - The dictionary: entries use `content-visibility: auto` (with `overflow-clip-margin` so the edge focus rings show); the list's ~3,100 links are plain anchors with one delegated click listener (`lib/client-link.ts`, tested), which keeps client-side navigation; the stars take their state from the list's one store read (`StarToggle`). Blocking time is 1.7 s, down from 4–6 s; style and layout are 1.0 s, down from 6.6 s.
   - Measuring on this machine: OneDrive keeps the CPU busy, so compare builds as an interleaved A/B (two `serve` copies outside OneDrive, Lighthouse alternating), not against old absolute numbers. Two copies of the same build differ by about 3 points.
 
+- **Dictionary expansion** (2026-10-07, on `nextgen`): 1,448 common words beyond the lessons in `content/common-words/` (batches a–d2 from the FrequencyWords subtitle list, CC BY-SA 4.0, credited on /dictionary; e: hand-picked places, languages and basics). The dictionary has 2,052 words. Marks, spoken forms and glosses are the course's own; three reviewer agents raised 15 errors, 19 should-fix, 36 polish, all applied except the Tehrani readings kept for تَوَجُّه / مُتَوَجِّه. Proofread with `npx tsx scripts/common-words.ts [batch…] < /dev/null`.
+  - The engine learned three readings (tests in translit.test.ts; no existing word changed): ی with tashdid after a bare consonant or v is *iyy* (بَقیّه, هُویَّت); pish + و before ا or a doubled ی is *v* (مُوافِق); a sukun on و/ی after zabar is always the diphthong (پَیْوَنْد *peyvand*).
+  - Dictionary entries now keep `[base|translit]` overrides' readings, and a merged spoken form keeps its transliteration (پِدَر / بابا).
+  - /dictionary draws 40 entries in its HTML (14 KB gzipped); the full list is `/data/dictionary.json` (65 KB gzipped), drawn 100 at a time in a React transition; search keys are built on first search. Lighthouse A/B against the 604-word page: 71 vs 69, TBT 1.3 s vs 0.8 s.
+  - Lesson 5.3: کیک read *kik*, now کَیک *keyk*; that line's cloze and convert cards get new ids.
+  - For the owner: گِره read *gere*; توالِت *tuvâlet*; spoken زِنْدون and کیلومتر wait on the کیلو question.
+
 ## Practice extras status
 
 The owner's brief is `docs/PROMPT-practice-extras.md`: X1 cloze, X2 spoken ↔ written, X3 one review queue. The hard rule: no new Persian. Every Persian string a learner sees comes unchanged from reviewed lesson data; a card that would need another string is left out.

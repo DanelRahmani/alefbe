@@ -230,20 +230,30 @@ export function analyzeWord(word: string): Analysis {
         roles[i] = "silent";
         continue;
       }
+      // Rule 4a′: a ی with tashdid after a bare consonant is the long i, then the
+      // doubled y (بَقیّه baqiyye, وَضْعیَّت vaz'iyyat; after a v, هُویَّت hoviyyat).
+      if (!isVav && m.has(SHADDA) && prev && (roles[i - 1] === "cons" || roles[i - 1] === "glide") && !vowelOf(i - 1) && !letters[i - 1].marks.has(SUKUN)) {
+        push("V", "i", i);
+        consonant(i, cons);
+        continue;
+      }
       // Rule 4a/4b: carries a vowel mark or tashdid, or starts a morpheme.
       if (VOWEL_MARKS.some((v) => m.has(v)) || m.has(SHADDA) || m.has(FATHATAN) || L.ms) {
         consonant(i, cons);
         continue;
       }
       const pv = prev ? vowelOf(i - 1) : null;
-      // Rule 4c: pish + و spells o (تُو, خُود).
-      if (isVav && bare() && pv === DAMMA) {
+      // Rule 4c: pish + و spells o (تُو, خُود), unless ا or a doubled ی follows:
+      // then it is the consonant v (مُوافِق movâfeq, هُویَّت hoviyyat).
+      if (isVav && bare() && pv === DAMMA && next?.ch !== "ا" && !(next?.ch === "ی" && M[i + 1].has(SHADDA))) {
         roles[i] = "silent";
         continue;
       }
       // Rule 4d: after zabar, a diphthong unless a vowel letter follows.
       if (pv === FATHA && (bare() || (m.size === 1 && m.has(SUKUN)))) {
-        if (next && "اوی".includes(next.ch)) {
+        // A sukun closes the syllable, so it is the diphthong even before و or ی
+        // (پَیْوَنْد peyvand, حَیْوان heyvân).
+        if (next && "اوی".includes(next.ch) && !m.has(SUKUN)) {
           consonant(i, cons);
         } else {
           const lp = lastPhon();

@@ -365,7 +365,7 @@ export const present: Lesson[] = [
         lines: [
           { who: "Waiter", fa: "چی {مَیل دارین}؟", written: "چه {مَیل دارید}؟", en: "What would you like?" },
           { who: "Customer", fa: "یه چایی {می‌خوام}، لُطْفاً.", written: "یِک چای {می‌خواهَم}، لُطْفاً.", en: "A tea, please." },
-          { who: "Waiter", fa: "چَشْم. کیک هَم {می‌خوایین}؟", written: "چَشْم. کیک هَم {می‌خواهید}؟", en: "Certainly. Would you like cake too?" },
+          { who: "Waiter", fa: "چَشْم. کَیک هَم {می‌خوایین}؟", written: "چَشْم. کَیک هَم {می‌خواهید}؟", en: "Certainly. Would you like cake too?" },
           { who: "Customer", fa: "نَه، مِرْسی. فَقَط چایی.", written: "نَه، مُتَشَکِّرَم. فَقَط چای.", en: "No, thanks. Just tea." },
         ],
         note: "چی مَیل دارین؟ (literally *what do you have an appetite for?*) is the polite waiter's question. چَشْم, literally *eye*, is a polite *certainly, right away*.",

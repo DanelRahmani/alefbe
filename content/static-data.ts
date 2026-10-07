@@ -5,6 +5,7 @@
 import type { DayWord } from "@/components/TodayCard";
 import { clozeAsk } from "@/lib/cloze";
 import { convertAsk } from "@/lib/convert";
+import type { DictData, DictEntry } from "@/lib/dictionary";
 import { CLOZE_CARDS } from "./cloze";
 import { CONVERT_CARDS } from "./convert";
 import { DICTIONARY } from "./dictionary";
@@ -30,5 +31,13 @@ export type ReviewData = ReturnType<typeof reviewData>;
 
 /** The word of the day is picked in the browser, by its date, from these. */
 export const dayWords = (): DayWord[] => DICTIONARY.map((e) => ({ fa: e.fa, en: e.en, id: e.id }));
+
+/** The dictionary page's full list, without the search keys (the browser rebuilds them). */
+export const dictionaryData = (): DictData[] =>
+  DICTIONARY.map((e) => {
+    const data: Partial<DictEntry> = { ...e };
+    delete data.keys;
+    return data as DictData;
+  });
 
 export { CLOZE_CARDS, CONVERT_CARDS, LESSON_QUIZZES, VOCAB_CARDS };

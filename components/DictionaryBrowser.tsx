@@ -1,11 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useDeferredValue, useState, type MouseEvent } from "react";
+import { startTransition, useDeferredValue, useEffect, useMemo, useState, type MouseEvent } from "react";
 import { TOPIC_LABELS, type Topic } from "@/content/topics";
 import { clientHref } from "@/lib/client-link";
-import { matches, rank, type DictEntry } from "@/lib/dictionary";
+import { DATA_URL } from "@/lib/data-urls";
+import { matches, rank, withKeys, type DictData } from "@/lib/dictionary";
 import { LETTERS, letterByChar } from "@/lib/persian/letters";
+import { useStaticData } from "@/lib/static-data";
 import { useStore } from "@/lib/storage";
 import { starKey } from "@/lib/starred";
 import { starredStore } from "@/lib/stores";
@@ -13,17 +15,47 @@ import { FaText } from "./FaText";
 import { MyWords } from "./MyWords";
 import { StarToggle } from "./StarButton";
 
+export interface DictionaryProps {
+  /** The first entries in alphabet order, drawn in the page's HTML. */
+  head: DictData[];
+  /** How many entries there are in all. */
+  total: number;
+  topics: Topic[];
+  /** The letters some word starts with. */
+  initials: string[];
+  units: { slug: string; label: string }[];
+}
+
+/** Entries drawn per idle moment once the full list has loaded. */
+const STEP = 100;
+
+const onIdle = (f: () => void) => {
+  if (typeof requestIdleCallback === "function") {
+    const id = requestIdleCallback(f, { timeout: 500 });
+    return () => cancelIdleCallback(id);
+  }
+  const id = setTimeout(f, 16);
+  return () => clearTimeout(id);
+};
+
+// The page's HTML carries the first entries; the full list (about 2,000) comes
+// from /data/dictionary.json and is drawn a little at a time while the browser
+// is idle, so the page doesn't hydrate thousands of rows at once.
 export function DictionaryBrowser({
-  entries,
+  head,
+  total,
+  topics,
+  initials: initialList,
   units,
   initialQuery = "",
   initialView = "all",
-}: {
-  entries: DictEntry[];
-  units: { slug: string; label: string }[];
+}: DictionaryProps & {
   initialQuery?: string;
   initialView?: "all" | "mine";
 }) {
+  const { data, failed } = useStaticData<DictData[]>(DATA_URL.dictionary);
+  const complete = !!data;
+  const entries = data ?? head;
   const [view, setView] = useState(initialView);
   const starred = useStore(starredStore);
   const starredCount = Object.keys(starred).length;
@@ -43,19 +75,38 @@ export function DictionaryBrowser({
     router.push(href);
   };
 
-  const topics = (Object.keys(TOPIC_LABELS) as Topic[]).filter((t) => entries.some((e) => e.topic === t));
-  const shown = entries
-    .filter(
-      (e) =>
-        matches(e, q) &&
-        (topic === "all" || e.topic === topic) &&
-        (unit === "all" || (unit === "trainer" ? e.trainer : e.lessons.some((l) => l.unit === unit))) &&
-        (!initial || e.initial === initial),
-    )
-    .map((e, i) => ({ e, r: rank(e, q), i }))
-    .sort((a, b) => a.r - b.r || a.i - b.i)
-    .map((x) => x.e);
-  const initials = new Set(entries.map((e) => e.initial));
+  const filtering = !!q.trim() || topic !== "all" || unit !== "all" || !!initial;
+  // The search keys are built the first time someone searches or filters, not on load.
+  const [wantKeys, setWantKeys] = useState(false);
+  if (filtering && !wantKeys) setWantKeys(true);
+  const keyed = useMemo(() => (wantKeys ? withKeys(entries) : null), [wantKeys, entries]);
+  const shown =
+    filtering && keyed
+      ? keyed
+          .filter(
+            (e) =>
+              matches(e, q) &&
+              (topic === "all" || e.topic === topic) &&
+              (unit === "all" || (unit === "trainer" ? e.trainer : unit === "common" ? e.common : e.lessons.some((l) => l.unit === unit))) &&
+              (!initial || e.initial === initial),
+          )
+          .map((e, i) => ({ e, r: rank(e, q), i }))
+          .sort((a, b) => a.r - b.r || a.i - b.i)
+          .map((x) => x.e)
+      : entries;
+  const initials = new Set(initialList);
+
+  const [limit, setLimit] = useState(head.length);
+  useEffect(() => {
+    if (!complete || limit >= shown.length) return;
+    // A transition renders in small slices the browser can interrupt, so drawing
+    // the rest of the list never holds up a tap or a keystroke for long.
+    return onIdle(() => startTransition(() => setLimit((n) => n + STEP)));
+  }, [complete, limit, shown.length]);
+  // Until the full list is here, a search or filter would only see the first entries.
+  // (If it failed to load, search the first entries.)
+  const waiting = filtering && !complete && !failed;
+  const count = complete || failed ? shown.length : filtering ? null : total;
 
   const views = (
     <div className="chips" role="group" aria-label="Show">
@@ -111,8 +162,9 @@ export function DictionaryBrowser({
         <label>
           <span className="sr-only">Source</span>
           <select value={unit} onChange={(e) => setUnit(e.target.value)}>
-            <option value="all">Lessons and trainer</option>
+            <option value="all">All sources</option>
             <option value="trainer">Trainer words</option>
+            <option value="common">Common words beyond the lessons</option>
             {units.map((u) => (
               <option key={u.slug} value={u.slug}>
                 {u.label}
@@ -138,7 +190,7 @@ export function DictionaryBrowser({
       </div>
 
       <p className="mt-3 text-sm text-muted" aria-live="polite">
-        {shown.length} {shown.length === 1 ? "word" : "words"}
+        {count === null ? "Loading the full dictionary…" : `${count} ${count === 1 ? "word" : "words"}`}
         {query || topic !== "all" || unit !== "all" || initial ? (
           <>
             {" · "}
@@ -158,11 +210,12 @@ export function DictionaryBrowser({
         ) : null}
       </p>
 
-      {shown.length === 0 ? (
+      {failed && <p className="panel panel-dashed empty-state">The full dictionary couldn&apos;t load (are you offline?). The first words are shown.</p>}
+      {waiting ? null : shown.length === 0 ? (
         <p className="panel panel-dashed empty-state">No words match. Try fewer letters, or search in English.</p>
       ) : (
         <ul className="dict-list" onClick={follow}>
-          {shown.map((e) => (
+          {shown.slice(0, limit).map((e) => (
             <li key={e.id} className="dict-entry">
               <div className="dict-word has-fa">
                 <FaText text={e.fa} translit="none" className="text-2xl" />
@@ -188,6 +241,7 @@ export function DictionaryBrowser({
                     </a>
                   ))}
                   {e.trainer && <span className="meta-tag meta-tag-quiet">in the trainer</span>}
+                  {e.common && !e.lessons.length && !e.trainer && <span className="meta-tag meta-tag-quiet">common word</span>}
                   <span className="dict-letters" aria-label="Letters">
                     {[...new Set([...e.id].map((c) => (c === "آ" ? "ا" : c)))]
                       .filter((c) => letterByChar.has(c))

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ALL_LESSONS, UNITS } from "@/content/units";
+import { COMMON_WORDS } from "@/content/common-words";
 import { DRILL_WORDS } from "@/content/drill-words";
 import { DRILL_GROUPS, LETTERS, letterByChar } from "@/lib/persian/letters";
 import { MARKS, SIGNS } from "@/content/reference";
@@ -121,6 +122,10 @@ function lessonStrs(l: Lesson, where: string): Str[] {
 
 const ALL: Str[] = [
   ...DRILL_WORDS.flatMap((w, i) => [{ where: `drill word ${i + 1} (${w.en})`, kind: "fa" as const, s: w.fa }]),
+  ...COMMON_WORDS.flatMap((w) => [
+    { where: `common word ${w.fa} (${w.en})`, kind: "fa" as const, s: w.fa },
+    ...(w.spoken ? [{ where: `common word ${w.fa} (spoken)`, kind: "fa" as const, s: w.spoken }] : []),
+  ]),
   ...LETTERS.flatMap((l) => [
     { where: `letter ${l.ch} hint`, kind: "rich" as const, s: l.hint },
     { where: `letter ${l.ch} key word`, kind: "fa" as const, s: l.key.fa },

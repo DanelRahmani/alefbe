@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { buildDictionary, compareFa, foldLatin, matches } from "@/lib/dictionary";
+import { buildDictionary, compareFa, foldLatin, matches, withKeys } from "@/lib/dictionary";
 import { DICTIONARY } from "@/content/dictionary";
+import { dictionaryData } from "@/content/static-data";
 
 const L = { href: "/learn/a/b", number: "1.1", title: "T", unit: "a" };
 
@@ -45,6 +46,24 @@ describe("dictionary", () => {
     expect(DICTIONARY.length).toBeGreaterThan(110);
     for (const e of DICTIONARY) expect(e.translit).toMatch(/^[a-zâ' -]+$/);
     expect(DICTIONARY.filter((e) => !e.topic).map((e) => e.fa)).toEqual([]);
+  });
+});
+
+describe("dictionary data", () => {
+  it("rebuilds the full entries, search keys included, from /data/dictionary.json", () => {
+    const data = JSON.parse(JSON.stringify(dictionaryData()));
+    expect(data[0]).not.toHaveProperty("keys");
+    expect(withKeys(data)).toEqual(JSON.parse(JSON.stringify(DICTIONARY)));
+  });
+  it("keeps a transliteration override's reading, and a merged spoken form's", () => {
+    const [radio] = buildDictionary([{ fa: "[رادیو|râdiyo]", en: "radio" }]);
+    expect(radio.id).toBe("رادیو");
+    expect(radio.translit).toBe("râdiyo");
+    const [father] = buildDictionary([
+      { fa: "پِدَر", en: "father" },
+      { fa: "پِدَر", spoken: "بابا", en: "dad" },
+    ]);
+    expect(father.spokenTranslit).toBe("bâbâ");
   });
 });
 

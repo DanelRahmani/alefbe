@@ -10,5 +10,6 @@ export const DATA_URL = {
   convertCards: "/data/convert-cards.json",
   lessonQuizzes: "/data/lesson-quizzes.json",
   words: "/data/words.json",
+  dictionary: "/data/dictionary.json",
   due: "/data/due.json",
 } as const;
